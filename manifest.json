@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Lanis Helper",
+  "version": "1.0.0",
+  "description": "Lanis Helper / 레어 아이템 범위 확인 도우미",
+  "icons": {
+    "16": "img/lanis16.png",
+    "128": "img/lanis128.png"
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://laniswiki.lovestoblog.com/*",
+    "https://lanis.me/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "img/lanis16.png",
+      "128": "img/lanis128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://lanis.me/*"],
+      "js": ["content.js"],
+      "css": ["popup.css"]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+/* Lanis 사용자 프로필 링크 스타일 */
+
+/* 사용자 이름 클릭 스타일 */
+.username-clickable {
+  cursor: pointer !important;
+  color: #007bff !important;
+  text-decoration: underline !important;
+  transition: color 0.2s ease;
+}
+
+.username-clickable:hover {
+  color: #0056b3 !important;
+}
+
+.username-clickable:active {
+  color: #004085 !important;
+}

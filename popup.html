@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .feature-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .feature-item:last-child {
+      border-bottom: none;
+    }
+    .feature-name {
+      font-weight: bold;
+      color: #555;
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    .description {
+      font-size: 12px;
+      color: #888;
+      margin-top: 5px;
+    }
+    .crawler-section {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid #eee;
+    }
+    .crawler-button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .crawler-button:hover {
+      background-color: #45a049;
+    }
+    .crawler-button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    .status {
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h3>Lanis Helper 설정</h3>
+  </div>
+  
+  <div class="feature-item">
+    <div>
+      <div class="feature-name">사용자 프로필 링크</div>
+      <div class="description">채팅에서 사용자 이름을 클릭하여 프로필 페이지로 이동</div>
+    </div>
+    <label class="toggle-switch">
+      <input type="checkbox" id="profileLink" checked>
+      <span class="slider"></span>
+    </label>
+  </div>
+  
+  <div class="feature-item">
+    <div>
+      <div class="feature-name">감정 범위 표기</div>
+      <div class="description">아이템 감정 범위 및 감정 등급 표기 (Lanis wiki 연동)</div>
+    </div>
+    <label class="toggle-switch">
+      <input type="checkbox" id="showItemStats" checked>
+      <span class="slider"></span>
+    </label>
+  </div>
+  
+  <div class="feature-item">
+    <div>
+      <div class="feature-name">기능 2</div>
+      <div class="description">추후 추가될 기능</div>
+    </div>
+    <label class="toggle-switch">
+      <input type="checkbox" id="feature2">
+      <span class="slider"></span>
+    </label>
+  </div>
+  
+  <div class="feature-item">
+    <div>
+      <div class="feature-name">기능 3</div>
+      <div class="description">추후 추가될 기능</div>
+    </div>
+    <label class="toggle-switch">
+      <input type="checkbox" id="feature3">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="crawler-section">
+    <button id="crawlButton" class="crawler-button">레어 아이템 데이터 수집</button>
+    <div id="status" class="status">대기 중...</div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html> 
