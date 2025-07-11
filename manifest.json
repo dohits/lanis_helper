@@ -2,35 +2,61 @@
   "manifest_version": 3,
   "name": "Lanis Helper",
   "version": "1.0.0",
-  "description": "Lanis Helper / 레어 아이템 범위 확인 도우미",
+  "description": "Lanis 게임을 위한 도우미 확장프로그램",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://lanis.me/*",
+    "https://laniswiki.lovestoblog.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://lanis.me/*",
+        "https://laniswiki.lovestoblog.com/*",
+        "https://laniswiki.lovestoblog.com/api.php*"
+      ],
+      "js": [
+        "menu-manager.js",
+        "search-engine.js", 
+        "item-stats.js",
+        "settings-modal.js",
+        "user-profile.js",
+        "content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "styles.css",
+        "menu-config.json",
+        "menu-manager.js",
+        "search-engine.js",
+        "item-stats.js",
+        "settings-modal.js",
+        "user-profile.js",
+        "rare-items.json"
+      ],
+      "matches": [
+        "https://lanis.me/*",
+        "https://laniswiki.lovestoblog.com/*"
+      ]
+    }
+  ],
   "icons": {
     "16": "img/lanis16.png",
     "128": "img/lanis128.png"
   },
-  "permissions": [
-    "storage",
-    "tabs",
-    "scripting"
-  ],
-  "background": {
-    "service_worker": "background.js"
-  },
-  "host_permissions": [
-    "https://laniswiki.lovestoblog.com/*",
-    "https://lanis.me/*"
-  ],
   "action": {
     "default_popup": "popup.html",
-    "default_icon": {
-      "16": "img/lanis16.png",
-      "128": "img/lanis128.png"
-    }
+    "default_title": "Lanis Helper"
   },
-  "content_scripts": [
-    {
-      "matches": ["https://lanis.me/*"],
-      "js": ["content.js"],
-      "css": ["popup.css"]
-    }
-  ]
+  "background": {
+    "service_worker": "background.js"
+  }
 }
