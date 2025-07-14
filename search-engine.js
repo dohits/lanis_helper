@@ -298,14 +298,24 @@ class SearchEngine {
     }
   }
 
-  // 위키 텍스트에서 아이템 정보 파싱 (구버전 방식)
+  // 위키 텍스트에서 아이템 정보 파싱 (확장된 버전)
   parseItemFromWikiText(wikiText, itemName) {
     try {
       let powerMin = null, powerMax = null;
       let weightMin = null, weightMax = null;
+      let weaponType = null;
+      let abilities = [];
+      let attributes = [];
       
       console.log(`아이템 파싱 시작: ${itemName}`);
       console.log('위키 텍스트 샘플:', wikiText.substring(0, 500));
+      
+      // 무기 타입 파싱 (예: (무기/지팡이) 형식)
+      const weaponTypeMatch = wikiText.match(/\(([^)]+)\)/);
+      if (weaponTypeMatch) {
+        weaponType = weaponTypeMatch[1].trim();
+        console.log(`무기 타입 파싱 성공: ${weaponType}`);
+      }
       
       // MediaWiki 테이블 구조에 맞는 패턴으로 위력 정보 찾기 (개선된 패턴)
       const powerMatch = wikiText.match(/\|\s*위력\s*\|\|\s*(\d+)\s*~\s*(\d+)/);
@@ -343,14 +353,61 @@ class SearchEngine {
         }
       }
       
-      // 유효한 정보가 있으면 반환
-      if (powerMin !== null || weightMin !== null) {
+      // 어빌리티 파싱
+      // 어빌리티 섹션을 찾기 위한 패턴들
+      const abilityPatterns = [
+        /\|\s*어빌리티\s*\|\|\s*([^|\n]+)/,  // 기본 패턴
+        /\|\s*어빌리티\s*\n\|\s*([^|\n]+)/,  // 별도 행 패턴
+        /어빌리티[:\s]*([^|\n]+)/,           // 일반 텍스트 패턴
+      ];
+      
+      for (const pattern of abilityPatterns) {
+        const abilityMatch = wikiText.match(pattern);
+        if (abilityMatch) {
+          const abilityText = abilityMatch[1].trim();
+          if (abilityText && abilityText !== '') {
+            // 쉼표나 줄바꿈으로 구분된 어빌리티들을 분리
+            const abilityList = abilityText.split(/[,，\n]/).map(ability => ability.trim()).filter(ability => ability.length > 0);
+            abilities = abilityList;
+            console.log(`어빌리티 파싱 성공: ${abilities.join(', ')}`);
+            break;
+          }
+        }
+      }
+      
+      // 속성 파싱
+      // 속성 섹션을 찾기 위한 패턴들
+      const attributePatterns = [
+        /\|\s*속성\s*\|\|\s*([^|\n]+)/,      // 기본 패턴
+        /\|\s*속성\s*\n\|\s*([^|\n]+)/,      // 별도 행 패턴
+        /속성[:\s]*([^|\n]+)/,               // 일반 텍스트 패턴
+      ];
+      
+      for (const pattern of attributePatterns) {
+        const attributeMatch = wikiText.match(pattern);
+        if (attributeMatch) {
+          const attributeText = attributeMatch[1].trim();
+          if (attributeText && attributeText !== '') {
+            // 쉼표나 줄바꿈으로 구분된 속성들을 분리
+            const attributeList = attributeText.split(/[,，\n]/).map(attribute => attribute.trim()).filter(attribute => attribute.length > 0);
+            attributes = attributeList;
+            console.log(`속성 파싱 성공: ${attributes.join(', ')}`);
+            break;
+          }
+        }
+      }
+      
+      // 유효한 정보가 있으면 반환 (위력, 무게, 무기타입, 어빌리티, 속성 중 하나라도 있으면)
+      if (powerMin !== null || weightMin !== null || weaponType !== null || abilities.length > 0 || attributes.length > 0) {
         const result = {
           name: itemName,
           power_min: powerMin,
           power_max: powerMax,
           weight_min: weightMin,
-          weight_max: weightMax
+          weight_max: weightMax,
+          weapon_type: weaponType,
+          abilities: abilities,
+          attributes: attributes
         };
         console.log(`아이템 파싱 완료:`, result);
         return result;

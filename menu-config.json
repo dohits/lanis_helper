@@ -13,6 +13,12 @@
         "title": "거래소 퀵버튼 메뉴"
       },
       {
+        "id": "itemGuide",
+        "icon": "📚",
+        "text": "아이템 도감",
+        "title": "아이템 도감"
+      },
+      {
         "id": "settings",
         "icon": "⚙️",
         "text": "설정",

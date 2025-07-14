@@ -101,12 +101,20 @@ function showItemsList() {
         const itemName = item.name || '알 수 없는 아이템';
         const powerRange = item.power_min && item.power_max ? `${item.power_min}-${item.power_max}` : 'N/A';
         const weightRange = item.weight_min && item.weight_max ? `${item.weight_min}-${item.weight_max}` : 'N/A';
+        const weaponType = item.weapon_type || 'N/A';
+        const abilities = item.abilities && item.abilities.length > 0 ? item.abilities.join(', ') : 'N/A';
+        
+        // 타입이 N/A가 아닐 때만 괄호로 표시
+        const typeDisplay = weaponType !== 'N/A' ? ` (${weaponType})` : '';
         
         itemsHtml += `
           <div style="padding: 8px; border-bottom: 1px solid #eee; background-color: white; margin-bottom: 5px; border-radius: 5px;">
-            <div style="font-weight: bold; color: #333; margin-bottom: 3px;">${itemName}</div>
-            <div style="font-size: 11px; color: #666;">
+            <div style="font-weight: bold; color: #333; margin-bottom: 3px;">${itemName}${typeDisplay}</div>
+            <div style="font-size: 11px; color: #666; margin-bottom: 2px;">
               위력: ${powerRange} | 무게: ${weightRange}
+            </div>
+            <div style="font-size: 10px; color: #888;">
+              어빌리티: ${abilities}
             </div>
           </div>
         `;
@@ -149,8 +157,8 @@ function startCrawling() {
       }
       
       // lanis.me 도메인이 아닌 경우 경고
-      if (!tabs[0].url.includes('lanis.me')) {
-        status.textContent = 'lanis.me 도메인에서 실행하는 것을 권장합니다.';
+      if (!tabs[0].url.includes('laniswiki.lovestoblog.com')) {
+        status.textContent = '아이템 수집은 https://laniswiki.lovestoblog.com/ 에서 실행해주세요.';
       }
       
       // content script가 로드되었는지 먼저 확인
