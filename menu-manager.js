@@ -94,9 +94,6 @@ class MenuManager {
 
     // 거래소/설정 버튼 생성 (메인 버튼과 동일한 디자인)
     this.menuConfig.mainMenu.items.forEach(item => {
-      // 설정 버튼은 비활성화
-      if (item.id === 'settings') return;
-      
       const button = document.createElement('button');
       button.className = 'main-menu-item';
       button.setAttribute('data-menu-id', item.id);
@@ -159,6 +156,8 @@ class MenuManager {
     // 서브메뉴 내용 생성
     if (item.id === 'exchange') {
       this.createQuickButtonsSubMenu(subMenu);
+    } else if (item.id === 'itemGuide') {
+      this.createItemGuideSubMenu(subMenu);
     } else if (item.id === 'settings') {
       this.createSettingsSubMenu(subMenu);
     }
@@ -213,84 +212,431 @@ class MenuManager {
   createQuickButtonsSubMenu(container) {
     container.innerHTML = '';
     
-    // 퀵버튼들 생성 (텍스트로 변경)
-    for (let i = 0; i < 3; i++) {
-      // 퀵버튼과 리셋 버튼을 감싸는 컨테이너
-      const buttonContainer = document.createElement('div');
-      buttonContainer.className = 'quick-button-group';
-      buttonContainer.style.display = 'flex';
-      buttonContainer.style.gap = '8px';
-      buttonContainer.style.alignItems = 'center';
-      
-      // 퀵버튼
-      const quickButton = document.createElement('button');
-      quickButton.className = 'main-menu-item sub-menu-item'; // sub-menu-item 클래스 추가
-      
-      // 설정된 아이템 이름이 있으면 사용, 없으면 기본 텍스트
-      const buttonText = this.quickButtons[i]?.keyword || `퀵${i + 1}`;
-      quickButton.innerHTML = buttonText;
-      quickButton.title = this.quickButtons[i]?.name || `퀵버튼 ${i + 1}`;
-      
-      quickButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.handleQuickButtonClick(i);
-      });
-      
-      // 리셋 버튼
-      const resetButton = document.createElement('button');
-      resetButton.className = 'main-menu-item sub-menu-item reset-btn';
-      resetButton.innerHTML = '리셋'; // 휴지통 아이콘 대신 텍스트
-      resetButton.title = `퀵${i + 1} 리셋`;
-      resetButton.style.width = '40px';
-      resetButton.style.height = '32px';
-      resetButton.style.fontSize = '0.5rem';
-      
-      resetButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.resetQuickButton(i);
-      });
-      
-      buttonContainer.appendChild(quickButton);
-      buttonContainer.appendChild(resetButton);
-      container.appendChild(buttonContainer);
-    }
+    // 기존 퀵버튼들 표시
+    this.quickButtons.forEach((button, index) => {
+      if (button && Object.keys(button).length > 0) {
+        // 퀵버튼과 삭제 버튼을 감싸는 컨테이너
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'quick-button-group';
+        buttonContainer.style.display = 'flex';
+        buttonContainer.style.gap = '8px';
+        buttonContainer.style.alignItems = 'center';
+        
+        // 퀵버튼
+        const quickButton = document.createElement('button');
+        quickButton.className = 'main-menu-item sub-menu-item';
+        
+        const buttonText = button.keyword || `퀵${index + 1}`;
+        quickButton.innerHTML = buttonText;
+        quickButton.title = button.name || `퀵버튼 ${index + 1}`;
+        
+        quickButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.handleQuickButtonClick(index);
+        });
+        
+        // 삭제 버튼
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'main-menu-item sub-menu-item delete-btn';
+        deleteButton.innerHTML = '삭제';
+        deleteButton.title = `퀵${index + 1} 삭제`;
+        
+        deleteButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.deleteQuickButton(index);
+        });
+        
+        buttonContainer.appendChild(quickButton);
+        buttonContainer.appendChild(deleteButton);
+        container.appendChild(buttonContainer);
+      }
+    });
+    
+    // 추가 버튼 (항상 마지막에 표시)
+    const addButton = document.createElement('button');
+    addButton.className = 'main-menu-item sub-menu-item add-btn';
+    addButton.innerHTML = '+ 추가';
+    addButton.title = '새 퀵버튼 추가';
+    
+    addButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.addNewQuickButton();
+    });
+    
+    container.appendChild(addButton);
+  }
+
+  createItemGuideSubMenu(container) {
+    container.innerHTML = '';
+    
+    // 아이템 도감 열기 버튼 생성
+    const guideButton = document.createElement('button');
+    guideButton.className = 'main-menu-item sub-menu-item';
+    guideButton.innerHTML = '도감 열기';
+    guideButton.title = '아이템 도감 열기';
+    
+    guideButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // 아이템 도감 모달 열기
+      this.openItemGuideModal();
+      this.closeAllSubMenus();
+    });
+    
+    container.appendChild(guideButton);
   }
 
   createSettingsSubMenu(container) {
-    /*
     container.innerHTML = '';
     
-    const settingsConfig = this.menuConfig.mainMenu.settings.subMenu.items;
-    settingsConfig.forEach(setting => {
-      const settingButton = document.createElement('button');
-      settingButton.className = 'main-menu-item sub-menu-item'; // sub-menu-item 클래스 추가
-      settingButton.innerHTML = setting.text; // 아이콘 대신 텍스트 사용
-      settingButton.title = setting.title;
-      
-      if (this.settings[setting.id]) {
-        settingButton.classList.add('active');
-      }
-      
-      settingButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.toggleSetting(setting.id);
-        if (this.settings[setting.id]) {
-          settingButton.classList.add('active');
-        } else {
-          settingButton.classList.remove('active');
-        }
-      });
-      
-      container.appendChild(settingButton);
+    // 팝업 열기 버튼 생성
+    const popupButton = document.createElement('button');
+    popupButton.className = 'main-menu-item sub-menu-item';
+    popupButton.innerHTML = '설정';
+    popupButton.title = '설정 팝업 열기';
+    
+    popupButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // 팝업 열기
+      chrome.runtime.sendMessage({ action: 'openPopup' });
+      this.closeAllSubMenus();
     });
-    */
+    
+    // 위키 이동 버튼 생성
+    const wikiButton = document.createElement('button');
+    wikiButton.className = 'main-menu-item sub-menu-item';
+    wikiButton.innerHTML = '위키 이동';
+    wikiButton.title = 'Lanis 위키로 이동';
+    
+    wikiButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // 위키 페이지 열기
+      window.open('https://laniswiki.lovestoblog.com/', '_blank');
+      this.closeAllSubMenus();
+    });
+    
+    // 라니스 이동 버튼 생성
+    const lanisButton = document.createElement('button');
+    lanisButton.className = 'main-menu-item sub-menu-item';
+    lanisButton.innerHTML = '라니스 이동';
+    lanisButton.title = 'Lanis 게임으로 이동';
+    
+    lanisButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // 라니스 게임 페이지 열기
+      window.open('https://lanis.me/', '_blank');
+      this.closeAllSubMenus();
+    });
+    
+    container.appendChild(popupButton);
+    container.appendChild(wikiButton);
+    container.appendChild(lanisButton);
   }
 
   closeAllSubMenus() {
-    document.querySelectorAll('.sub-menu-popup').forEach(el => el.remove());
+    const subMenus = document.querySelectorAll('.sub-menu-popup');
+    subMenus.forEach(menu => {
+      menu.remove();
+    });
+    
+    // 외부 클릭 핸들러 제거
     if (this._subMenuOutsideHandler) {
       document.removeEventListener('mousedown', this._subMenuOutsideHandler);
       this._subMenuOutsideHandler = null;
+    }
+  }
+
+  // 아이템 도감 모달 열기
+  openItemGuideModal() {
+    // 기존 모달이 있으면 제거
+    const existingModal = document.getElementById('itemGuideModal');
+    if (existingModal) {
+      existingModal.remove();
+    }
+
+    // 모달 생성
+    const modal = document.createElement('div');
+    modal.id = 'itemGuideModal';
+    modal.className = 'item-guide-modal';
+    modal.innerHTML = `
+      <div class="item-guide-content">
+        <div class="item-guide-header">
+          <h3>아이템 도감</h3>
+          <button class="close-button" onclick="this.closest('.item-guide-modal').remove()">×</button>
+        </div>
+        <div class="item-guide-search">
+          <input type="text" id="itemSearchInput" placeholder="아이템명 검색..." class="search-input">
+          <input type="text" id="abilitySearchInput" placeholder="어빌리티 검색..." class="search-input">
+        </div>
+        <div class="item-guide-attributes">
+          <div class="attribute-title">속성 필터</div>
+          <div class="attribute-buttons">
+            <button class="attribute-btn" data-attribute="물">물</button>
+            <button class="attribute-btn" data-attribute="불">불</button>
+            <button class="attribute-btn" data-attribute="번개">번개</button>
+            <button class="attribute-btn" data-attribute="바람">바람</button>
+            <button class="attribute-btn" data-attribute="별">별</button>
+            <button class="attribute-btn" data-attribute="빛">빛</button>
+            <button class="attribute-btn" data-attribute="어둠">어둠</button>
+          </div>
+        </div>
+        <div class="item-guide-categories">
+          <div class="main-categories">
+            <button class="category-btn main-category active" data-category="">전체</button>
+            <button class="category-btn main-category" data-category="무기">무기</button>
+            <button class="category-btn main-category" data-category="방어구">방어구</button>
+            <button class="category-btn main-category" data-category="장신구">장신구</button>
+          </div>
+          <div class="sub-categories" id="subCategories" style="display: none;">
+            <button class="category-btn sub-category active" data-category="">전체</button>
+            <button class="category-btn sub-category" data-category="검">검</button>
+            <button class="category-btn sub-category" data-category="도끼">도끼</button>
+            <button class="category-btn sub-category" data-category="창">창</button>
+            <button class="category-btn sub-category" data-category="활">활</button>
+            <button class="category-btn sub-category" data-category="너클">너클</button>
+            <button class="category-btn sub-category" data-category="지팡이">지팡이</button>
+            <button class="category-btn sub-category" data-category="나이프">나이프</button>
+            <button class="category-btn sub-category" data-category="미확인">미확인</button>
+          </div>
+        </div>
+        <div class="item-guide-list" id="itemGuideList">
+          <div style="text-align: center; color: #666; padding: 20px;">아이템을 로드하는 중...</div>
+        </div>
+        <div class="item-guide-footer">
+          총 <span id="itemGuideCount">0</span>개 아이템
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    
+    // 모달 외부 클릭 시 닫기 이벤트 추가
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.remove();
+      }
+    });
+    
+    // 아이템 데이터 로드 및 표시
+    this.loadAndDisplayItems();
+    
+    // 검색 및 필터 이벤트 리스너 추가
+    setTimeout(() => {
+      const searchInput = document.getElementById('itemSearchInput');
+      const abilitySearchInput = document.getElementById('abilitySearchInput');
+      
+      if (searchInput) {
+        searchInput.addEventListener('input', () => this.filterItems());
+      }
+      
+      if (abilitySearchInput) {
+        abilitySearchInput.addEventListener('input', () => this.filterItems());
+      }
+      
+      // 속성 버튼 이벤트
+      const attributeButtons = document.querySelectorAll('.attribute-btn');
+      attributeButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          btn.classList.toggle('active');
+          this.filterItems();
+        });
+      });
+      
+      // 메인 카테고리 버튼 이벤트
+      const mainCategories = document.querySelectorAll('.main-category');
+      mainCategories.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          // 활성 상태 변경
+          mainCategories.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          const category = btn.getAttribute('data-category');
+          this.handleMainCategoryChange(category);
+        });
+      });
+      
+      // 서브 카테고리 버튼 이벤트
+      const subCategories = document.querySelectorAll('.sub-category');
+      subCategories.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          // 활성 상태 변경
+          subCategories.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          this.filterItems();
+        });
+      });
+    }, 100);
+  }
+
+  // 아이템 데이터 로드 및 표시
+  async loadAndDisplayItems() {
+    try {
+      const result = await new Promise((resolve) => {
+        chrome.storage.local.get(['rareItems'], resolve);
+      });
+
+      if (result.rareItems && result.rareItems.length > 0) {
+        this.displayItems(result.rareItems);
+      } else {
+        document.getElementById('itemGuideList').innerHTML = 
+          '<div style="text-align: center; color: #666; padding: 20px;">스캔된 아이템이 없습니다.<br>먼저 아이템 데이터를 수집해주세요.</div>';
+        document.getElementById('itemGuideCount').textContent = '0';
+      }
+    } catch (error) {
+      console.error('아이템 데이터 로드 실패:', error);
+      document.getElementById('itemGuideList').innerHTML = 
+        '<div style="text-align: center; color: #666; padding: 20px;">데이터 로드 중 오류가 발생했습니다.</div>';
+    }
+  }
+
+  // 아이템 목록 표시
+  displayItems(items) {
+    const listContainer = document.getElementById('itemGuideList');
+    const countElement = document.getElementById('itemGuideCount');
+    
+    if (!listContainer || !countElement) return;
+
+    // 아이템을 가나다순으로 정렬
+    items.sort((a, b) => {
+      const nameA = (a.name || '').trim();
+      const nameB = (b.name || '').trim();
+      return nameA.localeCompare(nameB, 'ko');
+    });
+
+    let itemsHtml = '';
+    items.forEach((item) => {
+      const itemName = item.name || '알 수 없는 아이템';
+      const powerRange = item.power_min && item.power_max ? `${item.power_min}-${item.power_max}` : 'N/A';
+      const weightRange = item.weight_min && item.weight_max ? `${item.weight_min}-${item.weight_max}` : 'N/A';
+      const weaponType = item.weapon_type || 'N/A';
+      const abilities = item.abilities && item.abilities.length > 0 ? item.abilities.join(', ') : 'N/A';
+      const attributes = item.attributes && item.attributes.length > 0 ? item.attributes.join(', ') : 'N/A';
+      
+      // 타입이 N/A가 아닐 때만 괄호로 표시
+      const typeDisplay = weaponType !== 'N/A' ? ` (${weaponType})` : '';
+      
+      // 카테고리 분류
+      let mainCategory = '';
+      let subCategory = '';
+      
+      if (weaponType !== 'N/A') {
+        const categories = weaponType.split('/');
+        if (categories.length >= 2) {
+          mainCategory = categories[0]; // 첫 번째는 메인 카테고리
+          subCategory = categories[1]; // 두 번째는 서브 카테고리
+        } else {
+          mainCategory = categories[0];
+          // 메인 카테고리가 무기인데 서브카테고리가 없는 경우 "미확인"으로 분류
+          if (mainCategory === '무기') {
+            subCategory = '미확인';
+          }
+        }
+      }
+      
+      // 카테고리별 아이콘 설정
+      let categoryIcon = '⚔️'; // 기본 아이콘
+      
+      if (mainCategory === '무기') {
+        switch(subCategory) {
+          case '검': categoryIcon = '🗡️'; break;
+          case '도끼': categoryIcon = '🪓'; break;
+          case '창': categoryIcon = '🔱'; break;
+          case '활': categoryIcon = '🏹'; break;
+          case '너클': categoryIcon = '🥊'; break;
+          case '지팡이': categoryIcon = '🪄'; break;
+          case '나이프': categoryIcon = '🔪'; break;
+          case '미확인': categoryIcon = '❓'; break;
+          default: categoryIcon = '⚔️';
+        }
+      } else if (mainCategory === '방어구') {
+        categoryIcon = '🛡️';
+      } else if (mainCategory === '장신구') {
+        categoryIcon = '💎';
+      }
+      
+      itemsHtml += `
+        <div class="item-guide-item" data-name="${itemName.toLowerCase()}" data-main-category="${mainCategory.toLowerCase()}" data-sub-category="${subCategory.toLowerCase()}" data-abilities="${abilities.toLowerCase()}" data-attributes="${attributes.toLowerCase()}">
+          <div class="item-name">
+            <span class="item-icon">${categoryIcon}</span>
+            ${itemName}${typeDisplay}
+          </div>
+          <div class="item-stats">위력: ${powerRange} | 무게: ${weightRange}</div>
+          <div class="item-attributes">속성: ${attributes}</div>
+          <div class="item-abilities">어빌리티: ${abilities}</div>
+        </div>
+      `;
+    });
+
+    listContainer.innerHTML = itemsHtml;
+    countElement.textContent = items.length;
+  }
+
+  // 메인 카테고리 변경 처리
+  handleMainCategoryChange(category) {
+    const subCategories = document.getElementById('subCategories');
+    
+    if (category === '무기') {
+      // 무기 카테고리일 때만 서브카테고리 표시
+      subCategories.style.display = 'block';
+      // 서브카테고리 전체 버튼 활성화
+      document.querySelectorAll('.sub-category').forEach(btn => btn.classList.remove('active'));
+      document.querySelector('.sub-category[data-category=""]').classList.add('active');
+    } else {
+      // 다른 카테고리일 때 서브카테고리 숨김
+      subCategories.style.display = 'none';
+    }
+    
+    this.filterItems();
+  }
+
+  // 검색/필터
+  filterItems() {
+    const searchInput = document.getElementById('itemSearchInput');
+    const abilitySearchInput = document.getElementById('abilitySearchInput');
+    const items = document.querySelectorAll('.item-guide-item');
+    
+    if (!searchInput || !abilitySearchInput) return;
+
+    const searchTerm = searchInput.value.toLowerCase();
+    const abilitySearchTerm = abilitySearchInput.value.toLowerCase();
+    const selectedMainCategory = document.querySelector('.main-category.active').getAttribute('data-category');
+    const selectedSubCategory = document.querySelector('.sub-category.active')?.getAttribute('data-category') || '';
+    
+    // 활성화된 속성 버튼들 가져오기
+    const activeAttributes = Array.from(document.querySelectorAll('.attribute-btn.active')).map(btn => 
+      btn.getAttribute('data-attribute').toLowerCase()
+    );
+    
+    let visibleCount = 0;
+
+    items.forEach(item => {
+      const itemName = item.getAttribute('data-name');
+      const itemMainCategory = item.getAttribute('data-main-category');
+      const itemSubCategory = item.getAttribute('data-sub-category');
+      const itemAbilities = item.getAttribute('data-abilities');
+      const itemAttributes = item.getAttribute('data-attributes');
+      
+      const matchesSearch = itemName.includes(searchTerm);
+      const matchesAbility = itemAbilities.includes(abilitySearchTerm);
+      const matchesMainCategory = !selectedMainCategory || itemMainCategory === selectedMainCategory;
+      const matchesSubCategory = !selectedSubCategory || itemSubCategory === selectedSubCategory;
+      
+      // 속성 매칭 (활성화된 속성이 없으면 모든 아이템 표시, 있으면 해당 속성만)
+      const matchesAttribute = activeAttributes.length === 0 || 
+        activeAttributes.some(attr => itemAttributes.includes(attr));
+      
+      if (matchesSearch && matchesAbility && matchesAttribute && matchesMainCategory && matchesSubCategory) {
+        item.style.display = 'block';
+        visibleCount++;
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    // 표시된 아이템 수 업데이트
+    const countElement = document.getElementById('itemGuideCount');
+    if (countElement) {
+      countElement.textContent = visibleCount;
     }
   }
 
@@ -447,6 +793,55 @@ class MenuManager {
 
   openQuickSettingsModal(index) {
     window.lanisHelper.openQuickSettingsModal(index);
+  }
+
+  addNewQuickButton() {
+    console.log('새 퀵버튼 추가');
+    
+    // 새로운 퀵버튼 설정을 위한 기본값
+    const newButton = {
+      keyword: `퀵${this.quickButtons.length + 1}`,
+      name: `새 퀵버튼 ${this.quickButtons.length + 1}`,
+      searchType: 'item',
+      searchValue: ''
+    };
+    
+    // 배열에 추가
+    this.quickButtons.push(newButton);
+    
+    // 로컬 스토리지 업데이트
+    try {
+      localStorage.setItem('lanisHelperQuickButtons', JSON.stringify(this.quickButtons));
+      console.log('새 퀵버튼 추가 완료:', this.quickButtons);
+    } catch (error) {
+      console.error('새 퀵버튼 추가 실패:', error);
+    }
+    
+    // 설정 모달 열기
+    this.openQuickSettingsModal(this.quickButtons.length - 1);
+  }
+
+  deleteQuickButton(index) {
+    console.log(`퀵${index + 1} 삭제`);
+    
+    // 확인 메시지
+    if (!confirm(`퀵버튼 "${this.quickButtons[index]?.keyword || `퀵${index + 1}`}"을(를) 삭제하시겠습니까?`)) {
+      return;
+    }
+    
+    // 배열에서 제거
+    this.quickButtons.splice(index, 1);
+    
+    // 로컬 스토리지 업데이트
+    try {
+      localStorage.setItem('lanisHelperQuickButtons', JSON.stringify(this.quickButtons));
+      console.log('퀵버튼 삭제 완료:', this.quickButtons);
+    } catch (error) {
+      console.error('퀵버튼 삭제 실패:', error);
+    }
+    
+    // 서브메뉴 닫기
+    this.closeAllSubMenus();
   }
 
   resetQuickButton(index) {

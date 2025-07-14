@@ -210,6 +210,16 @@
   transition: all 0.1s ease;
 }
 
+.main-menu-item.sub-menu-item {
+  font-size: 15px;
+  font-family: inherit;
+  height: 44px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .main-menu-row {
   display: flex;
   flex-direction: row;
@@ -924,19 +934,305 @@
   transform: translateY(0) scale(1);
 } 
 
-.main-menu-item.sub-menu-item {
-  font-size: 0.6rem !important;
+/* 퀵버튼 그룹 스타일 */
+.quick-button-group {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  height: 44px;
+  width: 200px;
+  margin-bottom: 10px;
+  padding: 0 0 0 16px;
+  gap: 8px;
 }
 
-.reset-btn {
+.quick-button-group .main-menu-item {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  flex: 1;
+  text-align: left;
+  font-size: 15px;
+  color: #222;
+  height: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 16px 0 0 16px;
+}
+
+.quick-button-group .delete-btn,
+button.delete-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  min-width: 60px;
+  height: 44px;
+  font-size: 15px;
+  border-radius: 0 16px 16px 0;
+  margin: 0;
   background: linear-gradient(135deg, #ef4444, #dc2626) !important;
-  border-color: rgba(239, 68, 68, 0.5) !important;
-  color: white !important;
+  background-color: #ef4444 !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: none !important;
+  position: relative !important;
+  z-index: 10000 !important;
+  pointer-events: auto !important;
 }
 
-.reset-btn:hover {
-  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
-  color: white !important;
-  border-color: rgba(239, 68, 68, 0.7) !important;
-  transform: translateY(-1px) scale(1.02);
+.delete-btn:hover,
+.delete-btn:focus,
+.delete-btn:active {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: #fff !important;
+}
+
+.add-btn {
+  width: 200px;
+  height: 44px;
+  border-radius: 16px;
+  font-size: 15px;
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: #fff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  margin-bottom: 10px;
+  border: none !important;
+}
+
+.add-btn:hover {
+  background: linear-gradient(135deg, #059669, #047857) !important;
+  color: #fff !important;
+} 
+
+/* 아이템 도감 모달 스타일 */
+.item-guide-modal {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.5);
+  z-index: 10010;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.item-guide-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 16px 16px 16px;
+  width: 90vw;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  position: relative;
+  box-sizing: border-box;
+}
+.item-guide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.item-guide-header h3 {
+  margin: 0;
+  font-size: 1.2em;
+  color: #333;
+}
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  color: #888;
+  cursor: pointer;
+}
+.item-guide-search {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+.item-guide-attributes {
+  margin-bottom: 12px;
+}
+.attribute-title {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+  text-align: center;
+}
+.attribute-buttons {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.attribute-btn {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #f8f9fa;
+  color: #666;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  white-space: nowrap;
+  min-width: 0;
+  flex-shrink: 0;
+}
+.attribute-btn:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+.attribute-btn.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+.item-guide-categories {
+  margin-bottom: 12px;
+}
+.main-categories, .sub-categories {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.category-btn {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  background: #f8f9fa;
+  color: #666;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  white-space: nowrap;
+  min-width: 0;
+  flex-shrink: 0;
+}
+.category-btn:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+.category-btn.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+.sub-categories {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+}
+.item-guide-list {
+  margin-bottom: 10px;
+}
+.item-guide-item {
+  background: #f9f9f9;
+  border-radius: 7px;
+  padding: 8px 10px;
+  margin-bottom: 7px;
+  border: 1px solid #eee;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.item-name {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 2px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.item-icon {
+  font-size: 1.1em;
+  flex-shrink: 0;
+}
+.item-stats {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 2px;
+}
+.item-abilities {
+  font-size: 10px;
+  color: #888;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.item-attributes {
+  font-size: 10px;
+  color: #666;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.item-guide-footer {
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+}
+
+/* 위키 이동 버튼 스타일 */
+.main-menu-item.sub-menu-item[title="Lanis 위키로 이동"] {
+  background: linear-gradient(135deg, #a8e6cf 0%, #88d8c0 100%);
+  color: #2d5a3d;
+  border: 1px solid rgba(168, 230, 207, 0.5);
+  box-shadow: 
+    0 4px 16px rgba(168, 230, 207, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.main-menu-item.sub-menu-item[title="Lanis 위키로 이동"]:hover {
+  background: linear-gradient(135deg, #9dd5c4 0%, #7bc8b8 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 8px 24px rgba(168, 230, 207, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* 라니스 이동 버튼 스타일 */
+.main-menu-item.sub-menu-item[title="Lanis 게임으로 이동"] {
+  background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+  color: #ffd700;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 
+    0 4px 16px rgba(255, 215, 0, 0.2),
+    inset 0 1px 0 rgba(255, 215, 0, 0.1);
+}
+
+.main-menu-item.sub-menu-item[title="Lanis 게임으로 이동"]:hover {
+  background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+  color: #ffed4e;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 8px 24px rgba(255, 215, 0, 0.3),
+    inset 0 1px 0 rgba(255, 215, 0, 0.2);
+} 
+
+.quick-button-group .delete-btn,
+button.delete-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  background-color: #ef4444 !important;
+  color: #fff !important;
 } 
