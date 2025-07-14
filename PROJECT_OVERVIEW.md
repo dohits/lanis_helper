@@ -1,260 +1,113 @@
-# Lanis Helper - 프로젝트 개요
+# Lanis Helper 프로젝트 개요
 
-## 📋 프로젝트 소개
+## 프로젝트 구조
 
-Lanis Helper는 Lanis 채팅 플랫폼과 위키에서 사용자 경험을 향상시키는 크롬 확장프로그램입니다. 사용자 이름 클릭을 통한 프로필 페이지 이동, 레어 아이템 데이터 수집 등 다양한 기능을 제공하며, 각 기능을 개별적으로 on/off할 수 있는 설정 시스템을 포함합니다.
+### 핵심 파일들
+- `manifest.json`: 확장프로그램 설정 및 권한 관리
+- `content.js`: 메인 초기화 및 모듈 관리
+- `popup.js`: 팝업 UI 제어 및 데이터 수집 트리거
+- `background.js`: 백그라운드 서비스 (현재는 기본 구조만 유지)
 
-## 🏗️ 프로젝트 구조
+### 기능별 모듈들
+- `menu-manager.js`: 퀵버튼 메뉴 시스템 관리
+- `search-engine.js`: 아이템 검색 및 데이터 수집 엔진
+- `item-stats.js`: 아이템 스탯 표시 및 처리
+- `settings-modal.js`: 설정 모달 UI 관리
+- `user-profile.js`: 사용자 프로필 링크 생성
 
-```
-lanis_helper/
-├── manifest.json          # 확장프로그램 설정 파일
-├── popup.html             # 설정 창 UI
-├── popup.js               # 설정 창 제어 로직
-├── content.js             # 메인 기능 로직 (페이지 주입)
-├── popup.css              # 스타일시트
-├── img/                   # 아이콘 이미지
-│   ├── lanis16.png
-│   └── lanis128.png
-├── README.md              # 사용자용 문서
-└── PROJECT_OVERVIEW.md    # 개발자용 문서 (현재 파일)
-```
+### UI/스타일 파일들
+- `popup.html`: 팝업 UI 구조
+- `popup.css`: 팝업 스타일
+- `styles.css`: 메인 스타일시트
+- `menu-config.json`: 메뉴 설정 데이터
 
-## 🔧 기술 스택
+### 데이터 파일들
+- `rare-items.json`: 희귀 아이템 데이터 캐시
+- `hongbo.md`: 개발 참고 문서
 
-- **Manifest Version**: 3 (최신 Chrome 확장프로그램 표준)
-- **언어**: JavaScript (ES6+)
-- **스타일**: CSS3
-- **마크업**: HTML5
-- **브라우저 지원**: Chrome, Mises (모바일)
+## 주요 기능
 
-## 📁 파일별 역할
+### 1. 아이템 데이터 수집
+- **구현 위치**: `search-engine.js`의 `collectRareItems()` 메서드
+- **데이터 소스**: Lanis 위키 API (https://laniswiki.lovestoblog.com/api.php)
+- **수집 방식**: 
+  - MediaWiki API를 통한 레어 아이템 분류 페이지 크롤링
+  - 배치 처리 (50개씩)로 성능 최적화
+  - 구버전과 동일한 단순한 fetch 호출 방식 사용
+- **저장 위치**: `chrome.storage.local`의 `rareItems` 키
+- **캐시 관리**: 마지막 수집 시간 및 수집 횟수 추적
 
-### 1. manifest.json
-**역할**: 확장프로그램의 메타데이터와 권한 설정
+### 2. 아이템 스탯 표시
+- **구현 위치**: `item-stats.js`의 `ItemStatsManager` 클래스
+- **표시 방식**: 
+  - 구버전과 동일한 CSS 선택자 사용
+  - 등급별 색상 표시 (일반/고급/희귀/전설/신화)
+  - 실시간 DOM 변경 감지 및 자동 재처리
+- **설정 연동**: `showItemStats` 설정에 따라 활성화/비활성화
 
-**주요 설정**:
-- `manifest_version`: 3
-- `permissions`: storage, tabs
-- `action`: 확장프로그램 아이콘 클릭 시 popup.html 표시
-- `content_scripts`: 모든 웹페이지에 content.js 주입
+### 3. 사용자 프로필 링크
+- **구현 위치**: `user-profile.js`의 `UserProfileManager` 클래스
+- **기능**: 
+  - 채팅 메시지 내 사용자명을 클릭 가능한 링크로 변환
+  - 골드색 스타일 및 밑줄 적용
+  - 동적 콘텐츠 자동 감지 및 처리
 
-### 2. popup.html
-**역할**: 확장프로그램 설정 창 UI
+### 4. 퀵버튼 메뉴
+- **구현 위치**: `menu-manager.js`의 `MenuManager` 클래스
+- **기능**: 
+  - 거래소 퀵검색 버튼 생성 및 관리
+  - 동적 퀵버튼 추가/삭제 기능
+  - 설정 토글 기능
+  - 사용자 정의 퀵버튼 저장/로드
+- **메뉴 구조**: 
+  - 메인 버튼 → 거래소 버튼 → 퀵버튼 목록 + 추가 버튼
+  - 각 퀵버튼마다 삭제 버튼 제공
+  - "+ 추가" 버튼으로 새로운 퀵버튼 생성
 
-**구조**:
-- 헤더: "Lanis Helper 설정"
-- 기능별 토글 스위치
-- 각 기능에 대한 설명
-- 크롤링 섹션: "레어 아이템 데이터 수집" 버튼
+## 기술적 특징
 
-### 3. popup.js
-**역할**: 설정 창의 기능 제어 및 설정 저장
+### 모듈 로딩 시스템
+- **안정성 개선**: DOM 로드 상태 확인 후 모듈 인스턴스 생성
+- **대기 시간**: 최대 10초까지 모듈 로딩 대기
+- **재시도 로직**: 초기화 실패 시 5초 후 자동 재시도
+- **동시 로딩**: Promise.all을 사용한 모든 모듈 동시 대기
 
-**주요 함수**:
-- `loadSettings()`: 저장된 설정 로드
-- `saveSettings()`: 설정 변경 시 저장 및 현재 탭에 알림
-- `startCrawling()`: 크롤링 기능 시작
+### 보안 및 권한
+- **최소 권한 원칙**: 필요한 사이트만 접근 허용
+- **CSP 대응**: 인라인 스크립트 대신 외부 스크립트 태그 사용
+- **API 호출**: 구버전과 동일한 단순한 fetch 방식으로 보안 검증 최소화
 
-### 4. content.js
-**역할**: 웹페이지에 주입되어 실제 기능을 수행하는 메인 로직
+### 성능 최적화
+- **배치 처리**: 아이템 데이터 수집 시 50개씩 처리
+- **캐시 활용**: 기존 데이터 확인 후 불필요한 재수집 방지
+- **지연 로딩**: DOM 변경 감지를 통한 필요시에만 처리
 
-**주요 기능**:
-- 사용자 프로필 링크 기능
-- 레어 아이템 크롤링 기능
-- 설정 기반 기능 제어
-- 동적 콘텐츠 처리 (MutationObserver)
+## 설정 시스템
 
-### 5. popup.css
-**역할**: 사용자 이름 클릭 스타일 및 UI 스타일 정의
+### 저장 방식
+- **사용자 설정**: `chrome.storage.sync` 사용 (동기화)
+- **로컬 데이터**: `chrome.storage.local` 사용 (아이템 데이터)
+- **세션 데이터**: `localStorage` 사용 (퀵버튼 설정)
 
-## 🚀 주요 기능
+### 주요 설정 항목
+- `profileLink`: 사용자 프로필 링크 활성화
+- `showItemStats`: 아이템 스탯 표시 활성화
+- `quickButtons`: 퀵버튼 메뉴 활성화
+- `feature2`, `feature3`: 향후 기능을 위한 예약 설정
 
-### 1. 사용자 프로필 링크 기능
-- **감지 대상**: `li[id^="message-"]` 구조의 메시지
-- **처리 로직**: 
-  1. 첫 번째 `span` 요소를 사용자 이름으로 인식
-  2. 콜론(`:`) 이전 부분만 추출
-  3. 클릭 시 `https://lanis.me/users/사용자이름`으로 이동
-- **시각적 피드백**: 파란색 텍스트, 밑줄, 포인터 커서
+## 개발 참고사항
 
-### 2. 레어 아이템 크롤링 기능
-- **동작 방식**: Lanis 위키 페이지에서 레어 아이템 정보 자동 수집
-- **데이터 저장**: Chrome 로컬 스토리지에 JSON 형태로 저장
-- **서버 부하 방지**: 200ms 지연으로 안전한 크롤링
+### 구버전 호환성
+- 모든 기능이 구버전과 동일한 방식으로 작동
+- CSS 선택자 및 DOM 구조 유지
+- API 호출 방식 및 데이터 처리 로직 동일
 
-### 3. 설정 시스템
-- **저장 방식**: Chrome Sync Storage
-- **실시간 적용**: 설정 변경 시 즉시 반영
-- **개별 제어**: 각 기능을 독립적으로 on/off 가능
+### 디버깅
+- 상세한 콘솔 로그 제공
+- 모듈 로딩 상태 추적
+- 오류 발생 시 재시도 로직 포함
 
-## 🔄 메시지 전달 시스템
-
-```javascript
-// popup.js → content.js
-chrome.tabs.sendMessage(tabId, {
-  action: 'settingsChanged',
-  settings: settings
-});
-
-// content.js에서 수신
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.action === 'settingsChanged') {
-    // 설정 처리
-  }
-});
-```
-
-## 💾 데이터 저장 구조
-
-### 설정 데이터 (Chrome Sync Storage)
-```javascript
-{
-  profileLink: true,    // 사용자 프로필 링크 기능
-  feature2: false,      // 향후 추가될 기능
-  feature3: false       // 향후 추가될 기능
-}
-```
-
-### 크롤링 데이터 (Chrome Local Storage)
-```javascript
-[
-  {
-    "name": "아이템명",
-    "power_min": 10,
-    "power_max": 15,
-    "weight_min": 5,
-    "weight_max": 8
-  }
-]
-```
-
-## 🎯 개발 가이드
-
-### 새 기능 추가 방법
-
-#### 1. 설정 UI 추가 (popup.html)
-```html
-<div class="feature-item">
-  <div>
-    <div class="feature-name">새 기능명</div>
-    <div class="description">기능 설명</div>
-  </div>
-  <label class="toggle-switch">
-    <input type="checkbox" id="newFeature">
-    <span class="slider"></span>
-  </label>
-</div>
-```
-
-#### 2. 설정 로직 추가 (popup.js)
-```javascript
-// 이벤트 리스너
-document.getElementById('newFeature').addEventListener('change', saveSettings);
-
-// 설정 로드에 추가
-chrome.storage.sync.get({
-  profileLink: true,
-  newFeature: false  // 새 기능
-}, function(items) {
-  document.getElementById('newFeature').checked = items.newFeature;
-});
-
-// 설정 저장에 추가
-const settings = {
-  profileLink: document.getElementById('profileLink').checked,
-  newFeature: document.getElementById('newFeature').checked  // 새 기능
-};
-```
-
-#### 3. 기능 로직 추가 (content.js)
-```javascript
-// 설정에 새 기능 추가
-let settings = {
-  profileLink: true,
-  newFeature: false  // 새 기능
-};
-
-// 새 기능 함수 추가
-function processNewFeature() {
-  // 기능 로직
-}
-
-// 기능 제거 함수
-function removeNewFeature() {
-  // 기능 제거 로직
-}
-
-// 설정 변경 시 새 기능 처리
-if (settings.newFeature) {
-  processNewFeature();
-} else {
-  removeNewFeature();
-}
-```
-
-## 🔍 디버깅 방법
-
-### 1. 콘솔 로그 확인
-- F12 → Console 탭에서 오류 및 로그 확인
-- `console.log()` 추가하여 디버깅
-
-### 2. 확장프로그램 디버깅
-- `chrome://extensions/` → 개발자 모드 활성화
-- 확장프로그램의 "검사" 버튼으로 popup 디버깅
-
-### 3. Content Script 디버깅
-- 웹페이지에서 F12 → Console 탭
-- content.js의 로그 및 오류 확인
-
-### 4. 크롤링 데이터 확인
-- Chrome 개발자 도구 → Application → Storage → Local Storage
-- `rareItems` 키에서 수집된 데이터 확인
-
-## 🐛 알려진 이슈 및 해결방법
-
-### 1. "Could not establish connection" 오류
-**원인**: content script가 로드되지 않은 탭에서 메시지 전송 시도
-**해결**: popup.js에 오류 처리 추가 (이미 해결됨)
-
-### 2. 설정이 적용되지 않는 경우
-**원인**: 페이지 새로고침 필요
-**해결**: F5로 페이지 새로고침
-
-### 3. 사용자 이름이 인식되지 않는 경우
-**원인**: DOM 구조 변경
-**해결**: content.js의 셀렉터 수정 필요
-
-### 4. 크롤링이 작동하지 않는 경우
-**원인**: Lanis 위키 페이지가 아닌 곳에서 실행
-**해결**: 올바른 위키 페이지에서 실행
-
-## 📝 업데이트 로그
-
-### v1.0 (현재 버전)
-- ✅ 사용자 프로필 링크 기능 구현
-- ✅ 설정 시스템 구현
-- ✅ 실시간 설정 적용
-- ✅ 오류 처리 추가
-- ✅ 모바일 호환성 고려
-- ✅ 레어 아이템 크롤링 기능 통합
-- ✅ Chrome 로컬 스토리지 저장 기능
-
-### 향후 계획
-- [ ] 기능 2 구현
-- [ ] 기능 3 구현
-- [ ] 성능 최적화
-- [ ] 추가 설정 옵션
-- [ ] 크롤링 데이터 내보내기 기능
-
-## 🤝 기여 방법
-
-1. 이슈 리포트: 버그 발견 시 상세한 설명과 함께 리포트
-2. 기능 제안: 새로운 기능 아이디어 제안
-3. 코드 개선: 성능 최적화 및 코드 품질 개선
-
----
-
-**마지막 업데이트**: 2025년 1월
-**버전**: 1.0
-**개발자**: 도희님 
+### 확장성
+- 모듈화된 구조로 새로운 기능 추가 용이
+- 설정 시스템을 통한 기능 활성화/비활성화
+- API 기반 데이터 수집으로 최신 정보 유지 
