@@ -1,11 +1,9 @@
 // 메뉴 관리자
 class MenuManager {
   constructor() {
-    console.log('MenuManager 생성자 호출됨');
     this.menuConfig = null;
     this.settings = {};
     this.quickButtons = [];
-    console.log('MenuManager 생성자 완료');
     // init()은 외부에서 호출하도록 변경
   }
 
@@ -21,9 +19,7 @@ class MenuManager {
     try {
       const response = await fetch(chrome.runtime.getURL('menu-config.json'));
       this.menuConfig = await response.json();
-      console.log('메뉴 설정 로드 완료:', this.menuConfig);
     } catch (error) {
-      console.error('메뉴 설정 로드 실패:', error);
       // 기본 설정 사용
       this.menuConfig = {
         mainMenu: {
@@ -51,10 +47,8 @@ class MenuManager {
         showItemStats: true  // 구버전 방식으로 변경
       }, (items) => {
         this.settings = items;
-        console.log('설정 로드 완료:', this.settings);
       });
     } catch (error) {
-      console.error('설정 로드 실패:', error);
       this.settings = { 
         profileLink: true, 
         feature2: false, 
@@ -68,9 +62,7 @@ class MenuManager {
     try {
       const savedQuickButtons = localStorage.getItem('lanisHelperQuickButtons');
       this.quickButtons = savedQuickButtons ? JSON.parse(savedQuickButtons) : [];
-      console.log('퀵버튼 로드 완료:', this.quickButtons);
     } catch (error) {
-      console.error('퀵버튼 로드 실패:', error);
       this.quickButtons = [];
     }
   }
@@ -174,7 +166,6 @@ class MenuManager {
   }
 
   toggleExchangeSubMenu(item) {
-    console.log('거래소 서브메뉴 토글');
     const subMenuContainer = document.querySelector('.sub-menu-container');
     if (!subMenuContainer) return;
     
@@ -182,17 +173,14 @@ class MenuManager {
     
     if (isOpen) {
       subMenuContainer.classList.remove('show');
-      console.log('거래소 서브메뉴 닫기');
     } else {
       this.closeAllSubMenus();
       this.createQuickButtonsSubMenu(subMenuContainer);
       subMenuContainer.classList.add('show');
-      console.log('거래소 서브메뉴 열기');
     }
   }
 
   toggleSettingsSubMenu(item) {
-    console.log('설정 서브메뉴 토글');
     const subMenuContainer = document.querySelector('.sub-menu-container');
     if (!subMenuContainer) return;
     
@@ -200,12 +188,10 @@ class MenuManager {
     
     if (isOpen) {
       subMenuContainer.classList.remove('show');
-      console.log('설정 서브메뉴 닫기');
     } else {
       this.closeAllSubMenus();
       this.createSettingsSubMenu(subMenuContainer);
       subMenuContainer.classList.add('show');
-      console.log('설정 서브메뉴 열기');
     }
   }
 
@@ -483,7 +469,6 @@ class MenuManager {
         document.getElementById('itemGuideCount').textContent = '0';
       }
     } catch (error) {
-      console.error('아이템 데이터 로드 실패:', error);
       document.getElementById('itemGuideList').innerHTML = 
         '<div style="text-align: center; color: #666; padding: 20px;">데이터 로드 중 오류가 발생했습니다.</div>';
     }
@@ -652,16 +637,13 @@ class MenuManager {
   }
 
   toggleSetting(settingId) {
-    console.log('설정 토글:', settingId);
     this.settings[settingId] = !this.settings[settingId];
     
     // 구버전 방식으로 chrome.storage.sync에 저장
     try {
       chrome.storage.sync.set(this.settings, () => {
-        console.log('설정 저장 완료:', this.settings);
       });
     } catch (error) {
-      console.error('설정 저장 실패:', error);
     }
     
     // 설정에 따른 기능 실행
@@ -697,28 +679,23 @@ class MenuManager {
   }
 
   handleQuickButtonClick(index) {
-    console.log('퀵버튼 클릭:', index);
     
     // 퀵버튼이 설정되지 않았거나 빈 객체인 경우 설정창 열기
     if (!this.quickButtons[index] || Object.keys(this.quickButtons[index]).length === 0) {
-      console.log('퀵버튼이 설정되지 않음, 설정창 열기');
       this.openQuickSettingsModal(index);
       return;
     }
     
     // 퀵버튼이 설정된 경우 바로 실행
-    console.log('퀵버튼 바로 실행:', this.quickButtons[index]);
     window.lanisHelper.executeQuickSearch(this.quickButtons[index], index);
   }
 
   showQuickButtonOptions(index) {
-    console.log('퀵버튼 옵션 표시 시작', index);
     
     this.removeQuickButtonOptions();
     
     const button = document.querySelector(`.sub-menu-popup .main-menu-item:nth-child(${index + 1})`);
     if (!button) {
-      console.log('퀵버튼을 찾을 수 없음');
       return;
     }
     
@@ -741,7 +718,6 @@ class MenuManager {
     moveButton.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log('이동 버튼 클릭됨', index);
       window.lanisHelper.executeQuickSearch(this.quickButtons[index], index);
       this.removeQuickButtonOptions();
     });
@@ -756,7 +732,6 @@ class MenuManager {
     resetButton.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log('재설정 버튼 클릭됨', index);
       window.lanisHelper.openQuickSettingsModal(index);
       this.removeQuickButtonOptions();
     });
@@ -765,7 +740,6 @@ class MenuManager {
     optionsContainer.appendChild(resetButton);
     
     document.body.appendChild(optionsContainer);
-    console.log('옵션 컨테이너 추가 완료', optionsContainer);
     
     optionsContainer.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -779,7 +753,6 @@ class MenuManager {
   closeOptionsOnOutsideClick(event) {
     const optionsContainer = document.querySelector('.quick-button-options');
     if (optionsContainer && !optionsContainer.contains(event.target)) {
-      console.log('외부 클릭으로 옵션 닫기');
       this.removeQuickButtonOptions();
     }
   }
@@ -796,7 +769,6 @@ class MenuManager {
   }
 
   addNewQuickButton() {
-    console.log('새 퀵버튼 추가');
     
     // 새로운 퀵버튼 설정을 위한 기본값
     const newButton = {
@@ -812,9 +784,7 @@ class MenuManager {
     // 로컬 스토리지 업데이트
     try {
       localStorage.setItem('lanisHelperQuickButtons', JSON.stringify(this.quickButtons));
-      console.log('새 퀵버튼 추가 완료:', this.quickButtons);
     } catch (error) {
-      console.error('새 퀵버튼 추가 실패:', error);
     }
     
     // 설정 모달 열기
@@ -822,7 +792,6 @@ class MenuManager {
   }
 
   deleteQuickButton(index) {
-    console.log(`퀵${index + 1} 삭제`);
     
     // 확인 메시지
     if (!confirm(`퀵버튼 "${this.quickButtons[index]?.keyword || `퀵${index + 1}`}"을(를) 삭제하시겠습니까?`)) {
@@ -835,9 +804,7 @@ class MenuManager {
     // 로컬 스토리지 업데이트
     try {
       localStorage.setItem('lanisHelperQuickButtons', JSON.stringify(this.quickButtons));
-      console.log('퀵버튼 삭제 완료:', this.quickButtons);
     } catch (error) {
-      console.error('퀵버튼 삭제 실패:', error);
     }
     
     // 서브메뉴 닫기
@@ -845,15 +812,12 @@ class MenuManager {
   }
 
   resetQuickButton(index) {
-    console.log(`퀵${index + 1} 리셋`);
     // 퀵버튼 설정 제거
     this.quickButtons[index] = {};
     // 로컬 스토리지 업데이트
     try {
       localStorage.setItem('lanisHelperQuickButtons', JSON.stringify(this.quickButtons));
-      console.log('퀵버튼 리셋 완료:', this.quickButtons);
     } catch (error) {
-      console.error('퀵버튼 리셋 실패:', error);
     }
     // 서브메뉴 닫기
     this.closeAllSubMenus();
@@ -872,9 +836,7 @@ class MenuManager {
     this.quickButtons = quickButtons;
     try {
       localStorage.setItem('lanisHelperQuickButtons', JSON.stringify(this.quickButtons));
-      console.log('퀵버튼 업데이트 완료:', this.quickButtons);
     } catch (error) {
-      console.error('퀵버튼 업데이트 실패:', error);
     }
   }
 }

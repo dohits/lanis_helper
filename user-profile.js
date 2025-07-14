@@ -5,19 +5,16 @@ class UserProfileManager {
   }
 
   init() {
-    console.log('사용자 프로필 관리자 초기화');
     this.processUserNames();
     this.startDynamicContentObserver();
   }
 
   processUserNames() {
     if (this.isProcessing) {
-      console.log('이미 처리 중입니다.');
       return;
     }
 
     this.isProcessing = true;
-    console.log('사용자명 처리 시작');
 
     try {
       // 구버전 방식: li 태그들을 찾아서 사용자 이름 처리
@@ -56,7 +53,6 @@ class UserProfileManager {
         li.classList.add('username-processed');
       });
 
-      console.log('사용자명 처리 완료');
     } catch (error) {
       console.error('사용자명 처리 중 오류:', error);
     } finally {
@@ -93,11 +89,9 @@ class UserProfileManager {
       subtree: true
     });
 
-    console.log('동적 콘텐츠 관찰 시작');
   }
 
   removeUserNames() {
-    console.log('사용자명 링크 제거 시작');
     
     try {
       // 구버전 방식: 클릭 가능한 요소들 제거
@@ -115,7 +109,6 @@ class UserProfileManager {
         element.classList.remove('username-processed');
       });
       
-      console.log('사용자명 링크 제거 완료');
     } catch (error) {
       console.error('사용자명 링크 제거 중 오류:', error);
     }

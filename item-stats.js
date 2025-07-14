@@ -7,7 +7,6 @@ class ItemStatsManager {
   }
 
   async init() {
-    console.log('ItemStatsManager 초기화 시작');
     
     // 설정 로드 (구버전 방식)
     this.loadSettings();
@@ -17,7 +16,6 @@ class ItemStatsManager {
     // 동적 콘텐츠 감지 시작 (구버전 방식)
     this.startDynamicContentDetection();
     
-    console.log('ItemStatsManager 초기화 완료');
   }
 
   // 설정 로드 (구버전 방식)
@@ -26,7 +24,6 @@ class ItemStatsManager {
       showItemStats: true
     }, (items) => {
       this.settings = items;
-      console.log('ItemStatsManager 설정 로드:', this.settings);
     });
   }
 
@@ -37,11 +34,9 @@ class ItemStatsManager {
         chrome.storage.local.get(['rareItems'], (result) => {
           if (result.rareItems && result.rareItems.length > 0) {
             this.rareItemsData = result.rareItems;
-            console.log('희귀 아이템 데이터 로드 완료:', this.rareItemsData.length);
             // 구버전 방식: 데이터 로드 후 즉시 처리 실행
             this.processItemStats();
           } else {
-            console.log('희귀 아이템 데이터가 없습니다.');
             this.rareItemsData = [];
           }
           resolve();
@@ -56,20 +51,14 @@ class ItemStatsManager {
   processItemStats() {
     // 구버전 방식: 설정 확인
     if (!this.settings.showItemStats || !this.rareItemsData || this.rareItemsData.length === 0) {
-      console.log('아이템 스탯 처리 건너뛰기:', {
-        showItemStats: this.settings.showItemStats,
-        dataLength: this.rareItemsData ? this.rareItemsData.length : 0
-      });
       return;
     }
 
     if (this.isProcessing) {
-      console.log('이미 처리 중입니다.');
       return;
     }
 
     this.isProcessing = true;
-    console.log('아이템 스탯 처리 시작');
 
     try {
       // 정확한 아이템 컨테이너 구조 찾기 (css-38zrbw)
@@ -77,8 +66,6 @@ class ItemStatsManager {
       
       let foundContainers = 0;
       let matchedItems = 0;
-      
-      console.log('찾은 아이템 컨테이너 개수:', itemContainers.length);
       
       itemContainers.forEach(container => {
         // 이미 처리된 컨테이너는 건너뛰기
@@ -88,13 +75,11 @@ class ItemStatsManager {
         const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2');
         
         if (!itemNameElement) {
-          console.log('컨테이너에서 아이템명 요소를 찾을 수 없음');
           return;
         }
         
         const text = itemNameElement.textContent.trim();
         if (!text || text.length < 2 || text.length > 50) {
-          console.log('아이템명이 유효하지 않음:', text);
           return; // 너무 짧거나 긴 텍스트 제외
         }
         
@@ -113,7 +98,6 @@ class ItemStatsManager {
         
         if (itemData) {
           matchedItems++;
-          console.log('아이템 매칭 성공:', cleanItemName, itemData);
           
           // 해당 아이템의 위력과 무게 값 옆에 범위 정보 추가
           this.addRangeInfoToStats(container, itemData);
@@ -125,11 +109,8 @@ class ItemStatsManager {
         foundContainers++;
       });
       
-      console.log(`아이템 스탯 처리 완료: ${foundContainers}개 컨테이너 검사, ${matchedItems}개 매칭`);
-      
       // 매칭이 적으면 더 넓은 범위로 검색 (제거됨 - 정확한 구조에서만 처리)
       if (matchedItems === 0 && foundContainers > 0) {
-        console.log('정확한 구조에서 매칭된 아이템이 없습니다. 더 넓은 범위 검색은 비활성화되었습니다.');
       }
       
     } catch (error) {
@@ -306,7 +287,6 @@ class ItemStatsManager {
 
   // 더 넓은 범위에서 아이템 검색 (비활성화됨 - 정확한 구조에서만 처리)
   searchInWiderRange() {
-    console.log('더 넓은 범위 검색은 비활성화되었습니다. 정확한 아이템 컨테이너 구조에서만 처리됩니다.');
     return;
   }
 
@@ -343,11 +323,9 @@ class ItemStatsManager {
       subtree: true
     });
     
-    console.log('동적 콘텐츠 감지 시작');
   }
 
   removeItemStats() {
-    console.log('아이템 스탯 제거 시작');
     
     // 기존 아이템명 옆 스탯 정보 제거
     const statsElements = document.querySelectorAll('.item-stats-info');
@@ -391,7 +369,6 @@ class ItemStatsManager {
       element.classList.remove('item-stats-processed', 'power-range-processed', 'weight-range-processed');
     });
     
-    console.log('아이템 스탯 제거 완료');
   }
 
   getRareItemsData() {
@@ -404,21 +381,12 @@ class ItemStatsManager {
 }
 
 // 전역 인스턴스 생성 (개선된 버전)
-console.log('ItemStatsManager 클래스 정의 완료');
-console.log('ItemStatsManager 인스턴스 생성 시작');
-console.log('현재 window 객체:', Object.keys(window).filter(key => key.includes('Manager') || key.includes('Engine')));
 
 // DOM이 준비된 후에 인스턴스 생성
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM 로드 완료 - ItemStatsManager 인스턴스 생성');
     window.itemStatsManager = new ItemStatsManager();
-    console.log('ItemStatsManager 인스턴스 생성 완료:', window.itemStatsManager);
-    console.log('생성 후 window 객체:', Object.keys(window).filter(key => key.includes('Manager') || key.includes('Engine')));
   });
 } else {
-  console.log('DOM 이미 로드됨 - ItemStatsManager 인스턴스 즉시 생성');
   window.itemStatsManager = new ItemStatsManager();
-  console.log('ItemStatsManager 인스턴스 생성 완료:', window.itemStatsManager);
-  console.log('생성 후 window 객체:', Object.keys(window).filter(key => key.includes('Manager') || key.includes('Engine')));
 } 

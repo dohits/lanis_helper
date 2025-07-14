@@ -5,11 +5,9 @@ class SettingsModalManager {
   }
 
   init() {
-    console.log('설정 모달 관리자 초기화');
   }
 
   openQuickSettingsModal(index) {
-    console.log('퀵버튼 설정 모달 열기', index);
     
     // 기존 모달 제거
     this.closeQuickSettingsModal();
@@ -127,8 +125,6 @@ class SettingsModalManager {
         this.closeQuickSettingsModal();
       }
     });
-    
-    console.log('퀵버튼 설정 모달 생성 완료');
   }
 
   createFormGroup(labelText, inputType, placeholder, fieldName) {
@@ -231,8 +227,6 @@ class SettingsModalManager {
   saveQuickButton() {
     if (this.currentModalIndex === null) return;
     
-    console.log('퀵버튼 저장:', this.currentModalIndex);
-    
     // 폼 데이터 수집
     const formData = {};
     const fields = ['keyword', 'category', 'bidPrice', 'buyPrice', 'power', 'weight', 'attribute'];
@@ -262,8 +256,6 @@ class SettingsModalManager {
     // 메뉴 매니저에 업데이트
     window.menuManager.updateQuickButtons(quickButtons);
     
-    console.log('퀵버튼 저장 완료:', formData);
-    
     // 모달 닫기
     this.closeQuickSettingsModal();
     
@@ -278,8 +270,6 @@ class SettingsModalManager {
       return;
     }
     
-    console.log('퀵버튼 삭제:', this.currentModalIndex);
-    
     // 기존 퀵버튼 데이터 가져오기
     const quickButtons = window.menuManager.getQuickButtons();
     
@@ -288,8 +278,6 @@ class SettingsModalManager {
     
     // 메뉴 매니저에 업데이트
     window.menuManager.updateQuickButtons(quickButtons);
-    
-    console.log('퀵버튼 삭제 완료');
     
     // 모달 닫기
     this.closeQuickSettingsModal();
@@ -309,21 +297,12 @@ class SettingsModalManager {
 }
 
 // 전역 인스턴스 생성 (개선된 버전)
-console.log('SettingsModalManager 클래스 정의 완료');
-console.log('SettingsModalManager 인스턴스 생성 시작');
-console.log('현재 window 객체:', Object.keys(window).filter(key => key.includes('Manager') || key.includes('Engine')));
 
 // DOM이 준비된 후에 인스턴스 생성
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM 로드 완료 - SettingsModalManager 인스턴스 생성');
     window.settingsModalManager = new SettingsModalManager();
-    console.log('SettingsModalManager 인스턴스 생성 완료:', window.settingsModalManager);
-    console.log('생성 후 window 객체:', Object.keys(window).filter(key => key.includes('Manager') || key.includes('Engine')));
   });
 } else {
-  console.log('DOM 이미 로드됨 - SettingsModalManager 인스턴스 즉시 생성');
   window.settingsModalManager = new SettingsModalManager();
-  console.log('SettingsModalManager 인스턴스 생성 완료:', window.settingsModalManager);
-  console.log('생성 후 window 객체:', Object.keys(window).filter(key => key.includes('Manager') || key.includes('Engine')));
 } 

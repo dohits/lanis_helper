@@ -15,13 +15,11 @@
   function waitForModule(moduleName, maxWait = 10000) {
     return new Promise((resolve, reject) => {
       const startTime = Date.now();
-      console.log(`${moduleName} 모듈 대기 시작 (최대 ${maxWait}ms)`);
       
       const checkModule = () => {
         const elapsed = Date.now() - startTime;
         
         if (window[moduleName]) {
-          console.log(`${moduleName} 모듈 확인됨 (${elapsed}ms 소요)`);
           resolve();
         } else if (elapsed > maxWait) {
           const relevantKeys = Object.keys(window).filter(key => 
@@ -45,7 +43,6 @@
     
     try {
       await Promise.all(modulePromises);
-      console.log('모든 모듈 로드 확인 완료');
     } catch (error) {
       console.error('모듈 로드 실패:', error);
       throw error;
@@ -85,41 +82,31 @@
 
   // 메인 초기화 함수
   async function initializeExtension() {
-    console.log('Lanis Helper 초기화 시작');
     
     try {
       // CSS 스타일 로드
       loadStyles();
       
       // 모든 모듈들이 로드될 때까지 대기 (개선된 방식)
-      console.log('모듈 로드 확인 시작...');
       await waitForAllModules();
       
       // 각 모듈 초기화
-      console.log('모듈 초기화 시작...');
       
       await window.menuManager.init();
-      console.log('menuManager 초기화 완료');
       
       await window.searchEngine.init();
-      console.log('searchEngine 초기화 완료');
       
       await window.itemStatsManager.init();
-      console.log('itemStatsManager 초기화 완료');
       
       window.userProfileManager.init();
-      console.log('userProfileManager 초기화 완료');
       
       window.settingsModalManager.init();
-      console.log('settingsModalManager 초기화 완료');
       
       // 구버전 방식으로 설정 로드 및 기능 실행
       loadSettingsAndExecute();
       
       // 대기 중인 퀵검색 확인
       window.searchEngine.checkPendingQuickSearch();
-      
-      console.log('Lanis Helper 초기화 완료');
       
     } catch (error) {
       console.error('Lanis Helper 초기화 실패:', error);
@@ -134,9 +121,7 @@
       });
       
       // 재시도 로직 추가
-      console.log('5초 후 재시도...');
       setTimeout(() => {
-        console.log('재시도 시작...');
         initializeExtension();
       }, 5000);
     }
@@ -176,16 +161,13 @@
 
   // DOM 로드 완료 후 초기화 (개선된 버전)
   function startInitialization() {
-    console.log('초기화 시작 - DOM 상태:', document.readyState);
     
     // DOM이 완전히 로드된 후에 초기화 실행
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
-        console.log('DOMContentLoaded 이벤트 발생 - 초기화 실행');
         setTimeout(initializeExtension, 100); // 약간의 지연으로 안정성 확보
       });
     } else {
-      console.log('DOM 이미 로드됨 - 즉시 초기화 실행');
       setTimeout(initializeExtension, 100); // 약간의 지연으로 안정성 확보
     }
   }
@@ -220,7 +202,6 @@
   const observer = new MutationObserver(() => {
     if (window.location.href !== currentUrl) {
       currentUrl = window.location.href;
-      console.log('페이지 변경 감지:', currentUrl);
       
       // 새로운 페이지에서 기능 재실행 (구버전 방식)
       setTimeout(() => {

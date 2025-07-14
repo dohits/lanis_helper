@@ -63,7 +63,6 @@ function saveSettings() {
           settings: settings
         }).catch(function(error) {
           // content script가 로드되지 않은 경우 무시
-          console.log('설정 변경 알림 실패:', error);
         });
       }
     });
