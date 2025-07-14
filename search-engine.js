@@ -397,24 +397,41 @@ class SearchEngine {
     if (button) button.classList.add('loading');
 
     try {
-      // 1. 카테고리 탭 이동 (탭 버튼이 나타날 때까지 대기)
+      // 1. 카테고리 탭 이동과 검색 패널 열기를 병렬로 처리
+      const promises = [];
+      
       if (searchConfig.category) {
-        await this.waitForElement('button[role="tab"]', 5000);
+        promises.push(this.waitForElement('button[role="tab"]', 3000));
+      }
+      
+      // 검색 패널이 이미 열려있는지 먼저 확인
+      let searchPanel = document.querySelector('.css-1e25jpw');
+      if (!searchPanel) {
+        promises.push(this.openSearchPanelIfNeeded());
+      }
+      
+      // 병렬로 대기
+      await Promise.all(promises);
+      
+      // 2. 카테고리 전환 (대기 시간 단축)
+      if (searchConfig.category) {
         await this.switchToCategory(searchConfig.category);
-        // 탭 이동 완료 후 충분한 대기 시간
-        await this.sleep(1500);
+        await this.sleep(500); // 1500ms → 500ms로 단축
       }
 
-      // 2. 검색 패널 열기 (탭 이동 완료 후)
-      await this.openSearchPanelIfNeeded();
+      // 3. 검색 패널이 열려있는지 다시 확인 (이미 열려있으면 건너뛰기)
+      searchPanel = document.querySelector('.css-1e25jpw');
+      if (!searchPanel) {
+        await this.openSearchPanelIfNeeded();
+      }
 
-      // 3. 입력 필드가 나타날 때까지 대기 (검색 패널 내부에서)
-      await this.waitForElement('.css-1e25jpw input[placeholder*="아이템 이름"]', 5000);
+      // 4. 입력 필드 대기 시간 단축
+      await this.waitForElement('.css-1e25jpw input[placeholder*="아이템 이름"]', 3000); // 5000ms → 3000ms
 
-      // 4. 검색 조건 입력
+      // 5. 검색 조건 입력 (대기 시간 단축)
       await this.fillSearchConditions(searchConfig);
 
-      // 5. 검색 실행
+      // 6. 검색 실행
       await this.executeSearch();
 
     } catch (error) {
@@ -464,7 +481,7 @@ class SearchEngine {
     }
 
     const start = Date.now();
-    const maxWait = 7000;
+    const maxWait = 4000; // 7000ms → 4000ms로 단축
 
     while (Date.now() - start < maxWait) {
       // 검색 패널이 열렸는지 다시 확인
@@ -473,7 +490,7 @@ class SearchEngine {
 
       // 검색 버튼 클릭
       searchButton.click();
-      await this.sleep(400);
+      await this.sleep(200); // 400ms → 200ms로 단축
     }
     
     console.log('검색 패널을 열 수 없습니다. 현재 페이지의 패널들:', 
@@ -485,110 +502,326 @@ class SearchEngine {
   }
 
   async fillSearchConditions(config) {
-    await this.sleep(300); // 검색 패널이 완전히 로드될 때까지 대기
+    
+    await this.sleep(150);
 
-    // 키워드 검색
-    const panel = document.querySelector('.css-1e25jpw');
-    if (config.keyword && panel) {
-      const keywordInput = panel.querySelector('input[placeholder*="아이템 이름"]');
-      if (keywordInput) {
-        keywordInput.value = config.keyword;
-        keywordInput.dispatchEvent(new Event('input', { bubbles: true }));
-        await this.sleep(100);
+    // React/MUI 입력 필드 값을 설정하는 헬퍼 함수
+    const setInputValueById = (id, value) => {
+      const input = document.getElementById(id);
+      if (!input) {
+        console.error(`ID ${id}를 가진 입력 필드를 찾을 수 없습니다.`);
+        return false;
       }
+      
+      try {
+        // React/MUI 방식: focus → value 변경 → input 이벤트 → blur
+        input.focus();
+        input.value = value;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        input.blur();
+
+        return true;
+      } catch (error) {
+        console.error(`ID ${id} 값 입력 실패:`, error);
+        return false;
+      }
+    };
+
+    // ID로 입력 필드를 찾을 수 없는 경우를 위한 fallback 함수
+    const setInputValueByPlaceholder = (placeholder, value) => {
+      const input = document.querySelector(`input[placeholder*="${placeholder}"]`);
+      if (!input) {
+        console.error(`placeholder "${placeholder}"를 가진 입력 필드를 찾을 수 없습니다.`);
+        return false;
+      }
+      
+      try {
+        input.focus();
+        input.value = value;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        input.blur();
+
+        return true;
+      } catch (error) {
+        console.error(`placeholder "${placeholder}" 값 입력 실패:`, error);
+        return false;
+      }
+    };
+
+    // 1. 키워드 검색 (ID: «r1t» 또는 placeholder로 fallback)
+    if (config.keyword) {
+      let success = setInputValueById('«r1t»', config.keyword);
+      if (!success) {
+        success = setInputValueByPlaceholder('아이템 이름 또는 설명으로 검색', config.keyword);
+      }
+      if (success) await this.sleep(50);
     }
 
-    // 모든 입력 필드 찾기 (검색 패널 내부에서만)
-    const allInputs = panel ? panel.querySelectorAll('input[type="text"], input[type="number"]') : [];
-    let inputIndex = 0;
-
-    // 입찰가 범위 (첫 번째, 두 번째 입력 필드)
+    // 2. 입찰가 범위 입력 (ID: «r1u», «r1v»)
     if (config.bidMin || config.bidMax) {
-      if (allInputs.length > inputIndex && config.bidMin) {
-        allInputs[inputIndex].value = config.bidMin;
-        allInputs[inputIndex].dispatchEvent(new Event('input', { bubbles: true }));
-        await this.sleep(100);
+      if (config.bidMin) {
+        let success = setInputValueById('«r1u»', config.bidMin);
+        if (!success) {
+          // fallback: 입찰가 라벨 근처의 첫 번째 최소 입력 필드
+          const bidSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🟢 입찰가:'));
+          if (bidSection) {
+            const section = bidSection.closest('.MuiBox-root');
+            if (section) {
+              const inputs = section.querySelectorAll('input[placeholder="최소"]');
+              if (inputs.length > 0) {
+                const input = inputs[0];
+                input.focus();
+                input.value = config.bidMin;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.blur();
+
+              }
+            }
+          }
+        }
+        await this.sleep(50);
       }
-      inputIndex++;
-      if (allInputs.length > inputIndex && config.bidMax) {
-        allInputs[inputIndex].value = config.bidMax;
-        allInputs[inputIndex].dispatchEvent(new Event('input', { bubbles: true }));
-        await this.sleep(100);
+      
+      if (config.bidMax) {
+        let success = setInputValueById('«r1v»', config.bidMax);
+        if (!success) {
+          // fallback: 입찰가 라벨 근처의 첫 번째 최대 입력 필드
+          const bidSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🟢 입찰가:'));
+          if (bidSection) {
+            const section = bidSection.closest('.MuiBox-root');
+            if (section) {
+              const inputs = section.querySelectorAll('input[placeholder="최대"]');
+              if (inputs.length > 0) {
+                const input = inputs[0];
+                input.focus();
+                input.value = config.bidMax;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.blur();
+
+              }
+            }
+          }
+        }
+        await this.sleep(50);
       }
-      inputIndex++;
-    } else {
-      inputIndex += 2; // 입찰가 필드 건너뛰기
     }
 
-    // 즉시구매가 범위 (세 번째, 네 번째 입력 필드)
+    // 3. 즉시구매가 범위 입력 (ID: «r20», «r21»)
     if (config.buyMin || config.buyMax) {
-      if (allInputs.length > inputIndex && config.buyMin) {
-        allInputs[inputIndex].value = config.buyMin;
-        allInputs[inputIndex].dispatchEvent(new Event('input', { bubbles: true }));
-        await this.sleep(100);
+      if (config.buyMin) {
+        let success = setInputValueById('«r20»', config.buyMin);
+        if (!success) {
+          // fallback: 즉시구매 라벨 근처의 첫 번째 최소 입력 필드
+          const buySection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🟠 즉시구매:'));
+          if (buySection) {
+            const section = buySection.closest('.MuiBox-root');
+            if (section) {
+              const inputs = section.querySelectorAll('input[placeholder="최소"]');
+              if (inputs.length > 0) {
+                const input = inputs[0];
+                input.focus();
+                input.value = config.buyMin;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.blur();
+
+              }
+            }
+          }
+        }
+        await this.sleep(50);
       }
-      inputIndex++;
-      if (allInputs.length > inputIndex && config.buyMax) {
-        allInputs[inputIndex].value = config.buyMax;
-        allInputs[inputIndex].dispatchEvent(new Event('input', { bubbles: true }));
-        await this.sleep(100);
+      
+      if (config.buyMax) {
+        let success = setInputValueById('«r21»', config.buyMax);
+        if (!success) {
+          // fallback: 즉시구매 라벨 근처의 첫 번째 최대 입력 필드
+          const buySection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🟠 즉시구매:'));
+          if (buySection) {
+            const section = buySection.closest('.MuiBox-root');
+            if (section) {
+              const inputs = section.querySelectorAll('input[placeholder="최대"]');
+              if (inputs.length > 0) {
+                const input = inputs[0];
+                input.focus();
+                input.value = config.buyMax;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.blur();
+
+              }
+            }
+          }
+        }
+        await this.sleep(50);
       }
-      inputIndex++;
-    } else {
-      inputIndex += 2; // 즉시구매가 필드 건너뛰기
     }
 
-    // 위력 범위 (다섯 번째, 여섯 번째 입력 필드)
+    // 4. 위력 범위 입력 (ID: «r22», «r23»)
     if (config.powerMin || config.powerMax) {
-      if (allInputs.length > inputIndex && config.powerMin) {
-        allInputs[inputIndex].value = config.powerMin;
-        allInputs[inputIndex].dispatchEvent(new Event('input', { bubbles: true }));
-        await this.sleep(100);
+      if (config.powerMin) {
+        let success = setInputValueById('«r22»', config.powerMin);
+        if (!success) {
+          // fallback: 위력 라벨 근처의 첫 번째 최소 입력 필드
+          const powerSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🔵 위력:'));
+          if (powerSection) {
+            const section = powerSection.closest('.MuiBox-root');
+            if (section) {
+              const inputs = section.querySelectorAll('input[placeholder="최소"]');
+              if (inputs.length > 0) {
+                const input = inputs[0];
+                input.focus();
+                input.value = config.powerMin;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.blur();
+
+              }
+            }
+          }
+        }
+        await this.sleep(50);
       }
-      inputIndex++;
-      if (allInputs.length > inputIndex && config.powerMax) {
-        allInputs[inputIndex].value = config.powerMax;
-        allInputs[inputIndex].dispatchEvent(new Event('input', { bubbles: true }));
-        await this.sleep(100);
+      
+      if (config.powerMax) {
+        let success = setInputValueById('«r23»', config.powerMax);
+        if (!success) {
+          // fallback: 위력 라벨 근처의 첫 번째 최대 입력 필드
+          const powerSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🔵 위력:'));
+          if (powerSection) {
+            const section = powerSection.closest('.MuiBox-root');
+            if (section) {
+              const inputs = section.querySelectorAll('input[placeholder="최대"]');
+              if (inputs.length > 0) {
+                const input = inputs[0];
+                input.focus();
+                input.value = config.powerMax;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.blur();
+
+              }
+            }
+          }
+        }
+        await this.sleep(50);
       }
-      inputIndex++;
-    } else {
-      inputIndex += 2; // 위력 필드 건너뛰기
     }
 
-    // 무게 범위 (일곱 번째, 여덟 번째 입력 필드)
+    // 5. 무게 범위 입력 (ID: «r24», «r25»)
     if (config.weightMin || config.weightMax) {
-      if (allInputs.length > inputIndex && config.weightMin) {
-        allInputs[inputIndex].value = config.weightMin;
-        allInputs[inputIndex].dispatchEvent(new Event('input', { bubbles: true }));
-        await this.sleep(100);
+      if (config.weightMin) {
+        let success = setInputValueById('«r24»', config.weightMin);
+        if (!success) {
+          // fallback: 무게 라벨 근처의 첫 번째 최소 입력 필드
+          const weightSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🟣 무게:'));
+          if (weightSection) {
+            const section = weightSection.closest('.MuiBox-root');
+            if (section) {
+              const inputs = section.querySelectorAll('input[placeholder="최소"]');
+              if (inputs.length > 0) {
+                const input = inputs[0];
+                input.focus();
+                input.value = config.weightMin;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.blur();
+
+              }
+            }
+          }
+        }
+        await this.sleep(50);
       }
-      inputIndex++;
-      if (allInputs.length > inputIndex && config.weightMax) {
-        allInputs[inputIndex].value = config.weightMax;
-        allInputs[inputIndex].dispatchEvent(new Event('input', { bubbles: true }));
-        await this.sleep(100);
+      
+      if (config.weightMax) {
+        let success = setInputValueById('«r25»', config.weightMax);
+        if (!success) {
+          // fallback: 무게 라벨 근처의 첫 번째 최대 입력 필드
+          const weightSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🟣 무게:'));
+          if (weightSection) {
+            const section = weightSection.closest('.MuiBox-root');
+            if (section) {
+              const inputs = section.querySelectorAll('input[placeholder="최대"]');
+              if (inputs.length > 0) {
+                const input = inputs[0];
+                input.focus();
+                input.value = config.weightMax;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.blur();
+
+              }
+            }
+          }
+        }
+        await this.sleep(50);
       }
-      inputIndex++;
-    } else {
-      inputIndex += 2; // 무게 필드 건너뛰기
     }
 
-    // 속성 선택
-    if (config.attribute && panel) {
-      const attributeSelect = panel.querySelector('select');
+    // 6. 속성 선택 (ID: «r26»)
+    if (config.attribute) {
+      
+      const attributeSelect = document.getElementById('«r26»');
       if (attributeSelect) {
-        const options = Array.from(attributeSelect.options);
-        const targetOption = options.find(option => 
-          option.textContent.includes(config.attribute)
-        );
-        if (targetOption) {
-          attributeSelect.value = targetOption.value;
-          attributeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        try {
+          // 드롭다운 클릭
+          attributeSelect.click();
           await this.sleep(100);
+          
+          // 드롭다운 메뉴에서 옵션 찾기
+          const listbox = document.querySelector('ul[role="listbox"]');
+          if (listbox) {
+            const options = listbox.querySelectorAll('li[role="option"]');
+            for (const option of options) {
+              if (option.textContent.trim() === config.attribute) {
+                                  option.click();
+                  await this.sleep(50);
+                break;
+              }
+            }
+          } else {
+            console.error('속성 드롭다운 메뉴를 찾을 수 없습니다.');
+          }
+        } catch (error) {
+          console.error('속성 선택 실패:', error);
+        }
+      } else {
+        // fallback: 속성 라벨 근처의 드롭다운 찾기
+        const attributeSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🔴 속성:'));
+        if (attributeSection) {
+          const section = attributeSection.closest('.MuiBox-root');
+          if (section) {
+            const select = section.querySelector('div[role="combobox"]');
+            if (select) {
+              try {
+                select.click();
+                await this.sleep(100);
+                
+                const listbox = document.querySelector('ul[role="listbox"]');
+                if (listbox) {
+                  const options = listbox.querySelectorAll('li[role="option"]');
+                  for (const option of options) {
+                    if (option.textContent.trim() === config.attribute) {
+                      option.click();
+                      await this.sleep(50);
+                      break;
+                    }
+                  }
+                }
+              } catch (error) {
+                console.error('속성 선택 실패 (fallback):', error);
+              }
+            }
+          }
         }
       }
     }
+    
 
   }
 
@@ -605,7 +838,6 @@ class SearchEngine {
 
     const targetCategory = categoryMap[category];
     if (!targetCategory) {
-      console.log('알 수 없는 카테고리:', category);
       return;
     }
 
@@ -617,18 +849,72 @@ class SearchEngine {
         return;
       }
     }
-
-    console.log('카테고리 탭을 찾을 수 없음:', targetCategory);
   }
 
   async executeSearch() {
+
     
-    // 검색 버튼 찾기 및 클릭
-    const searchButton = document.querySelector('button[type="submit"], button:contains("검색")');
+    // 검색 버튼 찾기 (여러 방법으로 시도)
+    let searchButton = null;
+    
+    // 1. 검색 패널 내의 검색 버튼 찾기 (우선순위 1)
+    const panel = document.querySelector('.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.css-1e25jpw');
+    if (panel) {
+      const buttons = panel.querySelectorAll('button');
+      for (const button of buttons) {
+        if (button.textContent.includes('검색') && !button.textContent.includes('초기화')) {
+          searchButton = button;
+          break;
+        }
+      }
+    }
+    
+    // 2. 전체 페이지에서 검색 버튼 찾기 (우선순위 2)
+    if (!searchButton) {
+      const allButtons = document.querySelectorAll('button');
+      for (const button of allButtons) {
+        if (button.textContent.includes('검색') && 
+            !button.textContent.includes('초기화') && 
+            button.classList.contains('MuiButton-containedPrimary')) {
+          searchButton = button;
+          break;
+        }
+      }
+    }
+    
+    // 3. 클래스 기반으로 검색 버튼 찾기 (우선순위 3)
+    if (!searchButton) {
+      searchButton = document.querySelector('button.MuiButton-containedPrimary');
+      if (searchButton && searchButton.textContent.includes('검색')) {
+      } else {
+        searchButton = null;
+      }
+    }
+    
+    // 4. 마지막 fallback: 검색 아이콘이 있는 버튼 찾기
+    if (!searchButton) {
+      const buttonsWithSearchIcon = document.querySelectorAll('button');
+      for (const button of buttonsWithSearchIcon) {
+        const searchIcon = button.querySelector('svg');
+        if (searchIcon && button.textContent.includes('검색')) {
+          searchButton = button;
+          break;
+        }
+      }
+    }
+    
     if (searchButton) {
-      searchButton.click();
+      try {
+        searchButton.click();
+        await this.sleep(500); // 검색 결과 로딩 대기
+        return true;
+      } catch (error) {
+        console.error('검색 버튼 클릭 실패:', error);
+        return false;
+      }
     } else {
-      console.log('검색 버튼을 찾을 수 없음');
+      console.error('검색 버튼을 찾을 수 없습니다.');
+      return false;
     }
   }
 
@@ -657,10 +943,10 @@ class SearchEngine {
         const { searchConfig, buttonIndex } = JSON.parse(pendingSearch);
         sessionStorage.removeItem('pendingQuickSearch');
         
-        // 페이지 로드 완료 후 검색 실행
+        // 페이지 로드 완료 후 검색 실행 (대기 시간 단축)
         setTimeout(() => {
           this.executeQuickSearch(searchConfig, buttonIndex);
-        }, 2000);
+        }, 1000); // 2000ms → 1000ms로 단축
         
       } catch (error) {
         console.error('대기 중인 퀵검색 파싱 실패:', error);
@@ -675,18 +961,11 @@ class SearchEngine {
   }
 }
 
-// 전역 인스턴스 생성 (개선된 버전)
-console.log('SearchEngine 클래스 정의 완료');
-console.log('SearchEngine 인스턴스 생성 시작');
-console.log('현재 window 객체:', Object.keys(window).filter(key => key.includes('Manager') || key.includes('Engine')));
-
-// DOM이 준비된 후에 인스턴스 생성
+// 전역 인스턴스 생성
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM 로드 완료 - SearchEngine 인스턴스 생성');
     window.searchEngine = new SearchEngine();
   });
 } else {
-  console.log('DOM 이미 로드됨 - SearchEngine 인스턴스 즉시 생성');
-window.searchEngine = new SearchEngine(); 
+  window.searchEngine = new SearchEngine(); 
 } 

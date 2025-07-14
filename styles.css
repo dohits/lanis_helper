@@ -965,7 +965,9 @@
 }
 
 .quick-button-group .delete-btn,
-button.delete-btn {
+.quick-button-group .edit-btn,
+button.delete-btn,
+button.edit-btn {
   display: flex !important;
   align-items: center;
   justify-content: center;
@@ -975,9 +977,6 @@ button.delete-btn {
   font-size: 15px;
   border-radius: 0 16px 16px 0;
   margin: 0;
-  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
-  background-color: #ef4444 !important;
-  color: #fff !important;
   border: none !important;
   box-shadow: none !important;
   position: relative !important;
@@ -985,10 +984,31 @@ button.delete-btn {
   pointer-events: auto !important;
 }
 
+.quick-button-group .delete-btn,
+button.delete-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  background-color: #ef4444 !important;
+  color: #fff !important;
+}
+
+.quick-button-group .edit-btn,
+button.edit-btn {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  background-color: #10b981 !important;
+  color: #fff !important;
+}
+
 .delete-btn:hover,
 .delete-btn:focus,
 .delete-btn:active {
   background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: #fff !important;
+}
+
+.edit-btn:hover,
+.edit-btn:focus,
+.edit-btn:active {
+  background: linear-gradient(135deg, #059669, #047857) !important;
   color: #fff !important;
 }
 

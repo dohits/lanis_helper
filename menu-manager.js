@@ -201,7 +201,7 @@ class MenuManager {
     // 기존 퀵버튼들 표시
     this.quickButtons.forEach((button, index) => {
       if (button && Object.keys(button).length > 0) {
-        // 퀵버튼과 삭제 버튼을 감싸는 컨테이너
+        // 퀵버튼과 수정/삭제 버튼을 감싸는 컨테이너
         const buttonContainer = document.createElement('div');
         buttonContainer.className = 'quick-button-group';
         buttonContainer.style.display = 'flex';
@@ -221,6 +221,17 @@ class MenuManager {
           this.handleQuickButtonClick(index);
         });
         
+        // 수정 버튼
+        const editButton = document.createElement('button');
+        editButton.className = 'main-menu-item sub-menu-item edit-btn';
+        editButton.innerHTML = '수정';
+        editButton.title = `퀵${index + 1} 수정`;
+        
+        editButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.openQuickSettingsModal(index);
+        });
+        
         // 삭제 버튼
         const deleteButton = document.createElement('button');
         deleteButton.className = 'main-menu-item sub-menu-item delete-btn';
@@ -233,6 +244,7 @@ class MenuManager {
         });
         
         buttonContainer.appendChild(quickButton);
+        buttonContainer.appendChild(editButton);
         buttonContainer.appendChild(deleteButton);
         container.appendChild(buttonContainer);
       }
