@@ -6,41 +6,22 @@ document.addEventListener('DOMContentLoaded', function() {
   // 이벤트 리스너 추가
   document.getElementById('profileLink').addEventListener('change', saveSettings);
   document.getElementById('showItemStats').addEventListener('change', saveSettings);
-  document.getElementById('quickButtons').addEventListener('change', saveSettings);
-  document.getElementById('feature2').addEventListener('change', saveSettings);
-  document.getElementById('feature3').addEventListener('change', saveSettings);
   
   // 크롤링 버튼 이벤트
   document.getElementById('crawlButton').addEventListener('click', startCrawling);
   
   // 아이템 목록 보기 버튼 이벤트
   document.getElementById('viewItemsButton').addEventListener('click', showItemsList);
-  
-  // 모달 닫기 버튼 이벤트
-  document.getElementById('closeModal').addEventListener('click', closeItemsModal);
-  
-  // 모달 외부 클릭 시 닫기
-  document.getElementById('itemsModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-      closeItemsModal();
-    }
-  });
 });
 
 // 설정 로드
 function loadSettings() {
   chrome.storage.sync.get({
     profileLink: true,
-    showItemStats: true,
-    quickButtons: true,
-    feature2: false,
-    feature3: false
+    showItemStats: true
   }, function(items) {
     document.getElementById('profileLink').checked = items.profileLink;
     document.getElementById('showItemStats').checked = items.showItemStats;
-    document.getElementById('quickButtons').checked = items.quickButtons;
-    document.getElementById('feature2').checked = items.feature2;
-    document.getElementById('feature3').checked = items.feature3;
   });
 }
 
@@ -48,10 +29,7 @@ function loadSettings() {
 function saveSettings() {
   const settings = {
     profileLink: document.getElementById('profileLink').checked,
-    showItemStats: document.getElementById('showItemStats').checked,
-    quickButtons: document.getElementById('quickButtons').checked,
-    feature2: document.getElementById('feature2').checked,
-    feature3: document.getElementById('feature3').checked
+    showItemStats: document.getElementById('showItemStats').checked
   };
   
   chrome.storage.sync.set(settings, function() {
@@ -71,19 +49,97 @@ function saveSettings() {
 
 // 아이템 목록 보기
 function showItemsList() {
-  const modal = document.getElementById('itemsModal');
-  const itemsList = document.getElementById('itemsList');
-  const itemsCount = document.getElementById('itemsCount');
+  // 새 창에서 아이템 목록 표시
+  const itemsWindow = window.open('', 'itemsList', 'width=400,height=600,scrollbars=yes,resizable=yes');
   
-  // 모달 표시
-  modal.style.display = 'block';
-  
-  // 로딩 상태 표시
-  itemsList.innerHTML = '<div style="text-align: center; color: #666;">아이템을 로드하는 중...</div>';
-  itemsCount.textContent = '0';
+  // 새 창에 HTML 내용 작성
+  itemsWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>스캔된 아이템 목록</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+          background-color: #f5f5f5;
+        }
+        .header {
+          text-align: center;
+          margin-bottom: 20px;
+          color: #333;
+        }
+        .items-container {
+          max-height: 500px;
+          overflow-y: auto;
+          background-color: white;
+          border-radius: 10px;
+          padding: 15px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .item {
+          padding: 10px;
+          border-bottom: 1px solid #eee;
+          background-color: white;
+          margin-bottom: 8px;
+          border-radius: 5px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .item:last-child {
+          border-bottom: none;
+          margin-bottom: 0;
+        }
+        .item-name {
+          font-weight: bold;
+          color: #333;
+          margin-bottom: 5px;
+        }
+        .item-stats {
+          font-size: 12px;
+          color: #666;
+          margin-bottom: 3px;
+        }
+        .item-abilities {
+          font-size: 11px;
+          color: #888;
+        }
+        .loading {
+          text-align: center;
+          color: #666;
+          padding: 20px;
+        }
+        .no-items {
+          text-align: center;
+          color: #666;
+          padding: 20px;
+        }
+        .count {
+          text-align: center;
+          font-size: 12px;
+          color: #666;
+          margin-top: 10px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h2>스캔된 아이템 목록</h2>
+      </div>
+      <div id="itemsContainer" class="items-container">
+        <div class="loading">아이템을 로드하는 중...</div>
+      </div>
+      <div id="count" class="count">총 0개 아이템</div>
+    </body>
+    </html>
+  `);
   
   // chrome.storage.local에서 아이템 데이터 로드
   chrome.storage.local.get(['rareItems'], function(result) {
+    const itemsContainer = itemsWindow.document.getElementById('itemsContainer');
+    const countElement = itemsWindow.document.getElementById('count');
+    
     if (result.rareItems && result.rareItems.length > 0) {
       const items = result.rareItems;
       
@@ -107,31 +163,26 @@ function showItemsList() {
         const typeDisplay = weaponType !== 'N/A' ? ` (${weaponType})` : '';
         
         itemsHtml += `
-          <div style="padding: 8px; border-bottom: 1px solid #eee; background-color: white; margin-bottom: 5px; border-radius: 5px;">
-            <div style="font-weight: bold; color: #333; margin-bottom: 3px;">${itemName}${typeDisplay}</div>
-            <div style="font-size: 11px; color: #666; margin-bottom: 2px;">
-              위력: ${powerRange} | 무게: ${weightRange}
-            </div>
-            <div style="font-size: 10px; color: #888;">
-              어빌리티: ${abilities}
-            </div>
+          <div class="item">
+            <div class="item-name">${itemName}${typeDisplay}</div>
+            <div class="item-stats">위력: ${powerRange} | 무게: ${weightRange}</div>
+            <div class="item-abilities">어빌리티: ${abilities}</div>
           </div>
         `;
       });
       
-      itemsList.innerHTML = itemsHtml;
-      itemsCount.textContent = items.length;
+      itemsContainer.innerHTML = itemsHtml;
+      countElement.textContent = `총 ${items.length}개 아이템`;
     } else {
-      itemsList.innerHTML = '<div style="text-align: center; color: #666;">스캔된 아이템이 없습니다.<br>먼저 "레어 아이템 데이터 수집"을 실행해주세요.</div>';
-      itemsCount.textContent = '0';
+      itemsContainer.innerHTML = '<div class="no-items">스캔된 아이템이 없습니다.<br>먼저 "레어 아이템 데이터 수집"을 실행해주세요.</div>';
+      countElement.textContent = '총 0개 아이템';
     }
   });
 }
 
-// 모달 닫기
+// 모달 닫기 (더 이상 사용하지 않음)
 function closeItemsModal() {
-  const modal = document.getElementById('itemsModal');
-  modal.style.display = 'none';
+  // 이 함수는 더 이상 사용하지 않지만, 기존 코드와의 호환성을 위해 남겨둠
 }
 
 // API 수집 시작
@@ -160,6 +211,20 @@ function startCrawling() {
         status.textContent = '아이템 수집은 https://laniswiki.lovestoblog.com/ 에서 실행해주세요.';
       }
       
+      // 메시지 통신 타임아웃 설정 (10분)
+      const messageTimeout = 600000; // 10분
+      let timeoutId;
+      
+      // 타임아웃 함수
+      const handleTimeout = () => {
+        status.textContent = '수집 시간이 초과되었습니다. 팝업을 닫지 말고 다시 시도해주세요.';
+        button.disabled = false;
+        button.textContent = '레어 아이템 데이터 수집';
+      };
+      
+      // 타임아웃 설정
+      timeoutId = setTimeout(handleTimeout, messageTimeout);
+      
       // content script가 로드되었는지 먼저 확인
       chrome.tabs.sendMessage(tabs[0].id, {
         action: 'ping'
@@ -178,12 +243,18 @@ function startCrawling() {
           target: { tabId: tabs[0].id },
           files: ['content.js']
         }).then(function() {
+          // 주입 후 잠시 대기
+          return new Promise(resolve => setTimeout(resolve, 1000));
+        }).then(function() {
           // 주입 후 API 수집 실행
           return chrome.tabs.sendMessage(tabs[0].id, {
             action: 'startCrawling'
           });
         });
       }).then(function(response) {
+        // 타임아웃 해제
+        clearTimeout(timeoutId);
+        
         if (response && response.success) {
           if (response.message && response.message.includes('기존 데이터 사용')) {
             status.textContent = `${response.message} (${response.count}개 아이템)`;
@@ -194,8 +265,19 @@ function startCrawling() {
           status.textContent = `수집 실패: ${response.message || '알 수 없는 오류'}`;
         }
       }).catch(function(error) {
-        status.textContent = `오류 발생: ${error.message || '알 수 없는 오류'}`;
+        // 타임아웃 해제
+        clearTimeout(timeoutId);
+        
+        // 메시지 통신 오류인 경우 사용자에게 안내
+        if (error.message && error.message.includes('message channel closed')) {
+          status.textContent = '팝업이 닫혀서 수집이 중단되었습니다. 팝업을 열고 다시 시도해주세요.';
+        } else {
+          status.textContent = `오류 발생: ${error.message || '알 수 없는 오류'}`;
+        }
       }).finally(function() {
+        // 타임아웃 해제
+        clearTimeout(timeoutId);
+        
         // 버튼 다시 활성화
         button.disabled = false;
         button.textContent = '레어 아이템 데이터 수집';

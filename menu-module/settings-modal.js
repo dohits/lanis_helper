@@ -56,17 +56,23 @@ class SettingsModalManager {
       { value: 'consumable', text: '소모품' }
     ]);
     
-    // 입찰가 입력
-    const bidGroup = this.createFormGroup('입찰가 (골드)', 'number', '최소 입찰가', 'bidPrice');
+    // 카테고리 변경 시 조건부 필드 표시/숨김 처리
+    const categorySelectElement = categoryGroup.querySelector('select');
+    categorySelectElement.addEventListener('change', (e) => {
+      this.updateConditionalFields(e.target.value);
+    });
     
-    // 즉시구매가 입력
-    const buyGroup = this.createFormGroup('즉시구매가 (골드)', 'number', '최대 즉시구매가', 'buyPrice');
+    // 입찰가 범위 입력
+    const bidGroup = this.createRangeGroup('입찰가 (골드)', 'bidMin', 'bidMax', '최소 입찰가', '최대 입찰가');
     
-    // 위력 입력
-    const powerGroup = this.createFormGroup('위력', 'number', '최소 위력', 'power');
+    // 즉시구매가 범위 입력
+    const buyGroup = this.createRangeGroup('즉시구매가 (골드)', 'buyMin', 'buyMax', '최소 즉시구매가', '최대 즉시구매가');
     
-    // 무게 입력
-    const weightGroup = this.createFormGroup('무게', 'number', '최대 무게', 'weight');
+    // 위력 범위 입력 (재료 카테고리 제외)
+    const powerGroup = this.createConditionalRangeGroup('위력', 'powerMin', 'powerMax', '최소 위력', '최대 위력', 'material');
+    
+    // 무게 범위 입력 (재료 카테고리 제외)
+    const weightGroup = this.createConditionalRangeGroup('무게', 'weightMin', 'weightMax', '최소 무게', '최대 무게', 'material');
     
     // 속성 선택
     const attributeGroup = this.createSelectGroup('속성', 'attribute', [
@@ -77,7 +83,8 @@ class SettingsModalManager {
       { value: '바람', text: '바람' },
       { value: '별', text: '별' },
       { value: '빛', text: '빛' },
-      { value: '어둠', text: '어둠' }
+      { value: '어둠', text: '어둠' },
+      { value: '무', text: '무' }
     ]);
     
     // 버튼 그룹
@@ -112,6 +119,12 @@ class SettingsModalManager {
     // 기존 데이터 로드
     this.loadExistingData(index);
     
+    // 초기 카테고리에 따른 조건부 필드 업데이트
+    const initialCategorySelect = document.querySelector('[data-field="category"]');
+    if (initialCategorySelect && initialCategorySelect.value) {
+      this.updateConditionalFields(initialCategorySelect.value);
+    }
+    
     // 모달 외부 클릭 시 닫기
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
@@ -145,6 +158,114 @@ class SettingsModalManager {
     group.appendChild(input);
     
     return group;
+  }
+
+  createRangeGroup(labelText, minFieldName, maxFieldName, minPlaceholder, maxPlaceholder) {
+    const group = document.createElement('div');
+    group.className = 'form-group';
+    
+    const label = document.createElement('label');
+    label.className = 'form-label';
+    label.textContent = labelText;
+    
+    const rangeContainer = document.createElement('div');
+    rangeContainer.className = 'range-container';
+    rangeContainer.style.display = 'flex';
+    rangeContainer.style.gap = '10px';
+    rangeContainer.style.alignItems = 'center';
+    
+    const minInput = document.createElement('input');
+    minInput.className = 'form-input';
+    minInput.type = 'number';
+    minInput.placeholder = minPlaceholder;
+    minInput.setAttribute('data-field', minFieldName);
+    minInput.style.flex = '1';
+    
+    const rangeLabel = document.createElement('span');
+    rangeLabel.textContent = '~';
+    rangeLabel.style.color = '#666';
+    rangeLabel.style.fontWeight = 'bold';
+    
+    const maxInput = document.createElement('input');
+    maxInput.className = 'form-input';
+    maxInput.type = 'number';
+    maxInput.placeholder = maxPlaceholder;
+    maxInput.setAttribute('data-field', maxFieldName);
+    maxInput.style.flex = '1';
+    
+    rangeContainer.appendChild(minInput);
+    rangeContainer.appendChild(rangeLabel);
+    rangeContainer.appendChild(maxInput);
+    
+    group.appendChild(label);
+    group.appendChild(rangeContainer);
+    
+    return group;
+  }
+
+  createConditionalRangeGroup(labelText, minFieldName, maxFieldName, minPlaceholder, maxPlaceholder, excludedCategory) {
+    const group = document.createElement('div');
+    group.className = 'form-group conditional-group';
+    group.setAttribute('data-excluded-category', excludedCategory);
+    
+    const label = document.createElement('label');
+    label.className = 'form-label';
+    label.textContent = labelText;
+    
+    const rangeContainer = document.createElement('div');
+    rangeContainer.className = 'range-container';
+    rangeContainer.style.display = 'flex';
+    rangeContainer.style.gap = '10px';
+    rangeContainer.style.alignItems = 'center';
+    
+    const minInput = document.createElement('input');
+    minInput.className = 'form-input';
+    minInput.type = 'number';
+    minInput.placeholder = minPlaceholder;
+    minInput.setAttribute('data-field', minFieldName);
+    minInput.style.flex = '1';
+    
+    const rangeLabel = document.createElement('span');
+    rangeLabel.textContent = '~';
+    rangeLabel.style.color = '#666';
+    rangeLabel.style.fontWeight = 'bold';
+    
+    const maxInput = document.createElement('input');
+    maxInput.className = 'form-input';
+    maxInput.type = 'number';
+    maxInput.placeholder = maxPlaceholder;
+    maxInput.setAttribute('data-field', maxFieldName);
+    maxInput.style.flex = '1';
+    
+    rangeContainer.appendChild(minInput);
+    rangeContainer.appendChild(rangeLabel);
+    rangeContainer.appendChild(maxInput);
+    
+    group.appendChild(label);
+    group.appendChild(rangeContainer);
+    
+    return group;
+  }
+
+  updateConditionalFields(selectedCategory) {
+    const conditionalGroups = document.querySelectorAll('.conditional-group');
+    
+    conditionalGroups.forEach(group => {
+      const excludedCategory = group.getAttribute('data-excluded-category');
+      
+      if (selectedCategory === excludedCategory) {
+        // 제외된 카테고리인 경우 숨김
+        group.style.display = 'none';
+        // 입력값도 클리어
+        const inputs = group.querySelectorAll('input');
+        inputs.forEach(input => {
+          input.value = '';
+        });
+      } else {
+        // 표시
+        group.style.display = 'block';
+      }
+    });
   }
 
   createSelectGroup(labelText, fieldName, options) {
@@ -206,11 +327,36 @@ class SettingsModalManager {
     
     if (buttonData) {
       // 각 필드에 기존 데이터 설정
-      const fields = ['keyword', 'category', 'bidPrice', 'buyPrice', 'power', 'weight', 'attribute'];
+      const fields = ['keyword', 'category', 'attribute'];
       fields.forEach(field => {
         const element = document.querySelector(`[data-field="${field}"]`);
         if (element && buttonData[field]) {
           element.value = buttonData[field];
+        }
+      });
+      
+      // 범위 필드 처리 (기존 단일 값 필드와 호환성 유지)
+      const rangeFields = [
+        { min: 'bidMin', max: 'bidMax', old: 'bidPrice' },
+        { min: 'buyMin', max: 'buyMax', old: 'buyPrice' },
+        { min: 'powerMin', max: 'powerMax', old: 'power' },
+        { min: 'weightMin', max: 'weightMax', old: 'weight' }
+      ];
+      
+      rangeFields.forEach(({ min, max, old }) => {
+        const minElement = document.querySelector(`[data-field="${min}"]`);
+        const maxElement = document.querySelector(`[data-field="${max}"]`);
+        
+        if (minElement && buttonData[min]) {
+          minElement.value = buttonData[min];
+        }
+        if (maxElement && buttonData[max]) {
+          maxElement.value = buttonData[max];
+        }
+        
+        // 기존 단일 값 필드가 있다면 최소값으로 설정
+        if (minElement && buttonData[old] && !buttonData[min]) {
+          minElement.value = buttonData[old];
         }
       });
     }
@@ -229,12 +375,32 @@ class SettingsModalManager {
     
     // 폼 데이터 수집
     const formData = {};
-    const fields = ['keyword', 'category', 'bidPrice', 'buyPrice', 'power', 'weight', 'attribute'];
+    const fields = ['keyword', 'category', 'attribute'];
     
     fields.forEach(field => {
       const element = document.querySelector(`[data-field="${field}"]`);
       if (element) {
         formData[field] = element.value;
+      }
+    });
+    
+    // 범위 필드 수집
+    const rangeFields = [
+      { min: 'bidMin', max: 'bidMax' },
+      { min: 'buyMin', max: 'buyMax' },
+      { min: 'powerMin', max: 'powerMax' },
+      { min: 'weightMin', max: 'weightMax' }
+    ];
+    
+    rangeFields.forEach(({ min, max }) => {
+      const minElement = document.querySelector(`[data-field="${min}"]`);
+      const maxElement = document.querySelector(`[data-field="${max}"]`);
+      
+      if (minElement && minElement.value) {
+        formData[min] = minElement.value;
+      }
+      if (maxElement && maxElement.value) {
+        formData[max] = maxElement.value;
       }
     });
     

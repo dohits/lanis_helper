@@ -1,17 +1,6 @@
-// 백그라운드 스크립트 - 기본 구조 유지
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  
-  // ping 메시지에 대한 응답
-  if (request.action === 'ping') {
-    sendResponse({ success: true, message: 'Background script loaded' });
-  }
-  
-  // 팝업 열기 메시지 처리
-  if (request.action === 'openPopup') {
-    chrome.action.openPopup();
-    sendResponse({ success: true });
-  }
-  
-  // 다른 메시지들은 content script에서 직접 처리됨
-  return false; // 동기 응답
+// Lanis Helper 백그라운드 서비스 워커
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  // 필요시 메시지 relay 등 처리
+  // 현재는 별도 로직 없음
+  return false;
 }); 

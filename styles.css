@@ -222,21 +222,21 @@
 
 .main-menu-row {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 16px;
   position: absolute;
-  left: 80px;
-  bottom: 0;
+  left: 0;
+  bottom: 80px;
   opacity: 0;
   pointer-events: none;
-  transform: translateX(40px) scale(0.8);
+  transform: translateY(40px) scale(0.8);
   transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 10002;
 }
 .main-menu-row.show {
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(0) scale(1);
+  transform: translateY(0) scale(1);
 }
 
 .sub-menu-container {
@@ -479,7 +479,7 @@
   flex-direction: row;
   gap: 8px;
   padding: 12px;
-  animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideInRight 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   pointer-events: auto;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.1));
@@ -570,6 +570,30 @@
 }
 
 /* 설정 모달 스타일 */
+.equipment-settings-modal,
+.equipment-complete-modal,
+.equipment-error-modal,
+.ability-complete-modal,
+.ability-error-modal,
+.combined-complete-modal,
+.market-search-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000000;
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 .quick-settings-modal {
   position: fixed;
   top: 0;
@@ -724,6 +748,25 @@
   transform: translateY(-1px);
 }
 
+/* 범위 입력 컨테이너 */
+.range-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.range-container .form-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.range-container span {
+  color: #666;
+  font-weight: bold;
+  font-size: 16px;
+  user-select: none;
+}
+
 .modal-actions {
   display: flex;
   gap: 12px;
@@ -819,6 +862,64 @@
 .btn:active {
   transform: translateY(0) scale(0.98);
   transition: all 0.1s ease;
+}
+
+.equipment-complete-modal .close-btn,
+.equipment-error-modal .close-btn,
+.ability-complete-modal .close-btn,
+.ability-error-modal .close-btn,
+.combined-complete-modal .close-btn,
+.market-search-modal .close-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 16px;
+}
+
+.equipment-complete-modal .close-btn:hover,
+.equipment-error-modal .close-btn:hover,
+.ability-complete-modal .close-btn:hover,
+.ability-error-modal .close-btn:hover,
+.combined-complete-modal .close-btn:hover,
+.market-search-modal .close-btn:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-2px);
+}
+
+.equipment-complete-modal .modal-content,
+.equipment-error-modal .modal-content,
+.ability-complete-modal .modal-content,
+.ability-error-modal .modal-content,
+.combined-complete-modal .modal-content,
+.market-search-modal .modal-content {
+  text-align: center;
+  padding: 32px;
+}
+
+.equipment-complete-modal h3,
+.equipment-error-modal h3,
+.ability-complete-modal h3,
+.ability-error-modal h3,
+.combined-complete-modal h3,
+.market-search-modal h3 {
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.equipment-complete-modal p,
+.equipment-error-modal p,
+.ability-complete-modal p,
+.ability-error-modal p,
+.combined-complete-modal p,
+.market-search-modal p {
+  color: #6b7280;
+  margin-bottom: 24px;
 }
 
 /* 스크롤바 스타일링 */
@@ -924,14 +1025,14 @@
   align-items: center;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(30px) scale(0.95);
+  transform: translateX(-30px) scale(0.95);
   transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 10010;
 }
 .sub-menu-popup.show {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(0) scale(1);
+  transform: translateX(0) scale(1);
 } 
 
 /* 퀵버튼 그룹 스타일 */

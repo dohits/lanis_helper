@@ -385,6 +385,7 @@ class SearchEngine {
     }
   }
 
+  // 거래소 퀵검색 자동화 (새로운 HTML 구조 기반)
   async executeQuickSearch(searchConfig, buttonIndex) {
     // 거래소 페이지가 아닐 경우 이동
     if (!window.location.href.includes('/market')) {
@@ -397,62 +398,223 @@ class SearchEngine {
     if (button) button.classList.add('loading');
 
     try {
-      // 1. 카테고리 탭 이동과 검색 패널 열기를 병렬로 처리
-      const promises = [];
+      // 기존 단일 값 필드와 새로운 범위 필드 호환성 처리
+      const normalizedConfig = this.normalizeSearchConfig(searchConfig);
       
-      if (searchConfig.category) {
-        promises.push(this.waitForElement('button[role="tab"]', 3000));
+      // 1. 거래소 패널이 열려있는지 확인하고 필요시 열기
+      await this.openMarketPanelIfNeeded();
+      
+      // 2. 카테고리 탭으로 이동 (필요시)
+      if (normalizedConfig.category) {
+        await this.moveToMarketTab(normalizedConfig.category);
       }
       
-      // 검색 패널이 이미 열려있는지 먼저 확인
-      let searchPanel = document.querySelector('.css-1e25jpw');
-      if (!searchPanel) {
-        promises.push(this.openSearchPanelIfNeeded());
-      }
+      // 3. 검색 패널 열기
+      await this.openMarketSearchPanel();
       
-      // 병렬로 대기
-      await Promise.all(promises);
+      // 4. 검색 조건 입력
+      await this.fillMarketSearchFields(normalizedConfig);
       
-      // 2. 카테고리 전환 (대기 시간 단축)
-      if (searchConfig.category) {
-        await this.switchToCategory(searchConfig.category);
-        await this.sleep(500); // 1500ms → 500ms로 단축
-      }
-
-      // 3. 검색 패널이 열려있는지 다시 확인 (이미 열려있으면 건너뛰기)
-      searchPanel = document.querySelector('.css-1e25jpw');
-      if (!searchPanel) {
-        await this.openSearchPanelIfNeeded();
-      }
-
-      // 4. 입력 필드 대기 시간 단축
-      await this.waitForElement('.css-1e25jpw input[placeholder*="아이템 이름"]', 3000); // 5000ms → 3000ms
-
-      // 5. 검색 조건 입력 (대기 시간 단축)
-      await this.fillSearchConditions(searchConfig);
-
-      // 6. 검색 실행
-      await this.executeSearch();
-
+      // 5. 검색 실행
+      await this.clickMarketSearchButton();
+      
+      // 6. 결과 저장 및 모달 표시
+      const result = {
+        success: true,
+        searchConfig,
+        timestamp: Date.now(),
+        message: '거래소 검색이 완료되었습니다.'
+      };
+      
+      this.saveMarketSearchResultToSession(result);
+      this.showFinalMarketModal(result);
+      
     } catch (error) {
-      console.error('퀵검색 실행 중 오류:', error);
+      console.error('거래소 퀵검색 실행 중 오류:', error);
+      
+      const result = {
+        success: false,
+        searchConfig,
+        timestamp: Date.now(),
+        error: error.message,
+        message: '거래소 검색 중 오류가 발생했습니다.'
+      };
+      
+      this.saveMarketSearchResultToSession(result);
+      this.showFinalMarketModal(result);
+      
     } finally {
       if (button) button.classList.remove('loading');
     }
   }
 
-  async openSearchPanelIfNeeded() {
-    // 검색 패널이 이미 열려있는지 확인
-    let searchPanel = document.querySelector('.css-1e25jpw');
-    if (searchPanel) return;
+  // 거래소 패널이 닫혀 있으면 자동으로 열기
+  async openMarketPanelIfNeeded() {
+    // 거래소 패널이 이미 열려있는지 확인
+    const marketPanel = document.querySelector('.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.css-s1ntyf');
+    if (marketPanel) {
+      return;
+    }
 
-    // 검색 버튼 찾기 (정확한 셀렉터 사용)
+    // 거래소 메뉴/버튼 찾기 (여러 방법으로 시도)
+    let marketButton = null;
+    
+    // 방법 1: 메뉴에서 "거래소" 텍스트로 찾기
+    const menuButtons = document.querySelectorAll('button, a');
+    for (const button of menuButtons) {
+      if (button.textContent.includes('거래소') && !button.closest('.css-s1ntyf')) {
+        marketButton = button;
+        break;
+      }
+    }
+    
+    // 방법 2: 네비게이션 메뉴에서 찾기
+    if (!marketButton) {
+      const navItems = document.querySelectorAll('[role="menuitem"], .MuiListItem-root');
+      for (const item of navItems) {
+        if (item.textContent.includes('거래소')) {
+          marketButton = item;
+          break;
+        }
+      }
+    }
+    
+    // 방법 3: 사이드바 메뉴에서 찾기
+    if (!marketButton) {
+      const sidebarItems = document.querySelectorAll('.MuiDrawer-root button, .MuiDrawer-root a');
+      for (const item of sidebarItems) {
+        if (item.textContent.includes('거래소')) {
+          marketButton = item;
+          break;
+        }
+      }
+    }
+
+    if (!marketButton) {
+      console.error('거래소 버튼을 찾을 수 없습니다.');
+      throw new Error('거래소 버튼을 찾을 수 없습니다.');
+    }
+
+    marketButton.click();
+    
+    // 거래소 패널이 열릴 때까지 감지
+    await this.waitForMarketPanel();
+  }
+
+  // 거래소 패널이 완전히 열릴 때까지 감지
+  async waitForMarketPanel() {
+    let attempts = 0;
+    const maxAttempts = 30; // 최대 3초 대기
+    
+    while (attempts < maxAttempts) {
+      const marketPanel = document.querySelector('.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.css-s1ntyf');
+      if (marketPanel) {
+        // 탭 버튼들이 로드되었는지도 확인
+        const tabButtons = marketPanel.querySelectorAll('button[role="tab"]');
+        if (tabButtons.length > 0) {
+          return;
+        }
+      }
+      
+      await this.sleep(100);
+      attempts++;
+    }
+    
+    throw new Error('거래소 패널을 열 수 없습니다.');
+  }
+
+  // 카테고리 탭으로 이동
+  async moveToMarketTab(tabName) {
+    const categoryMap = {
+      'weapon': '무기',
+      'armor': '방어구', 
+      'accessory': '장신구',
+      'material': '재료',
+      'potion': '포션',
+      'consumable': '소모품',
+      'favorite': '관심목록'
+    };
+
+    const targetCategory = categoryMap[tabName];
+    if (!targetCategory) {
+      console.error(`알 수 없는 카테고리: ${tabName}`);
+      return;
+    }
+
+    // 거래소 패널 내의 탭 버튼들 찾기
+    const marketPanel = document.querySelector('.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.css-s1ntyf');
+    if (!marketPanel) {
+      throw new Error('거래소 패널을 찾을 수 없습니다.');
+    }
+
+    const tabButtons = marketPanel.querySelectorAll('button[role="tab"]');
+    let targetTab = null;
+    
+    for (const button of tabButtons) {
+      if (button.textContent.includes(targetCategory)) {
+        targetTab = button;
+        break;
+      }
+    }
+
+    if (!targetTab) {
+      console.error(`카테고리 탭을 찾을 수 없음: ${targetCategory}`);
+      throw new Error(`카테고리 탭을 찾을 수 없음: ${targetCategory}`);
+    }
+
+    // 이미 선택된 탭인지 확인
+    if (targetTab.getAttribute('aria-selected') === 'true') {
+      return;
+    }
+
+    targetTab.click();
+    
+    // 탭 전환 후 해당 탭의 내용이 로드될 때까지 대기
+    await this.waitForMarketTabLoaded(targetCategory);
+  }
+
+  // 탭 전환 후 해당 탭의 내용이 로드될 때까지 대기
+  async waitForMarketTabLoaded(category) {
+    let attempts = 0;
+    const maxAttempts = 30; // 최대 3초 대기
+    
+    while (attempts < maxAttempts) {
+      // 탭이 선택되었는지 확인
+      const marketPanel = document.querySelector('.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.css-s1ntyf');
+      if (marketPanel) {
+        const selectedTab = marketPanel.querySelector('button[role="tab"][aria-selected="true"]');
+        if (selectedTab && selectedTab.textContent.includes(category)) {
+          return;
+        }
+      }
+      
+      await this.sleep(100);
+      attempts++;
+    }
+    
+  }
+
+  // 검색 패널 열기
+  async openMarketSearchPanel() {
+    // 검색 패널이 이미 열려있는지 확인
+    const searchPanel = document.querySelector('.css-1e25jpw');
+    if (searchPanel) {
+      return;
+    }
+
+    // 거래소 패널 내의 검색 버튼 찾기
+    const marketPanel = document.querySelector('.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.css-s1ntyf');
+    if (!marketPanel) {
+      throw new Error('거래소 패널을 찾을 수 없습니다.');
+    }
+
+    // 검색 버튼 찾기 (제공된 HTML 구조 기반)
     let searchButton = null;
     
-    // 방법 1: 텍스트로 찾기
-    const buttons = document.querySelectorAll('button');
+    // 방법 1: "검색" 텍스트가 포함된 버튼 찾기
+    const buttons = marketPanel.querySelectorAll('button');
     for (const button of buttons) {
-      if (button.textContent.includes('검색')) {
+      if (button.textContent.includes('검색') && !button.textContent.includes('초기화')) {
         searchButton = button;
         break;
       }
@@ -470,455 +632,593 @@ class SearchEngine {
     }
 
     if (!searchButton) {
-      console.log('검색 버튼을 찾을 수 없습니다. 사용 가능한 버튼들:', 
-                  Array.from(document.querySelectorAll('button')).map(b => ({
-                    text: b.textContent,
-                    ariaLabel: b.getAttribute('aria-label'),
-                    title: b.getAttribute('title'),
-                    className: b.className
-                  })));
+      console.error('검색 버튼을 찾을 수 없습니다.');
       throw new Error('검색 버튼을 찾을 수 없습니다.');
     }
 
-    const start = Date.now();
-    const maxWait = 4000; // 7000ms → 4000ms로 단축
+    searchButton.click();
+    
+    // 검색 패널이 열릴 때까지 감지
+    await this.waitForMarketSearchPanel();
+  }
 
-    while (Date.now() - start < maxWait) {
-      // 검색 패널이 열렸는지 다시 확인
-      searchPanel = document.querySelector('.css-1e25jpw');
-      if (searchPanel) return;
-
-      // 검색 버튼 클릭
-      searchButton.click();
-      await this.sleep(200); // 400ms → 200ms로 단축
+  // 검색 패널이 완전히 열릴 때까지 감지
+  async waitForMarketSearchPanel() {
+    let attempts = 0;
+    const maxAttempts = 30; // 최대 3초 대기
+    
+    while (attempts < maxAttempts) {
+      const searchPanel = document.querySelector('.css-1e25jpw');
+      if (searchPanel) {
+        // 입력 필드가 로드되었는지도 확인
+        const inputFields = searchPanel.querySelectorAll('input');
+        if (inputFields.length > 0) {
+          return;
+        }
+      }
+      
+      await this.sleep(100);
+      attempts++;
     }
     
-    console.log('검색 패널을 열 수 없습니다. 현재 페이지의 패널들:', 
-                Array.from(document.querySelectorAll('.css-1e25jpw')).map(p => ({
-                  className: p.className,
-                  visible: p.offsetParent !== null
-                })));
     throw new Error('검색 패널을 열 수 없습니다.');
   }
 
-  async fillSearchConditions(config) {
+  // 검색 설정 정규화 (기존 단일 값 필드와 새로운 범위 필드 호환성)
+  normalizeSearchConfig(searchConfig) {
+    const normalized = { ...searchConfig };
     
-    await this.sleep(150);
+    // 기존 단일 값 필드를 새로운 범위 필드로 변환
+    if (searchConfig.bidPrice && !searchConfig.bidMin) {
+      normalized.bidMin = searchConfig.bidPrice;
+    }
+    if (searchConfig.buyPrice && !searchConfig.buyMin) {
+      normalized.buyMin = searchConfig.buyPrice;
+    }
+    if (searchConfig.power && !searchConfig.powerMin) {
+      normalized.powerMin = searchConfig.power;
+    }
+    if (searchConfig.weight && !searchConfig.weightMin) {
+      normalized.weightMin = searchConfig.weight;
+    }
+    
+    return normalized;
+  }
 
-    // React/MUI 입력 필드 값을 설정하는 헬퍼 함수
-    const setInputValueById = (id, value) => {
-      const input = document.getElementById(id);
-      if (!input) {
-        console.error(`ID ${id}를 가진 입력 필드를 찾을 수 없습니다.`);
-        return false;
-      }
-      
+  // 검색 조건 입력
+  async fillMarketSearchFields(config) {
+    
+    const searchPanel = document.querySelector('.css-1e25jpw');
+    if (!searchPanel) {
+      throw new Error('검색 패널을 찾을 수 없습니다.');
+    }
+
+    // React/MUI 입력 필드 값을 설정하는 헬퍼 함수 (최적화된 버전)
+    const setInputValue = async (input, value) => {
       try {
-        // React/MUI 방식: focus → value 변경 → input 이벤트 → blur
+        
+        // 즉시 값 설정 (대기 시간 없음)
         input.focus();
+        input.value = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        
         input.value = value;
         input.dispatchEvent(new Event('input', { bubbles: true }));
         input.dispatchEvent(new Event('change', { bubbles: true }));
+        
+        // React의 onChange 이벤트 시뮬레이션
+        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+        nativeInputValueSetter.call(input, value);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        
         input.blur();
 
         return true;
       } catch (error) {
-        console.error(`ID ${id} 값 입력 실패:`, error);
+        console.error('입력 필드 값 설정 실패:', error);
         return false;
       }
     };
 
-    // ID로 입력 필드를 찾을 수 없는 경우를 위한 fallback 함수
-    const setInputValueByPlaceholder = (placeholder, value) => {
-      const input = document.querySelector(`input[placeholder*="${placeholder}"]`);
-      if (!input) {
-        console.error(`placeholder "${placeholder}"를 가진 입력 필드를 찾을 수 없습니다.`);
-        return false;
-      }
-      
-      try {
-        input.focus();
-        input.value = value;
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-        input.blur();
-
-        return true;
-      } catch (error) {
-        console.error(`placeholder "${placeholder}" 값 입력 실패:`, error);
-        return false;
-      }
-    };
-
-    // 1. 키워드 검색 (ID: «r1t» 또는 placeholder로 fallback)
+    // 1. 키워드 검색
     if (config.keyword) {
-      let success = setInputValueById('«r1t»', config.keyword);
-      if (!success) {
-        success = setInputValueByPlaceholder('아이템 이름 또는 설명으로 검색', config.keyword);
+      const keywordInput = searchPanel.querySelector('input[placeholder*="아이템 이름"], input[placeholder*="검색"]');
+      if (keywordInput) {
+        await setInputValue(keywordInput, config.keyword);
       }
-      if (success) await this.sleep(50);
     }
 
-    // 2. 입찰가 범위 입력 (ID: «r1u», «r1v»)
+    // 2. 모든 입력 필드 분석
+    
+    const allInputs = searchPanel.querySelectorAll('input');
+    
+    allInputs.forEach((input, index) => {
+      const container = input.closest('.MuiBox-root') || input.parentElement;
+      const label = container?.textContent || '';
+    });
+
+    // 3. 범위 입력 필드 찾기 (입찰가, 즉시구매가, 위력, 무게)
+    // 실제 HTML에서는 type="text"이지만 placeholder로 구분
+    const rangeInputs = searchPanel.querySelectorAll('input[placeholder*="최소"], input[placeholder*="최대"]');
+    
+    // 각 범위 입력 필드의 컨텍스트 분석
+    rangeInputs.forEach((input, index) => {
+      const container = input.closest('.MuiBox-root') || input.parentElement;
+      const context = container?.textContent || '';
+    });
+
+    // 4. 입찰가 범위 입력
     if (config.bidMin || config.bidMax) {
-      if (config.bidMin) {
-        let success = setInputValueById('«r1u»', config.bidMin);
-        if (!success) {
-          // fallback: 입찰가 라벨 근처의 첫 번째 최소 입력 필드
-          const bidSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🟢 입찰가:'));
-          if (bidSection) {
-            const section = bidSection.closest('.MuiBox-root');
-            if (section) {
-              const inputs = section.querySelectorAll('input[placeholder="최소"]');
-              if (inputs.length > 0) {
-                const input = inputs[0];
-                input.focus();
-                input.value = config.bidMin;
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-                input.blur();
-
-              }
-            }
-          }
-        }
-        await this.sleep(50);
-      }
       
-      if (config.bidMax) {
-        let success = setInputValueById('«r1v»', config.bidMax);
-        if (!success) {
-          // fallback: 입찰가 라벨 근처의 첫 번째 최대 입력 필드
-          const bidSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🟢 입찰가:'));
+      // 입찰가 섹션을 정확히 찾기 (HTML 구조 기반)
+      const bidSection = Array.from(searchPanel.querySelectorAll('p')).find(p => p.textContent.includes('🟢 입찰가:'));
+      
           if (bidSection) {
-            const section = bidSection.closest('.MuiBox-root');
-            if (section) {
-              const inputs = section.querySelectorAll('input[placeholder="최대"]');
-              if (inputs.length > 0) {
-                const input = inputs[0];
-                input.focus();
-                input.value = config.bidMax;
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-                input.blur();
-
-              }
+        // 입찰가 섹션의 부모 컨테이너에서 입력 필드 찾기
+        const container = bidSection.closest('.MuiBox-root');
+        if (container) {
+          // 해당 컨테이너 내의 첫 번째, 두 번째 입력 필드 (최소, 최대)
+          const bidInputs = container.querySelectorAll('input[placeholder="최소"], input[placeholder="최대"]');
+          
+          if (bidInputs.length >= 2) {
+            if (config.bidMin) {
+              await setInputValue(bidInputs[0], config.bidMin);
+            }
+            if (config.bidMax) {
+              await setInputValue(bidInputs[1], config.bidMax);
             }
           }
         }
-        await this.sleep(50);
       }
     }
 
-    // 3. 즉시구매가 범위 입력 (ID: «r20», «r21»)
+
+
+    // 5. 즉시구매가 범위 입력
     if (config.buyMin || config.buyMax) {
-      if (config.buyMin) {
-        let success = setInputValueById('«r20»', config.buyMin);
-        if (!success) {
-          // fallback: 즉시구매 라벨 근처의 첫 번째 최소 입력 필드
-          const buySection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🟠 즉시구매:'));
-          if (buySection) {
-            const section = buySection.closest('.MuiBox-root');
-            if (section) {
-              const inputs = section.querySelectorAll('input[placeholder="최소"]');
-              if (inputs.length > 0) {
-                const input = inputs[0];
-                input.focus();
-                input.value = config.buyMin;
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-                input.blur();
-
-              }
-            }
-          }
-        }
-        await this.sleep(50);
-      }
       
-      if (config.buyMax) {
-        let success = setInputValueById('«r21»', config.buyMax);
-        if (!success) {
-          // fallback: 즉시구매 라벨 근처의 첫 번째 최대 입력 필드
-          const buySection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🟠 즉시구매:'));
+      // 즉시구매가 섹션을 정확히 찾기 (HTML 구조 기반)
+      const buySection = Array.from(searchPanel.querySelectorAll('p')).find(p => p.textContent.includes('🟠 즉시구매:'));
+      
           if (buySection) {
-            const section = buySection.closest('.MuiBox-root');
-            if (section) {
-              const inputs = section.querySelectorAll('input[placeholder="최대"]');
-              if (inputs.length > 0) {
-                const input = inputs[0];
-                input.focus();
-                input.value = config.buyMax;
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-                input.blur();
-
-              }
+        // 즉시구매가 섹션의 부모 컨테이너에서 입력 필드 찾기
+        const container = buySection.closest('.MuiBox-root');
+        if (container) {
+          // 해당 컨테이너 내의 첫 번째, 두 번째 입력 필드 (최소, 최대)
+          const buyInputs = container.querySelectorAll('input[placeholder="최소"], input[placeholder="최대"]');
+          
+          if (buyInputs.length >= 2) {
+            if (config.buyMin) {
+              await setInputValue(buyInputs[0], config.buyMin);
+            }
+            if (config.buyMax) {
+              await setInputValue(buyInputs[1], config.buyMax);
             }
           }
         }
-        await this.sleep(50);
       }
     }
 
-    // 4. 위력 범위 입력 (ID: «r22», «r23»)
+    // 6. 위력 범위 입력
     if (config.powerMin || config.powerMax) {
-      if (config.powerMin) {
-        let success = setInputValueById('«r22»', config.powerMin);
-        if (!success) {
-          // fallback: 위력 라벨 근처의 첫 번째 최소 입력 필드
-          const powerSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🔵 위력:'));
-          if (powerSection) {
-            const section = powerSection.closest('.MuiBox-root');
-            if (section) {
-              const inputs = section.querySelectorAll('input[placeholder="최소"]');
-              if (inputs.length > 0) {
-                const input = inputs[0];
-                input.focus();
-                input.value = config.powerMin;
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-                input.blur();
-
-              }
-            }
-          }
-        }
-        await this.sleep(50);
-      }
       
-      if (config.powerMax) {
-        let success = setInputValueById('«r23»', config.powerMax);
-        if (!success) {
-          // fallback: 위력 라벨 근처의 첫 번째 최대 입력 필드
-          const powerSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🔵 위력:'));
+      // 위력 섹션을 정확히 찾기 (HTML 구조 기반)
+      const powerSection = Array.from(searchPanel.querySelectorAll('p')).find(p => p.textContent.includes('🔵 위력:'));
+      
           if (powerSection) {
-            const section = powerSection.closest('.MuiBox-root');
-            if (section) {
-              const inputs = section.querySelectorAll('input[placeholder="최대"]');
-              if (inputs.length > 0) {
-                const input = inputs[0];
-                input.focus();
-                input.value = config.powerMax;
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-                input.blur();
-
-              }
+        // 위력 섹션의 부모 컨테이너에서 입력 필드 찾기
+        const container = powerSection.closest('.MuiBox-root');
+        if (container) {
+          // 해당 컨테이너 내의 첫 번째, 두 번째 입력 필드 (최소, 최대)
+          const powerInputs = container.querySelectorAll('input[placeholder="최소"], input[placeholder="최대"]');
+          
+          if (powerInputs.length >= 2) {
+            if (config.powerMin) {
+              await setInputValue(powerInputs[0], config.powerMin);
+            }
+            if (config.powerMax) {
+              await setInputValue(powerInputs[1], config.powerMax);
             }
           }
         }
-        await this.sleep(50);
       }
     }
 
-    // 5. 무게 범위 입력 (ID: «r24», «r25»)
+    // 7. 무게 범위 입력
     if (config.weightMin || config.weightMax) {
-      if (config.weightMin) {
-        let success = setInputValueById('«r24»', config.weightMin);
-        if (!success) {
-          // fallback: 무게 라벨 근처의 첫 번째 최소 입력 필드
-          const weightSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🟣 무게:'));
-          if (weightSection) {
-            const section = weightSection.closest('.MuiBox-root');
-            if (section) {
-              const inputs = section.querySelectorAll('input[placeholder="최소"]');
-              if (inputs.length > 0) {
-                const input = inputs[0];
-                input.focus();
-                input.value = config.weightMin;
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-                input.blur();
-
-              }
-            }
-          }
-        }
-        await this.sleep(50);
-      }
       
-      if (config.weightMax) {
-        let success = setInputValueById('«r25»', config.weightMax);
-        if (!success) {
-          // fallback: 무게 라벨 근처의 첫 번째 최대 입력 필드
-          const weightSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🟣 무게:'));
+      // 무게 섹션을 정확히 찾기 (HTML 구조 기반)
+      const weightSection = Array.from(searchPanel.querySelectorAll('p')).find(p => p.textContent.includes('🟣 무게:'));
+      
           if (weightSection) {
-            const section = weightSection.closest('.MuiBox-root');
-            if (section) {
-              const inputs = section.querySelectorAll('input[placeholder="최대"]');
-              if (inputs.length > 0) {
-                const input = inputs[0];
-                input.focus();
-                input.value = config.weightMax;
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-                input.blur();
-
-              }
+        // 무게 섹션의 부모 컨테이너에서 입력 필드 찾기
+        const container = weightSection.closest('.MuiBox-root');
+        if (container) {
+          // 해당 컨테이너 내의 첫 번째, 두 번째 입력 필드 (최소, 최대)
+          const weightInputs = container.querySelectorAll('input[placeholder="최소"], input[placeholder="최대"]');
+          
+          if (weightInputs.length >= 2) {
+            if (config.weightMin) {
+              await setInputValue(weightInputs[0], config.weightMin);
+            }
+            if (config.weightMax) {
+              await setInputValue(weightInputs[1], config.weightMax);
             }
           }
         }
-        await this.sleep(50);
       }
     }
 
-    // 6. 속성 선택 (ID: «r26»)
+    // 8. 속성 선택
     if (config.attribute) {
       
-      const attributeSelect = document.getElementById('«r26»');
-      if (attributeSelect) {
-        try {
-          // 드롭다운 클릭
-          attributeSelect.click();
-          await this.sleep(100);
-          
-          // 드롭다운 메뉴에서 옵션 찾기
-          const listbox = document.querySelector('ul[role="listbox"]');
-          if (listbox) {
-            const options = listbox.querySelectorAll('li[role="option"]');
-            for (const option of options) {
-              if (option.textContent.trim() === config.attribute) {
-                                  option.click();
-                  await this.sleep(50);
-                break;
-              }
-            }
-          } else {
-            console.error('속성 드롭다운 메뉴를 찾을 수 없습니다.');
-          }
-        } catch (error) {
-          console.error('속성 선택 실패:', error);
+      // 속성 드롭다운 컨테이너 찾기
+      const searchPanel = document.querySelector('.css-1e25jpw');
+      if (!searchPanel) {
+        return;
+      }
+      
+      // 먼저 이미 열린 메뉴들이 있는지 확인하고 닫기
+      const openMenus = document.querySelectorAll('.MuiMenu-root, .MuiPopover-root');
+      if (openMenus.length > 0) {
+        document.dispatchEvent(new KeyboardEvent('keydown', { 
+          key: 'Escape', 
+          bubbles: true 
+        }));
+        await this.sleep(200);
+      }
+      
+      // 속성 드롭다운 찾기 (정확한 선택자 사용)
+      let attributeSelect = null;
+      
+      // 방법 1: 속성 관련 텍스트가 있는 드롭다운 찾기
+      const allSelects = searchPanel.querySelectorAll('.MuiSelect-select, .MuiSelect-root, [role="combobox"]');
+      for (const select of allSelects) {
+        const text = select.textContent?.trim();
+        if (text && (text.includes('속성') || text.includes('선택') || text === '')) {
+          attributeSelect = select;
+          break;
         }
+      }
+      
+      // 방법 2: 특정 클래스나 속성으로 찾기
+      if (!attributeSelect) {
+        attributeSelect = searchPanel.querySelector('.MuiSelect-select[role="combobox"]');
+      }
+      if (!attributeSelect) {
+        attributeSelect = searchPanel.querySelector('.MuiSelect-root');
+      }
+      if (!attributeSelect) {
+        attributeSelect = searchPanel.querySelector('[aria-haspopup="listbox"]');
+      }
+      
+      if (!attributeSelect) {
+        return;
+      }
+      
+      
+      try {
+        // 드롭다운 열기 시도
+        let dropdownOpened = false;
+        
+        // 방법 1: 클릭
+          attributeSelect.click();
+        await this.sleep(500);
+        
+        // 드롭다운이 열렸는지 확인
+        const menuItems = document.querySelectorAll('.MuiMenuItem-root');
+        if (menuItems.length > 0) {
+          dropdownOpened = true;
+        } else {
+        }
+        
+        // 방법 2: 포커스 + 스페이스바
+        if (!dropdownOpened) {
+          attributeSelect.focus();
+          await this.sleep(200);
+          
+          attributeSelect.dispatchEvent(new KeyboardEvent('keydown', { 
+            key: ' ', 
+            code: 'Space',
+            bubbles: true,
+            cancelable: true
+          }));
+          await this.sleep(500);
+          
+          const menuItems2 = document.querySelectorAll('.MuiMenuItem-root');
+          if (menuItems2.length > 0) {
+            dropdownOpened = true;
+          } else {
+          }
+        }
+        
+        // 방법 3: 엔터키
+        if (!dropdownOpened) {
+          attributeSelect.focus();
+          await this.sleep(200);
+          
+          attributeSelect.dispatchEvent(new KeyboardEvent('keydown', { 
+            key: 'Enter', 
+            code: 'Enter',
+            bubbles: true,
+            cancelable: true
+          }));
+          await this.sleep(500);
+          
+          const menuItems3 = document.querySelectorAll('.MuiMenuItem-root');
+          if (menuItems3.length > 0) {
+            dropdownOpened = true;
       } else {
-        // fallback: 속성 라벨 근처의 드롭다운 찾기
-        const attributeSection = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('🔴 속성:'));
-        if (attributeSection) {
-          const section = attributeSection.closest('.MuiBox-root');
-          if (section) {
-            const select = section.querySelector('div[role="combobox"]');
-            if (select) {
-              try {
-                select.click();
-                await this.sleep(100);
-                
-                const listbox = document.querySelector('ul[role="listbox"]');
-                if (listbox) {
-                  const options = listbox.querySelectorAll('li[role="option"]');
-                  for (const option of options) {
-                    if (option.textContent.trim() === config.attribute) {
-                      option.click();
-                      await this.sleep(50);
+          }
+        }
+        
+        if (!dropdownOpened) {
+          return;
+        }
+        
+        // 열린 메뉴에서 옵션 찾기
+        const finalMenuItems = document.querySelectorAll('.MuiMenuItem-root');
+        
+        // 원하는 속성 옵션 찾기
+        let targetOption = null;
+        for (const item of finalMenuItems) {
+          const text = item.textContent?.trim();
+          if (text === config.attribute) {
+            targetOption = item;
                       break;
                     }
                   }
-                }
-              } catch (error) {
-                console.error('속성 선택 실패 (fallback):', error);
-              }
-            }
-          }
+        
+        if (targetOption) {
+          
+          // 옵션 클릭
+          targetOption.click();
+          
+          // 메뉴가 닫힐 때까지 대기
+          await this.sleep(300);
+          
+        } else {
+          // 메뉴 닫기 (ESC 키)
+          document.dispatchEvent(new KeyboardEvent('keydown', { 
+            key: 'Escape', 
+            bubbles: true 
+          }));
         }
+        
+              } catch (error) {
+        console.error('속성 선택 중 오류:', error);
+        
+        // 오류 발생 시 메뉴 닫기
+        document.dispatchEvent(new KeyboardEvent('keydown', { 
+          key: 'Escape', 
+          bubbles: true 
+        }));
       }
     }
-    
 
   }
 
-  async switchToCategory(category) {
+  // 검색 버튼 클릭
+  async clickMarketSearchButton() {
     
-    const categoryMap = {
-      'weapon': '무기',
-      'armor': '방어구',
-      'accessory': '장신구',
-      'material': '재료',
-      'potion': '포션',
-      'consumable': '소모품'
-    };
-
-    const targetCategory = categoryMap[category];
-    if (!targetCategory) {
-      return;
+    const searchPanel = document.querySelector('.css-1e25jpw');
+    if (!searchPanel) {
+      throw new Error('검색 패널을 찾을 수 없습니다.');
     }
 
-    const tabButtons = document.querySelectorAll('button[role="tab"]');
-    for (const button of tabButtons) {
-      if (button.textContent.includes(targetCategory)) {
-        button.click();
-        await this.sleep(500);
-        return;
-      }
-    }
-  }
-
-  async executeSearch() {
-
-    
-    // 검색 버튼 찾기 (여러 방법으로 시도)
+    // 검색 패널 내의 검색 버튼 찾기
     let searchButton = null;
+    const buttons = searchPanel.querySelectorAll('button');
     
-    // 1. 검색 패널 내의 검색 버튼 찾기 (우선순위 1)
-    const panel = document.querySelector('.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.css-1e25jpw');
-    if (panel) {
-      const buttons = panel.querySelectorAll('button');
       for (const button of buttons) {
         if (button.textContent.includes('검색') && !button.textContent.includes('초기화')) {
           searchButton = button;
           break;
-        }
       }
     }
     
-    // 2. 전체 페이지에서 검색 버튼 찾기 (우선순위 2)
     if (!searchButton) {
-      const allButtons = document.querySelectorAll('button');
-      for (const button of allButtons) {
-        if (button.textContent.includes('검색') && 
-            !button.textContent.includes('초기화') && 
-            button.classList.contains('MuiButton-containedPrimary')) {
-          searchButton = button;
-          break;
-        }
-      }
-    }
-    
-    // 3. 클래스 기반으로 검색 버튼 찾기 (우선순위 3)
-    if (!searchButton) {
-      searchButton = document.querySelector('button.MuiButton-containedPrimary');
-      if (searchButton && searchButton.textContent.includes('검색')) {
-      } else {
-        searchButton = null;
-      }
-    }
-    
-    // 4. 마지막 fallback: 검색 아이콘이 있는 버튼 찾기
-    if (!searchButton) {
-      const buttonsWithSearchIcon = document.querySelectorAll('button');
-      for (const button of buttonsWithSearchIcon) {
-        const searchIcon = button.querySelector('svg');
-        if (searchIcon && button.textContent.includes('검색')) {
-          searchButton = button;
-          break;
-        }
-      }
-    }
-    
-    if (searchButton) {
-      try {
-        searchButton.click();
-        await this.sleep(500); // 검색 결과 로딩 대기
-        return true;
-      } catch (error) {
-        console.error('검색 버튼 클릭 실패:', error);
-        return false;
-      }
-    } else {
       console.error('검색 버튼을 찾을 수 없습니다.');
-      return false;
+      throw new Error('검색 버튼을 찾을 수 없습니다.');
+    }
+
+    searchButton.click();
+    
+    // 검색 결과가 로드될 때까지 대기
+    await this.waitForMarketSearchResults();
+  }
+
+  // 검색 결과가 로드될 때까지 대기 (최적화된 버전)
+  async waitForMarketSearchResults() {
+    let attempts = 0;
+    const maxAttempts = 30; // 최대 3초 대기 (단축)
+    
+    while (attempts < maxAttempts) {
+      // 로딩 스피너가 사라졌는지 확인
+      const loadingSpinner = document.querySelector('.MuiCircularProgress-root');
+      
+      // 검색 결과가 로드되었는지 확인
+      const results = document.querySelectorAll('.MuiTableRow-root, .MuiCard-root, .MuiGrid-item');
+      
+      if (!loadingSpinner && results.length > 0) {
+      return;
+    }
+
+      await this.sleep(100);
+      attempts++;
+    }
+    
+  }
+
+  // 거래소 검색 결과를 sessionStorage에 저장
+  saveMarketSearchResultToSession(result) {
+    try {
+      const searchResults = JSON.parse(sessionStorage.getItem('marketSearchResults') || '[]');
+      searchResults.push(result);
+      
+      // 최대 10개까지만 유지
+      if (searchResults.length > 10) {
+        searchResults.splice(0, searchResults.length - 10);
+      }
+      
+      sessionStorage.setItem('marketSearchResults', JSON.stringify(searchResults));
+    } catch (error) {
+      console.error('거래소 검색 결과 저장 실패:', error);
     }
   }
 
-  async waitForElement(selector, timeout = 5000) {
+  // 최종 거래소 검색 완료 모달 표시
+  showFinalMarketModal(result) {
+    try {
+      // 기존 모달이 있으면 제거
+      const existingModal = document.querySelector('.market-search-modal');
+      if (existingModal) {
+        existingModal.remove();
+      }
+      
+      // 새 모달 생성 및 표시 (기존 모달 스타일과 동일하게)
+      const modal = document.createElement('div');
+      modal.className = 'market-search-modal';
+      
+      // 검색 조건을 보기 좋게 포맷팅
+      const formatSearchConfig = (config) => {
+        const parts = [];
+        
+        // 키워드
+        if (config.keyword) {
+          parts.push(`🔍 키워드: ${config.keyword}`);
+        }
+        
+        // 카테고리 번역 및 포맷팅
+        if (config.category) {
+          const categoryMap = {
+            'weapon': '⚔️ 무기',
+            'armor': '🛡️ 방어구',
+            'accessory': '💍 장신구',
+            'material': '📦 재료',
+            'potion': '🧪 포션',
+            'consumable': '🍖 소모품',
+            'favorite': '❤️ 관심목록'
+          };
+          const categoryName = categoryMap[config.category] || config.category;
+          parts.push(`📂 카테고리: ${categoryName}`);
+        }
+        
+        // 입찰가 범위
+        if (config.bidMin || config.bidMax) {
+          const bidRange = [];
+          if (config.bidMin) bidRange.push(config.bidMin.toLocaleString());
+          if (config.bidMax) bidRange.push(config.bidMax.toLocaleString());
+          const bidText = bidRange.length === 2 ? `${bidRange[0]} ~ ${bidRange[1]}` : bidRange[0];
+          parts.push(`🟢 입찰가: ${bidText} Gold`);
+        }
+        
+        // 즉시구매가 범위
+        if (config.buyMin || config.buyMax) {
+          const buyRange = [];
+          if (config.buyMin) buyRange.push(config.buyMin.toLocaleString());
+          if (config.buyMax) buyRange.push(config.buyMax.toLocaleString());
+          const buyText = buyRange.length === 2 ? `${buyRange[0]} ~ ${buyRange[1]}` : buyRange[0];
+          parts.push(`🟠 즉시구매가: ${buyText} Gold`);
+        }
+        
+        // 위력 범위
+        if (config.powerMin || config.powerMax) {
+          const powerRange = [];
+          if (config.powerMin) powerRange.push(config.powerMin);
+          if (config.powerMax) powerRange.push(config.powerMax);
+          const powerText = powerRange.length === 2 ? `${powerRange[0]} ~ ${powerRange[1]}` : powerRange[0];
+          parts.push(`⚡ 위력: ${powerText}`);
+        }
+        
+        // 무게 범위
+        if (config.weightMin || config.weightMax) {
+          const weightRange = [];
+          if (config.weightMin) weightRange.push(config.weightMin);
+          if (config.weightMax) weightRange.push(config.weightMax);
+          const weightText = weightRange.length === 2 ? `${weightRange[0]} ~ ${weightRange[1]}` : weightRange[0];
+          parts.push(`⚖️ 무게: ${weightText}`);
+        }
+        
+        // 속성
+        if (config.attribute) {
+          const attributeMap = {
+            '물': '💧 물',
+            '불': '🔥 불',
+            '번개': '⚡ 번개',
+            '바람': '💨 바람',
+            '대지': '🌍 대지',
+            '빛': '✨ 빛',
+            '어둠': '🌑 어둠',
+            '무': '⚔️ 무'
+          };
+          const attributeName = attributeMap[config.attribute] || config.attribute;
+          parts.push(`🎨 속성: ${attributeName}`);
+        }
+        
+        return parts.length > 0 ? parts.join('\n') : '🔍 기본 검색';
+      };
+      
+      modal.innerHTML = `
+        <div class="modal-content">
+          <h3>🏪 거래소 검색 완료</h3>
+          <div style="text-align: left; margin: 20px 0;">
+            <div style="background: ${result.success ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; padding: 12px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid ${result.success ? '#10b981' : '#ef4444'};">
+              <p style="margin: 0; font-weight: 600; color: ${result.success ? '#065f46' : '#991b1b'};">
+                ${result.success ? '✅ 검색이 성공적으로 완료되었습니다' : '❌ 검색 중 오류가 발생했습니다'}
+              </p>
+            </div>
+            
+            <div style="background: rgba(59, 130, 246, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid #3b82f6;">
+              <p style="margin: 0 0 8px 0; font-weight: 600; color: #1e40af;">🔍 검색 조건</p>
+              <div style="white-space: pre-line; color: #374151; font-size: 14px; line-height: 1.5;">
+                ${formatSearchConfig(result.searchConfig)}
+              </div>
+            </div>
+            
+            ${result.error ? `
+              <div style="background: rgba(239, 68, 68, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid #ef4444;">
+                <p style="margin: 0; font-weight: 600; color: #991b1b;">⚠️ 오류 정보</p>
+                <p style="margin: 8px 0 0 0; color: #dc2626; font-size: 14px;">${result.error}</p>
+              </div>
+            ` : ''}
+            
+            <p style="margin: 16px 0 0 0; color: #6b7280; font-size: 13px; text-align: center;">
+              💡 검색 결과는 거래소 페이지에서 확인하실 수 있습니다
+            </p>
+          </div>
+          <button class="close-btn">확인</button>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      // 확인 버튼 클릭 시 모달 닫기
+      const closeBtn = modal.querySelector('.close-btn');
+      closeBtn.addEventListener('click', () => {
+        modal.remove();
+      });
+      
+      // 모달 외부 클릭 시 닫기
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
+      
+      // 5초 후 자동으로 모달 닫기
+      setTimeout(() => {
+        if (modal.parentNode) {
+          modal.remove();
+        }
+      }, 5000);
+      
+      } catch (error) {
+      console.error('거래소 검색 모달 표시 실패:', error);
+    }
+  }
+
+  async waitForElement(selector, timeout = 3000) {
     const start = Date.now();
     
     while (Date.now() - start < timeout) {
@@ -926,7 +1226,7 @@ class SearchEngine {
       if (element) {
         return element;
       }
-      await this.sleep(100);
+      await this.sleep(50); // 더 빠른 확인 간격
     }
     
     throw new Error(`요소를 찾을 수 없음: ${selector}`);
@@ -943,10 +1243,8 @@ class SearchEngine {
         const { searchConfig, buttonIndex } = JSON.parse(pendingSearch);
         sessionStorage.removeItem('pendingQuickSearch');
         
-        // 페이지 로드 완료 후 검색 실행 (대기 시간 단축)
-        setTimeout(() => {
-          this.executeQuickSearch(searchConfig, buttonIndex);
-        }, 1000); // 2000ms → 1000ms로 단축
+        // 페이지 로드 완료 후 검색 실행 (조건 감지)
+        this.waitForMarketDOMAndExecute(searchConfig, buttonIndex);
         
       } catch (error) {
         console.error('대기 중인 퀵검색 파싱 실패:', error);
@@ -955,11 +1253,62 @@ class SearchEngine {
     }
   }
 
+  async waitForMarketDOMAndExecute(searchConfig, buttonIndex) {
+    // DOM이 이미 준비되어 있는지 먼저 확인 (새로운 HTML 구조 기반)
+    const checkDOMReady = () => {
+      // 거래소 패널이 열려있는지 확인
+      const marketPanel = document.querySelector('.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.css-s1ntyf');
+      if (!marketPanel) return false;
+      
+      // 탭 버튼들이 로드되었는지 확인
+      const tabButtons = marketPanel.querySelectorAll('button[role="tab"]');
+      if (tabButtons.length === 0) return false;
+      
+      // 거래소 제목이 있는지 확인
+      const marketTitle = marketPanel.querySelector('h5');
+      if (!marketTitle || !marketTitle.textContent.includes('거래소')) return false;
+      
+      return true;
+    };
+    
+    // 이미 준비되어 있으면 즉시 실행
+    if (checkDOMReady()) {
+      this.executeQuickSearch(searchConfig, buttonIndex);
+      return;
+    }
+    
+    // DOM이 준비될 때까지 감지 (최적화된 버전)
+    let attempts = 0;
+    const maxAttempts = 30; // 최대 3초 (단축)
+    
+    const checkAndExecute = () => {
+      attempts++;
+      
+      if (checkDOMReady()) {
+        this.executeQuickSearch(searchConfig, buttonIndex);
+        return;
+      }
+      
+      if (attempts >= maxAttempts) {
+        return;
+      }
+      
+      // 더 빠른 확인 간격
+      setTimeout(checkAndExecute, 50);
+    };
+    
+    // 즉시 첫 번째 확인 시작
+    setTimeout(checkAndExecute, 0);
+  }
+
   // 공개 메서드들
   getRareItemsData() {
     return this.rareItemsData;
   }
 }
+
+// SearchEngine 클래스를 전역으로 노출
+window.SearchEngine = SearchEngine;
 
 // 전역 인스턴스 생성
 if (document.readyState === 'loading') {

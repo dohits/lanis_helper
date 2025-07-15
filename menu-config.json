@@ -1,89 +1,13 @@
 {
   "mainMenu": {
-    "button": {
-      "icon": "⚡",
-      "text": "",
-      "title": "Lanis Helper 메뉴"
-    },
+    "button": { "icon": "⚡", "text": "", "title": "Lanis Helper 메뉴" },
     "items": [
-      {
-        "id": "exchange",
-        "icon": "🏪",
-        "text": "거래소",
-        "title": "거래소 퀵버튼 메뉴"
-      },
-      {
-        "id": "itemGuide",
-        "icon": "📚",
-        "text": "아이템 도감",
-        "title": "아이템 도감"
-      },
-      {
-        "id": "settings",
-        "icon": "⚙️",
-        "text": "설정",
-        "title": "설정 메뉴"
-      }
-    ],
-    "exchange": {
-      "subMenu": {
-        "title": "거래소 퀵버튼",
-        "items": [
-          {
-            "id": "quick1",
-            "icon": "🔍",
-            "text": "퀵1",
-            "title": "퀵버튼 1"
-          },
-          {
-            "id": "quick2",
-            "icon": "🔍",
-            "text": "퀵2",
-            "title": "퀵버튼 2"
-          },
-          {
-            "id": "quick3",
-            "icon": "🔍",
-            "text": "퀵3",
-            "title": "퀵버튼 3"
-          }
-        ]
-      }
-    },
-    "settings": {
-      "subMenu": {
-        "title": "설정",
-        "items": [
-          {
-            "id": "profileLink",
-            "icon": "👤",
-            "text": "프로필 링크",
-            "title": "사용자 프로필 링크 표시"
-          },
-          {
-            "id": "showItemStats",
-            "icon": "📊",
-            "text": "아이템 스탯",
-            "title": "아이템 스탯 정보 표시"
-          },
-          {
-            "id": "quickButtons",
-            "icon": "⚡",
-            "text": "퀵버튼",
-            "title": "퀵버튼 기능 활성화"
-          }
-        ]
-      }
-    }
+      { "id": "exchange", "icon": "🏪", "text": "거래소", "title": "거래소 퀵버튼 메뉴" },
+      { "id": "settings", "icon": "⚙️", "text": "설정", "title": "설정 메뉴" }
+    ]
   },
   "quickButtonOptions": {
-    "move": {
-      "text": "▶️",
-      "title": "거래소로 이동하여 검색 실행"
-    },
-    "reset": {
-      "text": "⚙️",
-      "title": "퀵버튼 설정 변경"
-    }
+    "move": { "text": "▶️", "title": "거래소로 이동하여 검색 실행" },
+    "reset": { "text": "⚙️", "title": "퀵버튼 설정 변경" }
   }
 } 
