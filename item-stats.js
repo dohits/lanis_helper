@@ -1,4 +1,13 @@
 // 아이템 감정 범위 표기 관리자
+// 
+// HTML 구조 참조: exam/item-popover-example.html
+// - 팝오버 컨테이너: .MuiPaper-root.MuiPopover-paper
+// - 아이템 감정 정보 컨테이너: .item-stats-processed
+// - 감정 정보 래퍼: .item-stats-wrapper
+// - 태그/점수 표기: .item-grade-tag-row
+// - 위력/무게 감정 정보: .power-range-processed/.weight-range-processed
+// - 퍼센트/점수 표기: .stat-detail-row
+//
 class ItemStatsManager {
   constructor() {
     this.rareItemsData = [];
@@ -10,6 +19,7 @@ class ItemStatsManager {
     this.loadSettings();
     await this.loadRareItemsData();
     this.startDynamicContentDetection();
+    this.startPopoverPositionObserver();
   }
 
   // 설정 로드
@@ -109,6 +119,9 @@ class ItemStatsManager {
             rangeSpan.style.color = '#666';
             rangeSpan.style.fontSize = '0.9em';
             rangeSpan.style.fontStyle = 'italic';
+            rangeSpan.style.textAlign = 'right';
+            rangeSpan.style.display = 'inline-block';
+            rangeSpan.style.width = '100%';
             rangeSpan.classList.add('power-range-info');
             const wikiSpan = document.createElement('span');
             wikiSpan.textContent = ' [위키有]';
@@ -119,6 +132,14 @@ class ItemStatsManager {
             valueElement.appendChild(rangeSpan);
             valueElement.appendChild(wikiSpan);
             valueElement.classList.add('power-range-processed');
+            
+            // 팝오버 위치 재조정
+            const popover = container.closest('.MuiPopover-root');
+            if (popover) {
+              setTimeout(() => {
+                this.adjustPopoverPosition(popover);
+              }, 50);
+            }
             return;
           }
           const { grade, color, percentage, score } = this.calculateGrade(currentPower, itemData.power_min, itemData.power_max);
@@ -128,12 +149,18 @@ class ItemStatsManager {
           rangeSpan.style.color = '#666';
           rangeSpan.style.fontSize = '0.9em';
           rangeSpan.style.fontStyle = 'italic';
+          rangeSpan.style.textAlign = 'right';
+          rangeSpan.style.display = 'inline-block';
+          rangeSpan.style.width = '100%';
           rangeSpan.classList.add('power-range-info');
           const gradeSpan = document.createElement('span');
           gradeSpan.textContent = ` [${grade}]`;
           gradeSpan.style.color = color;
           gradeSpan.style.fontSize = '0.9em';
           gradeSpan.style.fontWeight = 'bold';
+          gradeSpan.style.textAlign = 'right';
+          gradeSpan.style.display = 'inline-block';
+          gradeSpan.style.width = '100%';
           gradeSpan.classList.add('power-grade-info');
           gradeSpan.setAttribute('data-grade', grade);
           // 퍼센트/점수 표기 (범위좁음이면 점수 표기 X)
@@ -176,6 +203,14 @@ class ItemStatsManager {
           valueElement.classList.add('power-range-processed');
           // 퍼센트/점수/색상 저장
           powerSummary = { percent: percentage.toFixed(1), score, color };
+          
+          // 팝오버 위치 재조정
+          const popover = container.closest('.MuiPopover-root');
+          if (popover) {
+            setTimeout(() => {
+              this.adjustPopoverPosition(popover);
+            }, 50);
+          }
         }
         // 무게 처리
         if (label === '무게' &&
@@ -191,6 +226,9 @@ class ItemStatsManager {
             rangeSpan.style.color = '#666';
             rangeSpan.style.fontSize = '0.9em';
             rangeSpan.style.fontStyle = 'italic';
+            rangeSpan.style.textAlign = 'right';
+            rangeSpan.style.display = 'inline-block';
+            rangeSpan.style.width = '100%';
             rangeSpan.classList.add('weight-range-info');
             const wikiSpan = document.createElement('span');
             wikiSpan.textContent = ' [위키有]';
@@ -201,6 +239,14 @@ class ItemStatsManager {
             valueElement.appendChild(rangeSpan);
             valueElement.appendChild(wikiSpan);
             valueElement.classList.add('weight-range-processed');
+            
+            // 팝오버 위치 재조정
+            const popover = container.closest('.MuiPopover-root');
+            if (popover) {
+              setTimeout(() => {
+                this.adjustPopoverPosition(popover);
+              }, 50);
+            }
             return;
           }
           const { grade, color, percentage, score } = this.calculateGrade(currentWeight, itemData.weight_min, itemData.weight_max, true);
@@ -210,12 +256,18 @@ class ItemStatsManager {
           rangeSpan.style.color = '#666';
           rangeSpan.style.fontSize = '0.9em';
           rangeSpan.style.fontStyle = 'italic';
+          rangeSpan.style.textAlign = 'right';
+          rangeSpan.style.display = 'inline-block';
+          rangeSpan.style.width = '100%';
           rangeSpan.classList.add('weight-range-info');
           const gradeSpan = document.createElement('span');
           gradeSpan.textContent = ` [${grade}]`;
           gradeSpan.style.color = color;
           gradeSpan.style.fontSize = '0.9em';
           gradeSpan.style.fontWeight = 'bold';
+          gradeSpan.style.textAlign = 'right';
+          gradeSpan.style.display = 'inline-block';
+          gradeSpan.style.width = '100%';
           gradeSpan.classList.add('weight-grade-info');
           gradeSpan.setAttribute('data-grade', grade);
           // 퍼센트/점수 표기 (범위좁음이면 점수 표기 X)
@@ -258,6 +310,14 @@ class ItemStatsManager {
           valueElement.classList.add('weight-range-processed');
           // 퍼센트/점수/색상 저장
           weightSummary = { percent: percentage.toFixed(1), score, color };
+          
+          // 팝오버 위치 재조정
+          const popover = container.closest('.MuiPopover-root');
+          if (popover) {
+            setTimeout(() => {
+              this.adjustPopoverPosition(popover);
+            }, 50);
+          }
         }
       }
     });
@@ -317,46 +377,60 @@ class ItemStatsManager {
     let tagText = '';
     let tagColor = '';
     let tagScore;
-    // 점수 계산
-    if (powerNarrow && weightNarrow) {
-      tagScore = Math.max(powerScore, weightScore);
-    } else if (powerNarrow) {
-      tagScore = weightScore;
-    } else if (weightNarrow) {
-      tagScore = powerScore;
+    // '누락' 등급이 하나라도 있으면 (누락)만 표기, 태그/점수/합산 없음
+    if (powerGrade === '누락' || weightGrade === '누락') {
+      tagText = '';
+      tagColor = '#FF8888';
+      tagScore = '누락';
     } else {
-      tagScore = powerScore + weightScore;
+      // 점수 계산 (score가 null이면 0으로 대체)
+      const safePowerScore = powerScore == null ? 0 : powerScore;
+      const safeWeightScore = weightScore == null ? 0 : weightScore;
+      if (powerNarrow && weightNarrow) {
+        tagScore = Math.max(safePowerScore, safeWeightScore);
+      } else if (powerNarrow) {
+        tagScore = safeWeightScore;
+      } else if (weightNarrow) {
+        tagScore = safePowerScore;
+      } else {
+        tagScore = safePowerScore + safeWeightScore;
+      }
+      // 태그 조건
+      if (!powerNarrow && !weightNarrow) {
+        if (tagScore === 16) {
+          tagText = '[완전무결]'; tagColor = '#00FFF0';
+        } else if (tagScore >= 12 && tagScore <= 15) {
+          tagText = '[종결]'; tagColor = '#FF5555';
+        } else if (tagScore === 11) {
+          tagText = '[준종결]'; tagColor = '#C770FF';
+        }
+      } else if (powerNarrow && !weightNarrow) {
+        if (tagScore === 8 && weightGrade === '무결') {
+          tagText = '[완전무결]'; tagColor = '#00FFF0';
+        } else if (tagScore >= 6 && tagScore <= 7) {
+          tagText = '[종결]'; tagColor = '#FF5555';
+        } else if (tagScore === 5) {
+          tagText = '[준종결]'; tagColor = '#C770FF';
+        }
+      } else if (!powerNarrow && weightNarrow) {
+        if (tagScore === 8 && powerGrade === '무결') {
+          tagText = '[완전무결]'; tagColor = '#00FFF0';
+        } else if (tagScore >= 6 && tagScore <= 7) {
+          tagText = '[종결]'; tagColor = '#FF5555';
+        } else if (tagScore === 5) {
+          tagText = '[준종결]'; tagColor = '#C770FF';
+        }
+      }
     }
-    // 태그 조건
-    if (!powerNarrow && !weightNarrow) {
-      if (tagScore === 16) {
-        tagText = '[완전무결]'; tagColor = '#00FFF0';
-      } else if (tagScore >= 12 && tagScore <= 15) {
-        tagText = '[종결]'; tagColor = '#FF5555';
-      } else if (tagScore === 11) {
-        tagText = '[준종결]'; tagColor = '#C770FF';
-      }
-    } else if (powerNarrow && !weightNarrow) {
-      if (tagScore === 8 && weightGrade === '무결') {
-        tagText = '[완전무결]'; tagColor = '#00FFF0';
-      } else if (tagScore >= 6 && tagScore <= 7) {
-        tagText = '[종결]'; tagColor = '#FF5555';
-      } else if (tagScore === 5) {
-        tagText = '[준종결]'; tagColor = '#C770FF';
-      }
-    } else if (!powerNarrow && weightNarrow) {
-      if (tagScore === 8 && powerGrade === '무결') {
-        tagText = '[완전무결]'; tagColor = '#00FFF0';
-      } else if (tagScore >= 6 && tagScore <= 7) {
-        tagText = '[종결]'; tagColor = '#FF5555';
-      } else if (tagScore === 5) {
-        tagText = '[준종결]'; tagColor = '#C770FF';
-      }
-    }
-    // 태그/점수 표기 (태그가 없더라도 점수는 항상 표기)
+    // 태그/점수 표기 (태그가 없더라도 점수는 항상 표기, 단 누락은 (누락)만)
     const tagSpan = document.createElement('span');
-    tagSpan.textContent = tagText ? ` ${tagText} (${tagScore}점)` : ` (${tagScore}점)`;
-    tagSpan.style.color = tagText ? tagColor : '#666';
+    if (tagScore === '누락') {
+      tagSpan.textContent = ' (누락)';
+      tagSpan.style.color = tagColor;
+    } else {
+      tagSpan.textContent = tagText ? ` ${tagText} (${tagScore}점)` : ` (${tagScore}점)`;
+      tagSpan.style.color = tagText ? tagColor : '#666';
+    }
     tagSpan.style.fontSize = '0.8rem';
     tagSpan.style.fontWeight = 'bold';
     tagSpan.style.fontStyle = 'italic';
@@ -374,24 +448,26 @@ class ItemStatsManager {
     }
     tagRow.innerHTML = '';
     tagRow.appendChild(tagSpan);
-    // stat summary 줄 생성/갱신 - 제거
-    // let statRow = container.querySelector('.item-stat-summary-row');
-    // if (!statRow) {
-    //   statRow = document.createElement('div');
-    //   statRow.className = 'item-stat-summary-row';
-    //   tagRow.parentNode.insertBefore(statRow, tagRow.nextSibling);
-    // }
-    // 퍼센트/점수 정보로 한 줄 생성 - 제거
-    // const statSummary = container._statSummary || {};
-    // let statHtml = '';
-    // if (statSummary.power) {
-    //   statHtml += `<span style="color:${statSummary.power.color}">위력 [${statSummary.power.percent}%] (${statSummary.power.score}점)</span>`;
-    // }
-    // if (statSummary.weight) {
-    //   if (statHtml) statHtml += ' / ';
-    //   statHtml += `<span style="color:${statSummary.weight.color}">무게 [${statSummary.weight.percent}%] (${statSummary.weight.score}점)</span>`;
-    // }
-    // statRow.innerHTML = statHtml;
+    // popover 내부 wrapper로 감싸고 marginTop 적용 (실험용)
+    let wrapper = container.querySelector('.item-stats-wrapper');
+    if (!wrapper) {
+      wrapper = document.createElement('div');
+      wrapper.className = 'item-stats-wrapper';
+      // 기존 컨텐츠를 wrapper로 이동
+      while (container.firstChild) {
+        wrapper.appendChild(container.firstChild);
+      }
+      container.appendChild(wrapper);
+    }
+    // wrapper 스타일 속성 제거
+    
+    // 아이템 감정 정보 추가 후 팝오버 위치 재조정
+    const popover = container.closest('.MuiPopover-root');
+    if (popover) {
+      setTimeout(() => {
+        this.adjustPopoverPosition(popover);
+      }, 50);
+    }
   }
 
   // 등급 계산 함수 (퍼센트, 점수 반환, 오차 방지, 다크모드 색상)
@@ -400,19 +476,19 @@ class ItemStatsManager {
     if (currentValue === null || currentValue === undefined || 
         minValue === null || minValue === undefined || 
         maxValue === null || maxValue === undefined) {
-      return { grade: '최하', color: '#CCCCCC', percentage: 0, score: 2 };
+      return { grade: null, color: null, percentage: null, score: null };
+    }
+    // 현재값이 범위를 벗어나는 경우 (이상치)
+    if (currentValue < minValue || currentValue > maxValue) {
+      return { grade: '누락', color: '#FF8888', percentage: null, score: null };
     }
     // 범위가 0인 경우 (최소값과 최대값이 같은 경우)
     if (minValue === maxValue) {
       if (currentValue === minValue) {
-        return { grade: '최상', color: '#FF5555', percentage: 100.0, score: 6 };
+        return { grade: '무결', color: '#00FFF0', percentage: 100.0, score: 8 };
       } else {
-        return { grade: '최하', color: '#CCCCCC', percentage: 0, score: 2 };
+        return { grade: null, color: null, percentage: null, score: null };
       }
-    }
-    // 현재값이 범위를 벗어나는 경우
-    if (currentValue < minValue || currentValue > maxValue) {
-      return { grade: '최하', color: '#CCCCCC', percentage: 0, score: 2 };
     }
     // 퍼센트 계산 (음수 범위도 올바르게 처리)
     let percentage;
@@ -422,31 +498,63 @@ class ItemStatsManager {
       const range = maxValue - minValue;
       percentage = ((currentValue - minValue) / range) * 100;
     }
+    // 무게는 낮을수록 좋으므로 등급 판정 반전
     if (isWeight) {
       percentage = 100 - percentage;
+      if (currentValue === minValue) {
+        return { grade: '무결', color: '#00FFF0', percentage: 100.0, score: 8 };
+      }
+      if (currentValue === maxValue) {
+        return { grade: '폐급', color: '#888888', percentage: 0, score: 0 };
+      }
+    } else {
+      if (currentValue === minValue) {
+        return { grade: '폐급', color: '#888888', percentage: 0, score: 0 };
+      }
+      if (currentValue === maxValue) {
+        return { grade: '무결', color: '#00FFF0', percentage: 100.0, score: 8 };
+      }
     }
     // 부동소수점 오차 방지 및 0~100 클램프, 소수점 1자리
     percentage = Math.max(0, Math.min(100, Math.round((percentage + Number.EPSILON) * 10) / 10));
-    // 등급 결정 (최소치: 불량, 5% 이하: 폐급, 100%: 무결, 95%~: 완벽)
+    // 등급 결정 (최소치: 폐급, 5% 이하: 불량, 100%: 무결, 95%~: 완벽)
     let grade, color, score;
-    if (currentValue === minValue) {
-      grade = '불량'; color = '#888888'; score = 0;
-    } else if (percentage <= 5) {
-      grade = '폐급'; color = '#BBBBBB'; score = 1;
-    } else if (percentage === 100.0) {
-      grade = '무결'; color = '#00FFF0'; score = 8;
-    } else if (percentage >= 95) {
-      grade = '완벽'; color = '#FFE066'; score = 7;
-    } else if (percentage >= 90) {
-      grade = '최상'; color = '#FF5555'; score = 6;
-    } else if (percentage >= 70) {
-      grade = '상'; color = '#C770FF'; score = 5;
-    } else if (percentage >= 50) {
-      grade = '중'; color = '#FFFF66'; score = 4;
-    } else if (percentage >= 30) {
-      grade = '하'; color = '#66A3FF'; score = 3;
+    if (isWeight) {
+      if (percentage <= 5) {
+        grade = '불량'; color = '#BBBBBB'; score = 1;
+      } else if (percentage === 100.0) {
+        grade = '무결'; color = '#00FFF0'; score = 8;
+      } else if (percentage >= 95) {
+        grade = '완벽'; color = '#FFE066'; score = 7;
+      } else if (percentage >= 90) {
+        grade = '최상'; color = '#FF5555'; score = 6;
+      } else if (percentage >= 70) {
+        grade = '상'; color = '#C770FF'; score = 5;
+      } else if (percentage >= 50) {
+        grade = '중'; color = '#FFFF66'; score = 4;
+      } else if (percentage >= 30) {
+        grade = '하'; color = '#66A3FF'; score = 3;
+      } else {
+        grade = '폐급'; color = '#CCCCCC'; score = 2;
+      }
     } else {
-      grade = '최하'; color = '#CCCCCC'; score = 2;
+      if (percentage <= 5) {
+        grade = '불량'; color = '#BBBBBB'; score = 1;
+      } else if (percentage === 100.0) {
+        grade = '무결'; color = '#00FFF0'; score = 8;
+      } else if (percentage >= 95) {
+        grade = '완벽'; color = '#FFE066'; score = 7;
+      } else if (percentage >= 90) {
+        grade = '최상'; color = '#FF5555'; score = 6;
+      } else if (percentage >= 70) {
+        grade = '상'; color = '#C770FF'; score = 5;
+      } else if (percentage >= 50) {
+        grade = '중'; color = '#FFFF66'; score = 4;
+      } else if (percentage >= 30) {
+        grade = '하'; color = '#66A3FF'; score = 3;
+      } else {
+        grade = '폐급'; color = '#CCCCCC'; score = 2;
+      }
     }
     return { grade, color, percentage, score };
   }
@@ -483,6 +591,100 @@ class ItemStatsManager {
       childList: true,
       subtree: true
     });
+  }
+
+  // 팝오버 위치 관찰자 시작
+  startPopoverPositionObserver() {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              // MUI 팝오버가 추가되었는지 확인
+              if (node.classList && node.classList.contains('MuiPopover-root')) {
+                this.adjustPopoverPosition(node);
+              } else if (node.querySelectorAll) {
+                const popovers = node.querySelectorAll('.MuiPopover-root');
+                popovers.forEach(popover => this.adjustPopoverPosition(popover));
+              }
+            }
+          });
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  // 팝오버 위치 조정
+  adjustPopoverPosition(popover) {
+    const paper = popover.querySelector('.MuiPaper-root');
+    if (!paper) return;
+
+    // 팝오버가 완전히 렌더링될 때까지 대기
+    setTimeout(() => {
+      this.calculateAndAdjustPosition(popover, paper);
+    }, 100);
+  }
+
+  // 위치 계산 및 조정
+  calculateAndAdjustPosition(popover, paper) {
+    const rect = paper.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    let newLeft = rect.left;
+    let newTop = rect.top;
+    let needsAdjustment = false;
+
+    // 우측 경계 체크
+    if (rect.right > viewportWidth - 20) {
+      newLeft = viewportWidth - rect.width - 20;
+      needsAdjustment = true;
+    }
+
+    // 좌측 경계 체크
+    if (rect.left < 20) {
+      newLeft = 20;
+      needsAdjustment = true;
+    }
+
+    // 하단 경계 체크
+    if (rect.bottom > viewportHeight - 20) {
+      newTop = viewportHeight - rect.height - 20;
+      needsAdjustment = true;
+    }
+
+    // 상단 경계 체크
+    if (rect.top < 20) {
+      newTop = 20;
+      needsAdjustment = true;
+    }
+
+    // 위치 조정이 필요한 경우
+    if (needsAdjustment) {
+      paper.style.position = 'fixed';
+      paper.style.left = `${newLeft}px`;
+      paper.style.top = `${newTop}px`;
+      paper.style.transform = 'none';
+      
+      // 팝오버 컨테이너도 함께 조정
+      popover.style.position = 'fixed';
+      popover.style.left = `${newLeft}px`;
+      popover.style.top = `${newTop}px`;
+      popover.style.transform = 'none';
+    }
+
+    // 내용이 너무 길 경우 스크롤 처리
+    if (rect.height > viewportHeight - 40) {
+      paper.style.maxHeight = `${viewportHeight - 40}px`;
+      paper.style.overflowY = 'auto';
+    }
+
+    // 가로는 제한하지 않음 (사용자 요청에 따라)
   }
 
   removeItemStats() {
