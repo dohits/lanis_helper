@@ -517,7 +517,7 @@ class ItemStatsManager {
       } else if (percentage >= 30) {
         grade = '하'; color = '#66A3FF'; score = 3;
       } else {
-        grade = '폐급'; color = '#CCCCCC'; score = 2;
+        grade = '최하'; color = '#CCCCCC'; score = 2;
       }
     } else {
       if (percentage <= 5) {
@@ -535,7 +535,7 @@ class ItemStatsManager {
       } else if (percentage >= 30) {
         grade = '하'; color = '#66A3FF'; score = 3;
       } else {
-        grade = '폐급'; color = '#CCCCCC'; score = 2;
+        grade = '최하'; color = '#CCCCCC'; score = 2;
       }
     }
     return { grade, color, percentage, score };
