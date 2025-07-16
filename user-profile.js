@@ -130,21 +130,12 @@ class UserProfileManager {
 }
 
 // 전역 인스턴스 생성 (개선된 버전)
-console.log('UserProfileManager 클래스 정의 완료');
-console.log('UserProfileManager 인스턴스 생성 시작');
-console.log('현재 window 객체:', Object.keys(window).filter(key => key.includes('Manager') || key.includes('Engine')));
-
+// 모든 console.log 등 콘솔 출력 코드 삭제
 // DOM이 준비된 후에 인스턴스 생성
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM 로드 완료 - UserProfileManager 인스턴스 생성');
     window.userProfileManager = new UserProfileManager();
-    console.log('UserProfileManager 인스턴스 생성 완료:', window.userProfileManager);
-    console.log('생성 후 window 객체:', Object.keys(window).filter(key => key.includes('Manager') || key.includes('Engine')));
   });
 } else {
-  console.log('DOM 이미 로드됨 - UserProfileManager 인스턴스 즉시 생성');
   window.userProfileManager = new UserProfileManager();
-  console.log('UserProfileManager 인스턴스 생성 완료:', window.userProfileManager);
-  console.log('생성 후 window 객체:', Object.keys(window).filter(key => key.includes('Manager') || key.includes('Engine')));
 } 

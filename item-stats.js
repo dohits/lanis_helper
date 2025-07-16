@@ -86,6 +86,8 @@ class ItemStatsManager {
     const statContainers = container.querySelectorAll('.MuiBox-root.css-gg4vpm');
     let powerGrade = null;
     let weightGrade = null;
+    let powerSummary = null;
+    let weightSummary = null;
     statContainers.forEach((statContainer) => {
       const pElements = statContainer.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv');
       if (pElements.length === 2) {
@@ -99,8 +101,28 @@ class ItemStatsManager {
             itemData.power_min !== itemData.power_max) {
           if (valueElement.classList.contains('power-range-processed')) return;
           const currentPower = parseInt(value);
-          const { grade, color } = this.calculateGrade(currentPower, itemData.power_min, itemData.power_max);
-          powerGrade = grade;
+          // 미감정 아이템(범위 문자열 ex: 80~122) 처리
+          if (!/^-?\d+$/.test(value)) {
+            // 범위만 표기, 등급/퍼센트/태그 대신 [위키有] 표기
+            const rangeSpan = document.createElement('span');
+            rangeSpan.textContent = ` (${itemData.power_min}-${itemData.power_max})`;
+            rangeSpan.style.color = '#666';
+            rangeSpan.style.fontSize = '0.9em';
+            rangeSpan.style.fontStyle = 'italic';
+            rangeSpan.classList.add('power-range-info');
+            const wikiSpan = document.createElement('span');
+            wikiSpan.textContent = ' [위키有]';
+            wikiSpan.style.color = '#888';
+            wikiSpan.style.fontSize = '0.9em';
+            wikiSpan.style.fontStyle = 'italic';
+            wikiSpan.classList.add('wiki-info');
+            valueElement.appendChild(rangeSpan);
+            valueElement.appendChild(wikiSpan);
+            valueElement.classList.add('power-range-processed');
+            return;
+          }
+          const { grade, color, percentage, score } = this.calculateGrade(currentPower, itemData.power_min, itemData.power_max);
+          const isNarrow = Math.abs(itemData.power_max - itemData.power_min) <= 9;
           const rangeSpan = document.createElement('span');
           rangeSpan.textContent = ` (${itemData.power_min}-${itemData.power_max})`;
           rangeSpan.style.color = '#666';
@@ -113,9 +135,47 @@ class ItemStatsManager {
           gradeSpan.style.fontSize = '0.9em';
           gradeSpan.style.fontWeight = 'bold';
           gradeSpan.classList.add('power-grade-info');
+          gradeSpan.setAttribute('data-grade', grade);
+          // 퍼센트/점수 표기 (범위좁음이면 점수 표기 X)
+          const percentSpan = document.createElement('span');
+          percentSpan.textContent = isNarrow ? ` (${percentage.toFixed(1)}%)` : ` (${percentage.toFixed(1)}%)`;
+          percentSpan.style.color = '#666';
+          percentSpan.style.fontSize = '0.9em';
+          percentSpan.style.fontWeight = 'normal';
+          percentSpan.style.fontStyle = 'italic';
+          percentSpan.classList.add('power-percent-info');
+          // 점수 표기 (등급과 같은 색상)
+          let scoreSpan = null;
+          if (!isNarrow) {
+            scoreSpan = document.createElement('span');
+            scoreSpan.textContent = ` (${score}점)`;
+            scoreSpan.style.color = color;
+            scoreSpan.style.fontSize = '0.9em';
+            scoreSpan.style.fontWeight = 'bold';
+            scoreSpan.classList.add('power-score-info');
+          }
+          // (범위 좁음) 안내
+          let narrowSpan = null;
+          if (isNarrow) {
+            narrowSpan = document.createElement('span');
+            narrowSpan.textContent = ' (범위 좁음)';
+            narrowSpan.style.color = '#666';
+            narrowSpan.style.fontSize = '0.9em';
+            narrowSpan.style.fontWeight = 'bold';
+            narrowSpan.classList.add('narrow-range-info');
+          }
           valueElement.appendChild(rangeSpan);
           valueElement.appendChild(gradeSpan);
+          valueElement.appendChild(document.createElement('br'));
+          let detailRow = document.createElement('span');
+          detailRow.className = 'stat-detail-row';
+          detailRow.appendChild(percentSpan);
+          if (scoreSpan) detailRow.appendChild(scoreSpan);
+          if (narrowSpan) detailRow.appendChild(narrowSpan);
+          valueElement.appendChild(detailRow);
           valueElement.classList.add('power-range-processed');
+          // 퍼센트/점수/색상 저장
+          powerSummary = { percent: percentage.toFixed(1), score, color };
         }
         // 무게 처리
         if (label === '무게' &&
@@ -123,8 +183,28 @@ class ItemStatsManager {
             itemData.weight_min !== itemData.weight_max) {
           if (valueElement.classList.contains('weight-range-processed')) return;
           const currentWeight = parseInt(value);
-          const { grade, color } = this.calculateGrade(currentWeight, itemData.weight_min, itemData.weight_max, true);
-          weightGrade = grade;
+          // 미감정 아이템(범위 문자열 ex: 80~122) 처리
+          if (!/^-?\d+$/.test(value)) {
+            // 범위만 표기, 등급/퍼센트/태그 대신 [위키有] 표기
+            const rangeSpan = document.createElement('span');
+            rangeSpan.textContent = ` (${itemData.weight_min}-${itemData.weight_max})`;
+            rangeSpan.style.color = '#666';
+            rangeSpan.style.fontSize = '0.9em';
+            rangeSpan.style.fontStyle = 'italic';
+            rangeSpan.classList.add('weight-range-info');
+            const wikiSpan = document.createElement('span');
+            wikiSpan.textContent = ' [위키有]';
+            wikiSpan.style.color = '#888';
+            wikiSpan.style.fontSize = '0.9em';
+            wikiSpan.style.fontStyle = 'italic';
+            wikiSpan.classList.add('wiki-info');
+            valueElement.appendChild(rangeSpan);
+            valueElement.appendChild(wikiSpan);
+            valueElement.classList.add('weight-range-processed');
+            return;
+          }
+          const { grade, color, percentage, score } = this.calculateGrade(currentWeight, itemData.weight_min, itemData.weight_max, true);
+          const isNarrow = Math.abs(itemData.weight_max - itemData.weight_min) <= 9;
           const rangeSpan = document.createElement('span');
           rangeSpan.textContent = ` (${itemData.weight_min}-${itemData.weight_max})`;
           rangeSpan.style.color = '#666';
@@ -137,66 +217,245 @@ class ItemStatsManager {
           gradeSpan.style.fontSize = '0.9em';
           gradeSpan.style.fontWeight = 'bold';
           gradeSpan.classList.add('weight-grade-info');
+          gradeSpan.setAttribute('data-grade', grade);
+          // 퍼센트/점수 표기 (범위좁음이면 점수 표기 X)
+          const percentSpan = document.createElement('span');
+          percentSpan.textContent = isNarrow ? ` (${percentage.toFixed(1)}%)` : ` (${percentage.toFixed(1)}%)`;
+          percentSpan.style.color = '#666';
+          percentSpan.style.fontSize = '0.9em';
+          percentSpan.style.fontWeight = 'normal';
+          percentSpan.style.fontStyle = 'italic';
+          percentSpan.classList.add('weight-percent-info');
+          // 점수 표기 (등급과 같은 색상)
+          let scoreSpan = null;
+          if (!isNarrow) {
+            scoreSpan = document.createElement('span');
+            scoreSpan.textContent = ` (${score}점)`;
+            scoreSpan.style.color = color;
+            scoreSpan.style.fontSize = '0.9em';
+            scoreSpan.style.fontWeight = 'bold';
+            scoreSpan.classList.add('weight-score-info');
+          }
+          // (범위 좁음) 안내
+          let narrowSpan = null;
+          if (isNarrow) {
+            narrowSpan = document.createElement('span');
+            narrowSpan.textContent = ' (범위 좁음)';
+            narrowSpan.style.color = '#666';
+            narrowSpan.style.fontSize = '0.9em';
+            narrowSpan.style.fontWeight = 'bold';
+            narrowSpan.classList.add('narrow-range-info');
+          }
           valueElement.appendChild(rangeSpan);
           valueElement.appendChild(gradeSpan);
+          valueElement.appendChild(document.createElement('br'));
+          let detailRow = document.createElement('span');
+          detailRow.className = 'stat-detail-row';
+          detailRow.appendChild(percentSpan);
+          if (scoreSpan) detailRow.appendChild(scoreSpan);
+          if (narrowSpan) detailRow.appendChild(narrowSpan);
+          valueElement.appendChild(detailRow);
           valueElement.classList.add('weight-range-processed');
+          // 퍼센트/점수/색상 저장
+          weightSummary = { percent: percentage.toFixed(1), score, color };
         }
       }
     });
-    // 종결/준종결 태그 추가
-    if (powerGrade && weightGrade) {
-      this.addFinalTag(container, powerGrade, weightGrade);
+    // 퍼센트/점수 정보 컨테이너에 저장
+    // container._statSummary = { power: powerSummary, weight: weightSummary }; // 제거
+    // 종결/준종결/완전무결 태그 추가 (점수 기반, 범위좁음 예외, 점수 항상 표기)
+    // label이 '위력', '무게'인 statContainer를 반드시 찾아 점수 계산
+    let statPower = null, statWeight = null;
+    statContainers.forEach(sc => {
+      const labelEl = sc.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv')[0];
+      if (!labelEl) return;
+      const label = labelEl.textContent.trim();
+      if (label === '위력') statPower = sc.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv')[1];
+      if (label === '무게') statWeight = sc.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv')[1];
+    });
+    let powerInfo = {score: 0, grade: ''};
+    let weightInfo = {score: 0, grade: ''};
+    // 첫 번째 텍스트 노드만 추출
+    const powerText = this.getFirstNumberText(statPower);
+    const weightText = this.getFirstNumberText(statWeight);
+    if (statPower && powerText.match(/^-?\d+$/)) {
+      powerInfo = this.calculateGrade(parseInt(powerText), itemData.power_min, itemData.power_max);
     }
+    if (statWeight && weightText.match(/^-?\d+$/)) {
+      weightInfo = this.calculateGrade(parseInt(weightText), itemData.weight_min, itemData.weight_max, true);
+    }
+    const powerScore = powerInfo.score;
+    const weightScore = weightInfo.score;
+    const powerGradeVal = powerInfo.grade;
+    const weightGradeVal = weightInfo.grade;
+    const powerNarrow = Math.abs(itemData.power_max - itemData.power_min) <= 9;
+    const weightNarrow = Math.abs(itemData.weight_max - itemData.weight_min) <= 9;
+    // 미감정(위력/무게 값이 범위 문자열) 체크 (첫 텍스트만 검사)
+    const isWikiUnappraised =
+      statPower && statWeight &&
+      !powerText.match(/^-?\d+$/) &&
+      !weightText.match(/^-?\d+$/);
+    // addFinalTag는 항상 실행
+    this.addFinalTag(container, powerGradeVal, weightGradeVal, powerScore, weightScore, powerNarrow, weightNarrow, isWikiUnappraised);
   }
 
-  // 종결/준종결 태그 추가 함수
-  addFinalTag(container, powerGrade, weightGrade) {
+  // 종결/준종결/완전무결 태그 추가 함수 (점수 기반, 범위좁음 예외, 무결 등급 체크, 점수 항상 표기)
+  addFinalTag(container, powerGrade, weightGrade, powerScore, weightScore, powerNarrow, weightNarrow, isWikiUnappraised) {
     const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2');
-    if (!itemNameElement) return;
-    if (itemNameElement.querySelector('.final-tag')) return;
+    if (!itemNameElement) {
+      console.warn('아이템명 p 태그 탐색 실패', container);
+      return;
+    }
+    if (itemNameElement.querySelector('.final-tag')) {
+      console.warn('이미 final-tag가 있음', itemNameElement);
+      return;
+    }
+    if (isWikiUnappraised) {
+      console.warn('미감정으로 태그/점수 표기 생략', container);
+      return;
+    }
     let tagText = '';
     let tagColor = '';
-    if (powerGrade === '최상' && weightGrade === '최상') {
-      tagText = '[종결]';
-      tagColor = '#FF0000';
-    } else if ((powerGrade === '최상' && weightGrade === '상') ||
-               (powerGrade === '상' && weightGrade === '최상')) {
-      tagText = '[준종결]';
-      tagColor = '#800080';
+    let tagScore;
+    // 점수 계산
+    if (powerNarrow && weightNarrow) {
+      tagScore = Math.max(powerScore, weightScore);
+    } else if (powerNarrow) {
+      tagScore = weightScore;
+    } else if (weightNarrow) {
+      tagScore = powerScore;
+    } else {
+      tagScore = powerScore + weightScore;
     }
-    if (tagText) {
-      const tagSpan = document.createElement('span');
-      tagSpan.textContent = ` ${tagText}`;
-      tagSpan.style.color = tagColor;
-      tagSpan.style.fontSize = '0.9em';
-      tagSpan.style.fontWeight = 'bold';
-      tagSpan.style.fontStyle = 'italic';
-      tagSpan.classList.add('final-tag');
-      itemNameElement.appendChild(tagSpan);
+    // 태그 조건
+    if (!powerNarrow && !weightNarrow) {
+      if (tagScore === 16) {
+        tagText = '[완전무결]'; tagColor = '#00FFF0';
+      } else if (tagScore >= 12 && tagScore <= 15) {
+        tagText = '[종결]'; tagColor = '#FF5555';
+      } else if (tagScore === 11) {
+        tagText = '[준종결]'; tagColor = '#C770FF';
+      }
+    } else if (powerNarrow && !weightNarrow) {
+      if (tagScore === 8 && weightGrade === '무결') {
+        tagText = '[완전무결]'; tagColor = '#00FFF0';
+      } else if (tagScore >= 6 && tagScore <= 7) {
+        tagText = '[종결]'; tagColor = '#FF5555';
+      } else if (tagScore === 5) {
+        tagText = '[준종결]'; tagColor = '#C770FF';
+      }
+    } else if (!powerNarrow && weightNarrow) {
+      if (tagScore === 8 && powerGrade === '무결') {
+        tagText = '[완전무결]'; tagColor = '#00FFF0';
+      } else if (tagScore >= 6 && tagScore <= 7) {
+        tagText = '[종결]'; tagColor = '#FF5555';
+      } else if (tagScore === 5) {
+        tagText = '[준종결]'; tagColor = '#C770FF';
+      }
     }
+    // 태그/점수 표기 (태그가 없더라도 점수는 항상 표기)
+    const tagSpan = document.createElement('span');
+    tagSpan.textContent = tagText ? ` ${tagText} (${tagScore}점)` : ` (${tagScore}점)`;
+    tagSpan.style.color = tagText ? tagColor : '#666';
+    tagSpan.style.fontSize = '0.8rem';
+    tagSpan.style.fontWeight = 'bold';
+    tagSpan.style.fontStyle = 'italic';
+    tagSpan.classList.add('final-tag');
+    // 태그 줄(div) 생성/갱신
+    let tagRow = container.querySelector('.item-grade-tag-row');
+    if (!tagRow) {
+      tagRow = document.createElement('div');
+      tagRow.className = 'item-grade-tag-row';
+      if (itemNameElement.nextSibling) {
+        itemNameElement.parentNode.insertBefore(tagRow, itemNameElement.nextSibling);
+      } else {
+        itemNameElement.parentNode.appendChild(tagRow);
+      }
+    }
+    tagRow.innerHTML = '';
+    tagRow.appendChild(tagSpan);
+    // stat summary 줄 생성/갱신 - 제거
+    // let statRow = container.querySelector('.item-stat-summary-row');
+    // if (!statRow) {
+    //   statRow = document.createElement('div');
+    //   statRow.className = 'item-stat-summary-row';
+    //   tagRow.parentNode.insertBefore(statRow, tagRow.nextSibling);
+    // }
+    // 퍼센트/점수 정보로 한 줄 생성 - 제거
+    // const statSummary = container._statSummary || {};
+    // let statHtml = '';
+    // if (statSummary.power) {
+    //   statHtml += `<span style="color:${statSummary.power.color}">위력 [${statSummary.power.percent}%] (${statSummary.power.score}점)</span>`;
+    // }
+    // if (statSummary.weight) {
+    //   if (statHtml) statHtml += ' / ';
+    //   statHtml += `<span style="color:${statSummary.weight.color}">무게 [${statSummary.weight.percent}%] (${statSummary.weight.score}점)</span>`;
+    // }
+    // statRow.innerHTML = statHtml;
   }
 
-  // 등급 계산 함수
+  // 등급 계산 함수 (퍼센트, 점수 반환, 오차 방지, 다크모드 색상)
   calculateGrade(currentValue, minValue, maxValue, isWeight = false) {
-    if (currentValue < minValue || currentValue > maxValue) {
-      return { grade: '최하', color: '#FFFFFF' };
+    // 유효하지 않은 값 처리
+    if (currentValue === null || currentValue === undefined || 
+        minValue === null || minValue === undefined || 
+        maxValue === null || maxValue === undefined) {
+      return { grade: '최하', color: '#CCCCCC', percentage: 0, score: 2 };
     }
-    const range = maxValue - minValue;
-    let percentage = ((currentValue - minValue) / range) * 100;
+    // 범위가 0인 경우 (최소값과 최대값이 같은 경우)
+    if (minValue === maxValue) {
+      if (currentValue === minValue) {
+        return { grade: '최상', color: '#FF5555', percentage: 100.0, score: 6 };
+      } else {
+        return { grade: '최하', color: '#CCCCCC', percentage: 0, score: 2 };
+      }
+    }
+    // 현재값이 범위를 벗어나는 경우
+    if (currentValue < minValue || currentValue > maxValue) {
+      return { grade: '최하', color: '#CCCCCC', percentage: 0, score: 2 };
+    }
+    // 퍼센트 계산 (음수 범위도 올바르게 처리)
+    let percentage;
+    if (minValue === maxValue) {
+      percentage = 100.0;
+    } else {
+      const range = maxValue - minValue;
+      percentage = ((currentValue - minValue) / range) * 100;
+    }
     if (isWeight) {
       percentage = 100 - percentage;
     }
-    if (percentage >= 90) {
-      return { grade: '최상', color: '#FF0000' };
+    // 부동소수점 오차 방지 및 0~100 클램프, 소수점 1자리
+    percentage = Math.max(0, Math.min(100, Math.round((percentage + Number.EPSILON) * 10) / 10));
+    // 등급 결정 (최소치: 불량, 5% 이하: 폐급, 100%: 무결, 95%~: 완벽)
+    let grade, color, score;
+    if (currentValue === minValue) {
+      grade = '불량'; color = '#888888'; score = 0;
+    } else if (percentage <= 5) {
+      grade = '폐급'; color = '#BBBBBB'; score = 1;
+    } else if (percentage === 100.0) {
+      grade = '무결'; color = '#00FFF0'; score = 8;
+    } else if (percentage >= 95) {
+      grade = '완벽'; color = '#FFE066'; score = 7;
+    } else if (percentage >= 90) {
+      grade = '최상'; color = '#FF5555'; score = 6;
     } else if (percentage >= 70) {
-      return { grade: '상', color: '#800080' };
+      grade = '상'; color = '#C770FF'; score = 5;
     } else if (percentage >= 50) {
-      return { grade: '중', color: '#FFFF00' };
+      grade = '중'; color = '#FFFF66'; score = 4;
     } else if (percentage >= 30) {
-      return { grade: '하', color: '#0000FF' };
+      grade = '하'; color = '#66A3FF'; score = 3;
     } else {
-      return { grade: '최하', color: '#FFFFFF' };
+      grade = '최하'; color = '#CCCCCC'; score = 2;
     }
+    return { grade, color, percentage, score };
+  }
+
+  // p 태그의 첫 번째 텍스트 노드(숫자)만 추출하는 유틸 함수 추가
+  getFirstNumberText(el) {
+    if (!el) return '';
+    const node = Array.from(el.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
+    return node ? node.textContent.trim() : '';
   }
 
   // 동적 감지(아이템 목록 변화 감지)

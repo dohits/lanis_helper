@@ -965,7 +965,7 @@
 
 .power-grade-info[data-grade="상"],
 .weight-grade-info[data-grade="상"] {
-  color: #800080 !important; /* 보라색 */
+  color: #C770FF !important; /* 연보라색 */
 }
 
 .power-grade-info[data-grade="중"],
@@ -1356,4 +1356,24 @@ button.delete-btn {
   background: linear-gradient(135deg, #ef4444, #dc2626) !important;
   background-color: #ef4444 !important;
   color: #fff !important;
+} 
+
+.item-grade-tag-row {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+} 
+
+.stat-detail-row {
+  display: block;
+  width: 100%;
+  font-size: 0.8rem;
+  color: #666;
+  margin-left: 0;
+  margin-bottom: 2px;
+  text-align: right;
 } 
