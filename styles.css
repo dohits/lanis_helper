@@ -1393,9 +1393,7 @@ button.delete-btn {
 
 /* 아이템 팝오버 특별 처리 */
 .MuiPopover-root .MuiPaper-root .item-stats-processed {
-  max-width: 100% !important;
-  word-wrap: break-word !important;
-  overflow-wrap: break-word !important;
+  /* 가로 제한 제거 - 사용자 요청에 따라 */
 }
 
 /* 팝오버 내용이 길 때 스크롤 처리 */
@@ -1404,20 +1402,7 @@ button.delete-btn {
   overflow-y: auto !important;
 }
 
-/* 팝오버 위치 자동 조정을 위한 컨테이너 */
-.MuiPopover-root {
-  position: fixed !important;
-}
-
-/* 팝오버가 화면 하단을 벗어날 때 위쪽으로 표시 */
-.MuiPopover-root[data-popper-placement*="bottom"] .MuiPaper-root {
-  transform-origin: top center !important;
-}
-
-/* 팝오버가 화면 우측을 벗어날 때 왼쪽으로 표시 */
-.MuiPopover-root[data-popper-placement*="right"] .MuiPaper-root {
-  transform-origin: left center !important;
-}
+/* 팝오버 위치 자동 조정을 위한 컨테이너 - 제거 (가로 스크롤 방지) */
 
 /* 아이템 감정 정보가 추가된 팝오버의 최대 크기 제한 (세로만) */
 .MuiPopover-root .MuiPaper-root .item-stats-processed {
@@ -1425,12 +1410,7 @@ button.delete-btn {
   overflow-y: auto !important;
 }
 
-/* 팝오버 내부 텍스트 줄바꿈 처리 */
-.MuiPopover-root .MuiPaper-root p,
-.MuiPopover-root .MuiPaper-root span {
-  word-break: break-word !important;
-  overflow-wrap: break-word !important;
-}
+/* 팝오버 내부 텍스트 줄바꿈 처리 - 제거 (가로 스크롤 방지) */
 
 /* 팝오버가 화면 경계에 닿았을 때 자동 위치 조정 (세로만) */
 @media (max-width: 768px) {
@@ -1438,4 +1418,11 @@ button.delete-btn {
     max-height: calc(100vh - 20px) !important;
     margin: 10px !important;
   }
+} 
+
+/* MUI 팝오버 가로 스크롤 방지 */
+.MuiPopover-root .MuiPaper-root,
+.MuiPopover-root .MuiPaper-root * {
+  word-break: break-all !important;
+  overflow-wrap: anywhere !important;
 } 

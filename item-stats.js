@@ -119,9 +119,6 @@ class ItemStatsManager {
             rangeSpan.style.color = '#666';
             rangeSpan.style.fontSize = '0.9em';
             rangeSpan.style.fontStyle = 'italic';
-            rangeSpan.style.textAlign = 'right';
-            rangeSpan.style.display = 'inline-block';
-            rangeSpan.style.width = '100%';
             rangeSpan.classList.add('power-range-info');
             const wikiSpan = document.createElement('span');
             wikiSpan.textContent = ' [위키有]';
@@ -149,18 +146,12 @@ class ItemStatsManager {
           rangeSpan.style.color = '#666';
           rangeSpan.style.fontSize = '0.9em';
           rangeSpan.style.fontStyle = 'italic';
-          rangeSpan.style.textAlign = 'right';
-          rangeSpan.style.display = 'inline-block';
-          rangeSpan.style.width = '100%';
           rangeSpan.classList.add('power-range-info');
           const gradeSpan = document.createElement('span');
           gradeSpan.textContent = ` [${grade}]`;
           gradeSpan.style.color = color;
           gradeSpan.style.fontSize = '0.9em';
           gradeSpan.style.fontWeight = 'bold';
-          gradeSpan.style.textAlign = 'right';
-          gradeSpan.style.display = 'inline-block';
-          gradeSpan.style.width = '100%';
           gradeSpan.classList.add('power-grade-info');
           gradeSpan.setAttribute('data-grade', grade);
           // 퍼센트/점수 표기 (범위좁음이면 점수 표기 X)
@@ -226,9 +217,6 @@ class ItemStatsManager {
             rangeSpan.style.color = '#666';
             rangeSpan.style.fontSize = '0.9em';
             rangeSpan.style.fontStyle = 'italic';
-            rangeSpan.style.textAlign = 'right';
-            rangeSpan.style.display = 'inline-block';
-            rangeSpan.style.width = '100%';
             rangeSpan.classList.add('weight-range-info');
             const wikiSpan = document.createElement('span');
             wikiSpan.textContent = ' [위키有]';
@@ -256,18 +244,12 @@ class ItemStatsManager {
           rangeSpan.style.color = '#666';
           rangeSpan.style.fontSize = '0.9em';
           rangeSpan.style.fontStyle = 'italic';
-          rangeSpan.style.textAlign = 'right';
-          rangeSpan.style.display = 'inline-block';
-          rangeSpan.style.width = '100%';
           rangeSpan.classList.add('weight-range-info');
           const gradeSpan = document.createElement('span');
           gradeSpan.textContent = ` [${grade}]`;
           gradeSpan.style.color = color;
           gradeSpan.style.fontSize = '0.9em';
           gradeSpan.style.fontWeight = 'bold';
-          gradeSpan.style.textAlign = 'right';
-          gradeSpan.style.display = 'inline-block';
-          gradeSpan.style.width = '100%';
           gradeSpan.classList.add('weight-grade-info');
           gradeSpan.setAttribute('data-grade', grade);
           // 퍼센트/점수 표기 (범위좁음이면 점수 표기 X)
@@ -664,18 +646,15 @@ class ItemStatsManager {
       needsAdjustment = true;
     }
 
-    // 위치 조정이 필요한 경우
+    // 위치 조정이 필요한 경우 (세로만)
     if (needsAdjustment) {
-      paper.style.position = 'fixed';
-      paper.style.left = `${newLeft}px`;
-      paper.style.top = `${newTop}px`;
-      paper.style.transform = 'none';
-      
-      // 팝오버 컨테이너도 함께 조정
-      popover.style.position = 'fixed';
-      popover.style.left = `${newLeft}px`;
-      popover.style.top = `${newTop}px`;
-      popover.style.transform = 'none';
+      // 세로 위치만 조정, 가로는 MUI가 자동으로 처리하도록 함
+      if (rect.bottom > viewportHeight - 20) {
+        paper.style.top = `${newTop}px`;
+      }
+      if (rect.top < 20) {
+        paper.style.top = `${newTop}px`;
+      }
     }
 
     // 내용이 너무 길 경우 스크롤 처리
