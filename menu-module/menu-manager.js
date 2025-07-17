@@ -3,27 +3,14 @@ class MenuManager {
   constructor() {
     this.menuConfig = null;
     this.settings = {};
-    this.quickButtons = [];
-    this.equipmentButtons = [];
     // init()은 외부에서 호출하도록 변경
   }
 
   async init() {
     await this.loadMenuConfig();
     this.loadSettings();
-    this.loadQuickButtons();
-    this.loadEquipmentButtons();
     this.createMenuUI();
     this.bindEvents();
-    
-    // 인벤토리 페이지에서 대기 중인 장비 변경 작업 확인
-    this.checkPendingEquipmentChange();
-    
-    // 어빌리티 페이지에서 대기 중인 어빌리티 변경 작업 확인
-    this.checkPendingAbilityChange();
-    
-    // 스킬 관리 페이지에서 대기 중인 스킬 활성화 작업 확인
-    this.checkPendingSkillActivation();
   }
 
   async loadMenuConfig() {
@@ -36,13 +23,28 @@ class MenuManager {
         mainMenu: {
           button: { icon: "⚡", text: "", title: "Lanis Helper 메뉴" },
           items: [
-            { id: "exchange", icon: "🏪", text: "거래소", title: "거래소 퀵버튼 메뉴" },
+            { id: "itemGuide", icon: "📚", text: "아이템 도감", title: "아이템 도감" },
             { id: "settings", icon: "⚙️", text: "설정", title: "설정 메뉴" }
-          ]
-        },
-        quickButtonOptions: {
-          move: { text: "▶️", title: "거래소로 이동하여 검색 실행" },
-          reset: { text: "⚙️", title: "퀵버튼 설정 변경" }
+          ],
+          itemGuide: {
+            subMenu: {
+              title: "아이템 도감",
+              items: [
+                { id: "openGuide", icon: "📖", text: "도감 열기", title: "아이템 도감 열기" }
+              ]
+            }
+          },
+          settings: {
+            subMenu: {
+              title: "설정",
+              items: [
+                { id: "profileLink", icon: "👤", text: "프로필 링크", title: "사용자 프로필 링크 표시" },
+                { id: "showItemStats", icon: "📊", text: "아이템 스탯", title: "아이템 스탯 정보 표시" },
+                { id: "wikiLink", icon: "📚", text: "위키 이동", title: "Lanis 위키로 이동", url: "https://laniswiki.lovestoblog.com/" },
+                { id: "lanisLink", icon: "🎮", text: "라니스 이동", title: "Lanis 게임으로 이동", url: "https://lanis.me/" }
+              ]
+            }
+          }
         }
       };
     }
@@ -69,144 +71,15 @@ class MenuManager {
     }
   }
 
-  loadQuickButtons() {
-    try {
-      const savedQuickButtons = localStorage.getItem('lanisHelperQuickButtons');
-      this.quickButtons = savedQuickButtons ? JSON.parse(savedQuickButtons) : [];
-    } catch (error) {
-      this.quickButtons = [];
-    }
-  }
 
-  checkPendingEquipmentChange() {
-    // 인벤토리 페이지에서만 실행
-    if (!window.location.href.includes('lanis.me/inventory')) {
-      return;
-    }
 
-    try {
-      const pendingData = sessionStorage.getItem('lanisHelperPendingEquipment');
-      if (pendingData) {
-        const { equipmentSet, shouldRunAbility, timestamp } = JSON.parse(pendingData);
-        
-        // 30초 이내의 요청만 처리 (오래된 요청 무시)
-        if (Date.now() - timestamp < 30000) {
-          // 대기 중인 작업 제거
-          sessionStorage.removeItem('lanisHelperPendingEquipment');
-          
-          // DOM이 완전히 로드될 때까지 대기 후 장비 변경 실행
-          this.waitForInventoryDOM(equipmentSet, shouldRunAbility);
-        } else {
-          // 오래된 요청 제거
-          sessionStorage.removeItem('lanisHelperPendingEquipment');
-        }
-      } else {
-        // 대기 중인 장비 변경 작업 없음
-      }
-    } catch (error) {
-      sessionStorage.removeItem('lanisHelperPendingEquipment');
-    }
-  }
 
-  checkPendingAbilityChange() {
-    // 어빌리티 페이지에서만 실행
-    if (!window.location.href.includes('lanis.me/abilities')) {
-      return;
-    }
 
-    try {
-      const pendingData = sessionStorage.getItem('lanisHelperPendingAbility');
-      if (pendingData) {
-        const { equipmentSet, isCombined, timestamp } = JSON.parse(pendingData);
-        
-        // 30초 이내의 요청만 처리 (오래된 요청 무시)
-        if (Date.now() - timestamp < 30000) {
-          // 대기 중인 작업 제거
-          sessionStorage.removeItem('lanisHelperPendingAbility');
-          
-          // DOM이 완전히 로드될 때까지 대기 후 어빌리티 변경 실행
-          this.waitForAbilityDOM(equipmentSet, isCombined);
-        } else {
-          // 오래된 요청 제거
-          sessionStorage.removeItem('lanisHelperPendingAbility');
-        }
-      }
-    } catch (error) {
-      sessionStorage.removeItem('lanisHelperPendingAbility');
-    }
-  }
 
-  checkPendingSkillActivation() {
-    // 스킬 관리 페이지에서만 실행
-    if (!window.location.href.includes('lanis.me/skill-management')) {
-      return;
-    }
 
-    try {
-      const pendingData = sessionStorage.getItem('lanisHelperPendingSkill');
-      if (pendingData) {
-        const { skillNumber, timestamp } = JSON.parse(pendingData);
-        
-        // 30초 이내의 요청만 처리 (오래된 요청 무시)
-        if (Date.now() - timestamp < 30000) {
-          // 대기 중인 작업 제거
-          sessionStorage.removeItem('lanisHelperPendingSkill');
-          
-          // DOM이 완전히 로드될 때까지 대기 후 스킬 활성화 실행
-          this.waitForSkillManagementDOM(skillNumber);
-        } else {
-          // 오래된 요청 제거
-          sessionStorage.removeItem('lanisHelperPendingSkill');
-          
-          // 오래된 요청이면 최종 모달 표시
-          this.showFinalCompleteModal();
-        }
-      }
-    } catch (error) {
-      sessionStorage.removeItem('lanisHelperPendingSkill');
-      
-      // 오류 발생 시에도 최종 모달 표시
-      this.showFinalCompleteModal();
-    }
-  }
 
-  waitForInventoryDOM(equipmentSet, shouldRunAbility) {
-    // DOM이 이미 준비되어 있는지 먼저 확인
-    const checkDOMReady = () => {
-      const tabs = document.querySelectorAll('.MuiTab-root');
-      const table = document.querySelector('.MuiTable-root');
-      return tabs.length > 0 && table;
-    };
-    
-    // 이미 준비되어 있으면 즉시 실행
-    if (checkDOMReady()) {
-      this.performEquipmentChange(equipmentSet, shouldRunAbility);
-      return;
-    }
-    
-    // DOM이 준비될 때까지 짧은 간격으로 확인 (100ms)
-    let attempts = 0;
-    const maxAttempts = 50; // 최대 5초
-    
-    const checkAndExecute = () => {
-      attempts++;
-      
-      if (checkDOMReady()) {
-        this.performEquipmentChange(equipmentSet, shouldRunAbility);
-        return;
-      }
-      
-      if (attempts >= maxAttempts) {
-        return;
-      }
-      
-      // 다음 프레임에서 다시 확인
-      requestAnimationFrame(checkAndExecute);
-    };
-    
-    // 즉시 첫 번째 확인 시작
-    requestAnimationFrame(checkAndExecute);
-  }
+
+
 
   waitForAbilityDOM(equipmentSet, isCombined) {
     // DOM이 이미 준비되어 있는지 먼저 확인
@@ -577,9 +450,9 @@ class MenuManager {
         editButton.style.minWidth = '40px';
         editButton.style.padding = '0';
         
-        editButton.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.openQuickSettingsModal(index);
+        editButton.addEventListener('click', () => {
+          // 퀵설정 모달 기능 삭제됨
+          console.log('퀵설정 모달 기능이 삭제되었습니다.');
         });
         
         // 삭제 버튼 (우측)
@@ -640,56 +513,100 @@ class MenuManager {
   createItemGuideSubMenu(container) {
     container.innerHTML = '';
     
-    // 아이템 도감 열기 버튼 생성
-    const guideButton = document.createElement('button');
-    guideButton.className = 'main-menu-item sub-menu-item';
-    guideButton.innerHTML = '도감 열기';
-    guideButton.title = '아이템 도감 열기';
-    guideButton.style.fontWeight = 'bold';
+    const subMenuConfig = this.menuConfig.mainMenu.itemGuide.subMenu;
     
-    guideButton.addEventListener('click', (e) => {
-      e.stopPropagation();
-      // 아이템 도감 모달 열기
-      this.openItemGuideModal();
-      this.closeAllSubMenus();
+    subMenuConfig.items.forEach(item => {
+      const button = document.createElement('button');
+      button.className = 'main-menu-item sub-menu-item';
+      button.innerHTML = item.text;
+      button.title = item.title;
+      button.style.fontWeight = 'bold';
+      
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.handleSubMenuItemClick(item);
+        this.closeAllSubMenus();
+      });
+      
+      container.appendChild(button);
     });
-    
-    container.appendChild(guideButton);
   }
 
   createSettingsSubMenu(container) {
     container.innerHTML = '';
     
-    // 위키 이동 버튼 생성
-    const wikiButton = document.createElement('button');
-    wikiButton.className = 'main-menu-item sub-menu-item';
-    wikiButton.innerHTML = '위키 이동';
-    wikiButton.title = 'Lanis 위키로 이동';
-    wikiButton.style.fontWeight = 'bold';
+    const subMenuConfig = this.menuConfig.mainMenu.settings.subMenu;
     
-    wikiButton.addEventListener('click', (e) => {
-      e.stopPropagation();
-      // 위키 페이지 열기
-      window.open('https://laniswiki.lovestoblog.com/', '_blank');
-      this.closeAllSubMenus();
+    subMenuConfig.items.forEach(item => {
+      const button = document.createElement('button');
+      button.className = 'main-menu-item sub-menu-item';
+      button.setAttribute('data-item-id', item.id);
+      
+      // 토글 버튼인지 확인
+      const isToggleButton = item.id === 'profileLink' || item.id === 'showItemStats';
+      
+      if (isToggleButton) {
+        // 토글 버튼 스타일 적용
+        button.classList.add('toggle-button');
+        const isEnabled = this.settings[item.id];
+        button.classList.toggle('enabled', isEnabled);
+        
+        // 아이콘과 텍스트 설정
+        const icon = isEnabled ? '✅' : '❌';
+        button.innerHTML = `${icon} ${item.text}`;
+        button.title = `${item.title} (${isEnabled ? '켜짐' : '꺼짐'})`;
+      } else {
+        // 일반 버튼
+        button.innerHTML = item.text;
+        button.title = item.title;
+        button.style.fontWeight = 'bold';
+      }
+      
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.handleSubMenuItemClick(item, button);
+        
+        // 토글 버튼이 아닌 경우에만 메뉴 닫기
+        if (!isToggleButton) {
+          this.closeAllSubMenus();
+        }
+      });
+      
+      container.appendChild(button);
     });
+  }
+
+  handleSubMenuItemClick(item, button) {
+    switch (item.id) {
+      case 'openGuide':
+        this.openItemGuideModal();
+        break;
+      case 'profileLink':
+      case 'showItemStats':
+        this.toggleSetting(item.id);
+        this.updateToggleButton(button, item);
+        break;
+      case 'wikiLink':
+      case 'lanisLink':
+        if (item.url) {
+          window.open(item.url, '_blank');
+        }
+        break;
+      default:
+        console.log('Unknown submenu item:', item.id);
+    }
+  }
+
+  updateToggleButton(button, item) {
+    const isEnabled = this.settings[item.id];
     
-    // 라니스 이동 버튼 생성
-    const lanisButton = document.createElement('button');
-    lanisButton.className = 'main-menu-item sub-menu-item';
-    lanisButton.innerHTML = '라니스 이동';
-    lanisButton.title = 'Lanis 게임으로 이동';
-    lanisButton.style.fontWeight = 'bold';
+    // 클래스 업데이트
+    button.classList.toggle('enabled', isEnabled);
     
-    lanisButton.addEventListener('click', (e) => {
-      e.stopPropagation();
-      // 라니스 게임 페이지 열기
-      window.open('https://lanis.me/', '_blank');
-      this.closeAllSubMenus();
-    });
-    
-    container.appendChild(wikiButton);
-    container.appendChild(lanisButton);
+    // 아이콘과 텍스트 업데이트
+    const icon = isEnabled ? '✅' : '❌';
+    button.innerHTML = `${icon} ${item.text}`;
+    button.title = `${item.title} (${isEnabled ? '켜짐' : '꺼짐'})`;
   }
 
   closeAllSubMenus() {
@@ -708,7 +625,7 @@ class MenuManager {
   // 아이템 도감 모달 열기
   openItemGuideModal() {
     // 기존 모달이 있으면 제거
-    const existingModal = document.getElementById('itemGuideModal');
+    const existingModal = document.querySelector('.item-guide-modal');
     if (existingModal) {
       existingModal.remove();
     }
@@ -717,57 +634,129 @@ class MenuManager {
     const modal = document.createElement('div');
     modal.id = 'itemGuideModal';
     modal.className = 'item-guide-modal';
-    modal.innerHTML = `
-      <div class="item-guide-content">
-        <div class="item-guide-header">
-          <h3>아이템 도감</h3>
-          <button class="close-button" onclick="this.closest('.item-guide-modal').remove()">×</button>
-        </div>
-        <div class="item-guide-search">
-          <input type="text" id="itemSearchInput" placeholder="아이템명 검색..." class="search-input">
-          <input type="text" id="abilitySearchInput" placeholder="어빌리티 검색..." class="search-input">
-        </div>
-        <div class="item-guide-attributes">
-          <div class="attribute-title">속성 필터</div>
-          <div class="attribute-buttons">
-            <button class="attribute-btn" data-attribute="물">물</button>
-            <button class="attribute-btn" data-attribute="불">불</button>
-            <button class="attribute-btn" data-attribute="번개">번개</button>
-            <button class="attribute-btn" data-attribute="바람">바람</button>
-            <button class="attribute-btn" data-attribute="별">별</button>
-            <button class="attribute-btn" data-attribute="빛">빛</button>
-            <button class="attribute-btn" data-attribute="어둠">어둠</button>
-            <button class="attribute-btn" data-attribute="무">무</button>
-          </div>
-        </div>
-        <div class="item-guide-categories">
-          <div class="main-categories">
-            <button class="category-btn main-category active" data-category="">전체</button>
-            <button class="category-btn main-category" data-category="무기">무기</button>
-            <button class="category-btn main-category" data-category="방어구">방어구</button>
-            <button class="category-btn main-category" data-category="장신구">장신구</button>
-          </div>
-          <div class="sub-categories" id="subCategories" style="display: none;">
-            <button class="category-btn sub-category active" data-category="">전체</button>
-            <button class="category-btn sub-category" data-category="검">검</button>
-            <button class="category-btn sub-category" data-category="도끼">도끼</button>
-            <button class="category-btn sub-category" data-category="창">창</button>
-            <button class="category-btn sub-category" data-category="활">활</button>
-            <button class="category-btn sub-category" data-category="너클">너클</button>
-            <button class="category-btn sub-category" data-category="지팡이">지팡이</button>
-            <button class="category-btn sub-category" data-category="나이프">나이프</button>
-            <button class="category-btn sub-category" data-category="미확인">미확인</button>
-          </div>
-        </div>
-        <div class="item-guide-list" id="itemGuideList">
-          <div style="text-align: center; color: #666; padding: 20px;">아이템을 로드하는 중...</div>
-        </div>
-        <div class="item-guide-footer">
-          총 <span id="itemGuideCount">0</span>개 아이템
-        </div>
-      </div>
-    `;
-
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'item-guide-content';
+    
+    const modalHeader = document.createElement('div');
+    modalHeader.className = 'item-guide-header';
+    
+    const title = document.createElement('h3');
+    title.textContent = '아이템 도감';
+    
+    const closeButton = document.createElement('button');
+    closeButton.className = 'close-button';
+    closeButton.textContent = '×';
+    closeButton.onclick = () => modal.remove();
+    
+    modalHeader.appendChild(title);
+    modalHeader.appendChild(closeButton);
+    
+    const searchSection = document.createElement('div');
+    searchSection.className = 'item-guide-search';
+    
+    const itemSearchInput = document.createElement('input');
+    itemSearchInput.type = 'text';
+    itemSearchInput.id = 'itemSearchInput';
+    itemSearchInput.placeholder = '아이템명 검색...';
+    itemSearchInput.className = 'search-input';
+    
+    const abilitySearchInput = document.createElement('input');
+    abilitySearchInput.type = 'text';
+    abilitySearchInput.id = 'abilitySearchInput';
+    abilitySearchInput.placeholder = '어빌리티 검색...';
+    abilitySearchInput.className = 'search-input';
+    
+    searchSection.appendChild(itemSearchInput);
+    searchSection.appendChild(abilitySearchInput);
+    
+    const attributesSection = document.createElement('div');
+    attributesSection.className = 'item-guide-attributes';
+    
+    const attributeTitle = document.createElement('div');
+    attributeTitle.className = 'attribute-title';
+    attributeTitle.textContent = '속성 필터';
+    
+    const attributeButtons = document.createElement('div');
+    attributeButtons.className = 'attribute-buttons';
+    
+    const attributes = ['물', '불', '번개', '바람', '별', '빛', '어둠', '무'];
+    attributes.forEach(attr => {
+      const btn = document.createElement('button');
+      btn.className = 'attribute-btn';
+      btn.setAttribute('data-attribute', attr);
+      btn.textContent = attr;
+      attributeButtons.appendChild(btn);
+    });
+    
+    attributesSection.appendChild(attributeTitle);
+    attributesSection.appendChild(attributeButtons);
+    
+    const categoriesSection = document.createElement('div');
+    categoriesSection.className = 'item-guide-categories';
+    
+    const mainCategories = document.createElement('div');
+    mainCategories.className = 'main-categories';
+    
+    const mainCategoryOptions = ['전체', '무기', '방어구', '장신구'];
+    mainCategoryOptions.forEach(category => {
+      const btn = document.createElement('button');
+      btn.className = 'category-btn main-category';
+      btn.setAttribute('data-category', category === '전체' ? '' : category);
+      btn.textContent = category;
+      if (category === '전체') btn.classList.add('active');
+      mainCategories.appendChild(btn);
+    });
+    
+    const subCategories = document.createElement('div');
+    subCategories.className = 'sub-categories';
+    subCategories.id = 'subCategories';
+    subCategories.style.display = 'none';
+    
+    const subCategoryOptions = ['전체', '검', '도끼', '창', '활', '너클', '지팡이', '나이프', '미확인'];
+    subCategoryOptions.forEach(category => {
+      const btn = document.createElement('button');
+      btn.className = 'category-btn sub-category';
+      btn.setAttribute('data-category', category === '전체' ? '' : category);
+      btn.textContent = category;
+      if (category === '전체') btn.classList.add('active');
+      subCategories.appendChild(btn);
+    });
+    
+    categoriesSection.appendChild(mainCategories);
+    categoriesSection.appendChild(subCategories);
+    
+    const listSection = document.createElement('div');
+    listSection.className = 'item-guide-list';
+    listSection.id = 'itemGuideList';
+    
+    const loadingDiv = document.createElement('div');
+    loadingDiv.style.cssText = 'text-align: center; color: #666; padding: 20px;';
+    loadingDiv.textContent = '아이템을 로드하는 중...';
+    
+    listSection.appendChild(loadingDiv);
+    
+    const footerSection = document.createElement('div');
+    footerSection.className = 'item-guide-footer';
+    footerSection.textContent = '총 ';
+    
+    const countSpan = document.createElement('span');
+    countSpan.id = 'itemGuideCount';
+    countSpan.textContent = '0';
+    
+    const countText = document.createTextNode('개 아이템');
+    
+    footerSection.appendChild(countSpan);
+    footerSection.appendChild(countText);
+    
+    modalContent.appendChild(modalHeader);
+    modalContent.appendChild(searchSection);
+    modalContent.appendChild(attributesSection);
+    modalContent.appendChild(categoriesSection);
+    modalContent.appendChild(listSection);
+    modalContent.appendChild(footerSection);
+    
+    modal.appendChild(modalContent);
     document.body.appendChild(modal);
     
     // 모달 외부 클릭 시 닫기 이벤트 추가
@@ -782,11 +771,8 @@ class MenuManager {
     
     // 검색 및 필터 이벤트 리스너 추가
     setTimeout(() => {
-      const searchInput = document.getElementById('itemSearchInput');
-      const abilitySearchInput = document.getElementById('abilitySearchInput');
-      
-      if (searchInput) {
-        searchInput.addEventListener('input', () => this.filterItems());
+      if (itemSearchInput) {
+        itemSearchInput.addEventListener('input', () => this.filterItems());
       }
       
       if (abilitySearchInput) {
@@ -839,13 +825,36 @@ class MenuManager {
       if (result.rareItems && result.rareItems.length > 0) {
         this.displayItems(result.rareItems);
       } else {
-        document.getElementById('itemGuideList').innerHTML = 
-          '<div style="text-align: center; color: #666; padding: 20px;">스캔된 아이템이 없습니다.<br>먼저 아이템 데이터를 수집해주세요.</div>';
-        document.getElementById('itemGuideCount').textContent = '0';
+        const listContainer = document.getElementById('itemGuideList');
+        const countElement = document.getElementById('itemGuideCount');
+        
+        if (listContainer) {
+          // 기존 내용 제거
+          listContainer.innerHTML = '';
+          
+          const noItemsDiv = document.createElement('div');
+          noItemsDiv.style.cssText = 'text-align: center; color: #666; padding: 20px;';
+          noItemsDiv.textContent = '스캔된 아이템이 없습니다. 먼저 아이템 데이터를 수집해주세요.';
+          
+          listContainer.appendChild(noItemsDiv);
+        }
+        
+        if (countElement) {
+          countElement.textContent = '0';
+        }
       }
     } catch (error) {
-      document.getElementById('itemGuideList').innerHTML = 
-        '<div style="text-align: center; color: #666; padding: 20px;">데이터 로드 중 오류가 발생했습니다.</div>';
+      const listContainer = document.getElementById('itemGuideList');
+      if (listContainer) {
+        // 기존 내용 제거
+        listContainer.innerHTML = '';
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.style.cssText = 'text-align: center; color: #666; padding: 20px;';
+        errorDiv.textContent = '데이터 로드 중 오류가 발생했습니다.';
+        
+        listContainer.appendChild(errorDiv);
+      }
     }
   }
 
@@ -854,26 +863,39 @@ class MenuManager {
     const listContainer = document.getElementById('itemGuideList');
     const countElement = document.getElementById('itemGuideCount');
     
-    if (!listContainer || !countElement) return;
+    if (!listContainer || !countElement) {
+      console.warn('아이템 가이드 컨테이너를 찾을 수 없습니다.');
+      return;
+    }
 
-    // 아이템을 가나다순으로 정렬
-    items.sort((a, b) => {
-      const nameA = (a.name || '').trim();
-      const nameB = (b.name || '').trim();
-      return nameA.localeCompare(nameB, 'ko');
-    });
+    // 기존 내용 제거
+    listContainer.innerHTML = '';
+    
+    if (!items || items.length === 0) {
+      const noItemsDiv = document.createElement('div');
+      noItemsDiv.className = 'no-items';
+      noItemsDiv.textContent = '아이템 데이터를 불러올 수 없습니다.';
+      listContainer.appendChild(noItemsDiv);
+      countElement.textContent = '0';
+      return;
+    }
 
-    let itemsHtml = '';
+    // HTML 이스케이프 함수
+    const escapeHtml = (text) => {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    };
+
     items.forEach((item) => {
-      const itemName = item.name || '알 수 없는 아이템';
+      const itemName = escapeHtml(item.name || '알 수 없는 아이템');
       const powerRange = item.power_min && item.power_max ? `${item.power_min}-${item.power_max}` : 'N/A';
       const weightRange = item.weight_min && item.weight_max ? `${item.weight_min}-${item.weight_max}` : 'N/A';
-      const weaponType = item.weapon_type || 'N/A';
-      const abilities = item.abilities && item.abilities.length > 0 ? item.abilities.join(', ') : 'N/A';
-      const attributes = item.attributes && item.attributes.length > 0 ? item.attributes.join(', ') : 'N/A';
-      
-      // 타입이 N/A가 아닐 때만 괄호로 표시
-      const typeDisplay = weaponType !== 'N/A' ? ` (${weaponType})` : '';
+      const weaponType = escapeHtml(item.weapon_type || 'N/A');
+      const abilities = item.abilities && item.abilities.length > 0 ? 
+        item.abilities.map(ability => escapeHtml(ability)).join(', ') : 'N/A';
+      const attributes = item.attributes && item.attributes.length > 0 ? 
+        item.attributes.map(attr => escapeHtml(attr)).join(', ') : 'N/A';
       
       // 카테고리 분류
       let mainCategory = '';
@@ -893,8 +915,11 @@ class MenuManager {
         }
       }
       
+      // 타입이 N/A가 아닐 때만 괄호로 표시
+      const typeDisplay = weaponType !== 'N/A' ? ` (${weaponType})` : '';
+      
       // 카테고리별 아이콘 설정
-      let categoryIcon = '⚔️'; // 기본 아이콘
+      let categoryIcon = '📦'; // 기본 아이콘
       
       if (mainCategory === '무기') {
         switch(subCategory) {
@@ -914,20 +939,47 @@ class MenuManager {
         categoryIcon = '💎';
       }
       
-      itemsHtml += `
-        <div class="item-guide-item" data-name="${itemName.toLowerCase()}" data-main-category="${mainCategory.toLowerCase()}" data-sub-category="${subCategory.toLowerCase()}" data-abilities="${abilities.toLowerCase()}" data-attributes="${attributes.toLowerCase()}">
-          <div class="item-name">
-            <span class="item-icon">${categoryIcon}</span>
-            ${itemName}${typeDisplay}
-          </div>
-          <div class="item-stats">위력: ${powerRange} | 무게: ${weightRange}</div>
-          <div class="item-attributes">속성: ${attributes}</div>
-          <div class="item-abilities">어빌리티: ${abilities}</div>
-        </div>
-      `;
+      // 안전한 DOM 요소 생성
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'item-guide-item';
+      itemDiv.setAttribute('data-name', itemName.toLowerCase());
+      itemDiv.setAttribute('data-main-category', mainCategory.toLowerCase());
+      itemDiv.setAttribute('data-sub-category', subCategory.toLowerCase());
+      itemDiv.setAttribute('data-abilities', abilities.toLowerCase());
+      itemDiv.setAttribute('data-attributes', attributes.toLowerCase());
+      
+      const nameDiv = document.createElement('div');
+      nameDiv.className = 'item-name';
+      
+      const iconSpan = document.createElement('span');
+      iconSpan.className = 'item-icon';
+      iconSpan.textContent = categoryIcon;
+      
+      const nameText = document.createTextNode(itemName + typeDisplay);
+      
+      nameDiv.appendChild(iconSpan);
+      nameDiv.appendChild(nameText);
+      
+      const statsDiv = document.createElement('div');
+      statsDiv.className = 'item-stats';
+      statsDiv.textContent = `위력: ${powerRange} | 무게: ${weightRange}`;
+      
+      const attributesDiv = document.createElement('div');
+      attributesDiv.className = 'item-attributes';
+      attributesDiv.textContent = `속성: ${attributes}`;
+      
+      const abilitiesDiv = document.createElement('div');
+      abilitiesDiv.className = 'item-abilities';
+      abilitiesDiv.textContent = `어빌리티: ${abilities}`;
+      
+      itemDiv.appendChild(nameDiv);
+      itemDiv.appendChild(statsDiv);
+      itemDiv.appendChild(attributesDiv);
+      itemDiv.appendChild(abilitiesDiv);
+      
+      listContainer.appendChild(itemDiv);
     });
 
-    listContainer.innerHTML = itemsHtml;
     countElement.textContent = items.length;
   }
 
@@ -1397,17 +1449,27 @@ class MenuManager {
   showEquipmentCompleteModal(equippedCount, totalItems) {
     const modal = document.createElement('div');
     modal.className = 'equipment-complete-modal';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3>장비 변경 완료</h3>
-        <p>${equippedCount}개 / ${totalItems}개 아이템을 착용했습니다.</p>
-        <button class="close-btn">확인</button>
-      </div>
-    `;
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    
+    const title = document.createElement('h3');
+    title.textContent = '장비 변경 완료';
+    
+    const message = document.createElement('p');
+    message.textContent = `${equippedCount}개 / ${totalItems}개 아이템을 착용했습니다.`;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'close-btn';
+    closeBtn.textContent = '확인';
+    
+    modalContent.appendChild(title);
+    modalContent.appendChild(message);
+    modalContent.appendChild(closeBtn);
+    modal.appendChild(modalContent);
     
     document.body.appendChild(modal);
     
-    const closeBtn = modal.querySelector('.close-btn');
     closeBtn.addEventListener('click', () => {
       modal.remove();
     });
@@ -1425,26 +1487,50 @@ class MenuManager {
     const totalEquipped = equipmentCount + abilityCount;
     const totalItems = equipmentTotal + abilityTotal;
     
-    // 스킬 활성화 문구 생성
-    const skillText = skillNumber ? `<p><strong>스킬:</strong> ${skillNumber}번 스킬 활성화 완료</p>` : '';
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
     
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3>모든 작업 완료</h3>
-        <div style="text-align: left; margin: 20px 0;">
-          <p><strong>장비:</strong> ${equipmentCount}개 / ${equipmentTotal}개 장착</p>
-          <p><strong>어빌리티:</strong> ${abilityCount}개 / ${abilityTotal}개 장착</p>
-          ${skillText}
-          <hr style="margin: 15px 0; border: none; border-top: 1px solid #e5e7eb;">
-          <p><strong>총합:</strong> ${totalEquipped}개 / ${totalItems}개 완료</p>
-        </div>
-        <button class="close-btn">확인</button>
-      </div>
-    `;
+    const title = document.createElement('h3');
+    title.textContent = '모든 작업 완료';
+    
+    const contentDiv = document.createElement('div');
+    contentDiv.style.cssText = 'text-align: left; margin: 20px 0;';
+    
+    const equipmentText = document.createElement('p');
+    equipmentText.innerHTML = `<strong>장비:</strong> ${equipmentCount}개 / ${equipmentTotal}개 장착`;
+    
+    const abilityText = document.createElement('p');
+    abilityText.innerHTML = `<strong>어빌리티:</strong> ${abilityCount}개 / ${abilityTotal}개 장착`;
+    
+    contentDiv.appendChild(equipmentText);
+    contentDiv.appendChild(abilityText);
+    
+    // 스킬 활성화 문구 생성
+    if (skillNumber) {
+      const skillText = document.createElement('p');
+      skillText.innerHTML = `<strong>스킬:</strong> ${skillNumber}번 스킬 활성화 완료`;
+      contentDiv.appendChild(skillText);
+    }
+    
+    const hr = document.createElement('hr');
+    hr.style.cssText = 'margin: 15px 0; border: none; border-top: 1px solid #e5e7eb;';
+    
+    const totalText = document.createElement('p');
+    totalText.innerHTML = `<strong>총합:</strong> ${totalEquipped}개 / ${totalItems}개 완료`;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'close-btn';
+    closeBtn.textContent = '확인';
+    
+    modalContent.appendChild(title);
+    modalContent.appendChild(contentDiv);
+    modalContent.appendChild(hr);
+    modalContent.appendChild(totalText);
+    modalContent.appendChild(closeBtn);
+    modal.appendChild(modalContent);
     
     document.body.appendChild(modal);
     
-    const closeBtn = modal.querySelector('.close-btn');
     closeBtn.addEventListener('click', () => {
       modal.remove();
     });
@@ -1453,17 +1539,27 @@ class MenuManager {
   showAbilityCompleteModal(equippedCount, totalItems) {
     const modal = document.createElement('div');
     modal.className = 'ability-complete-modal';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3>어빌리티 변경 완료</h3>
-        <p>${equippedCount}개 / ${totalItems}개 어빌리티를 장착했습니다.</p>
-        <button class="close-btn">확인</button>
-      </div>
-    `;
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    
+    const title = document.createElement('h3');
+    title.textContent = '어빌리티 변경 완료';
+    
+    const message = document.createElement('p');
+    message.textContent = `${equippedCount}개 / ${totalItems}개 어빌리티를 장착했습니다.`;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'close-btn';
+    closeBtn.textContent = '확인';
+    
+    modalContent.appendChild(title);
+    modalContent.appendChild(message);
+    modalContent.appendChild(closeBtn);
+    modal.appendChild(modalContent);
     
     document.body.appendChild(modal);
     
-    const closeBtn = modal.querySelector('.close-btn');
     closeBtn.addEventListener('click', () => {
       modal.remove();
     });
@@ -1472,17 +1568,27 @@ class MenuManager {
   showAbilityErrorModal() {
     const modal = document.createElement('div');
     modal.className = 'ability-error-modal';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3>어빌리티 변경 실패</h3>
-        <p>어빌리티 변경 중 오류가 발생했습니다.</p>
-        <button class="close-btn">확인</button>
-      </div>
-    `;
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    
+    const title = document.createElement('h3');
+    title.textContent = '어빌리티 변경 실패';
+    
+    const message = document.createElement('p');
+    message.textContent = '어빌리티 변경 중 오류가 발생했습니다.';
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'close-btn';
+    closeBtn.textContent = '확인';
+    
+    modalContent.appendChild(title);
+    modalContent.appendChild(message);
+    modalContent.appendChild(closeBtn);
+    modal.appendChild(modalContent);
     
     document.body.appendChild(modal);
     
-    const closeBtn = modal.querySelector('.close-btn');
     closeBtn.addEventListener('click', () => {
       modal.remove();
     });
@@ -1491,498 +1597,40 @@ class MenuManager {
   showEquipmentErrorModal() {
     const modal = document.createElement('div');
     modal.className = 'equipment-error-modal';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3>장비 변경 실패</h3>
-        <p>장비 변경 중 오류가 발생했습니다.</p>
-        <button class="close-btn">확인</button>
-      </div>
-    `;
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    
+    const title = document.createElement('h3');
+    title.textContent = '장비 변경 실패';
+    
+    const message = document.createElement('p');
+    message.textContent = '장비 변경 중 오류가 발생했습니다.';
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'close-btn';
+    closeBtn.textContent = '확인';
+    
+    modalContent.appendChild(title);
+    modalContent.appendChild(message);
+    modalContent.appendChild(closeBtn);
+    modal.appendChild(modalContent);
     
     document.body.appendChild(modal);
     
-    const closeBtn = modal.querySelector('.close-btn');
     closeBtn.addEventListener('click', () => {
       modal.remove();
     });
   }
 
   openEquipmentSettingsModal(index) {
-    this.createEquipmentSettingsModal(index);
+    // 장비 설정 모달 기능 삭제됨
+    console.log('장비 설정 모달 기능이 삭제되었습니다.');
   }
 
   createEquipmentSettingsModal(index) {
-    const equipment = this.equipmentButtons[index] || {
-      name: `장비 세트 ${index + 1}`,
-      weapon: '',
-      armor: '',
-      accessory: '',
-      jobAbility: '',
-      jobAbilityTab: '',
-      mainAbility: '',
-      mainAbilityTab: '',
-      skillNumber: null
-    };
-
-    const modal = document.createElement('div');
-    modal.className = 'equipment-settings-modal';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>장비 세트 설정</h3>
-          <button class="modal-close">×</button>
-        </div>
-        <div class="form-group">
-          <label class="form-label">장비 세트 이름</label>
-          <input type="text" class="form-input" id="equipment-name" value="${equipment.name}" placeholder="장비 세트 이름을 입력하세요">
-        </div>
-        <h4 style="margin: 20px 0 10px 0; color: #374151;">장비 설정</h4>
-        <div class="form-group">
-          <label class="form-label">무기</label>
-          <input type="text" class="form-input" id="equipment-weapon" value="${equipment.weapon}" placeholder="무기 이름을 입력하세요">
-        </div>
-        <div class="form-group">
-          <label class="form-label">방어구</label>
-          <input type="text" class="form-input" id="equipment-armor" value="${equipment.armor}" placeholder="방어구 이름을 입력하세요">
-        </div>
-        <div class="form-group">
-          <label class="form-label">장신구</label>
-          <input type="text" class="form-input" id="equipment-accessory" value="${equipment.accessory}" placeholder="장신구 이름을 입력하세요">
-        </div>
-        <h4 style="margin: 20px 0 10px 0; color: #374151;">어빌리티 설정</h4>
-        <div class="form-group">
-          <label class="form-label">직업 어빌리티 탭</label>
-          <select class="form-input" id="equipment-jobAbilityTab">
-            <option value="검술" ${equipment.jobAbilityTab === '검술' || !equipment.jobAbilityTab ? 'selected' : ''}>검술</option>
-            <option value="마술" ${equipment.jobAbilityTab === '마술' ? 'selected' : ''}>마술</option>
-            <option value="신술" ${equipment.jobAbilityTab === '신술' ? 'selected' : ''}>신술</option>
-            <option value="궁술" ${equipment.jobAbilityTab === '궁술' ? 'selected' : ''}>궁술</option>
-            <option value="체술" ${equipment.jobAbilityTab === '체술' ? 'selected' : ''}>체술</option>
-            <option value="인술" ${equipment.jobAbilityTab === '인술' ? 'selected' : ''}>인술</option>
-          </select>
-          <label class="form-label" style="margin-top: 10px;">직업 어빌리티</label>
-          <input type="text" class="form-input" id="equipment-jobAbility" value="${equipment.jobAbility}" placeholder="직업 어빌리티 이름을 입력하세요">
-        </div>
-        <div class="form-group">
-          <label class="form-label">메인 어빌리티 탭</label>
-          <select class="form-input" id="equipment-mainAbilityTab">
-            <option value="검술" ${equipment.mainAbilityTab === '검술' || !equipment.mainAbilityTab ? 'selected' : ''}>검술</option>
-            <option value="마술" ${equipment.mainAbilityTab === '마술' ? 'selected' : ''}>마술</option>
-            <option value="신술" ${equipment.mainAbilityTab === '신술' ? 'selected' : ''}>신술</option>
-            <option value="궁술" ${equipment.mainAbilityTab === '궁술' ? 'selected' : ''}>궁술</option>
-            <option value="체술" ${equipment.mainAbilityTab === '체술' ? 'selected' : ''}>체술</option>
-            <option value="인술" ${equipment.mainAbilityTab === '인술' ? 'selected' : ''}>인술</option>
-          </select>
-          <label class="form-label" style="margin-top: 10px;">메인 어빌리티</label>
-          <input type="text" class="form-input" id="equipment-mainAbility" value="${equipment.mainAbility}" placeholder="메인 어빌리티 이름을 입력하세요">
-        </div>
-        <h4 style="margin: 20px 0 10px 0; color: #374151;">스킬 설정</h4>
-        <div class="form-group">
-          <label class="form-label">자동 활성화할 스킬 번호</label>
-          <div class="skill-toggle-container" style="display: flex; gap: 10px; margin-top: 10px;">
-            <button type="button" class="skill-toggle-btn ${equipment.skillNumber === 1 ? 'active' : ''}" data-skill="1" style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 4px; background: ${equipment.skillNumber === 1 ? '#3b82f6' : '#fff'}; color: ${equipment.skillNumber === 1 ? '#fff' : '#374151'}; cursor: pointer;">1번</button>
-            <button type="button" class="skill-toggle-btn ${equipment.skillNumber === 2 ? 'active' : ''}" data-skill="2" style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 4px; background: ${equipment.skillNumber === 2 ? '#3b82f6' : '#fff'}; color: ${equipment.skillNumber === 2 ? '#fff' : '#374151'}; cursor: pointer;">2번</button>
-            <button type="button" class="skill-toggle-btn ${equipment.skillNumber === 3 ? 'active' : ''}" data-skill="3" style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 4px; background: ${equipment.skillNumber === 3 ? '#3b82f6' : '#fff'}; color: ${equipment.skillNumber === 3 ? '#fff' : '#374151'}; cursor: pointer;">3번</button>
-          </div>
-          <p style="margin-top: 8px; font-size: 12px; color: #6b7280;">장비/어빌리티 변경 시 자동으로 활성화할 스킬 번호를 선택하세요. 하나만 선택 가능합니다.</p>
-        </div>
-        <div class="modal-actions">
-          <button class="btn btn-secondary cancel-btn">취소</button>
-          <button class="btn btn-primary save-btn" data-index="${index}">저장</button>
-        </div>
-      </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // 이벤트 리스너 추가
-    const closeBtn = modal.querySelector('.modal-close');
-    const cancelBtn = modal.querySelector('.cancel-btn');
-    const saveBtn = modal.querySelector('.save-btn');
-    
-    closeBtn.addEventListener('click', () => {
-      modal.remove();
-    });
-    
-    cancelBtn.addEventListener('click', () => {
-      modal.remove();
-    });
-    
-    saveBtn.addEventListener('click', () => {
-      const buttonIndex = parseInt(saveBtn.getAttribute('data-index'));
-      this.saveEquipmentSettings(buttonIndex);
-    });
-
-    // 스킬 토글 버튼 이벤트 리스너 추가
-    const skillToggleBtns = modal.querySelectorAll('.skill-toggle-btn');
-    skillToggleBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // 모든 버튼 비활성화
-        skillToggleBtns.forEach(b => {
-          b.style.background = '#fff';
-          b.style.color = '#374151';
-          b.classList.remove('active');
-        });
-        
-        // 클릭된 버튼 활성화
-        btn.style.background = '#3b82f6';
-        btn.style.color = '#fff';
-        btn.classList.add('active');
-      });
-    });
-  }
-
-  saveEquipmentSettings(index) {
-    const modal = document.querySelector('.equipment-settings-modal');
-    if (!modal) {
-      return;
-    }
-
-    const name = modal.querySelector('#equipment-name').value.trim();
-    const weapon = modal.querySelector('#equipment-weapon').value.trim();
-    const armor = modal.querySelector('#equipment-armor').value.trim();
-    const accessory = modal.querySelector('#equipment-accessory').value.trim();
-    const jobAbility = modal.querySelector('#equipment-jobAbility').value.trim();
-    const jobAbilityTab = modal.querySelector('#equipment-jobAbilityTab').value;
-    const mainAbility = modal.querySelector('#equipment-mainAbility').value.trim();
-    const mainAbilityTab = modal.querySelector('#equipment-mainAbilityTab').value;
-    
-    // 선택된 스킬 번호 가져오기
-    const activeSkillBtn = modal.querySelector('.skill-toggle-btn.active');
-    const skillNumber = activeSkillBtn ? parseInt(activeSkillBtn.getAttribute('data-skill')) : null;
-
-    if (!name) {
-      alert('장비 세트 이름을 입력해주세요.');
-      return;
-    }
-
-    // 장비 세트 업데이트
-    this.equipmentButtons[index] = {
-      name,
-      weapon,
-      armor,
-      accessory,
-      jobAbility,
-      jobAbilityTab,
-      mainAbility,
-      mainAbilityTab,
-      skillNumber
-    };
-
-    // 로컬 스토리지 업데이트
-    try {
-      localStorage.setItem('lanisHelperEquipmentButtons', JSON.stringify(this.equipmentButtons));
-    } catch (error) {
-    }
-
-    // 모달 닫기
-    modal.remove();
-    
-    // 서브메뉴 닫기
-    this.closeAllSubMenus();
-  }
-
-  openQuickSettingsModal(index) {
-    window.lanisHelper.openQuickSettingsModal(index);
-  }
-
-  addNewEquipmentButton() {
-    
-    // 새로운 장비 버튼 설정을 위한 기본값
-    const newButton = {
-      name: `새 장비 세트 ${this.equipmentButtons.length + 1}`,
-      weapon: '',
-      armor: '',
-      accessory: '',
-      jobAbility: '',
-      jobAbilityTab: '',
-      mainAbility: '',
-      mainAbilityTab: '',
-      skillNumber: null
-    };
-    
-    // 배열에 추가
-    this.equipmentButtons.push(newButton);
-    
-    // 로컬 스토리지 업데이트
-    try {
-      localStorage.setItem('lanisHelperEquipmentButtons', JSON.stringify(this.equipmentButtons));
-    } catch (error) {
-    }
-    
-    // 설정 모달 열기
-    this.openEquipmentSettingsModal(this.equipmentButtons.length - 1);
-  }
-
-  addNewQuickButton() {
-    
-    // 새로운 퀵버튼 설정을 위한 기본값
-    const newButton = {
-      keyword: `퀵${this.quickButtons.length + 1}`,
-      name: `새 퀵버튼 ${this.quickButtons.length + 1}`,
-      searchType: 'item',
-      searchValue: ''
-    };
-    
-    // 배열에 추가
-    this.quickButtons.push(newButton);
-    
-    // 로컬 스토리지 업데이트
-    try {
-      localStorage.setItem('lanisHelperQuickButtons', JSON.stringify(this.quickButtons));
-    } catch (error) {
-    }
-    
-    // 설정 모달 열기
-    this.openQuickSettingsModal(this.quickButtons.length - 1);
-  }
-
-  deleteEquipmentButton(index) {
-    
-    // 확인 메시지
-    if (!confirm(`장비 세트 "${this.equipmentButtons[index]?.name || `장비${index + 1}`}"을(를) 삭제하시겠습니까?`)) {
-      return;
-    }
-    
-    // 배열에서 제거
-    this.equipmentButtons.splice(index, 1);
-    
-    // 로컬 스토리지 업데이트
-    try {
-      localStorage.setItem('lanisHelperEquipmentButtons', JSON.stringify(this.equipmentButtons));
-    } catch (error) {
-    }
-    
-    // 서브메뉴 닫기
-    this.closeAllSubMenus();
-  }
-
-  deleteQuickButton(index) {
-    
-    // 확인 메시지
-    if (!confirm(`퀵버튼 "${this.quickButtons[index]?.keyword || `퀵${index + 1}`}"을(를) 삭제하시겠습니까?`)) {
-      return;
-    }
-    
-    // 배열에서 제거
-    this.quickButtons.splice(index, 1);
-    
-    // 로컬 스토리지 업데이트
-    try {
-      localStorage.setItem('lanisHelperQuickButtons', JSON.stringify(this.quickButtons));
-    } catch (error) {
-    }
-    
-    // 서브메뉴 닫기
-    this.closeAllSubMenus();
-  }
-
-  resetQuickButton(index) {
-    // 퀵버튼 설정 제거
-    this.quickButtons[index] = {};
-    // 로컬 스토리지 업데이트
-    try {
-      localStorage.setItem('lanisHelperQuickButtons', JSON.stringify(this.quickButtons));
-    } catch (error) {
-    }
-    // 서브메뉴 닫기
-    this.closeAllSubMenus();
-  }
-
-  // 공개 메서드들
-  getSettings() {
-    return this.settings;
-  }
-
-  getQuickButtons() {
-    return this.quickButtons;
-  }
-
-  updateQuickButtons(quickButtons) {
-    this.quickButtons = quickButtons;
-    try {
-      localStorage.setItem('lanisHelperQuickButtons', JSON.stringify(this.quickButtons));
-    } catch (error) {
-    }
-  }
-
-  async waitForAbilityTabContent(abilityTab) {
-    let attempts = 0;
-    const maxAttempts = 10; // 최대 5초 대기
-    
-    while (attempts < maxAttempts) {
-      const cards = document.querySelectorAll('.MuiCard-root');
-      if (cards.length > 0) {
-        return;
-      }
-      await this.wait(500);
-      attempts++;
-    }
-    // 어빌리티 카드 로드 타임아웃
-  }
-
-  async waitForAbilityEquipComplete(equipButton, abilityName) {
-    let attempts = 0;
-    const maxAttempts = 20; // 최대 2초 대기
-    
-    while (attempts < maxAttempts) {
-      // 버튼이 비활성화되었거나 텍스트가 변경되었는지 확인
-      if (equipButton.disabled || !equipButton.textContent.includes('직업') && !equipButton.textContent.includes('메인')) {
-        return;
-      }
-      
-      // 또는 이미 장착 중인지 확인
-      const equippedAbilities = document.querySelectorAll('.css-3caazb .MuiTypography-subtitle1');
-      for (const ability of equippedAbilities) {
-        if (ability.textContent.trim() === abilityName.trim()) {
-          return;
-        }
-      }
-      
-      await this.wait(100);
-      attempts++;
-    }
-  }
-
-  // 스킬 자동 활성화 기능
-  async activateSkill(skillNumber) {
-    if (!skillNumber) {
-      return;
-    }
-
-    // 스킬 관리 페이지로 이동
-    if (!window.location.href.includes('lanis.me/skill-management')) {
-      // 대기 중인 스킬 활성화 작업을 sessionStorage에 저장
-      sessionStorage.setItem('lanisHelperPendingSkill', JSON.stringify({
-        skillNumber,
-        timestamp: Date.now()
-      }));
-      
-      window.location.href = 'https://lanis.me/skill-management';
-      return;
-    }
-
-    // DOM이 준비될 때까지 대기
-    await this.waitForSkillManagementDOM(skillNumber);
-  }
-
-  async waitForSkillManagementDOM(skillNumber) {
-    // DOM이 이미 준비되어 있는지 먼저 확인
-    const checkDOMReady = () => {
-      const skillButtons = document.querySelectorAll('button[class*="MuiButton"]');
-      return skillButtons.length > 0;
-    };
-    
-    // 이미 준비되어 있으면 즉시 실행
-    if (checkDOMReady()) {
-      this.performSkillActivation(skillNumber);
-      return;
-    }
-    
-    // DOM이 준비될 때까지 짧은 간격으로 확인 (100ms)
-    let attempts = 0;
-    const maxAttempts = 50; // 최대 5초
-    
-    const checkAndExecute = () => {
-      attempts++;
-      
-      if (checkDOMReady()) {
-        this.performSkillActivation(skillNumber);
-        return;
-      }
-      
-      if (attempts >= maxAttempts) {
-        this.showFinalCompleteModal();
-        return;
-      }
-      
-      // 다음 프레임에서 다시 확인
-      requestAnimationFrame(checkAndExecute);
-    };
-    
-    // 즉시 첫 번째 확인 시작
-    requestAnimationFrame(checkAndExecute);
-  }
-
-  async performSkillActivation(skillNumber) {
-    // 스킬 번호에 해당하는 활성화 버튼 찾기
-    const skillButtons = document.querySelectorAll('button[class*="MuiButton"]');
-    let targetButton = null;
-    
-    // 스킬 번호에 해당하는 버튼 찾기 (h6 태그의 텍스트로 스킬 번호 확인)
-    for (let i = 0; i < skillButtons.length; i++) {
-      const button = skillButtons[i];
-      const skillHeader = button.closest('.MuiPaper-root')?.querySelector('h6');
-      
-      if (skillHeader && skillHeader.textContent.includes(`스킬${skillNumber}`)) {
-        // 해당 스킬의 활성화 버튼 찾기
-        const activateButton = button.closest('.MuiPaper-root')?.querySelector('button[class*="MuiButton-containedPrimary"]');
-        if (activateButton && !activateButton.disabled && activateButton.textContent.includes('활성화')) {
-          targetButton = activateButton;
-          break;
-        }
-      }
-    }
-    
-    if (!targetButton) {
-      this.showFinalCompleteModal();
-      return;
-    }
-    
-    targetButton.click();
-    
-    // 활성화 완료 대기
-    await this.waitForSkillActivationComplete(targetButton, skillNumber);
-    
-    // 스킬 활성화 완료 후 최종 모달 표시
-    this.showFinalCompleteModal();
-  }
-
-  async waitForSkillActivationComplete(button, skillNumber) {
-    return new Promise((resolve) => {
-      let attempts = 0;
-      const maxAttempts = 30; // 최대 3초
-      
-      const checkComplete = () => {
-        attempts++;
-        
-        // 활성화 완료 확인 (버튼이 비활성화되거나 텍스트가 변경됨)
-        if (button.disabled || button.textContent.includes('활성화됨')) {
-          resolve();
-          return;
-        }
-        
-        if (attempts >= maxAttempts) {
-          resolve();
-          return;
-        }
-        
-        // 다음 프레임에서 다시 확인
-        requestAnimationFrame(checkComplete);
-      };
-      
-      // 즉시 첫 번째 확인 시작
-      requestAnimationFrame(checkComplete);
-    });
-  }
-
-  // 스킬 활성화 완료 후 최종 모달 표시
-  showFinalCompleteModal() {
-    try {
-      const equipmentResult = sessionStorage.getItem('lanisHelperEquipmentResult');
-      if (equipmentResult) {
-        const result = JSON.parse(equipmentResult);
-        const equipmentCount = Number(result.equipmentCount) || 0;
-        const equipmentTotal = Number(result.equipmentTotal) || 0;
-        const abilityCount = Number(result.abilityCount) || 0;
-        const abilityTotal = Number(result.abilityTotal) || 0;
-        const skillNumber = result.skillNumber || null;
-        this.showCombinedCompleteModal(equipmentCount, equipmentTotal, abilityCount, abilityTotal, skillNumber);
-        sessionStorage.removeItem('lanisHelperEquipmentResult');
-      }
-    } catch (error) {
-      sessionStorage.removeItem('lanisHelperEquipmentResult');
-    }
+    // 장비 설정 모달 기능 삭제됨
+    console.log('장비 설정 모달 기능이 삭제되었습니다.');
   }
 
   // 1. 결과 저장 함수 추가

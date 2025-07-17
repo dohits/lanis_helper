@@ -7,18 +7,6 @@
     },
     "items": [
       {
-        "id": "equipment",
-        "icon": "⚔️",
-        "text": "장착",
-        "title": "아이템 장착 퀵버튼 메뉴"
-      },
-      {
-        "id": "exchange",
-        "icon": "🏪",
-        "text": "거래소",
-        "title": "거래소 퀵버튼 메뉴"
-      },
-      {
         "id": "itemGuide",
         "icon": "📚",
         "text": "아이템 도감",
@@ -31,27 +19,15 @@
         "title": "설정 메뉴"
       }
     ],
-    "exchange": {
+    "itemGuide": {
       "subMenu": {
-        "title": "거래소 퀵버튼",
+        "title": "아이템 도감",
         "items": [
           {
-            "id": "quick1",
-            "icon": "🔍",
-            "text": "퀵1",
-            "title": "퀵버튼 1"
-          },
-          {
-            "id": "quick2",
-            "icon": "🔍",
-            "text": "퀵2",
-            "title": "퀵버튼 2"
-          },
-          {
-            "id": "quick3",
-            "icon": "🔍",
-            "text": "퀵3",
-            "title": "퀵버튼 3"
+            "id": "openGuide",
+            "icon": "📖",
+            "text": "도감 열기",
+            "title": "아이템 도감 열기"
           }
         ]
       }
@@ -69,27 +45,25 @@
           {
             "id": "showItemStats",
             "icon": "📊",
-            "text": "아이템 스탯",
-            "title": "아이템 스탯 정보 표시"
+            "text": "아이템 스카우터",
+            "title": "아이템 감정 정보 표시"
           },
           {
-            "id": "quickButtons",
-            "icon": "⚡",
-            "text": "퀵버튼",
-            "title": "퀵버튼 기능 활성화"
+            "id": "wikiLink",
+            "icon": "📚",
+            "text": "위키 이동",
+            "title": "Lanis 위키로 이동",
+            "url": "https://laniswiki.lovestoblog.com/"
+          },
+          {
+            "id": "lanisLink",
+            "icon": "🎮",
+            "text": "라니스 이동",
+            "title": "Lanis 게임으로 이동",
+            "url": "https://lanis.me/"
           }
         ]
       }
-    }
-  },
-  "quickButtonOptions": {
-    "move": {
-      "text": "▶️",
-      "title": "거래소로 이동하여 검색 실행"
-    },
-    "reset": {
-      "text": "⚙️",
-      "title": "퀵버튼 설정 변경"
     }
   }
 } 

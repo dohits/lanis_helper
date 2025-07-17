@@ -47,13 +47,20 @@ function saveSettings() {
   });
 }
 
+// HTML 이스케이프 함수 추가
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 // 아이템 목록 보기
 function showItemsList() {
   // 새 창에서 아이템 목록 표시
   const itemsWindow = window.open('', 'itemsList', 'width=400,height=600,scrollbars=yes,resizable=yes');
   
-  // 새 창에 HTML 내용 작성
-  itemsWindow.document.write(`
+  // 새 창에 HTML 내용 작성 (안전한 방식)
+  const safeHtml = `
     <!DOCTYPE html>
     <html>
     <head>
@@ -133,7 +140,12 @@ function showItemsList() {
       <div id="count" class="count">총 0개 아이템</div>
     </body>
     </html>
-  `);
+  `;
+  
+  // document.write 대신 안전한 방식 사용
+  itemsWindow.document.open();
+  itemsWindow.document.write(safeHtml);
+  itemsWindow.document.close();
   
   // chrome.storage.local에서 아이템 데이터 로드
   chrome.storage.local.get(['rareItems'], function(result) {
@@ -150,31 +162,46 @@ function showItemsList() {
         return nameA.localeCompare(nameB, 'ko');
       });
       
-      // 아이템 목록 생성
-      let itemsHtml = '';
+      // 아이템 목록 생성 (안전한 방식)
       items.forEach((item, index) => {
-        const itemName = item.name || '알 수 없는 아이템';
+        const itemName = escapeHtml(item.name || '알 수 없는 아이템');
         const powerRange = item.power_min && item.power_max ? `${item.power_min}-${item.power_max}` : 'N/A';
         const weightRange = item.weight_min && item.weight_max ? `${item.weight_min}-${item.weight_max}` : 'N/A';
-        const weaponType = item.weapon_type || 'N/A';
-        const abilities = item.abilities && item.abilities.length > 0 ? item.abilities.join(', ') : 'N/A';
+        const weaponType = escapeHtml(item.weapon_type || 'N/A');
+        const abilities = item.abilities && item.abilities.length > 0 ? 
+          item.abilities.map(ability => escapeHtml(ability)).join(', ') : 'N/A';
         
         // 타입이 N/A가 아닐 때만 괄호로 표시
         const typeDisplay = weaponType !== 'N/A' ? ` (${weaponType})` : '';
         
-        itemsHtml += `
-          <div class="item">
-            <div class="item-name">${itemName}${typeDisplay}</div>
-            <div class="item-stats">위력: ${powerRange} | 무게: ${weightRange}</div>
-            <div class="item-abilities">어빌리티: ${abilities}</div>
-          </div>
-        `;
+        const itemDiv = itemsWindow.document.createElement('div');
+        itemDiv.className = 'item';
+        
+        const nameDiv = itemsWindow.document.createElement('div');
+        nameDiv.className = 'item-name';
+        nameDiv.textContent = itemName + typeDisplay;
+        
+        const statsDiv = itemsWindow.document.createElement('div');
+        statsDiv.className = 'item-stats';
+        statsDiv.textContent = `위력: ${powerRange} | 무게: ${weightRange}`;
+        
+        const abilitiesDiv = itemsWindow.document.createElement('div');
+        abilitiesDiv.className = 'item-abilities';
+        abilitiesDiv.textContent = `어빌리티: ${abilities}`;
+        
+        itemDiv.appendChild(nameDiv);
+        itemDiv.appendChild(statsDiv);
+        itemDiv.appendChild(abilitiesDiv);
+        
+        itemsContainer.appendChild(itemDiv);
       });
       
-      itemsContainer.innerHTML = itemsHtml;
       countElement.textContent = `총 ${items.length}개 아이템`;
     } else {
-      itemsContainer.innerHTML = '<div class="no-items">스캔된 아이템이 없습니다.<br>먼저 "레어 아이템 데이터 수집"을 실행해주세요.</div>';
+      const noItemsDiv = itemsWindow.document.createElement('div');
+      noItemsDiv.className = 'no-items';
+      noItemsDiv.textContent = '스캔된 아이템이 없습니다. 먼저 "레어 아이템 데이터 수집"을 실행해주세요.';
+      itemsContainer.appendChild(noItemsDiv);
       countElement.textContent = '총 0개 아이템';
     }
   });

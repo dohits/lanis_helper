@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Lanis Helper",
-  "version": "1.2.1",
+  "version": "1.3.1",
   "description": "Lanis 게임을 위한 도우미 확장프로그램",
   "permissions": [
     "activeTab",
@@ -20,6 +20,7 @@
         "https://laniswiki.lovestoblog.com/api.php*"
       ],
       "js": [
+        "item-colors.js",
         "menu-module/menu-manager.js",
         "search-engine.js", 
         "item-stats.js",
@@ -34,6 +35,7 @@
     {
       "resources": [
         "styles.css",
+        "item-colors.js",
         "menu-module/menu-config.json",
         "menu-module/menu-manager.js",
         "search-engine.js",

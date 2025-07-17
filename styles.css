@@ -944,7 +944,6 @@
 /* 아이템 스탯 관련 스타일 */
 .power-range-info,
 .weight-range-info {
-  color: #666 !important;
   font-size: 0.9em !important;
   font-style: italic !important;
   margin-left: 4px !important;
@@ -957,31 +956,16 @@
   margin-left: 4px !important;
 }
 
-/* 등급별 색상 (구버전 방식) */
-.power-grade-info[data-grade="최상"],
-.weight-grade-info[data-grade="최상"] {
-  color: #FF0000 !important; /* 붉은색 */
+/* 점수 클래스 스타일 추가 */
+.power-score-info,
+.weight-score-info {
+  font-size: 0.9em !important;
+  font-weight: bold !important;
+  margin-left: 4px !important;
 }
 
-.power-grade-info[data-grade="상"],
-.weight-grade-info[data-grade="상"] {
-  color: #C770FF !important; /* 연보라색 */
-}
-
-.power-grade-info[data-grade="중"],
-.weight-grade-info[data-grade="중"] {
-  color: #FFFF00 !important; /* 노란색 */
-}
-
-.power-grade-info[data-grade="하"],
-.weight-grade-info[data-grade="하"] {
-  color: #0000FF !important; /* 파란색 */
-}
-
-.power-grade-info[data-grade="최하"],
-.weight-grade-info[data-grade="최하"] {
-  color: #FFFFFF !important; /* 흰색 */
-}
+/* 등급별 색상 (구버전 방식) - 이제 점수도 동일한 색상 사용 */
+/* 아이템 등급 색상은 JavaScript의 item-colors.js에서 관리됩니다 */
 
 /* 종결/준종결 태그 스타일 */
 .final-tag {
@@ -991,13 +975,7 @@
   margin-left: 4px !important;
 }
 
-.final-tag[data-tag="종결"] {
-  color: #FF0000 !important; /* 붉은색 */
-}
-
-.final-tag[data-tag="준종결"] {
-  color: #800080 !important; /* 보라색 */
-}
+/* 종결/준종결 태그 색상은 JavaScript의 item-colors.js에서 관리됩니다 */
 
 /* 사용자 프로필 링크 스타일 - 색상과 언더라인, 호버만 유지 */
 .username-clickable {
@@ -1425,4 +1403,76 @@ button.delete-btn {
 .MuiPopover-root .MuiPaper-root * {
   word-break: break-all !important;
   overflow-wrap: anywhere !important;
+}
+
+/* 토글 버튼 스타일 */
+.sub-menu-item.toggle-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 12px;
+  min-width: 120px;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.sub-menu-item.toggle-button.enabled {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border-color: #10b981;
+  box-shadow: 
+    0 4px 16px rgba(16, 185, 129, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.sub-menu-item.toggle-button:not(.enabled) {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border-color: #ef4444;
+  box-shadow: 
+    0 4px 16px rgba(239, 68, 68, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.sub-menu-item.toggle-button:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.sub-menu-item.toggle-button.enabled:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  box-shadow: 
+    0 6px 20px rgba(16, 185, 129, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.sub-menu-item.toggle-button:not(.enabled):hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  box-shadow: 
+    0 6px 20px rgba(239, 68, 68, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.sub-menu-item.toggle-button:active {
+  transform: translateY(0) scale(0.98);
+  transition: all 0.1s ease;
+}
+
+.sub-menu-item.toggle-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.sub-menu-item.toggle-button.enabled::after {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 } 
