@@ -357,7 +357,6 @@ class ItemStatsManager {
       return;
     }
     if (isWikiUnappraised) {
-      console.warn('미감정으로 태그/점수 표기 생략', container);
       return;
     }
     let tagText = '';
