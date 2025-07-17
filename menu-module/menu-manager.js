@@ -55,8 +55,6 @@ class MenuManager {
       // 구버전 방식으로 chrome.storage.sync 사용
       chrome.storage.sync.get({
         profileLink: true,
-        feature2: false,
-        feature3: false,
         showItemStats: true  // 구버전 방식으로 변경
       }, (items) => {
         this.settings = items;
@@ -64,8 +62,6 @@ class MenuManager {
     } catch (error) {
       this.settings = { 
         profileLink: true, 
-        feature2: false, 
-        feature3: false, 
         showItemStats: true 
       };
     }
@@ -81,52 +77,9 @@ class MenuManager {
 
 
 
-  waitForAbilityDOM(equipmentSet, isCombined) {
-    // DOM이 이미 준비되어 있는지 먼저 확인
-    const checkDOMReady = () => {
-      const tabs = document.querySelectorAll('.MuiTab-root');
-      const cards = document.querySelectorAll('.MuiCard-root');
-      return tabs.length > 0 && cards.length > 0;
-    };
-    
-    // 이미 준비되어 있으면 즉시 실행
-    if (checkDOMReady()) {
-      this.performAbilityChange(equipmentSet, isCombined);
-      return;
-    }
-    
-    // DOM이 준비될 때까지 짧은 간격으로 확인
-    let attempts = 0;
-    const maxAttempts = 50; // 최대 5초
-    
-    const checkAndExecute = () => {
-      attempts++;
-      
-      if (checkDOMReady()) {
-        this.performAbilityChange(equipmentSet, isCombined);
-        return;
-      }
-      
-      if (attempts >= maxAttempts) {
-        return;
-      }
-      
-      // 다음 프레임에서 다시 확인
-      requestAnimationFrame(checkAndExecute);
-    };
-    
-    // 즉시 첫 번째 확인 시작
-    requestAnimationFrame(checkAndExecute);
-  }
 
-  loadEquipmentButtons() {
-    try {
-      const savedEquipmentButtons = localStorage.getItem('lanisHelperEquipmentButtons');
-      this.equipmentButtons = savedEquipmentButtons ? JSON.parse(savedEquipmentButtons) : [];
-    } catch (error) {
-      this.equipmentButtons = [];
-    }
-  }
+
+
 
   createMenuUI() {
     this.removeExistingMenu();
@@ -182,12 +135,26 @@ class MenuManager {
 
   toggleMainMenuRow() {
     const mainMenuRow = document.querySelector('.main-menu-row');
+    const container = document.querySelector('.quick-buttons-container');
     if (!mainMenuRow) return;
     const isOpen = mainMenuRow.classList.contains('show');
     if (isOpen) {
       mainMenuRow.classList.remove('show');
+      // 메뉴가 닫힐 때 포커스 제거하여 접근성 경고 방지
+      if (container) {
+        container.setAttribute('aria-hidden', 'true');
+        // 포커스된 요소가 있다면 포커스 제거
+        const focusedElement = container.querySelector(':focus');
+        if (focusedElement) {
+          focusedElement.blur();
+        }
+      }
     } else {
       mainMenuRow.classList.add('show');
+      // 메뉴가 열릴 때 aria-hidden 제거
+      if (container) {
+        container.removeAttribute('aria-hidden');
+      }
     }
     // 이벤트 전파 방지
     event.stopPropagation();
@@ -209,11 +176,7 @@ class MenuManager {
     subMenu.style.transform = 'translateY(-50%)'; // 세로 중앙 정렬
     subMenu.style.zIndex = 10010;
     // 서브메뉴 내용 생성
-    if (item.id === 'equipment') {
-      this.createEquipmentButtonsSubMenu(subMenu);
-    } else if (item.id === 'exchange') {
-      this.createQuickButtonsSubMenu(subMenu);
-    } else if (item.id === 'itemGuide') {
+    if (item.id === 'itemGuide') {
       this.createItemGuideSubMenu(subMenu);
     } else if (item.id === 'settings') {
       this.createSettingsSubMenu(subMenu);
@@ -230,285 +193,11 @@ class MenuManager {
     }, 50);
   }
 
-  toggleExchangeSubMenu(item) {
-    const subMenuContainer = document.querySelector('.sub-menu-container');
-    if (!subMenuContainer) return;
-    
-    const isOpen = subMenuContainer.classList.contains('show');
-    
-    if (isOpen) {
-      subMenuContainer.classList.remove('show');
-    } else {
-      this.closeAllSubMenus();
-      this.createQuickButtonsSubMenu(subMenuContainer);
-      subMenuContainer.classList.add('show');
-    }
-  }
 
-  toggleSettingsSubMenu(item) {
-    const subMenuContainer = document.querySelector('.sub-menu-container');
-    if (!subMenuContainer) return;
-    
-    const isOpen = subMenuContainer.classList.contains('show');
-    
-    if (isOpen) {
-      subMenuContainer.classList.remove('show');
-    } else {
-      this.closeAllSubMenus();
-      this.createSettingsSubMenu(subMenuContainer);
-      subMenuContainer.classList.add('show');
-    }
-  }
 
-  createEquipmentButtonsSubMenu(container) {
-    container.innerHTML = '';
-    
-    // 기존 장비 버튼들 표시
-    this.equipmentButtons.forEach((button, index) => {
-      if (button && Object.keys(button).length > 0) {
-        // 메인 버튼과 수정/삭제 버튼을 같은 행에 배치
-        const buttonRow = document.createElement('div');
-        buttonRow.style.display = 'flex';
-        buttonRow.style.gap = '2px';
-        buttonRow.style.margin = '0 auto 4px auto';
-        buttonRow.style.marginBottom = '4px';
-        buttonRow.style.width = '180px';
-        buttonRow.style.maxWidth = '180px';
-        buttonRow.style.alignItems = 'center';
-        buttonRow.style.minWidth = '0';
-        buttonRow.style.overflow = 'hidden';
-        
-        // 메인 장비 버튼 (좌측)
-        const equipmentButton = document.createElement('button');
-        equipmentButton.className = 'main-menu-item sub-menu-item';
-        equipmentButton.style.flex = '1';
-        equipmentButton.style.height = '32px';
-        equipmentButton.style.backgroundColor = 'white';
-        equipmentButton.style.color = '#333';
-        equipmentButton.style.border = '1px solid #ddd';
-        equipmentButton.style.borderRadius = '6px';
-        equipmentButton.style.fontSize = '12px';
-        equipmentButton.style.fontWeight = 'bold';
-        equipmentButton.style.whiteSpace = 'nowrap';
-        equipmentButton.style.overflow = 'hidden';
-        equipmentButton.style.textOverflow = 'ellipsis';
-        equipmentButton.style.boxSizing = 'border-box';
-        equipmentButton.style.minWidth = '0';
-        equipmentButton.style.maxWidth = 'calc(100% - 84px)';
-        equipmentButton.style.padding = '0 8px';
-        
-        const buttonText = button.name || `장비${index + 1}`;
-        equipmentButton.innerHTML = buttonText;
-        equipmentButton.title = button.name || `장비 세트 ${index + 1}`;
-        
-        // 장비 버튼 클릭 이벤트
-        equipmentButton.setAttribute('data-index', index);
-        equipmentButton.addEventListener('click', (e) => {
-          const buttonIndex = parseInt(e.target.getAttribute('data-index'));
-          this.handleEquipmentButtonClick(buttonIndex);
-        });
-        
-        // 수정 버튼 (우측)
-        const editButton = document.createElement('button');
-        editButton.className = 'main-menu-item sub-menu-item edit-btn';
-        editButton.innerHTML = '수정';
-        editButton.title = `장비${index + 1} 수정`;
-        editButton.style.width = '35px';
-        editButton.style.height = '32px';
-        editButton.style.backgroundColor = '#10b981';
-        editButton.style.color = 'white';
-        editButton.style.border = 'none';
-        editButton.style.borderRadius = '6px';
-        editButton.style.fontSize = '10px';
-        editButton.style.fontWeight = 'bold';
-        editButton.style.boxSizing = 'border-box';
-        editButton.style.flexShrink = '0';
-        editButton.style.minWidth = '40px';
-        editButton.style.padding = '0';
-        
-        editButton.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.openEquipmentSettingsModal(index);
-        });
-        
-        // 삭제 버튼 (우측)
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'main-menu-item sub-menu-item delete-btn';
-        deleteButton.innerHTML = '삭제';
-        deleteButton.title = `장비${index + 1} 삭제`;
-        deleteButton.style.width = '35px';
-        deleteButton.style.height = '32px';
-        deleteButton.style.backgroundColor = '#ef4444';
-        deleteButton.style.color = 'white';
-        deleteButton.style.border = 'none';
-        deleteButton.style.borderRadius = '6px';
-        deleteButton.style.fontSize = '10px';
-        deleteButton.style.fontWeight = 'bold';
-        deleteButton.style.boxSizing = 'border-box';
-        deleteButton.style.flexShrink = '0';
-        deleteButton.style.minWidth = '40px';
-        deleteButton.style.padding = '0';
-        
-        deleteButton.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.deleteEquipmentButton(index);
-        });
-        
-        buttonRow.appendChild(equipmentButton);
-        buttonRow.appendChild(editButton);
-        buttonRow.appendChild(deleteButton);
-        container.appendChild(buttonRow);
-      }
-    });
-    
-    // 추가 버튼 (항상 마지막에 표시)
-    const addButton = document.createElement('button');
-    addButton.className = 'main-menu-item sub-menu-item add-btn';
-    addButton.innerHTML = '+ 추가';
-    addButton.title = '새 장비 세트 추가';
-    addButton.style.width = '100%';
-    addButton.style.height = '40px';
-    addButton.style.marginTop = '8px';
-    addButton.style.backgroundColor = '#10b981';
-    addButton.style.color = 'white';
-    addButton.style.border = 'none';
-    addButton.style.borderRadius = '6px';
-    addButton.style.fontSize = '14px';
-    addButton.style.fontWeight = 'bold';
-    addButton.style.boxSizing = 'border-box';
-    addButton.style.display = 'block';
-    
-    addButton.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.addNewEquipmentButton();
-    });
-    
-    container.appendChild(addButton);
-  }
 
-  createQuickButtonsSubMenu(container) {
-    container.innerHTML = '';
-    
-    // 기존 퀵버튼들 표시
-    this.quickButtons.forEach((button, index) => {
-      if (button && Object.keys(button).length > 0) {
-        // 메인 버튼과 수정/삭제 버튼을 같은 행에 배치
-        const buttonRow = document.createElement('div');
-        buttonRow.style.display = 'flex';
-        buttonRow.style.gap = '2px';
-        buttonRow.style.margin = '0 auto 4px auto';
-        buttonRow.style.marginBottom = '4px';
-        buttonRow.style.width = '180px';
-        buttonRow.style.maxWidth = '180px';
-        buttonRow.style.alignItems = 'center';
-        buttonRow.style.minWidth = '0';
-        buttonRow.style.overflow = 'hidden';
-        
-        // 메인 퀵버튼 (좌측)
-        const quickButton = document.createElement('button');
-        quickButton.className = 'main-menu-item sub-menu-item';
-        quickButton.style.flex = '1';
-        quickButton.style.height = '32px';
-        quickButton.style.backgroundColor = 'white';
-        quickButton.style.color = '#333';
-        quickButton.style.border = '1px solid #ddd';
-        quickButton.style.borderRadius = '6px';
-        quickButton.style.fontSize = '12px';
-        quickButton.style.fontWeight = 'bold';
-        quickButton.style.whiteSpace = 'nowrap';
-        quickButton.style.overflow = 'hidden';
-        quickButton.style.textOverflow = 'ellipsis';
-        quickButton.style.boxSizing = 'border-box';
-        quickButton.style.minWidth = '0';
-        quickButton.style.maxWidth = 'calc(100% - 84px)';
-        quickButton.style.padding = '0 8px';
-        
-        const buttonText = button.keyword || `퀵${index + 1}`;
-        quickButton.innerHTML = buttonText;
-        quickButton.title = button.name || `퀵버튼 ${index + 1}`;
-        
-        quickButton.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.handleQuickButtonClick(index);
-        });
-        
-        // 수정 버튼 (우측)
-        const editButton = document.createElement('button');
-        editButton.className = 'main-menu-item sub-menu-item edit-btn';
-        editButton.innerHTML = '수정';
-        editButton.title = `퀵${index + 1} 수정`;
-        editButton.style.width = '35px';
-        editButton.style.height = '32px';
-        editButton.style.backgroundColor = '#10b981';
-        editButton.style.color = 'white';
-        editButton.style.border = 'none';
-        editButton.style.borderRadius = '6px';
-        editButton.style.fontSize = '10px';
-        editButton.style.fontWeight = 'bold';
-        editButton.style.boxSizing = 'border-box';
-        editButton.style.flexShrink = '0';
-        editButton.style.minWidth = '40px';
-        editButton.style.padding = '0';
-        
-        editButton.addEventListener('click', () => {
-          // 퀵설정 모달 기능 삭제됨
-          console.log('퀵설정 모달 기능이 삭제되었습니다.');
-        });
-        
-        // 삭제 버튼 (우측)
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'main-menu-item sub-menu-item delete-btn';
-        deleteButton.innerHTML = '삭제';
-        deleteButton.title = `퀵${index + 1} 삭제`;
-        deleteButton.style.width = '35px';
-        deleteButton.style.height = '32px';
-        deleteButton.style.backgroundColor = '#ef4444';
-        deleteButton.style.color = 'white';
-        deleteButton.style.border = 'none';
-        deleteButton.style.borderRadius = '6px';
-        deleteButton.style.fontSize = '10px';
-        deleteButton.style.fontWeight = 'bold';
-        deleteButton.style.boxSizing = 'border-box';
-        deleteButton.style.flexShrink = '0';
-        deleteButton.style.minWidth = '40px';
-        deleteButton.style.padding = '0';
-        
-        deleteButton.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.deleteQuickButton(index);
-        });
-        
-        buttonRow.appendChild(quickButton);
-        buttonRow.appendChild(editButton);
-        buttonRow.appendChild(deleteButton);
-        container.appendChild(buttonRow);
-      }
-    });
-    
-    // 추가 버튼 (항상 마지막에 표시)
-    const addButton = document.createElement('button');
-    addButton.className = 'main-menu-item sub-menu-item add-btn';
-    addButton.innerHTML = '+ 추가';
-    addButton.title = '새 퀵버튼 추가';
-    addButton.style.width = '100%';
-    addButton.style.height = '40px';
-    addButton.style.marginTop = '8px';
-    addButton.style.backgroundColor = '#10b981';
-    addButton.style.color = 'white';
-    addButton.style.border = 'none';
-    addButton.style.borderRadius = '6px';
-    addButton.style.fontSize = '14px';
-    addButton.style.fontWeight = 'bold';
-    addButton.style.boxSizing = 'border-box';
-    addButton.style.display = 'block';
-    
-    addButton.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.addNewQuickButton();
-    });
-    
-    container.appendChild(addButton);
-  }
+
+
 
   createItemGuideSubMenu(container) {
     container.innerHTML = '';
@@ -976,7 +665,7 @@ class MenuManager {
       itemDiv.appendChild(statsDiv);
       itemDiv.appendChild(attributesDiv);
       itemDiv.appendChild(abilitiesDiv);
-      
+
       listContainer.appendChild(itemDiv);
     });
 
@@ -1061,6 +750,21 @@ class MenuManager {
 
   closeAllMenus() {
     this.closeAllSubMenus();
+    
+    // 메인 메뉴도 닫고 포커스 제거
+    const mainMenuRow = document.querySelector('.main-menu-row');
+    const container = document.querySelector('.quick-buttons-container');
+    if (mainMenuRow && mainMenuRow.classList.contains('show')) {
+      mainMenuRow.classList.remove('show');
+      if (container) {
+        container.setAttribute('aria-hidden', 'true');
+        // 포커스된 요소가 있다면 포커스 제거
+        const focusedElement = container.querySelector(':focus');
+        if (focusedElement) {
+          focusedElement.blur();
+        }
+      }
+    }
   }
 
   toggleSetting(settingId) {
@@ -1095,595 +799,30 @@ class MenuManager {
           window.itemStatsManager.removeItemStats();
         }
         break;
-      case 'quickButtons':
-        if (this.settings[settingId]) {
-          this.createMenuUI();
-        } else {
-          this.removeExistingMenu();
-        }
-        break;
     }
   }
 
-  handleEquipmentButtonClick(index) {
-    // 장비 버튼이 설정되지 않았거나 빈 객체인 경우 설정창 열기
-    if (!this.equipmentButtons[index] || Object.keys(this.equipmentButtons[index]).length === 0) {
-      this.openEquipmentSettingsModal(index);
-    return;
-    }
-    
-    const equipmentSet = this.equipmentButtons[index];
-    
-    // 빈 값 필터링 (공백 제거 후 빈 문자열인 경우 제외)
-    const hasEquipment = (equipmentSet.weapon && equipmentSet.weapon.trim()) || 
-                        (equipmentSet.armor && equipmentSet.armor.trim()) || 
-                        (equipmentSet.accessory && equipmentSet.accessory.trim());
-    const hasAbility = (equipmentSet.jobAbility && equipmentSet.jobAbility.trim()) || 
-                      (equipmentSet.mainAbility && equipmentSet.mainAbility.trim());
-    
-    if (hasEquipment && hasAbility) {
-      this.executeEquipmentChange(equipmentSet, index, true); // 어빌리티도 실행
-    } else if (hasEquipment) {
-      this.executeEquipmentChange(equipmentSet, index, false);
-    } else if (hasAbility) {
-      this.executeAbilityChange(equipmentSet, index, false);
-    } else {
-      this.openEquipmentSettingsModal(index);
-    }
-  }
 
-  executeEquipmentChange(equipmentSet, index, shouldRunAbility) {
-    // 중복 실행 방지: 기존 대기 작업 덮어쓰기
-    const pendingData = {
-      equipmentSet,
-      shouldRunAbility,
-      timestamp: Date.now()
-    };
-    sessionStorage.setItem('lanisHelperPendingEquipment', JSON.stringify(pendingData));
-    
-    if (window.location.href.includes('lanis.me/inventory')) {
-      this.performEquipmentChange(equipmentSet, shouldRunAbility);
-    } else {
-      window.location.href = 'https://lanis.me/inventory';
-    }
-  }
 
-  executeAbilityChange(equipmentSet, index, isCombined) {
-    // 중복 실행 방지: 기존 대기 작업 덮어쓰기
-    sessionStorage.setItem('lanisHelperPendingAbility', JSON.stringify({
-      equipmentSet,
-      isCombined,
-      timestamp: Date.now()
-    }));
-    if (window.location.href.includes('lanis.me/abilities')) {
-      // abilities 페이지에 이미 있어도 강제로 새로고침
-      window.location.reload();
-    } else {
-      window.location.href = 'https://lanis.me/abilities';
-    }
-  }
 
-  async performEquipmentChange(equipmentSet, shouldRunAbility) {
-    try {
-      if (!window.location.href.includes('lanis.me/inventory')) return;
-      const tabs = document.querySelectorAll('.MuiTab-root');
-      const table = document.querySelector('.MuiTable-root');
-      if (tabs.length === 0 || !table) {
-        setTimeout(() => this.performEquipmentChange(equipmentSet, shouldRunAbility), 1000);
-        return;
-      }
-      const { weapon, armor, accessory, skillNumber } = equipmentSet;
-      let equippedCount = 0;
-      const totalItems = [weapon, armor, accessory].filter(item => item && item.trim()).length;
-      if (weapon && weapon.trim()) if (await this.equipItem(weapon, '무기')) equippedCount++;
-      if (armor && armor.trim()) if (await this.equipItem(armor, '방어구')) equippedCount++;
-      if (accessory && accessory.trim()) if (await this.equipItem(accessory, '장신구')) equippedCount++;
-      
-      if (shouldRunAbility) {
-        this.saveResultToSession({equipmentCount: equippedCount, equipmentTotal: totalItems, abilityCount: 0, abilityTotal: 0, skillNumber});
-        this.executeAbilityChange(equipmentSet, null, true);
-      } else {
-        this.saveResultToSession({equipmentCount: equippedCount, equipmentTotal: totalItems, abilityCount: 0, abilityTotal: 0, skillNumber});
-        if (skillNumber) {
-          this.activateSkill(skillNumber);
-        } else {
-          this.showFinalCompleteModal();
-        }
-      }
-    } catch (error) {
-      this.showEquipmentErrorModal();
-    }
-  }
 
-  async performAbilityChange(equipmentSet, isCombined) {
-    try {
-      if (!window.location.href.includes('lanis.me/abilities')) return;
-      const tabs = document.querySelectorAll('.MuiTab-root');
-      const cards = document.querySelectorAll('.MuiCard-root');
-      if (tabs.length === 0 || cards.length === 0) {
-        setTimeout(() => this.performAbilityChange(equipmentSet, isCombined), 1000);
-        return;
-      }
-      const { jobAbility, jobAbilityTab, mainAbility, mainAbilityTab, skillNumber } = equipmentSet;
-      let equippedCount = 0;
-      const totalItems = [jobAbility, mainAbility].filter(item => item && item.trim()).length;
-      if (jobAbility && jobAbility.trim()) if (await this.equipAbility(jobAbility, 'job', jobAbilityTab)) equippedCount++;
-      if (mainAbility && mainAbility.trim()) if (await this.equipAbility(mainAbility, 'main', mainAbilityTab)) equippedCount++;
-      
-      if (isCombined) {
-        // 통합 변경: 장비 결과를 세션에서 읽어와서 합산
-        const equipmentResult = sessionStorage.getItem('lanisHelperEquipmentResult');
-        let equipmentCount = 0, equipmentTotal = 0;
-        if (equipmentResult) {
-          try {
-            const parsed = JSON.parse(equipmentResult);
-            equipmentCount = Number(parsed.equipmentCount) || 0;
-            equipmentTotal = Number(parsed.equipmentTotal) || 0;
-          } catch {}
-        }
-        this.saveResultToSession({equipmentCount, equipmentTotal, abilityCount: equippedCount, abilityTotal: totalItems, skillNumber});
-        if (skillNumber) {
-          this.activateSkill(skillNumber);
-        } else {
-          this.showFinalCompleteModal();
-        }
-      } else {
-        // 어빌리티만 변경
-        this.saveResultToSession({equipmentCount: 0, equipmentTotal: 0, abilityCount: equippedCount, abilityTotal: totalItems, skillNumber});
-        if (skillNumber) {
-          this.activateSkill(skillNumber);
-        } else {
-          this.showFinalCompleteModal();
-        }
-      }
-    } catch (error) {
-      this.showAbilityErrorModal();
-    }
-  }
 
-  async equipItem(itemName, category) {
-    try {
-      // 이미 착용 중인지 확인 (장착 중인 장비 테이블에서 확인)
-      const equippedTable = document.querySelector('.MuiTableBody-root');
-      if (equippedTable) {
-        const equippedItems = equippedTable.querySelectorAll('.MuiTypography-body1');
-        for (const item of equippedItems) {
-          if (item.textContent.includes(itemName)) {
-            return false;
-          }
-        }
-      }
 
-      // 해당 카테고리 탭 클릭
-      const tabs = document.querySelectorAll('.MuiTab-root');
-      let tabClicked = false;
-      
-      for (const tab of tabs) {
-        if (tab.textContent.includes(category)) {
-          tab.click();
-          tabClicked = true;
-          
-          // 탭 전환 후 아이템 테이블이 로드될 때까지 감지
-          await this.waitForTabContent(category);
-          break;
-        }
-      }
 
-      if (!tabClicked) {
-        return false;
-      }
 
-      // 아이템 테이블이 로드될 때까지 대기
-      await this.waitForItemTable();
 
-      // 아이템 찾기 및 장착
-      const itemRows = document.querySelectorAll('.MuiTableBody-root .MuiTableRow-root');
-      for (const row of itemRows) {
-        const itemElement = row.querySelector('.MuiTypography-body1');
-        if (itemElement) {
-          const itemText = itemElement.textContent.trim();
-          
-          if (itemText.includes(itemName)) {
-            const equipButton = row.querySelector('button');
-            if (equipButton && equipButton.textContent.includes('장착')) {
-              equipButton.click();
-              
-              // 장착 완료를 감지하여 즉시 진행
-              await this.waitForEquipComplete(equipButton, itemName);
-              return true;
-            }
-          }
-        }
-      }
 
-      return false;
 
-    } catch (error) {
-      return false;
-    }
-  }
 
-  async equipAbility(abilityName, type, abilityTab) {
-    try {
-      // 탭 전환이 필요한 경우 먼저 탭 전환
-      if (abilityTab && abilityTab.trim()) {
-        const tabs = document.querySelectorAll('.MuiTab-root');
-        let tabClicked = false;
-        
-        for (const tab of tabs) {
-          if (tab.textContent.trim() === abilityTab.trim()) {
-            tab.click();
-            tabClicked = true;
-            
-            // 탭 전환 후 어빌리티 카드가 로드될 때까지 감지
-            await this.waitForAbilityTabContent(abilityTab);
-            break;
-          }
-        }
 
-        if (!tabClicked) {
-          return false;
-        }
-      }
 
-      // 이미 장착 중인지 확인 (장착된 어빌리티 섹션에서 확인)
-      const equippedAbilities = document.querySelectorAll('.css-3caazb .MuiTypography-subtitle1');
-      for (const ability of equippedAbilities) {
-        if (ability.textContent.trim() === abilityName.trim()) {
-          return false;
-        }
-      }
 
-      // 어빌리티 카드들을 찾아서 해당 어빌리티 검색
-      const abilityCards = document.querySelectorAll('.MuiCard-root');
-      for (const card of abilityCards) {
-        const abilityTitle = card.querySelector('.MuiTypography-subtitle1');
-        if (abilityTitle) {
-          const titleText = abilityTitle.textContent.trim();
-          
-          if (titleText === abilityName.trim()) {
-            // 직업 어빌리티 버튼 찾기
-            if (type === 'job') {
-              const jobButton = card.querySelector('button');
-              if (jobButton && jobButton.textContent.includes('직업')) {
-                jobButton.click();
-                
-                // 어빌리티 장착 완료를 감지하여 즉시 진행
-                await this.waitForAbilityEquipComplete(jobButton, abilityName);
-                return true;
-              }
-            }
-            // 메인 어빌리티 버튼 찾기
-            else if (type === 'main') {
-              const buttons = card.querySelectorAll('button');
-              let found = false;
-              for (const button of buttons) {
-                if (button.textContent.includes('메인')) {
-                  button.click();
-                  
-                  // 어빌리티 장착 완료를 감지하여 즉시 진행
-                  await this.waitForAbilityEquipComplete(button, abilityName);
-                  found = true;
-                  return true;
-                }
-              }
-              if (!found) {
-              }
-            }
-          }
-        }
-      }
 
-      return false;
 
-    } catch (error) {
-      return false;
-    }
-  }
 
-  async waitForItemTable() {
-    // 아이템 테이블이 로드될 때까지 대기
-    let attempts = 0;
-    const maxAttempts = 20; // 최대 10초 대기
-    
-    while (attempts < maxAttempts) {
-      const table = document.querySelector('.MuiTableBody-root');
-      const rows = table ? table.querySelectorAll('.MuiTableRow-root') : [];
-      
-      if (rows.length > 0) {
-        return;
-    }
-    
-      await this.wait(500);
-      attempts++;
-    }
-    
-    // 아이템 테이블 로드 타임아웃
-  }
 
-  async waitForTabContent(category) {
-    let attempts = 0;
-    const maxAttempts = 10; // 최대 5초 대기
 
-    while (attempts < maxAttempts) {
-      const table = document.querySelector('.MuiTableBody-root');
-      if (table && table.querySelectorAll('.MuiTableRow-root').length > 0) {
-        return;
-      }
-      await this.wait(500);
-      attempts++;
-    }
-    // 아이템 테이블 로드 타임아웃
-  }
 
-  wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  async waitForEquipComplete(equipButton, itemName) {
-    let attempts = 0;
-    const maxAttempts = 20; // 최대 2초 대기
-    
-    while (attempts < maxAttempts) {
-      // 버튼이 비활성화되었거나 텍스트가 변경되었는지 확인
-      if (equipButton.disabled || !equipButton.textContent.includes('장착')) {
-        return;
-      }
-      
-      // 또는 이미 착용 중인지 확인
-      const equippedTable = document.querySelector('.MuiTableBody-root');
-      if (equippedTable) {
-        const equippedItems = equippedTable.querySelectorAll('.MuiTypography-body1');
-        for (const item of equippedItems) {
-          if (item.textContent.includes(itemName)) {
-            return;
-          }
-        }
-      }
-      
-      await this.wait(100);
-      attempts++;
-    }
-  }
-
-  showEquipmentCompleteModal(equippedCount, totalItems) {
-    const modal = document.createElement('div');
-    modal.className = 'equipment-complete-modal';
-    
-    const modalContent = document.createElement('div');
-    modalContent.className = 'modal-content';
-    
-    const title = document.createElement('h3');
-    title.textContent = '장비 변경 완료';
-    
-    const message = document.createElement('p');
-    message.textContent = `${equippedCount}개 / ${totalItems}개 아이템을 착용했습니다.`;
-    
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'close-btn';
-    closeBtn.textContent = '확인';
-    
-    modalContent.appendChild(title);
-    modalContent.appendChild(message);
-    modalContent.appendChild(closeBtn);
-    modal.appendChild(modalContent);
-    
-    document.body.appendChild(modal);
-    
-    closeBtn.addEventListener('click', () => {
-      modal.remove();
-    });
-  }
-
-  showCombinedCompleteModal(equipmentCount, equipmentTotal, abilityCount, abilityTotal, skillNumber = null) {
-    const modal = document.createElement('div');
-    modal.className = 'combined-complete-modal';
-    
-    equipmentCount = Number(equipmentCount) || 0;
-    equipmentTotal = Number(equipmentTotal) || 0;
-    abilityCount = Number(abilityCount) || 0;
-    abilityTotal = Number(abilityTotal) || 0;
-    
-    const totalEquipped = equipmentCount + abilityCount;
-    const totalItems = equipmentTotal + abilityTotal;
-    
-    const modalContent = document.createElement('div');
-    modalContent.className = 'modal-content';
-    
-    const title = document.createElement('h3');
-    title.textContent = '모든 작업 완료';
-    
-    const contentDiv = document.createElement('div');
-    contentDiv.style.cssText = 'text-align: left; margin: 20px 0;';
-    
-    const equipmentText = document.createElement('p');
-    equipmentText.innerHTML = `<strong>장비:</strong> ${equipmentCount}개 / ${equipmentTotal}개 장착`;
-    
-    const abilityText = document.createElement('p');
-    abilityText.innerHTML = `<strong>어빌리티:</strong> ${abilityCount}개 / ${abilityTotal}개 장착`;
-    
-    contentDiv.appendChild(equipmentText);
-    contentDiv.appendChild(abilityText);
-    
-    // 스킬 활성화 문구 생성
-    if (skillNumber) {
-      const skillText = document.createElement('p');
-      skillText.innerHTML = `<strong>스킬:</strong> ${skillNumber}번 스킬 활성화 완료`;
-      contentDiv.appendChild(skillText);
-    }
-    
-    const hr = document.createElement('hr');
-    hr.style.cssText = 'margin: 15px 0; border: none; border-top: 1px solid #e5e7eb;';
-    
-    const totalText = document.createElement('p');
-    totalText.innerHTML = `<strong>총합:</strong> ${totalEquipped}개 / ${totalItems}개 완료`;
-    
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'close-btn';
-    closeBtn.textContent = '확인';
-    
-    modalContent.appendChild(title);
-    modalContent.appendChild(contentDiv);
-    modalContent.appendChild(hr);
-    modalContent.appendChild(totalText);
-    modalContent.appendChild(closeBtn);
-    modal.appendChild(modalContent);
-    
-    document.body.appendChild(modal);
-    
-    closeBtn.addEventListener('click', () => {
-      modal.remove();
-    });
-  }
-
-  showAbilityCompleteModal(equippedCount, totalItems) {
-    const modal = document.createElement('div');
-    modal.className = 'ability-complete-modal';
-    
-    const modalContent = document.createElement('div');
-    modalContent.className = 'modal-content';
-    
-    const title = document.createElement('h3');
-    title.textContent = '어빌리티 변경 완료';
-    
-    const message = document.createElement('p');
-    message.textContent = `${equippedCount}개 / ${totalItems}개 어빌리티를 장착했습니다.`;
-    
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'close-btn';
-    closeBtn.textContent = '확인';
-    
-    modalContent.appendChild(title);
-    modalContent.appendChild(message);
-    modalContent.appendChild(closeBtn);
-    modal.appendChild(modalContent);
-    
-    document.body.appendChild(modal);
-    
-    closeBtn.addEventListener('click', () => {
-      modal.remove();
-    });
-  }
-
-  showAbilityErrorModal() {
-    const modal = document.createElement('div');
-    modal.className = 'ability-error-modal';
-    
-    const modalContent = document.createElement('div');
-    modalContent.className = 'modal-content';
-    
-    const title = document.createElement('h3');
-    title.textContent = '어빌리티 변경 실패';
-    
-    const message = document.createElement('p');
-    message.textContent = '어빌리티 변경 중 오류가 발생했습니다.';
-    
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'close-btn';
-    closeBtn.textContent = '확인';
-    
-    modalContent.appendChild(title);
-    modalContent.appendChild(message);
-    modalContent.appendChild(closeBtn);
-    modal.appendChild(modalContent);
-    
-    document.body.appendChild(modal);
-    
-    closeBtn.addEventListener('click', () => {
-      modal.remove();
-    });
-  }
-
-  showEquipmentErrorModal() {
-    const modal = document.createElement('div');
-    modal.className = 'equipment-error-modal';
-    
-    const modalContent = document.createElement('div');
-    modalContent.className = 'modal-content';
-    
-    const title = document.createElement('h3');
-    title.textContent = '장비 변경 실패';
-    
-    const message = document.createElement('p');
-    message.textContent = '장비 변경 중 오류가 발생했습니다.';
-    
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'close-btn';
-    closeBtn.textContent = '확인';
-    
-    modalContent.appendChild(title);
-    modalContent.appendChild(message);
-    modalContent.appendChild(closeBtn);
-    modal.appendChild(modalContent);
-    
-    document.body.appendChild(modal);
-    
-    closeBtn.addEventListener('click', () => {
-      modal.remove();
-    });
-  }
-
-  openEquipmentSettingsModal(index) {
-    // 장비 설정 모달 기능 삭제됨
-    console.log('장비 설정 모달 기능이 삭제되었습니다.');
-  }
-
-  createEquipmentSettingsModal(index) {
-    // 장비 설정 모달 기능 삭제됨
-    console.log('장비 설정 모달 기능이 삭제되었습니다.');
-  }
-
-  // 1. 결과 저장 함수 추가
-  saveResultToSession({equipmentCount = 0, equipmentTotal = 0, abilityCount = 0, abilityTotal = 0, skillNumber = null}) {
-    sessionStorage.setItem('lanisHelperEquipmentResult', JSON.stringify({
-      equipmentCount, equipmentTotal, abilityCount, abilityTotal, skillNumber, timestamp: Date.now()
-    }));
-  }
-
-  // 거래소 퀵버튼 클릭 핸들러
-  async handleQuickButtonClick(index) {
-    try {
-      // 퀵버튼 설정 가져오기
-      const quickButtons = this.getQuickButtons();
-      if (!quickButtons || !quickButtons[index]) {
-        return;
-      }
-      
-      const searchConfig = quickButtons[index];
-      
-      // searchEngine이 초기화될 때까지 대기
-      let attempts = 0;
-      const maxAttempts = 50; // 최대 5초 대기
-      
-      while (attempts < maxAttempts) {
-        if (window.searchEngine && typeof window.searchEngine.executeQuickSearch === 'function') {
-          window.searchEngine.executeQuickSearch(searchConfig, index);
-          break;
-        }
-        
-        await this.wait(100);
-        attempts++;
-      }
-      
-      if (attempts >= maxAttempts) {
-        // 대안: 직접 SearchEngine 인스턴스 생성
-        if (!window.searchEngine) {
-          window.searchEngine = new (window.SearchEngine || SearchEngine)();
-          await window.searchEngine.init();
-        }
-        
-        if (window.searchEngine && typeof window.searchEngine.executeQuickSearch === 'function') {
-          window.searchEngine.executeQuickSearch(searchConfig, index);
-        } else {
-        }
-      }
-      
-      // 서브메뉴 닫기
-      this.closeAllSubMenus();
-      
-    } catch (error) {
-    }
-  }
 }
 
 // 전역 인스턴스 생성 (개선된 버전)

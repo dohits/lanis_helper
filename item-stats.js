@@ -13,6 +13,8 @@ class ItemStatsManager {
     this.rareItemsData = [];
     this.isProcessing = false;
     this.settings = { showItemStats: true };
+    this.dynamicObserver = null;
+    this.popoverObserver = null;
   }
 
   async init() {
@@ -186,7 +188,7 @@ class ItemStatsManager {
           valueElement.appendChild(rangeSpan);
           valueElement.appendChild(gradeSpan);
           valueElement.appendChild(document.createElement('br'));
-          let detailRow = document.createElement('span');
+          let detailRow = document.createElement('div');
           detailRow.className = 'stat-detail-row';
           detailRow.appendChild(percentSpan);
           if (scoreSpan) detailRow.appendChild(scoreSpan);
@@ -285,7 +287,7 @@ class ItemStatsManager {
           valueElement.appendChild(rangeSpan);
           valueElement.appendChild(gradeSpan);
           valueElement.appendChild(document.createElement('br'));
-          let detailRow = document.createElement('span');
+          let detailRow = document.createElement('div');
           detailRow.className = 'stat-detail-row';
           detailRow.appendChild(percentSpan);
           if (scoreSpan) detailRow.appendChild(scoreSpan);
@@ -569,7 +571,12 @@ class ItemStatsManager {
 
   // 동적 감지(아이템 목록 변화 감지)
   startDynamicContentDetection() {
-    const observer = new MutationObserver((mutations) => {
+    // 기존 observer가 있으면 중지
+    if (this.dynamicObserver) {
+      this.dynamicObserver.disconnect();
+    }
+    
+    this.dynamicObserver = new MutationObserver((mutations) => {
       let shouldProcessItems = false;
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList') {
@@ -588,7 +595,7 @@ class ItemStatsManager {
         }, 100);
       }
     });
-    observer.observe(document.body, {
+    this.dynamicObserver.observe(document.body, {
       childList: true,
       subtree: true
     });
@@ -596,7 +603,12 @@ class ItemStatsManager {
 
   // 팝오버 위치 관찰자 시작
   startPopoverPositionObserver() {
-    const observer = new MutationObserver((mutations) => {
+    // 기존 observer가 있으면 중지
+    if (this.popoverObserver) {
+      this.popoverObserver.disconnect();
+    }
+    
+    this.popoverObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList') {
           mutation.addedNodes.forEach((node) => {
@@ -614,7 +626,7 @@ class ItemStatsManager {
       });
     });
 
-    observer.observe(document.body, {
+    this.popoverObserver.observe(document.body, {
       childList: true,
       subtree: true
     });
@@ -686,19 +698,53 @@ class ItemStatsManager {
   }
 
   removeItemStats() {
+    // MutationObserver 중지
+    if (this.dynamicObserver) {
+      this.dynamicObserver.disconnect();
+      this.dynamicObserver = null;
+    }
+    if (this.popoverObserver) {
+      this.popoverObserver.disconnect();
+      this.popoverObserver = null;
+    }
+    
     // 기존 감정 범위 표기 요소 제거
     const statsElements = document.querySelectorAll('.item-stats-info');
     statsElements.forEach(element => element.remove());
-    const powerRangeElements = document.querySelectorAll('.power-range-info');
-    powerRangeElements.forEach(element => element.remove());
-    const powerGradeElements = document.querySelectorAll('.power-grade-info');
-    powerGradeElements.forEach(element => element.remove());
-    const weightRangeElements = document.querySelectorAll('.weight-range-info');
-    weightRangeElements.forEach(element => element.remove());
-    const weightGradeElements = document.querySelectorAll('.weight-grade-info');
-    weightGradeElements.forEach(element => element.remove());
+    
+    // 모든 범위 정보 요소 제거
+    const rangeElements = document.querySelectorAll('.power-range-info, .weight-range-info');
+    rangeElements.forEach(element => element.remove());
+    
+    // 모든 등급 정보 요소 제거
+    const gradeElements = document.querySelectorAll('.power-grade-info, .weight-grade-info');
+    gradeElements.forEach(element => element.remove());
+    
+    // 모든 퍼센트 정보 요소 제거
+    const percentElements = document.querySelectorAll('.power-percent-info, .weight-percent-info');
+    percentElements.forEach(element => element.remove());
+    
+    // 모든 점수 정보 요소 제거
+    const scoreElements = document.querySelectorAll('.power-score-info, .weight-score-info');
+    scoreElements.forEach(element => element.remove());
+    
+    // 모든 범위 좁음 정보 요소 제거
+    const narrowElements = document.querySelectorAll('.narrow-range-info');
+    narrowElements.forEach(element => element.remove());
+    
+    // 모든 위키 정보 요소 제거
+    const wikiElements = document.querySelectorAll('.wiki-info');
+    wikiElements.forEach(element => element.remove());
+    
+    // 모든 종결 태그 요소 제거
     const finalTagElements = document.querySelectorAll('.final-tag');
     finalTagElements.forEach(element => element.remove());
+    
+    // 모든 상세 정보 행 제거
+    const detailRows = document.querySelectorAll('.stat-detail-row');
+    detailRows.forEach(element => element.remove());
+    
+    // 처리된 클래스 제거
     const processedElements = document.querySelectorAll('.item-stats-processed, .power-range-processed, .weight-range-processed');
     processedElements.forEach(element => {
       element.classList.remove('item-stats-processed', 'power-range-processed', 'weight-range-processed');

@@ -9,16 +9,61 @@
 - .item-grade-tag-row: 태그/점수 표기 줄
 - .power-range-processed/.weight-range-processed: 위력/무게 감정 정보가 추가된 요소
 - .stat-detail-row: 퍼센트/점수 표기 줄
--->
 
-<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper css-so83zd" tabindex="-1" style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); opacity: 1; transform: none; transition: opacity 290ms cubic-bezier(0.4, 0, 0.2, 1), transform 193ms cubic-bezier(0.4, 0, 0.2, 1); top: 427px; left: -81px; transform-origin: 113.8px 154.762px;">
+아이템 스카우터 적용전 원본 형식:
+-->
+<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper css-so83zd" tabindex="-1" style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); opacity: 1; transform: none; top: 438px; transition: opacity 271ms cubic-bezier(0.4, 0, 0.2, 1), transform 180ms cubic-bezier(0.4, 0, 0.2, 1); left: 33px; transform-origin: 0px 0px;">
+  <div class="MuiBox-root css-38zrbw">
+    <div class="MuiBox-root css-94lpvc">
+      <div class="MuiBox-root css-0">
+        <p class="MuiTypography-root MuiTypography-body2 css-1qmxyy2">천둥의 방패</p>
+        <p class="MuiTypography-root MuiTypography-body2 css-ck0wau">12,000,000 G</p>
+      </div>
+      <div class="MuiBox-root css-171onha">
+        <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">방어구</p>
+        <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-lw9s6y" tabindex="0" type="button">
+          <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-vh810p" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="MuiBox-root css-1821gv5">
+      <div class="MuiBox-root css-gg4vpm">
+        <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">위력</p>
+        <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">160</p>
+      </div>
+      <div class="MuiBox-root css-gg4vpm">
+        <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">무게</p>
+        <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">30</p>
+      </div>
+      <div class="MuiBox-root css-gg4vpm">
+        <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">속성</p>
+        <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">번개</p>
+      </div>
+      <div class="MuiBox-root css-gg4vpm">
+        <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">내구도</p>
+        <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">13000/13000</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 
+아이템 스카우터 적용 후 형식:
+- item-stats-processed 클래스가 추가됨
+- item-stats-wrapper로 감싸짐
+- 위력/무게에 범위, 등급, 퍼센트, 점수 정보가 추가됨
+- 종결 태그가 아이템명 아래에 표시됨
+-->
+<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper css-so83zd" tabindex="-1" style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); opacity: 1; transform: none; top: 424px; transition: opacity 265ms cubic-bezier(0.4, 0, 0.2, 1), transform 176ms cubic-bezier(0.4, 0, 0.2, 1); left: 33px; transform-origin: 0px 0px;">
   <div class="MuiBox-root css-38zrbw item-stats-processed">
     <div class="item-stats-wrapper">
       <div class="MuiBox-root css-94lpvc">
         <div class="MuiBox-root css-0">
-          <p class="MuiTypography-root MuiTypography-body2 css-1qmxyy2">이지스의 방패<span class="MuiTypography-root MuiTypography-body1 css-1fjwrsq">(귀속됨)</span></p>
+          <p class="MuiTypography-root MuiTypography-body2 css-1qmxyy2">레드발키리<span class="MuiTypography-root MuiTypography-body1 css-or11ie">(봉인됨)</span></p>
           <div class="item-grade-tag-row">
-            <span class="final-tag" style="color: rgb(102, 102, 102); font-size: 0.8rem; font-weight: bold; font-style: italic;"> (8점)</span>
+            <span class="final-tag" style="color: rgb(102, 102, 102); font-size: 0.8rem; font-weight: bold; font-style: italic;"> (9점)</span>
           </div>
         </div>
         <div class="MuiBox-root css-171onha">
@@ -34,41 +79,36 @@
         <div class="MuiBox-root css-gg4vpm">
           <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">위력</p>
           <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv power-range-processed">
-            472
-            <span class="power-range-info" style="color: rgb(102, 102, 102); font-size: 0.9em; font-style: italic; text-align: right; display: inline-block; width: 100%;"> (288-494)</span>
-            <span class="power-grade-info" data-grade="상" style="color: rgb(199, 112, 255); font-size: 0.9em; font-weight: bold; text-align: right; display: inline-block; width: 100%;"> [상]</span>
+            497
+            <span class="power-range-info" style="color: rgb(102, 102, 102); font-size: 0.9em; font-style: italic;"> (302-518)</span>
+            <span class="power-grade-info" data-grade="최상" style="color: rgb(255, 85, 85); font-size: 0.9em; font-weight: bold;"> [최상]</span>
             <br>
-            <span class="stat-detail-row">
-              <span class="power-percent-info" style="color: rgb(102, 102, 102); font-size: 0.9em; font-weight: normal; font-style: italic;"> (89.3%)</span>
-              <span class="power-score-info" style="color: rgb(199, 112, 255); font-size: 0.9em; font-weight: bold;"> (5점)</span>
-            </span>
+            <div class="stat-detail-row" style="text-align: right; width: 100%;">
+              <span class="power-percent-info" style="color: rgb(102, 102, 102); font-size: 0.9em; font-weight: normal; font-style: italic;"> (90.3%)</span>
+              <span class="power-score-info" data-grade="최상" style="color: rgb(255, 85, 85); font-size: 0.9em; font-weight: bold;"> (6점)</span>
+            </div>
           </p>
         </div>
         <div class="MuiBox-root css-gg4vpm">
           <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">무게</p>
           <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv weight-range-processed">
-            69
-            <span class="weight-range-info" style="color: rgb(102, 102, 102); font-size: 0.9em; font-style: italic; text-align: right; display: inline-block; width: 100%;"> (52-84)</span>
-            <span class="weight-grade-info" data-grade="하" style="color: rgb(102, 163, 255); font-size: 0.9em; font-weight: bold; text-align: right; display: inline-block; width: 100%;"> [하]</span>
+            70
+            <span class="weight-range-info" style="color: rgb(102, 102, 102); font-size: 0.9em; font-style: italic;"> (51-82)</span>
+            <span class="weight-grade-info" data-grade="하" style="color: rgb(102, 163, 255); font-size: 0.9em; font-weight: bold;"> [하]</span>
             <br>
-            <span class="stat-detail-row">
-              <span class="weight-percent-info" style="color: rgb(102, 102, 102); font-size: 0.9em; font-weight: normal; font-style: italic;"> (46.9%)</span>
-              <span class="weight-score-info" style="color: rgb(102, 163, 255); font-size: 0.9em; font-weight: bold;"> (3점)</span>
-            </span>
+            <div class="stat-detail-row" style="text-align: right; width: 100%;">
+              <span class="weight-percent-info" style="color: rgb(102, 102, 102); font-size: 0.9em; font-weight: normal; font-style: italic;"> (38.7%)</span>
+              <span class="weight-score-info" data-grade="하" style="color: rgb(102, 163, 255); font-size: 0.9em; font-weight: bold;"> (3점)</span>
+            </div>
           </p>
         </div>
         <div class="MuiBox-root css-gg4vpm">
           <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">속성</p>
-          <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">번개</p>
+          <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">불</p>
         </div>
         <div class="MuiBox-root css-gg4vpm">
           <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">내구도</p>
-          <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">8489/9000</p>
-        </div>
-        <div class="MuiBox-root css-yb0oh4"></div>
-        <div class="MuiBox-root css-gg4vpm">
-          <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">퍼펙트 블로킹: 적의 공격을 10% 확률로 무효화한다.
-[무기 타입 효과] 검, 도끼 장착 시 5% 확률 증가.</p>
+          <p class="MuiTypography-root MuiTypography-body2 css-1xgulgv">11000/11000</p>
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@
 class UserProfileManager {
   constructor() {
     this.isProcessing = false;
+    this.observer = null;
   }
 
   init() {
@@ -61,8 +62,13 @@ class UserProfileManager {
   }
 
   startDynamicContentObserver() {
+    // 기존 observer가 있으면 중지
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+    
     // 구버전 방식: MutationObserver로 새 메시지 감지
-    const observer = new MutationObserver((mutations) => {
+    this.observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList') {
           mutation.addedNodes.forEach((node) => {
@@ -84,7 +90,7 @@ class UserProfileManager {
     });
 
     // body 전체를 관찰
-    observer.observe(document.body, {
+    this.observer.observe(document.body, {
       childList: true,
       subtree: true
     });
@@ -92,6 +98,11 @@ class UserProfileManager {
   }
 
   removeUserNames() {
+    // MutationObserver 중지
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
+    }
     
     try {
       // 구버전 방식: 클릭 가능한 요소들 제거
