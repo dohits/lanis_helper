@@ -939,11 +939,11 @@ class MenuManager {
     input.className = 'user-search-input';
     input.placeholder = '검색할 사용자명을 입력하세요';
     input.required = true;
-    input.maxLength = 50;
+    input.maxLength = 6;
     
     const errorDiv = document.createElement('div');
     errorDiv.className = 'user-search-error';
-    errorDiv.textContent = '사용자명은 영문, 숫자, 한글, 언더스코어(_), 하이픈(-)만 사용 가능합니다.';
+    errorDiv.textContent = '닉네임은 영문, 숫자, 한글만 6글자까지 입력 가능합니다.';
     
     inputGroup.appendChild(label);
     inputGroup.appendChild(input);
@@ -1012,7 +1012,7 @@ class MenuManager {
   // 사용자 입력 검증
   validateUserInput(input, errorDiv) {
     const value = input.value.trim();
-    const isValid = /^[a-zA-Z0-9가-힣_-]+$/.test(value);
+    const isValid = /^[a-zA-Z0-9가-힣]{1,6}$/.test(value);
     
     if (value && !isValid) {
       input.classList.add('error');
@@ -1030,24 +1030,24 @@ class MenuManager {
     
     // 입력 검증
     if (!username) {
-      this.showUserSearchError(modal, '사용자명을 입력해주세요.');
+      this.showUserSearchError(modal, '닉네임을 입력해주세요.');
       return;
     }
 
-    if (!/^[a-zA-Z0-9가-힣_-]+$/.test(username)) {
-      this.showUserSearchError(modal, '사용자명은 영문, 숫자, 한글, 언더스코어(_), 하이픈(-)만 사용 가능합니다.');
+    if (!/^[a-zA-Z0-9가-힣]{1,6}$/.test(username)) {
+      this.showUserSearchError(modal, '닉네임은 영문, 숫자, 한글만 6글자까지 입력 가능합니다.');
       return;
     }
     
-    if (username.length > 50) {
-      this.showUserSearchError(modal, '사용자명은 50자를 초과할 수 없습니다.');
+    if (username.length > 6) {
+      this.showUserSearchError(modal, '닉네임은 6글자를 초과할 수 없습니다.');
       return;
     }
     
     // XSS 방지를 위한 추가 검증
     const sanitizedUsername = this.sanitizeUsername(username);
     if (sanitizedUsername !== username) {
-      this.showUserSearchError(modal, '잘못된 사용자명입니다.');
+      this.showUserSearchError(modal, '잘못된 닉네임입니다.');
         return;
     }
     
