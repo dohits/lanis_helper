@@ -138,10 +138,11 @@ class MenuManager {
     const isOpen = mainMenuRow.classList.contains('show');
     if (isOpen) {
       mainMenuRow.classList.remove('show');
-      // 메뉴가 닫힐 때 포커스 제거하여 접근성 경고 방지
+      // --- 서브메뉴(자식버튼)도 모두 제거 ---
+      document.querySelectorAll('.sub-menu-popup').forEach(el => el.remove());
+      // -------------------------------------
       if (container) {
         container.setAttribute('aria-hidden', 'true');
-        // 포커스된 요소가 있다면 포커스 제거
         const focusedElement = container.querySelector(':focus');
         if (focusedElement) {
           focusedElement.blur();
@@ -149,23 +150,28 @@ class MenuManager {
       }
     } else {
       mainMenuRow.classList.add('show');
-      // 메뉴가 열릴 때 aria-hidden 제거
       if (container) {
         container.removeAttribute('aria-hidden');
-      }
     }
-    // 이벤트 전파 방지
+    }
     event.stopPropagation();
   }
 
   handleMainMenuItemClick(item) {
+    // --- 이미 해당 서브메뉴가 열려있으면 닫기(토글) ---
+    const btn = document.querySelector(`.main-menu-item[data-menu-id="${item.id}"]`);
+    const opened = document.querySelector('.sub-menu-popup');
+    if (opened && opened.getAttribute('data-menu-id') === item.id) {
+      opened.remove();
+      return;
+    }
     // 서브메뉴가 이미 열려있으면 닫기
     this.closeAllSubMenus();
-    const btn = document.querySelector(`.main-menu-item[data-menu-id="${item.id}"]`);
     if (!btn) return;
     // 서브메뉴 팝업 생성
     const subMenu = document.createElement('div');
     subMenu.className = 'sub-menu-popup';
+    subMenu.setAttribute('data-menu-id', item.id);
     // 위치 조정(버튼 오른쪽, 스크롤 고려)
     const rect = btn.getBoundingClientRect();
     subMenu.style.position = 'fixed'; // absolute에서 fixed로 변경
@@ -180,15 +186,45 @@ class MenuManager {
       this.createSettingsSubMenu(subMenu);
     }
     document.body.appendChild(subMenu);
-    setTimeout(() => subMenu.classList.add('show'), 10);
-    // 외부 클릭 시 닫기
+
+    // --- 위치 조정: 화면을 넘어갈 경우에만 메인버튼 기준 위로 확장, 그 외에는 서브버튼 기준 아래로 ---
     setTimeout(() => {
-      document.addEventListener('mousedown', this._subMenuOutsideHandler = (e) => {
-        if (!subMenu.contains(e.target) && !btn.contains(e.target)) {
-          this.closeAllSubMenus();
+      try {
+        // 1. 기존 스타일 초기화
+        subMenu.style.top = '';
+        subMenu.style.bottom = '';
+        subMenu.style.maxHeight = '';
+        subMenu.style.transform = '';
+        // 2. 위치 정보 계산
+        const btnRect = btn.getBoundingClientRect();
+        const mainBtn = document.querySelector('.main-menu-button');
+        const mainBtnRect = mainBtn.getBoundingClientRect();
+        const prevVis = subMenu.style.visibility;
+        const prevDisp = subMenu.style.display;
+        subMenu.style.visibility = 'hidden';
+        subMenu.style.display = 'block';
+        const menuHeight = subMenu.offsetHeight;
+        subMenu.style.visibility = prevVis;
+        subMenu.style.display = prevDisp;
+        const spaceBelow = window.innerHeight - btnRect.bottom;
+        const spaceAbove = btnRect.top;
+        // 3. 아래로 열면 화면을 넘고, 위쪽 공간이 더 넓으면 메인버튼 기준 위로 확장
+        if (menuHeight > spaceBelow && spaceAbove > spaceBelow) {
+          subMenu.style.top = 'auto';
+          subMenu.style.bottom = `${window.innerHeight - mainBtnRect.bottom}px`;
+          subMenu.style.maxHeight = `${mainBtnRect.top - 16}px`;
+          subMenu.style.transform = 'none';
+    } else {
+          // 서브버튼 기준 아래로 렌더링
+          subMenu.style.top = `${btnRect.top + btnRect.height/2}px`;
+          subMenu.style.bottom = '';
+          subMenu.style.maxHeight = '';
+          subMenu.style.transform = 'translateY(-50%)';
         }
-      });
-    }, 50);
+        subMenu.classList.add('show');
+      } catch(e) {}
+    }, 0);
+    // --- 위치 조정 끝 ---
   }
 
 
