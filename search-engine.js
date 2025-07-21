@@ -1,4 +1,9 @@
 // 검색 엔진
+// 유틸: 정규식 이스케이프
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 class SearchEngine {
   constructor() {
     this.rareItemsData = [];
@@ -284,13 +289,34 @@ class SearchEngine {
       let weaponType = null;
       let abilities = [];
       let attributes = [];
-      
-      // 무기 타입 파싱 (예: (무기/지팡이) 형식)
+      // 이름은 title만 사용
+      const name = itemName.trim();
+      // 타입은 표 캡션에서 title 다음 괄호만 추출
+      let type = '';
+      const captionMatch = wikiText.match(/\|\+\s*'''(.+?)'''/);
+      if (captionMatch) {
+        const caption = captionMatch[1].trim();
+        if (caption.startsWith(name)) {
+          const rest = caption.slice(name.length).trim();
+          const typeMatch = rest.match(/^\(([^)]+)\)$/);
+          if (typeMatch) {
+            type = typeMatch[1].trim();
+          }
+        }
+      }
+      // fallback: [[분류:XXX 레어 아이템]]에서 추출
+      if (!type) {
+        const categoryMatch = wikiText.match(/\[\[분류:([^\]]+) 레어 아이템\]\]/);
+        if (categoryMatch) {
+          type = categoryMatch[1].trim();
+        }
+      }
+      // 기존 weaponType 파싱 유지(추가 정보용)
       const weaponTypeMatch = wikiText.match(/\(([^)]+)\)/);
       if (weaponTypeMatch) {
         weaponType = weaponTypeMatch[1].trim();
       }
-      
+      // 이하 기존 파싱 로직 동일
       // MediaWiki 테이블 구조에 맞는 패턴으로 위력 정보 찾기 (음수값, 0값 지원)
       const powerMatch = wikiText.match(/\|\s*위력\s*\|\|\s*(-?\d+)\s*~\s*(-?\d+)/);
       if (powerMatch) {
@@ -305,7 +331,6 @@ class SearchEngine {
         } else {
         }
       }
-      
       // MediaWiki 테이블 구조에 맞는 패턴으로 무게 정보 찾기 (음수값, 0값 지원)
       const weightMatch = wikiText.match(/\|\s*무게\s*\|\|\s*(-?\d+)\s*~\s*(-?\d+)/);
       if (weightMatch) {
@@ -320,7 +345,6 @@ class SearchEngine {
         } else {
         }
       }
-      
       // 어빌리티 파싱
       // 어빌리티 섹션을 찾기 위한 패턴들
       const abilityPatterns = [
@@ -366,7 +390,8 @@ class SearchEngine {
       // 유효한 정보가 있으면 반환 (위력, 무게, 무기타입, 어빌리티, 속성 중 하나라도 있으면)
       if (powerMin !== null || weightMin !== null || weaponType !== null || abilities.length > 0 || attributes.length > 0) {
         const result = {
-          name: itemName,
+          name: name,
+          type: type,
           power_min: powerMin,
           power_max: powerMax,
           weight_min: weightMin,

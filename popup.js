@@ -166,34 +166,27 @@ function showItemsList() {
       // 아이템 목록 생성 (안전한 방식)
       items.forEach((item, index) => {
         const itemName = escapeHtml(item.name || '알 수 없는 아이템');
+        const type = escapeHtml(item.type || ''); // 반드시 type 필드만 사용
+        const typeDisplay = type ? ` (${type})` : '';
         const powerRange = (item.power_min !== null && item.power_min !== undefined && item.power_max !== null && item.power_max !== undefined) ? `${item.power_min}-${item.power_max}` : 'N/A';
         const weightRange = (item.weight_min !== null && item.weight_min !== undefined && item.weight_max !== null && item.weight_max !== undefined) ? `${item.weight_min}-${item.weight_max}` : 'N/A';
-        const weaponType = escapeHtml(item.weapon_type || 'N/A');
         const abilities = item.abilities && item.abilities.length > 0 ? 
           item.abilities.map(ability => escapeHtml(ability)).join(', ') : 'N/A';
-        
-        // 타입이 N/A가 아닐 때만 괄호로 표시
-        const typeDisplay = weaponType !== 'N/A' ? ` (${weaponType})` : '';
-        
+        // 타입이 있을 때만 괄호로 표시
         const itemDiv = itemsWindow.document.createElement('div');
         itemDiv.className = 'item';
-        
         const nameDiv = itemsWindow.document.createElement('div');
         nameDiv.className = 'item-name';
         nameDiv.textContent = itemName + typeDisplay;
-        
         const statsDiv = itemsWindow.document.createElement('div');
         statsDiv.className = 'item-stats';
         statsDiv.textContent = `위력: ${powerRange} | 무게: ${weightRange}`;
-        
         const abilitiesDiv = itemsWindow.document.createElement('div');
         abilitiesDiv.className = 'item-abilities';
         abilitiesDiv.textContent = `어빌리티: ${abilities}`;
-        
         itemDiv.appendChild(nameDiv);
         itemDiv.appendChild(statsDiv);
         itemDiv.appendChild(abilitiesDiv);
-        
         itemsContainer.appendChild(itemDiv);
       });
       

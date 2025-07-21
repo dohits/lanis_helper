@@ -664,38 +664,31 @@ class MenuManager {
 
     items.forEach((item) => {
       const itemName = escapeHtml(item.name || '알 수 없는 아이템');
+      const type = escapeHtml(item.type || ''); // 반드시 type 필드만 사용
+      const typeDisplay = type ? ` (${type})` : '';
       const powerRange = (item.power_min !== null && item.power_min !== undefined && item.power_max !== null && item.power_max !== undefined) ? `${item.power_min}-${item.power_max}` : 'N/A';
       const weightRange = (item.weight_min !== null && item.weight_min !== undefined && item.weight_max !== null && item.weight_max !== undefined) ? `${item.weight_min}-${item.weight_max}` : 'N/A';
-      const weaponType = escapeHtml(item.weapon_type || 'N/A');
       const abilities = item.abilities && item.abilities.length > 0 ? 
         item.abilities.map(ability => escapeHtml(ability)).join(', ') : 'N/A';
       const attributes = item.attributes && item.attributes.length > 0 ? 
         item.attributes.map(attr => escapeHtml(attr)).join(', ') : 'N/A';
-      
       // 카테고리 분류
       let mainCategory = '';
       let subCategory = '';
-      
-      if (weaponType !== 'N/A') {
-        const categories = weaponType.split('/');
+      if (type) {
+        const categories = type.split('/');
         if (categories.length >= 2) {
-          mainCategory = categories[0]; // 첫 번째는 메인 카테고리
-          subCategory = categories[1]; // 두 번째는 서브 카테고리
+          mainCategory = categories[0];
+          subCategory = categories[1];
         } else {
           mainCategory = categories[0];
-          // 메인 카테고리가 무기인데 서브카테고리가 없는 경우 "미확인"으로 분류
           if (mainCategory === '무기') {
             subCategory = '미확인';
           }
         }
       }
-      
-      // 타입이 N/A가 아닐 때만 괄호로 표시
-      const typeDisplay = weaponType !== 'N/A' ? ` (${weaponType})` : '';
-      
       // 카테고리별 아이콘 설정
-      let categoryIcon = '📦'; // 기본 아이콘
-      
+      let categoryIcon = '📦';
       if (mainCategory === '무기') {
         switch(subCategory) {
           case '검': categoryIcon = '🗡️'; break;
@@ -713,7 +706,6 @@ class MenuManager {
       } else if (mainCategory === '장신구') {
         categoryIcon = '💎';
       }
-      
       // 안전한 DOM 요소 생성
       const itemDiv = document.createElement('div');
       itemDiv.className = 'item-guide-item';
@@ -722,16 +714,12 @@ class MenuManager {
       itemDiv.setAttribute('data-sub-category', subCategory.toLowerCase());
       itemDiv.setAttribute('data-abilities', abilities.toLowerCase());
       itemDiv.setAttribute('data-attributes', attributes.toLowerCase());
-      
       const nameDiv = document.createElement('div');
       nameDiv.className = 'item-name';
-      
       const iconSpan = document.createElement('span');
       iconSpan.className = 'item-icon';
       iconSpan.textContent = categoryIcon;
-      
       const nameText = document.createTextNode(itemName + typeDisplay);
-      
       nameDiv.appendChild(iconSpan);
       nameDiv.appendChild(nameText);
       

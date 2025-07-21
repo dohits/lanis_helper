@@ -81,6 +81,19 @@ class ItemStatsManager {
           matchedItems++;
           this.addRangeInfoToStats(container, itemData);
           container.classList.add('item-stats-processed');
+        } else {
+          // 수집되지 않은 레어아이템(범위가 표기된 경우)에만 위키 아이콘 추가
+          const popoverText = container.textContent || '';
+          const hasRange = /\d+\s*~\s*\d+/.test(popoverText);
+          if (hasRange && !itemNameElement.querySelector('.wiki-icon')) {
+            const wikiIcon = document.createElement('span');
+            wikiIcon.className = 'wiki-icon';
+            wikiIcon.textContent = '📚';
+            wikiIcon.title = '위키에 등록되지 않은 레어아이템입니다.';
+            wikiIcon.style.marginLeft = '4px';
+            wikiIcon.style.fontSize = '1em';
+            itemNameElement.appendChild(wikiIcon);
+          }
         }
         foundContainers++;
       });
