@@ -1,0 +1,19 @@
+# AI 가이드 파일 (커밋하지 않음)
+ai-readme.md
+
+# 시스템 파일
+.DS_Store
+Thumbs.db
+
+# IDE 파일
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 로그 파일
+*.log
+
+# 임시 파일
+*.tmp
+*.temp 
