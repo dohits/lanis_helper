@@ -1,7 +1,9 @@
 // 설정 창 제어 로직
 document.addEventListener('DOMContentLoaded', function() {
-  // 설정 로드
-  loadSettings();
+  // 설정 로드 (async 함수이므로 .then() 사용)
+  loadSettings().catch(error => {
+    console.warn('설정 로드 실패:', error);
+  });
   
   // 이벤트 리스너 추가
   document.getElementById('profileLink').addEventListener('change', saveSettings);
@@ -15,14 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // 설정 로드
-function loadSettings() {
-  chrome.storage.sync.get({
+async function loadSettings() {
+  const items = await utils.SettingsManager.getSettings({
     profileLink: true,
     showItemStats: true
-  }, function(items) {
-    document.getElementById('profileLink').checked = items.profileLink;
-    document.getElementById('showItemStats').checked = items.showItemStats;
   });
+  document.getElementById('profileLink').checked = items.profileLink;
+  document.getElementById('showItemStats').checked = items.showItemStats;
 }
 
 // 설정 저장
@@ -32,7 +33,7 @@ function saveSettings() {
     showItemStats: document.getElementById('showItemStats').checked
   };
   
-  chrome.storage.sync.set(settings, function() {
+  utils.SettingsManager.setSettings(settings).then(() => {
     // 현재 활성화된 탭에 설정 변경 알림
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       if (tabs[0]) {
@@ -165,8 +166,8 @@ function showItemsList() {
       // 아이템 목록 생성 (안전한 방식)
       items.forEach((item, index) => {
         const itemName = escapeHtml(item.name || '알 수 없는 아이템');
-        const powerRange = item.power_min && item.power_max ? `${item.power_min}-${item.power_max}` : 'N/A';
-        const weightRange = item.weight_min && item.weight_max ? `${item.weight_min}-${item.weight_max}` : 'N/A';
+        const powerRange = (item.power_min !== null && item.power_min !== undefined && item.power_max !== null && item.power_max !== undefined) ? `${item.power_min}-${item.power_max}` : 'N/A';
+        const weightRange = (item.weight_min !== null && item.weight_min !== undefined && item.weight_max !== null && item.weight_max !== undefined) ? `${item.weight_min}-${item.weight_max}` : 'N/A';
         const weaponType = escapeHtml(item.weapon_type || 'N/A');
         const abilities = item.abilities && item.abilities.length > 0 ? 
           item.abilities.map(ability => escapeHtml(ability)).join(', ') : 'N/A';

@@ -291,14 +291,14 @@ class SearchEngine {
         weaponType = weaponTypeMatch[1].trim();
       }
       
-      // MediaWiki 테이블 구조에 맞는 패턴으로 위력 정보 찾기 (개선된 패턴)
-      const powerMatch = wikiText.match(/\|\s*위력\s*\|\|\s*(\d+)\s*~\s*(\d+)/);
+      // MediaWiki 테이블 구조에 맞는 패턴으로 위력 정보 찾기 (음수값, 0값 지원)
+      const powerMatch = wikiText.match(/\|\s*위력\s*\|\|\s*(-?\d+)\s*~\s*(-?\d+)/);
       if (powerMatch) {
         powerMin = parseInt(powerMatch[1]);
         powerMax = parseInt(powerMatch[2]);
       } else {
         // 대안 패턴: 위력이 별도 행에 있는 경우
-        const powerMatchAlt = wikiText.match(/\|\s*위력\s*\n\|\s*(\d+)\s*~\s*(\d+)/);
+        const powerMatchAlt = wikiText.match(/\|\s*위력\s*\n\|\s*(-?\d+)\s*~\s*(-?\d+)/);
         if (powerMatchAlt) {
           powerMin = parseInt(powerMatchAlt[1]);
           powerMax = parseInt(powerMatchAlt[2]);
@@ -306,14 +306,14 @@ class SearchEngine {
         }
       }
       
-      // MediaWiki 테이블 구조에 맞는 패턴으로 무게 정보 찾기 (개선된 패턴)
-      const weightMatch = wikiText.match(/\|\s*무게\s*\|\|\s*(\d+)\s*~\s*(\d+)/);
+      // MediaWiki 테이블 구조에 맞는 패턴으로 무게 정보 찾기 (음수값, 0값 지원)
+      const weightMatch = wikiText.match(/\|\s*무게\s*\|\|\s*(-?\d+)\s*~\s*(-?\d+)/);
       if (weightMatch) {
         weightMin = parseInt(weightMatch[1]);
         weightMax = parseInt(weightMatch[2]);
       } else {
         // 대안 패턴: 무게가 별도 행에 있는 경우
-        const weightMatchAlt = wikiText.match(/\|\s*무게\s*\n\|\s*(\d+)\s*~\s*(\d+)/);
+        const weightMatchAlt = wikiText.match(/\|\s*무게\s*\n\|\s*(-?\d+)\s*~\s*(-?\d+)/);
         if (weightMatchAlt) {
           weightMin = parseInt(weightMatchAlt[1]);
           weightMax = parseInt(weightMatchAlt[2]);

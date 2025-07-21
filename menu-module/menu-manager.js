@@ -50,14 +50,11 @@ class MenuManager {
     }
   }
 
-  loadSettings() {
+  async loadSettings() {
     try {
-      // 구버전 방식으로 chrome.storage.sync 사용
-      chrome.storage.sync.get({
+      this.settings = await utils.SettingsManager.getSettings({
         profileLink: true,
-        showItemStats: true  // 구버전 방식으로 변경
-      }, (items) => {
-        this.settings = items;
+        showItemStats: true
       });
     } catch (error) {
       this.settings = { 
@@ -211,9 +208,9 @@ class MenuManager {
       button.title = item.title;
       button.style.fontWeight = 'bold';
       
-      button.addEventListener('click', (e) => {
+      button.addEventListener('click', async (e) => {
         e.stopPropagation();
-        this.handleSubMenuItemClick(item);
+        await this.handleSubMenuItemClick(item);
         this.closeAllSubMenus();
       });
       
@@ -251,9 +248,9 @@ class MenuManager {
         button.style.fontWeight = 'bold';
       }
       
-      button.addEventListener('click', (e) => {
+      button.addEventListener('click', async (e) => {
         e.stopPropagation();
-        this.handleSubMenuItemClick(item, button);
+        await this.handleSubMenuItemClick(item, button);
         
         // 토글 버튼이 아닌 경우에만 메뉴 닫기
         if (!isToggleButton) {
@@ -265,14 +262,17 @@ class MenuManager {
     });
   }
 
-  handleSubMenuItemClick(item, button) {
+  async handleSubMenuItemClick(item, button) {
     switch (item.id) {
       case 'openGuide':
         this.openItemGuideModal();
         break;
+      case 'userSearch':
+        this.openUserSearchModal();
+        break;
       case 'profileLink':
       case 'showItemStats':
-        this.toggleSetting(item.id);
+        await this.toggleSetting(item.id);
         this.updateToggleButton(button, item);
         break;
       case 'wikiLink':
@@ -578,8 +578,8 @@ class MenuManager {
 
     items.forEach((item) => {
       const itemName = escapeHtml(item.name || '알 수 없는 아이템');
-      const powerRange = item.power_min && item.power_max ? `${item.power_min}-${item.power_max}` : 'N/A';
-      const weightRange = item.weight_min && item.weight_max ? `${item.weight_min}-${item.weight_max}` : 'N/A';
+      const powerRange = (item.power_min !== null && item.power_min !== undefined && item.power_max !== null && item.power_max !== undefined) ? `${item.power_min}-${item.power_max}` : 'N/A';
+      const weightRange = (item.weight_min !== null && item.weight_min !== undefined && item.weight_max !== null && item.weight_max !== undefined) ? `${item.weight_min}-${item.weight_max}` : 'N/A';
       const weaponType = escapeHtml(item.weapon_type || 'N/A');
       const abilities = item.abilities && item.abilities.length > 0 ? 
         item.abilities.map(ability => escapeHtml(ability)).join(', ') : 'N/A';
@@ -767,14 +767,14 @@ class MenuManager {
     }
   }
 
-  toggleSetting(settingId) {
+  async toggleSetting(settingId) {
     this.settings[settingId] = !this.settings[settingId];
     
-    // 구버전 방식으로 chrome.storage.sync에 저장
+    // 유틸리티 함수를 사용하여 설정 저장
     try {
-      chrome.storage.sync.set(this.settings, () => {
-      });
+      await utils.SettingsManager.setSettings(this.settings);
     } catch (error) {
+      console.warn('설정 저장 실패:', error);
     }
     
     // 설정에 따른 기능 실행
@@ -800,6 +800,219 @@ class MenuManager {
         }
         break;
     }
+  }
+
+  // 사용자 검색 모달 열기
+  openUserSearchModal() {
+    // 기존 모달이 있으면 제거
+    const existingModal = document.querySelector('.user-search-modal');
+    if (existingModal) {
+      existingModal.remove();
+    }
+
+    // 모달 생성
+    const modal = document.createElement('div');
+    modal.className = 'user-search-modal';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'user-search-content';
+    
+    // 헤더 생성
+    const header = document.createElement('div');
+    header.className = 'user-search-header';
+    
+    const title = document.createElement('h3');
+    title.textContent = '사용자 검색';
+    
+    const closeButton = document.createElement('button');
+    closeButton.className = 'user-search-close';
+    closeButton.textContent = '×';
+    closeButton.onclick = () => this.closeUserSearchModal(modal);
+    
+    header.appendChild(title);
+    header.appendChild(closeButton);
+    
+    // 폼 생성
+    const form = document.createElement('form');
+    form.className = 'user-search-form';
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      this.handleUserSearch(modal);
+    };
+    
+    // 입력 그룹
+    const inputGroup = document.createElement('div');
+    inputGroup.className = 'user-search-input-group';
+    
+    const label = document.createElement('label');
+    label.className = 'user-search-label';
+    label.textContent = '사용자명';
+    
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'user-search-input';
+    input.placeholder = '검색할 사용자명을 입력하세요';
+    input.required = true;
+    input.maxLength = 50;
+    
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'user-search-error';
+    errorDiv.textContent = '사용자명은 영문, 숫자, 한글, 언더스코어(_), 하이픈(-)만 사용 가능합니다.';
+    
+    inputGroup.appendChild(label);
+    inputGroup.appendChild(input);
+    inputGroup.appendChild(errorDiv);
+    
+    // 버튼 그룹
+    const buttonGroup = document.createElement('div');
+    buttonGroup.className = 'user-search-buttons';
+    
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.className = 'user-search-submit';
+    submitButton.textContent = '검색';
+    
+    const cancelButton = document.createElement('button');
+    cancelButton.type = 'button';
+    cancelButton.className = 'user-search-cancel';
+    cancelButton.textContent = '취소';
+    cancelButton.onclick = () => this.closeUserSearchModal(modal);
+    
+    buttonGroup.appendChild(submitButton);
+    buttonGroup.appendChild(cancelButton);
+    
+    // 폼 조립
+    form.appendChild(inputGroup);
+    form.appendChild(buttonGroup);
+    
+    // 모달 조립
+    modalContent.appendChild(header);
+    modalContent.appendChild(form);
+    modal.appendChild(modalContent);
+    
+    // DOM에 추가
+    document.body.appendChild(modal);
+    
+    // 모달 표시 애니메이션
+    setTimeout(() => {
+      modal.classList.add('show');
+    }, 10);
+    
+    // 입력 필드에 포커스
+    input.focus();
+    
+    // ESC 키로 모달 닫기
+    const handleEscKey = (e) => {
+      if (e.key === 'Escape') {
+        this.closeUserSearchModal(modal);
+        document.removeEventListener('keydown', handleEscKey);
+      }
+    };
+    document.addEventListener('keydown', handleEscKey);
+    
+    // 모달 외부 클릭으로 닫기
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        this.closeUserSearchModal(modal);
+      }
+    });
+    
+    // 입력 검증
+    input.addEventListener('input', () => {
+      this.validateUserInput(input, errorDiv);
+    });
+  }
+
+  // 사용자 입력 검증
+  validateUserInput(input, errorDiv) {
+    const value = input.value.trim();
+    const isValid = /^[a-zA-Z0-9가-힣_-]+$/.test(value);
+    
+    if (value && !isValid) {
+      input.classList.add('error');
+      errorDiv.classList.add('show');
+    } else {
+      input.classList.remove('error');
+      errorDiv.classList.remove('show');
+    }
+  }
+
+  // 사용자 검색 처리
+  handleUserSearch(modal) {
+    const input = modal.querySelector('.user-search-input');
+    const username = input.value.trim();
+    
+    // 입력 검증
+    if (!username) {
+      this.showUserSearchError(modal, '사용자명을 입력해주세요.');
+      return;
+    }
+
+    if (!/^[a-zA-Z0-9가-힣_-]+$/.test(username)) {
+      this.showUserSearchError(modal, '사용자명은 영문, 숫자, 한글, 언더스코어(_), 하이픈(-)만 사용 가능합니다.');
+      return;
+    }
+    
+    if (username.length > 50) {
+      this.showUserSearchError(modal, '사용자명은 50자를 초과할 수 없습니다.');
+      return;
+    }
+    
+    // XSS 방지를 위한 추가 검증
+    const sanitizedUsername = this.sanitizeUsername(username);
+    if (sanitizedUsername !== username) {
+      this.showUserSearchError(modal, '잘못된 사용자명입니다.');
+        return;
+    }
+    
+    // URL 생성 및 이동
+    const userUrl = `https://lanis.me/users/${encodeURIComponent(sanitizedUsername)}`;
+    
+    // 현재 페이지에서 이동
+    window.location.href = userUrl;
+    
+    // 모달 닫기
+    this.closeUserSearchModal(modal);
+  }
+
+  // 사용자명 sanitize (XSS 방지)
+  sanitizeUsername(username) {
+    // 위험한 문자 제거 (HTML 엔티티 디코딩 없이 직접 처리)
+    const sanitized = username
+      .replace(/[<>\"'&]/g, '') // HTML 태그 및 위험 문자 제거
+      .replace(/javascript:/gi, '') // javascript: 프로토콜 제거
+      .replace(/data:/gi, '') // data: 프로토콜 제거
+      .replace(/vbscript:/gi, '') // vbscript: 프로토콜 제거
+      .trim();
+    
+    return sanitized;
+  }
+
+  // 사용자 검색 에러 표시
+  showUserSearchError(modal, message) {
+    const errorDiv = modal.querySelector('.user-search-error');
+    const input = modal.querySelector('.user-search-input');
+    
+    errorDiv.textContent = message;
+    errorDiv.classList.add('show');
+    input.classList.add('error');
+    input.focus();
+    
+    // 3초 후 에러 메시지 숨기기
+    setTimeout(() => {
+      errorDiv.classList.remove('show');
+      input.classList.remove('error');
+    }, 3000);
+  }
+
+  // 사용자 검색 모달 닫기
+  closeUserSearchModal(modal) {
+    modal.classList.remove('show');
+    setTimeout(() => {
+      if (modal.parentNode) {
+        modal.parentNode.removeChild(modal);
+      }
+    }, 300);
   }
 
 
