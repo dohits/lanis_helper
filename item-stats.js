@@ -51,7 +51,7 @@ class ItemStatsManager {
   }
 
   processItemStats() {
-    if (!this.settings.showItemStats || !this.rareItemsData || this.rareItemsData.length === 0) {
+    if (!this.settings.showItemStats) {
       return;
     }
     if (this.isProcessing) {
@@ -72,26 +72,88 @@ class ItemStatsManager {
         if (text.includes('(')) {
           cleanItemName = text.split('(')[0].trim();
         }
-        const itemData = this.rareItemsData.find(item => {
-          if (!item.name) return false;
-          const itemName = item.name.trim();
-          return cleanItemName === itemName;
+        // DOM에서 범위 추출
+        const statContainers = container.querySelectorAll('.MuiBox-root.css-gg4vpm');
+        let domPowerMin = null, domPowerMax = null, domWeightMin = null, domWeightMax = null;
+        statContainers.forEach((statContainer) => {
+          const pElements = statContainer.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv');
+          if (pElements.length === 2) {
+            const labelElement = pElements[0];
+            const valueElement = pElements[1];
+            const label = labelElement.textContent.trim();
+            const value = valueElement.textContent.trim();
+            // (123~456) 또는 (123 ~ 456) 패턴 추출
+            const rangeMatch = value.match(/\(([-\d]+)\s*~\s*([-\d]+)\)/);
+            if (rangeMatch) {
+              const min = parseInt(rangeMatch[1]);
+              const max = parseInt(rangeMatch[2]);
+              if (label === '위력') {
+                domPowerMin = min;
+                domPowerMax = max;
+              } else if (label === '무게') {
+                domWeightMin = min;
+                domWeightMax = max;
+              }
+            }
+          }
         });
+        // rareItemsData에서 정보 찾기
+        let itemData = null;
+        if (this.rareItemsData && this.rareItemsData.length > 0) {
+          itemData = this.rareItemsData.find(item => {
+            if (!item.name) return false;
+            const itemName = item.name.trim();
+            return cleanItemName === itemName;
+          });
+        }
+        // 정보가 있으면, DOM의 범위와 수집된 정보의 범위가 다르면 위키아이콘 표기
+        let showWikiIcon = false;
         if (itemData) {
           matchedItems++;
-          this.addRangeInfoToStats(container, itemData);
+          // 위력 범위 비교
+          if (
+            domPowerMin !== null && domPowerMax !== null &&
+            (itemData.power_min !== domPowerMin || itemData.power_max !== domPowerMax)
+          ) {
+            showWikiIcon = true;
+          }
+          // 무게 범위 비교
+          if (
+            domWeightMin !== null && domWeightMax !== null &&
+            (itemData.weight_min !== domWeightMin || itemData.weight_max !== domWeightMax)
+          ) {
+            showWikiIcon = true;
+          }
+          this.addRangeInfoToStats(container, itemData, domPowerMin, domPowerMax, domWeightMin, domWeightMax);
           container.classList.add('item-stats-processed');
         } else {
-          // 수집되지 않은 레어아이템(범위가 표기된 경우)에만 위키 아이콘 추가
-          const popoverText = container.textContent || '';
-          const hasRange = /\d+\s*~\s*\d+/.test(popoverText);
-          if (hasRange && !itemNameElement.querySelector('.wiki-icon')) {
-            const wikiIcon = document.createElement('span');
-            wikiIcon.className = 'wiki-icon';
-            wikiIcon.textContent = '📚';
-            wikiIcon.title = '위키에 등록되지 않은 레어아이템입니다.';
-            wikiIcon.style.marginLeft = '4px';
-            wikiIcon.style.fontSize = '1em';
+          // 수집된 정보가 없더라도, DOM에 범위가 있으면 임시 itemData 생성하여 판정 수행
+          if ((domPowerMin !== null && domPowerMax !== null) || (domWeightMin !== null && domWeightMax !== null)) {
+            showWikiIcon = true;
+            const tempItemData = {
+              name: cleanItemName,
+              power_min: domPowerMin,
+              power_max: domPowerMax,
+              weight_min: domWeightMin,
+              weight_max: domWeightMax
+            };
+            this.addRangeInfoToStats(container, tempItemData, domPowerMin, domPowerMax, domWeightMin, domWeightMax);
+            container.classList.add('item-stats-processed');
+          }
+        }
+        // 위키아이콘 표기
+        if (showWikiIcon && !itemNameElement.querySelector('.wiki-icon')) {
+          const wikiIcon = document.createElement('span');
+          wikiIcon.className = 'wiki-icon';
+          wikiIcon.textContent = '📚';
+          wikiIcon.title = '위키 정보와 불일치하거나, 위키에 등록되지 않은 레어아이템입니다.';
+          wikiIcon.style.marginLeft = '4px';
+          wikiIcon.style.fontSize = '1em';
+          // .final-tag 앞에 삽입, 없으면 아이템명 뒤에 append
+          const finalTag = container.querySelector('.final-tag');
+          if (finalTag) {
+            finalTag.parentNode.insertBefore(wikiIcon, finalTag);
+          } else {
             itemNameElement.appendChild(wikiIcon);
           }
         }
@@ -104,8 +166,37 @@ class ItemStatsManager {
     }
   }
 
-  // 아이템의 위력/무게 값에 범위 및 등급 표기 추가
-  addRangeInfoToStats(container, itemData) {
+  // valueElement에서 현재값, min, max를 정확히 추출하는 함수 추가
+  extractMainValueAndRange(valueElement) {
+    let currentValue = null;
+    let min = null, max = null;
+    if (valueElement.childNodes.length > 0) {
+      const firstText = valueElement.childNodes[0].nodeValue.trim();
+      const match = firstText.match(/^(-?\d+)/);
+      if (match) currentValue = parseInt(match[1]);
+    }
+    const span = valueElement.querySelector('span');
+    if (span) {
+      const rangeMatch = span.textContent.match(/\(([-\d]+)\s*~\s*([-\d]+)\)/);
+      if (rangeMatch) {
+        min = parseInt(rangeMatch[1]);
+        max = parseInt(rangeMatch[2]);
+      }
+    }
+    return { currentValue, min, max };
+  }
+
+  // itemData가 없을 때도 domPowerMin 등으로 판정 가능하도록 파라미터 추가
+  addRangeInfoToStats(container, itemData, domPowerMin, domPowerMax, domWeightMin, domWeightMax) {
+    // itemData가 없으면 dom에서 추출한 값으로 대체
+    if (!itemData) {
+      itemData = {
+        power_min: domPowerMin,
+        power_max: domPowerMax,
+        weight_min: domWeightMin,
+        weight_max: domWeightMax
+      };
+    }
     const statContainers = container.querySelectorAll('.MuiBox-root.css-gg4vpm');
     let powerGrade = null;
     let weightGrade = null;
@@ -117,22 +208,20 @@ class ItemStatsManager {
         const labelElement = pElements[0];
         const valueElement = pElements[1];
         const label = labelElement.textContent.trim();
-        const value = valueElement.textContent.trim();
+        // 개선: DOM에서 현재값, min, max를 모두 추출
+        const { currentValue, min, max } = this.extractMainValueAndRange(valueElement);
         // 위력 처리
         if (label === '위력' &&
-            itemData.power_min !== null && itemData.power_max !== null &&
-            itemData.power_min !== itemData.power_max) {
+            min !== null && max !== null && min !== max && typeof currentValue === 'number' && !isNaN(currentValue)) {
           if (valueElement.classList.contains('power-range-processed')) return;
-          const currentPower = parseInt(this.getFirstNumberText(valueElement));
-          const { grade, color, percentage, score } = this.calculateGrade(currentPower, itemData.power_min, itemData.power_max);
-          const isNarrow = Math.abs(itemData.power_max - itemData.power_min) <= 9;
+          const { grade, color, percentage, score } = this.calculateGrade(currentValue, min, max);
+          const isNarrow = Math.abs(max - min) <= 9;
           const gradeSpan = utils.createElement('span', 'power-grade-info', 
             ` [${grade}]`, {
               style: `color: ${color}; font-size: 0.9em; font-weight: bold;`,
               'data-grade': grade
             }
           );
-          // 퍼센트/점수 표기 (범위좁음이면 점수 표기 X)
           const percentSpan = utils.createElement('span', 'power-percent-info', 
             ` (${percentage.toFixed(1)}%)`, {
               style: `color: ${ITEM_COLORS.common.percent}; font-size: 0.9em; font-weight: normal; font-style: italic;`
@@ -141,6 +230,7 @@ class ItemStatsManager {
           // 점수 표기 (등급과 같은 색상)
           let scoreSpan = null;
           if (!isNarrow) {
+            // 점수 표기 (등급과 같은 색상)
             scoreSpan = utils.createElement('span', 'power-score-info', 
               ` (${score}점)`, {
                 style: `color: ${color}; font-size: 0.9em; font-weight: bold;`,
@@ -151,6 +241,7 @@ class ItemStatsManager {
           // (범위 좁음) 안내
           let narrowSpan = null;
           if (isNarrow) {
+            // (범위 좁음) 안내
             narrowSpan = utils.createElement('span', 'narrow-range-info', 
               ' (범위 좁음)', {
                 style: `color: ${ITEM_COLORS.common.narrow}; font-size: 0.9em; font-weight: bold;`
@@ -168,7 +259,6 @@ class ItemStatsManager {
           valueElement.classList.add('power-range-processed');
           // 퍼센트/점수/색상 저장
           powerSummary = { percent: percentage.toFixed(1), score, color };
-          
           // 팝오버 위치 재조정
           const popover = container.closest('.MuiPopover-root');
           if (popover) {
@@ -179,19 +269,16 @@ class ItemStatsManager {
         }
         // 무게 처리
         if (label === '무게' &&
-            itemData.weight_min !== null && itemData.weight_max !== null &&
-            itemData.weight_min !== itemData.weight_max) {
+            min !== null && max !== null && min !== max && typeof currentValue === 'number' && !isNaN(currentValue)) {
           if (valueElement.classList.contains('weight-range-processed')) return;
-          const currentWeight = parseInt(this.getFirstNumberText(valueElement));
-          const { grade, color, percentage, score } = this.calculateGrade(currentWeight, itemData.weight_min, itemData.weight_max, true);
-          const isNarrow = Math.abs(itemData.weight_max - itemData.weight_min) <= 9;
+          const { grade, color, percentage, score } = this.calculateGrade(currentValue, min, max, true);
+          const isNarrow = Math.abs(max - min) <= 9;
           const gradeSpan = utils.createElement('span', 'weight-grade-info', 
             ` [${grade}]`, {
               style: `color: ${color}; font-size: 0.9em; font-weight: bold;`,
               'data-grade': grade
             }
           );
-          // 퍼센트/점수 표기 (범위좁음이면 점수 표기 X)
           const percentSpan = utils.createElement('span', 'weight-percent-info', 
             ` (${percentage.toFixed(1)}%)`, {
               style: `color: ${ITEM_COLORS.common.percent}; font-size: 0.9em; font-weight: normal; font-style: italic;`
@@ -200,6 +287,7 @@ class ItemStatsManager {
           // 점수 표기 (등급과 같은 색상)
           let scoreSpan = null;
           if (!isNarrow) {
+            // 점수 표기 (등급과 같은 색상)
             scoreSpan = utils.createElement('span', 'weight-score-info', 
               ` (${score}점)`, {
                 style: `color: ${color}; font-size: 0.9em; font-weight: bold;`,
@@ -210,6 +298,7 @@ class ItemStatsManager {
           // (범위 좁음) 안내
           let narrowSpan = null;
           if (isNarrow) {
+            // (범위 좁음) 안내
             narrowSpan = utils.createElement('span', 'narrow-range-info', 
               ' (범위 좁음)', {
                 style: `color: ${ITEM_COLORS.common.narrow}; font-size: 0.9em; font-weight: bold;`
@@ -227,7 +316,6 @@ class ItemStatsManager {
           valueElement.classList.add('weight-range-processed');
           // 퍼센트/점수/색상 저장
           weightSummary = { percent: percentage.toFixed(1), score, color };
-          
           // 팝오버 위치 재조정
           const popover = container.closest('.MuiPopover-root');
           if (popover) {

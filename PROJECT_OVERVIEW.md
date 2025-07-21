@@ -105,6 +105,14 @@ const ITEM_COLORS = {
 3. DOM 요소 생성 시 색상 적용
 4. 등급 표시와 점수 표시에 동일한 색상 사용
 
+## 아이템 감정범위 표기 및 위키아이콘 표기 구조
+- processItemStats()에서 각 아이템 컨테이너에 대해:
+  - rareItemsData(수집 데이터)와 DOM에서 추출한 범위를 모두 비교
+  - 수집 데이터가 있을 때, DOM의 범위와 다르면 위키아이콘을 표기
+  - 수집 데이터가 없더라도, DOM에 범위가 있으면 임시 itemData를 생성하여 addRangeInfoToStats로 판정 및 표기를 수행
+  - 위키아이콘 표기는 정보 불일치 또는 정보 없음+범위존재 모두에 대해 표기됨
+- addRangeInfoToStats()는 itemData가 없을 때도 dom에서 추출한 값으로 판정 가능하도록 파라미터를 받음
+
 ## 🛡️ 보안 고려사항
 
 ### XSS 방지
