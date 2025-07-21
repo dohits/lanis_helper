@@ -43,6 +43,12 @@
         "title": "설정",
         "items": [
           {
+            "id": "programInfo",
+            "icon": "ℹ️",
+            "text": "프로그램 정보",
+            "title": "프로그램 정보 및 문의"
+          },
+          {
             "id": "profileLink",
             "icon": "👤",
             "text": "프로필 링크",
