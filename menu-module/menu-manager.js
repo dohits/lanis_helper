@@ -1,4 +1,5 @@
 // 메뉴 관리자
+const EXTENSION_VERSION = '1.4.0';
 class MenuManager {
   constructor() {
     this.menuConfig = null;
@@ -295,18 +296,7 @@ class MenuManager {
     const existingModal = document.querySelector('.program-info-modal');
     if (existingModal) existingModal.remove();
 
-    // 버전 정보 추출 (manifest.json에서)
-    let version = 'unknown';
-    try {
-      fetch(chrome.runtime.getURL('manifest.json'))
-        .then(res => res.json())
-        .then(manifest => {
-          version = manifest.version || 'unknown';
-          showModal(version);
-        });
-    } catch {
-      showModal(version);
-    }
+    showModal(EXTENSION_VERSION);
 
     function showModal(version) {
       const modal = document.createElement('div');
