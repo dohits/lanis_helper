@@ -25,6 +25,9 @@ lanis_helper/
 │   └── settings-modal.js      # 설정 모달
 ├── img/                       # 이미지 리소스
 └── exam/                      # 예시 파일
+    ├── enchant-info-armor-example.js  # 방어구 해방 정보 예시
+    ├── enchant-info-weapon-example.js # 무기 해방 정보 예시 (시트 미존재)
+    └── enchant-info-accessory-example.js # 장신구 해방 정보 예시 (시트 미존재)
 ```
 
 ## 🔧 핵심 모듈 설명
@@ -56,6 +59,30 @@ lanis_helper/
 ### 5. 메뉴 모듈 (`menu-module/`)
 - **목적**: 메인 메뉴 및 설정 UI 관리
 - **구성**: 메뉴 관리자, 설정 모달, 메뉴 설정
+- **새로운 기능**: 해방 정보 모달 (장비 해방 정보 표시)
+
+### 6. 해방 정보 시스템
+- **목적**: 구글 시트에서 장비 해방 정보를 실시간으로 가져와 표시
+- **구성**: 
+  - `background.js`: 구글 시트 API 연동 및 데이터 fetch
+  - `menu-manager.js`: 해방 정보 모달 UI 및 테이블 렌더링
+  - `exam/enchant-info-armor-example.js`: 방어구 해방 정보 예시 및 참조
+  - `exam/enchant-info-weapon-example.js`: 무기 해방 정보 예시 (시트 미존재)
+  - `exam/enchant-info-accessory-example.js`: 장신구 해방 정보 예시 (시트 미존재)
+- **데이터 플로우**:
+  1. 사용자 → "해방 정보 보기" 버튼 클릭
+  2. `openEnchantInfoModal()` → 모달 생성
+  3. `fetchEnchantInfoData()` → background.js에 메시지 전송
+  4. `background.js` → 구글 시트 CSV 데이터 fetch
+  5. `displayEnchantInfoTable()` → 테이블 형태로 데이터 렌더링
+- **데이터 구조**: 
+  - 구글 시트 구조: A열(빈칸), B열(스텟명), C열(동등급), D열(은등급), E열(금등급), F열(칠색등급)
+  - 파싱 시 cols[1]부터 시작 (A열은 빈칸이므로)
+  - 상세 구조는 `exam/enchant-info-armor-example.js` 참조
+- **현재 상태**:
+  - 방어구: 실제 데이터 연결됨 (GID: 468768394)
+  - 무기: 시트 미존재 (GID: 999999999)
+  - 장신구: 시트 미존재 (GID: 999999998)
 
 ## 🎨 색상 시스템 아키텍처
 
@@ -112,6 +139,23 @@ const ITEM_COLORS = {
   - 수집 데이터가 없더라도, DOM에 범위가 있으면 임시 itemData를 생성하여 addRangeInfoToStats로 판정 및 표기를 수행
   - 위키아이콘 표기는 정보 불일치 또는 정보 없음+범위존재 모두에 대해 표기됨
 - addRangeInfoToStats()는 itemData가 없을 때도 dom에서 추출한 값으로 판정 가능하도록 파라미터를 받음
+
+## exam 폴더 내 어빌리티 데이터 구조 안내
+
+- 모든 어빌리티 정보는 `ability-info.json` 파일에서 통합 관리됨
+
+```json
+[
+  { "job": "직업명", "name": "어빌리티명", "effect": "효과", "exp": "경험치" }
+]
+```
+- `job`: 직업명(예: "검술", "체술", "장비" 등)
+- `name`: 어빌리티 이름
+- `effect`: 효과 설명
+- `exp`: 필요 경험치 또는 "-P" (장비 어빌리티의 경우)
+
+### 활용 예시
+- 해당 파일에서 직업별(`job`), 이름(`name`), 효과(`effect`) 등으로 필터링 및 검색이 가능함
 
 ## 🛡️ 보안 고려사항
 

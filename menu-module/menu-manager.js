@@ -1,5 +1,5 @@
 // 메뉴 관리자
-const EXTENSION_VERSION = '1.4.0';
+const EXTENSION_VERSION = '1.5.0';
 class MenuManager {
   constructor() {
     this.menuConfig = null;
@@ -19,35 +19,9 @@ class MenuManager {
       const response = await fetch(chrome.runtime.getURL('menu-module/menu-config.json'));
       this.menuConfig = await response.json();
     } catch (error) {
-      // 기본 설정 사용
-      this.menuConfig = {
-        mainMenu: {
-          button: { icon: "⚡", text: "", title: "Lanis Helper 메뉴" },
-          items: [
-            { id: "itemGuide", icon: "📚", text: "아이템 도감", title: "아이템 도감" },
-            { id: "settings", icon: "⚙️", text: "설정", title: "설정 메뉴" }
-          ],
-          itemGuide: {
-            subMenu: {
-              title: "아이템 도감",
-              items: [
-                { id: "openGuide", icon: "📖", text: "도감 열기", title: "아이템 도감 열기" }
-              ]
-            }
-          },
-          settings: {
-            subMenu: {
-              title: "설정",
-              items: [
-                { id: "profileLink", icon: "👤", text: "프로필 링크", title: "사용자 프로필 링크 표시" },
-                { id: "showItemStats", icon: "📊", text: "아이템 스탯", title: "아이템 스탯 정보 표시" },
-                { id: "wikiLink", icon: "📚", text: "위키 이동", title: "Lanis 위키로 이동", url: "https://laniswiki.lovestoblog.com/" },
-                { id: "lanisLink", icon: "🎮", text: "라니스 이동", title: "Lanis 게임으로 이동", url: "https://lanis.me/" }
-              ]
-            }
-          }
-        }
-      };
+      // 에러 발생 시 기본설정 사용하지 않고 렌더링도 하지 않음
+      this.menuConfig = null;
+      return;
     }
   }
 
@@ -80,6 +54,7 @@ class MenuManager {
 
 
   createMenuUI() {
+    if (!this.menuConfig) return;
     this.removeExistingMenu();
     // 메인 컨테이너 생성
     const container = document.createElement('div');
@@ -307,6 +282,9 @@ class MenuManager {
       case 'userSearch':
         this.openUserSearchModal();
         break;
+      case 'enchantInfo':
+        this.openEnchantInfoModal();
+        break;
       case 'programInfo':
         this.openProgramInfoModal();
         break;
@@ -321,54 +299,11 @@ class MenuManager {
           window.open(item.url, '_blank');
         }
         break;
+      case 'abilityInfo':
+        this.openAbilityInfoModal();
+        break;
       default:
         console.log('Unknown submenu item:', item.id);
-    }
-  }
-
-  // 프로그램 정보 모달
-  openProgramInfoModal() {
-    // 기존 모달 제거
-    const existingModal = document.querySelector('.program-info-modal');
-    if (existingModal) existingModal.remove();
-
-    showModal(EXTENSION_VERSION);
-
-    function showModal(version) {
-      const modal = document.createElement('div');
-      modal.className = 'program-info-modal user-search-modal';
-      const content = document.createElement('div');
-      content.className = 'user-search-content';
-      // 헤더
-      const header = document.createElement('div');
-      header.className = 'user-search-header';
-      const title = document.createElement('h3');
-      title.textContent = '프로그램 정보';
-      const closeButton = document.createElement('button');
-      closeButton.className = 'user-search-close';
-      closeButton.textContent = '×';
-      closeButton.onclick = () => modal.remove();
-      header.appendChild(title);
-      header.appendChild(closeButton);
-      // 본문
-      const infoDiv = document.createElement('div');
-      infoDiv.style.margin = '24px 0 12px 0';
-      infoDiv.style.fontSize = '16px';
-      infoDiv.style.color = '#374151';
-      infoDiv.innerHTML =
-        `<b>버전:</b> v${version}<br><br>` +
-        `본 프로그램은 <b>유저 비공식 확장</b>입니다.<br><br>` +
-        `문의: 인게임 메일 <b>도히님</b>`;
-      // 조립
-      content.appendChild(header);
-      content.appendChild(infoDiv);
-      modal.appendChild(content);
-      document.body.appendChild(modal);
-      setTimeout(() => { modal.classList.add('show'); }, 10);
-      // ESC, 외부 클릭 닫기
-      const handleEsc = (e) => { if (e.key === 'Escape') { modal.remove(); document.removeEventListener('keydown', handleEsc); } };
-      document.addEventListener('keydown', handleEsc);
-      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
     }
   }
 
@@ -461,6 +396,34 @@ class MenuManager {
       btn.className = 'attribute-btn';
       btn.setAttribute('data-attribute', attr);
       btn.textContent = attr;
+      // 초기 스타일
+      btn.style.cssText = `
+        margin: 0 2px 6px 0;
+        padding: 6px 16px;
+        border-radius: 16px;
+        font-size: 13px;
+        font-weight: 700;
+        border: 2px solid #667eea;
+        background: white;
+        color: #667eea;
+        transition: all 0.3s;
+        cursor: pointer;
+        box-sizing: border-box;
+      `;
+      btn.addEventListener('click', (e) => {
+        btn.classList.toggle('active');
+        // 스타일 동기화
+        if (btn.classList.contains('active')) {
+          btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+          btn.style.color = 'white';
+          btn.style.border = 'none';
+        } else {
+          btn.style.background = 'white';
+          btn.style.color = '#667eea';
+          btn.style.border = '2px solid #667eea';
+        }
+        this.filterItems();
+      });
       attributeButtons.appendChild(btn);
     });
     
@@ -479,7 +442,41 @@ class MenuManager {
       btn.className = 'category-btn main-category';
       btn.setAttribute('data-category', category === '전체' ? '' : category);
       btn.textContent = category;
-      if (category === '전체') btn.classList.add('active');
+      // 초기 스타일
+      btn.style.cssText = `
+        margin: 0 2px 6px 0;
+        padding: 6px 16px;
+        border-radius: 16px;
+        font-size: 13px;
+        font-weight: 700;
+        border: 2px solid #667eea;
+        background: white;
+        color: #667eea;
+        transition: all 0.3s;
+        cursor: pointer;
+        box-sizing: border-box;
+      `;
+      if (category === '전체') {
+        btn.classList.add('active');
+        btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        btn.style.color = 'white';
+        btn.style.border = 'none';
+      }
+      btn.addEventListener('click', (e) => {
+        // 활성 상태 변경
+        document.querySelectorAll('.main-category').forEach(b => {
+          b.classList.remove('active');
+          b.style.background = 'white';
+          b.style.color = '#667eea';
+          b.style.border = '2px solid #667eea';
+        });
+        btn.classList.add('active');
+        btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        btn.style.color = 'white';
+        btn.style.border = 'none';
+        const category = btn.getAttribute('data-category');
+        this.handleMainCategoryChange(category);
+      });
       mainCategories.appendChild(btn);
     });
     
@@ -494,7 +491,40 @@ class MenuManager {
       btn.className = 'category-btn sub-category';
       btn.setAttribute('data-category', category === '전체' ? '' : category);
       btn.textContent = category;
-      if (category === '전체') btn.classList.add('active');
+      // 초기 스타일
+      btn.style.cssText = `
+        margin: 0 2px 6px 0;
+        padding: 6px 16px;
+        border-radius: 16px;
+        font-size: 13px;
+        font-weight: 700;
+        border: 2px solid #667eea;
+        background: white;
+        color: #667eea;
+        transition: all 0.3s;
+        cursor: pointer;
+        box-sizing: border-box;
+      `;
+      if (category === '전체') {
+        btn.classList.add('active');
+        btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        btn.style.color = 'white';
+        btn.style.border = 'none';
+      }
+      btn.addEventListener('click', (e) => {
+        // 활성 상태 변경
+        document.querySelectorAll('.sub-category').forEach(b => {
+          b.classList.remove('active');
+          b.style.background = 'white';
+          b.style.color = '#667eea';
+          b.style.border = '2px solid #667eea';
+        });
+        btn.classList.add('active');
+        btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        btn.style.color = 'white';
+        btn.style.border = 'none';
+        this.filterItems();
+      });
       subCategories.appendChild(btn);
     });
     
@@ -733,7 +763,10 @@ class MenuManager {
       
       const abilitiesDiv = document.createElement('div');
       abilitiesDiv.className = 'item-abilities';
-      abilitiesDiv.textContent = `어빌리티: ${abilities}`;
+      if (abilities !== 'N/A') {
+        abilitiesDiv.textContent = abilities;
+        itemDiv.appendChild(abilitiesDiv);
+      }
       
       itemDiv.appendChild(nameDiv);
       itemDiv.appendChild(statsDiv);
@@ -1087,6 +1120,660 @@ class MenuManager {
         modal.parentNode.removeChild(modal);
       }
     }, 300);
+  }
+
+  // 해방 정보 모달 열기
+  // 참고: exam/enchant-info-armor-example.js에서 데이터 구조 및 예시 확인
+  openEnchantInfoModal() {
+    // 기존 모달 제거
+    const existingModal = document.querySelector('.enchant-info-modal');
+    if (existingModal) existingModal.remove();
+
+    const modal = document.createElement('div');
+    modal.className = 'enchant-info-modal user-search-modal';
+    
+    const content = document.createElement('div');
+    content.className = 'user-search-content';
+    content.style.maxWidth = '800px';
+    content.style.maxHeight = '80vh';
+    
+    // 헤더
+    const header = document.createElement('div');
+    header.className = 'user-search-header';
+    const title = document.createElement('h3');
+    title.textContent = '장비 해방 정보';
+    const closeButton = document.createElement('button');
+    closeButton.className = 'user-search-close';
+    closeButton.textContent = '×';
+    closeButton.onclick = () => this.closeEnchantInfoModal(modal);
+    header.appendChild(title);
+    header.appendChild(closeButton);
+    
+    // 본문 컨테이너
+    const bodyContainer = document.createElement('div');
+    bodyContainer.style.padding = '20px';
+    
+    // 토글 버튼 컨테이너
+    const toggleContainer = document.createElement('div');
+    toggleContainer.style.cssText = `
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    `;
+    
+    const toggleButtons = [
+      { id: 'weapon', text: '무기', color: '#007BFF' },
+      { id: 'armor', text: '방어구', color: '#007BFF' },
+      { id: 'accessory', text: '장신구', color: '#007BFF' }
+    ];
+    
+    let currentType = 'armor'; // 기본값
+    
+    toggleButtons.forEach(btn => {
+      const button = document.createElement('button');
+      button.id = `toggle-${btn.id}`;
+      // 아이콘 제거, 텍스트만 표시
+      button.textContent = btn.text;
+      // 장비 해방 정보 토글버튼 생성 및 스타일
+      button.style.cssText = `
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        min-width: 80px;
+        min-height: 36px;
+        height: auto;
+        padding: 0 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 700;
+        transition: all 0.3s;
+        line-height: 1.5;
+        white-space: nowrap;
+        overflow: visible;
+        vertical-align: middle;
+        box-sizing: border-box;
+        ${btn.id === currentType ? `
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border: none;
+        ` : `
+          background: white;
+          color: #667eea;
+          border: 2px solid #667eea;
+        `}
+      `;
+      
+      button.onclick = () => {
+        // 모든 버튼 스타일 초기화
+        toggleButtons.forEach(b => {
+          const btnElement = document.getElementById(`toggle-${b.id}`);
+          if (btnElement) {
+            if (b.id === btn.id) return; // 선택된 버튼은 아래에서 처리
+            btnElement.style.background = 'white';
+            btnElement.style.color = '#667eea';
+            btnElement.style.border = '2px solid #667eea';
+            btnElement.style.borderRadius = '20px';
+          }
+        });
+        // 선택된 버튼 스타일
+        button.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        button.style.color = 'white';
+        button.style.border = 'none';
+        button.style.borderRadius = '20px';
+        // 데이터 로드
+        currentType = btn.id;
+        this.fetchEnchantInfoData(modal, currentType);
+      };
+      toggleContainer.appendChild(button);
+    });
+    
+    // 로딩 상태
+    const loadingDiv = document.createElement('div');
+    loadingDiv.id = 'enchant-loading';
+    loadingDiv.style.textAlign = 'center';
+    loadingDiv.style.padding = '40px';
+    loadingDiv.style.color = '#666';
+    loadingDiv.innerHTML = '데이터를 불러오는 중...';
+    
+    // 테이블 컨테이너
+    const tableContainer = document.createElement('div');
+    tableContainer.id = 'enchant-table-container';
+    tableContainer.style.display = 'none';
+    
+    // 조립
+    bodyContainer.appendChild(toggleContainer);
+    bodyContainer.appendChild(loadingDiv);
+    bodyContainer.appendChild(tableContainer);
+    content.appendChild(header);
+    content.appendChild(bodyContainer);
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+    
+    setTimeout(() => { modal.classList.add('show'); }, 10);
+    
+    // ESC, 외부 클릭 닫기
+    const handleEsc = (e) => { 
+      if (e.key === 'Escape') { 
+        this.closeEnchantInfoModal(modal); 
+        document.removeEventListener('keydown', handleEsc); 
+      } 
+    };
+    document.addEventListener('keydown', handleEsc);
+    modal.addEventListener('click', (e) => { 
+      if (e.target === modal) this.closeEnchantInfoModal(modal); 
+    });
+    
+    // 초기 데이터 로드
+    this.fetchEnchantInfoData(modal, currentType);
+  }
+
+  // 해방 정보 데이터 가져오기
+  async fetchEnchantInfoData(modal, type = 'armor') {
+    const loadingDiv = modal.querySelector('#enchant-loading');
+    const tableContainer = modal.querySelector('#enchant-table-container');
+    
+    // 로딩 상태 표시
+    loadingDiv.style.display = 'block';
+    tableContainer.style.display = 'none';
+    
+    try {
+      // background.js에 메시지 전송
+      const result = await new Promise((resolve) => {
+        chrome.runtime.sendMessage({ 
+          type: 'FETCH_ENCHANT_INFO',
+          enchantType: type 
+        }, (response) => {
+          resolve(response);
+        });
+      });
+      
+      if (result && result.success) {
+        if (result.data && result.data.length > 0) {
+          this.displayEnchantInfoTable(modal, result.data);
+          loadingDiv.style.display = 'none';
+          tableContainer.style.display = 'block';
+        } else {
+          // 데이터가 없는 경우
+          this.displayNoDataMessage(modal, type);
+          loadingDiv.style.display = 'none';
+          tableContainer.style.display = 'block';
+        }
+      } else {
+        const errorMsg = result ? (result.error || '데이터 가져오기 실패') : '응답이 없습니다';
+        throw new Error(errorMsg);
+      }
+    } catch (error) {
+      console.error('[MenuManager] 해방 정보 데이터 가져오기 실패:', error);
+      loadingDiv.innerHTML = `데이터 가져오기 실패: ${error.message}`;
+      loadingDiv.style.color = '#f44336';
+    }
+  }
+
+  // 해방 정보 테이블 표시
+  // 참고: exam/enchant-info-armor-example.js에서 데이터 구조 및 예시 확인
+  displayEnchantInfoTable(modal, data) {
+    const tableContainer = modal.querySelector('#enchant-table-container');
+    
+    // 테이블 생성
+    const table = document.createElement('table');
+    table.style.cssText = `
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 14px;
+      min-width: 300px;
+      table-layout: fixed;
+    `;
+    
+    // 헤더
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const headers = [
+      { text: '항목', color: '#f5f5f5' },
+      { text: '동', color: '#CD7F32' },      // 동색 (브론즈)
+      { text: '은', color: '#C0C0C0' },      // 은색
+      { text: '금', color: '#FFD700' },      // 금색
+      { text: '칠색', color: '#FF69B4' }     // 칠색 (핑크)
+    ];
+    
+    headers.forEach((header, index) => {
+      const th = document.createElement('th');
+      th.textContent = header.text;
+      th.style.cssText = `
+        padding: 8px 4px;
+        background: ${header.color};
+        border: 1px solid #ddd;
+        text-align: center;
+        font-weight: bold;
+        color: #222;
+        font-size: 12px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        ${index === 0 ? 'width: 25%;' : 'width: 18.75%;'}
+      `;
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    
+    // 본문
+    const tbody = document.createElement('tbody');
+    
+    data.forEach((item, index) => {
+      const row = document.createElement('tr');
+      
+      // 항목명
+      const typeCell = document.createElement('td');
+      typeCell.textContent = item.type;
+      typeCell.style.cssText = `
+        padding: 8px 4px;
+        border: 1px solid #ddd;
+        font-weight: bold;
+        background: #fafafa;
+        font-size: 12px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        color: #222;
+      `;
+      row.appendChild(typeCell);
+      
+      // 등급별 수치 (파스텔톤 배경색)
+      const gradeColors = {
+        bronze: '#F5E6D3',    // 동색 파스텔 (연한 브론즈)
+        silver: '#F0F0F0',    // 은색 파스텔 (연한 그레이)
+        gold: '#FFF8DC',      // 금색 파스텔 (연한 골드)
+        rainbow: '#FFE4E1'    // 칠색 파스텔 (연한 핑크)
+      };
+      
+      ['bronze', 'silver', 'gold', 'rainbow'].forEach(grade => {
+        const cell = document.createElement('td');
+        cell.textContent = item[grade] || '-';
+        cell.style.cssText = `
+          padding: 8px 4px;
+          border: 1px solid #ddd;
+          text-align: center;
+          background: ${item[grade] ? gradeColors[grade] : '#f9f9f9'};
+          font-size: 12px;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          color: #222;
+        `;
+        row.appendChild(cell);
+      });
+      
+      tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+    
+    // 기존 내용 완전히 제거 후 새 테이블 추가
+    tableContainer.innerHTML = '';
+    
+    // 테이블을 감싸는 스크롤 컨테이너 생성
+    const scrollContainer = document.createElement('div');
+    scrollContainer.style.cssText = `
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: visible;
+      margin-top: 20px;
+    `;
+    
+    scrollContainer.appendChild(table);
+    tableContainer.appendChild(scrollContainer);
+  }
+
+  // 데이터 없음 메시지 표시
+  displayNoDataMessage(modal, type) {
+    const tableContainer = modal.querySelector('#enchant-table-container');
+    
+    const noDataDiv = document.createElement('div');
+    noDataDiv.style.cssText = `
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+      font-size: 16px;
+    `;
+    
+    const typeNames = {
+      'weapon': '무기',
+      'armor': '방어구', 
+      'accessory': '장신구'
+    };
+    
+    noDataDiv.innerHTML = `
+      <div style="font-size: 48px; margin-bottom: 20px;">📭</div>
+      <div style="font-weight: bold; margin-bottom: 10px;">데이터 없음</div>
+      <div>${typeNames[type] || type} 해방 정보가 아직 준비되지 않았습니다.</div>
+      <div style="margin-top: 10px; font-size: 14px; color: #999;">
+        구글 시트에 데이터가 추가되면 자동으로 표시됩니다.
+      </div>
+    `;
+    
+    // 기존 내용 제거 후 새 메시지 추가
+    tableContainer.innerHTML = '';
+    tableContainer.appendChild(noDataDiv);
+  }
+
+  // 해방 정보 모달 닫기
+  closeEnchantInfoModal(modal) {
+    modal.classList.remove('show');
+    setTimeout(() => {
+      if (modal.parentNode) {
+        modal.parentNode.removeChild(modal);
+      }
+    }, 300);
+  }
+
+  // 어빌리티 정보 모달
+  async openAbilityInfoModal() {
+    // 기존 모달 제거
+    const existingModal = document.querySelector('.ability-info-modal');
+    if (existingModal) existingModal.remove();
+
+    // 모달 생성
+    const modal = document.createElement('div');
+    modal.className = 'ability-info-modal user-search-modal';
+    const content = document.createElement('div');
+    content.className = 'user-search-content';
+    content.style.maxWidth = '800px';
+    content.style.maxHeight = '80vh';
+
+    // 헤더
+    const header = document.createElement('div');
+    header.className = 'user-search-header';
+    const title = document.createElement('h3');
+    title.textContent = '어빌리티 정보';
+    const closeButton = document.createElement('button');
+    closeButton.className = 'user-search-close';
+    closeButton.textContent = '×';
+    closeButton.onclick = () => modal.remove();
+    header.appendChild(title);
+    header.appendChild(closeButton);
+
+    // 검색창
+    const searchSection = document.createElement('div');
+    searchSection.style.display = 'flex';
+    searchSection.style.gap = '8px';
+    searchSection.style.margin = '16px 0 8px 0';
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.placeholder = '어빌리티명/효과 검색...';
+    searchInput.className = 'search-input';
+    searchInput.style.flex = '1';
+    searchSection.appendChild(searchInput);
+
+    // 직업 토글 버튼
+    const jobToggleSection = document.createElement('div');
+    jobToggleSection.style.display = 'flex';
+    jobToggleSection.style.flexWrap = 'wrap';
+    jobToggleSection.style.gap = '6px';
+    jobToggleSection.style.marginBottom = '8px';
+
+    // 표 컨테이너
+    const tableContainer = document.createElement('div');
+    tableContainer.style.overflow = 'auto';
+    tableContainer.style.maxHeight = '50vh';
+    tableContainer.style.marginTop = '8px';
+
+    // 로딩 표시
+    const loadingDiv = document.createElement('div');
+    loadingDiv.style.textAlign = 'center';
+    loadingDiv.style.padding = '40px';
+    loadingDiv.style.color = '#666';
+    loadingDiv.innerHTML = '데이터를 불러오는 중...';
+    tableContainer.appendChild(loadingDiv);
+
+    // 조립
+    content.appendChild(header);
+    content.appendChild(searchSection);
+    content.appendChild(jobToggleSection);
+    content.appendChild(tableContainer);
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+    setTimeout(() => { modal.classList.add('show'); }, 10);
+
+    // ESC, 외부 클릭 닫기
+    const handleEsc = (e) => { if (e.key === 'Escape') { modal.remove(); document.removeEventListener('keydown', handleEsc); } };
+    document.addEventListener('keydown', handleEsc);
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+
+    // 구글 시트에서 데이터 fetch (CSV)
+    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo/export?format=csv';
+    fetch(SHEET_CSV_URL)
+      .then(res => res.text())
+      .then(csv => {
+        // robust CSV 파서 (셀 안의 쉼표, 줄바꿈, 따옴표 모두 처리)
+        function parseCSV(str) {
+          const rows = [];
+          let row = [];
+          let val = '';
+          let inQuotes = false;
+          let i = 0;
+          while (i < str.length) {
+            const c = str[i];
+            if (inQuotes) {
+              if (c === '"') {
+                if (str[i+1] === '"') { val += '"'; i++; }
+                else inQuotes = false;
+              } else {
+                val += c;
+              }
+            } else {
+              if (c === '"') inQuotes = true;
+              else if (c === ',') { row.push(val); val = ''; }
+              else if (c === '\n' || c === '\r') {
+                if (val !== '' || row.length > 0) { row.push(val); rows.push(row); row = []; val = ''; }
+                // \r\n 처리
+                if (c === '\r' && str[i+1] === '\n') i++;
+              } else {
+                val += c;
+              }
+            }
+            i++;
+          }
+          if (val !== '' || row.length > 0) { row.push(val); rows.push(row); }
+          return rows;
+        }
+        const rows = parseCSV(csv);
+        const header = rows[0].map(h => h.trim());
+        const data = rows.slice(1).map(cols => {
+          const obj = {};
+          header.forEach((h, i) => obj[h] = (cols[i]||'').trim());
+          return obj;
+        }).filter(row => row['직업'] && row['어빌리티명']);
+
+        // 직업 목록 추출
+        const jobs = Array.from(new Set(data.map(row => row['직업'])));
+        let selectedJob = '전체';
+
+        // 토글 버튼 생성
+        jobToggleSection.innerHTML = '';
+        const allBtn = document.createElement('button');
+        allBtn.textContent = '전체';
+        allBtn.className = 'category-btn main-category active';
+        allBtn.onclick = () => { selectedJob = '전체'; renderTable(); updateToggles(); };
+        jobToggleSection.appendChild(allBtn);
+        jobs.forEach(job => {
+          const btn = document.createElement('button');
+          btn.textContent = job;
+          btn.className = 'category-btn main-category';
+          btn.onclick = () => { selectedJob = job; renderTable(); updateToggles(); };
+          jobToggleSection.appendChild(btn);
+        });
+        function updateToggles() {
+          jobToggleSection.querySelectorAll('button').forEach(btn => {
+            if (btn.textContent === selectedJob) {
+              btn.classList.add('active');
+              btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+              btn.style.color = 'white';
+              btn.style.border = 'none';
+            } else {
+              btn.classList.remove('active');
+              btn.style.background = 'white';
+              btn.style.color = '#667eea';
+              btn.style.border = '2px solid #667eea';
+            }
+          });
+        }
+
+        // 표 렌더링 함수
+        function renderTable() {
+          tableContainer.innerHTML = '';
+          const table = document.createElement('table');
+          table.style.cssText = 'width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed;';
+          const thead = document.createElement('thead');
+          const tr = document.createElement('tr');
+          ['직업','어빌리티명','효과'].forEach((h, idx) => {
+            const th = document.createElement('th');
+            th.textContent = h;
+            th.style.cssText = 'padding:6px 2px;background:#f5f5f5;border:1px solid #ddd;text-align:center;font-weight:bold;color:#222;'
+              + (idx === 0 ? 'width:56px;min-width:48px;max-width:72px;' : '');
+            tr.appendChild(th);
+          });
+          thead.appendChild(tr);
+          table.appendChild(thead);
+          const tbody = document.createElement('tbody');
+          let filtered = data;
+          if (selectedJob !== '전체') filtered = filtered.filter(row => row['직업'] === selectedJob);
+          const search = searchInput.value.trim().toLowerCase();
+          if (search) {
+            filtered = filtered.filter(row =>
+              row['어빌리티명'].toLowerCase().includes(search) ||
+              row['효과'].toLowerCase().includes(search)
+            );
+          }
+          filtered.forEach(row => {
+            const tr = document.createElement('tr');
+            ['직업','어빌리티명','효과'].forEach((h, idx) => {
+              const td = document.createElement('td');
+              td.textContent = row[h];
+              td.style.cssText = 'padding:5px 2px;border:1px solid #eee;text-align:center;word-break:break-all;color:#222;'
+                + (idx === 0 ? 'width:56px;min-width:48px;max-width:72px;' : '');
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+          table.appendChild(tbody);
+          tableContainer.appendChild(table);
+        }
+        renderTable();
+        updateToggles();
+        searchInput.oninput = () => renderTable();
+      })
+      .catch(err => {
+        tableContainer.innerHTML = '<div style="color:#f44336;text-align:center;padding:40px;">데이터를 불러오지 못했습니다.</div>';
+      });
+  }
+
+  // 프로그램 정보 모달 복원
+  openProgramInfoModal() {
+    // 기존 모달 제거
+    const existingModal = document.querySelector('.program-info-modal');
+    if (existingModal) existingModal.remove();
+
+    showModal(EXTENSION_VERSION);
+
+    function showModal(version) {
+      const modal = document.createElement('div');
+      modal.className = 'program-info-modal user-search-modal';
+      const content = document.createElement('div');
+      content.className = 'user-search-content';
+      // 헤더
+      const header = document.createElement('div');
+      header.className = 'user-search-header';
+      const title = document.createElement('h3');
+      title.textContent = '프로그램 정보';
+      const closeButton = document.createElement('button');
+      closeButton.className = 'user-search-close';
+      closeButton.textContent = '×';
+      closeButton.onclick = () => modal.remove();
+      header.appendChild(title);
+      header.appendChild(closeButton);
+      // 본문
+      const infoDiv = document.createElement('div');
+      infoDiv.style.margin = '24px 0 12px 0';
+      infoDiv.style.fontSize = '16px';
+      infoDiv.style.color = '#374151';
+      infoDiv.innerHTML =
+        `<b>버전:</b> v${version}<br><br>` +
+        `본 프로그램은 <b>유저 비공식 확장</b>입니다.<br><br>` +
+        `문의: 인게임 메일 <b>도히님</b>` +
+        `<hr style='margin:18px 0 10px 0; border:0; border-top:1.5px solid #e5e7eb;'>`;
+
+      // 기여자 목록 표 추가
+      const contributorTable = document.createElement('table');
+      contributorTable.style.cssText = 'width:100%;margin-top:24px;border-collapse:collapse;font-size:14px;';
+      const thead = document.createElement('thead');
+      const headRow = document.createElement('tr');
+      ['항목','닉네임','url'].forEach(h => {
+        const th = document.createElement('th');
+        th.textContent = h;
+        th.style.cssText = 'padding:6px 2px;background:#f5f5f5;border:1px solid #ddd;text-align:center;font-weight:bold;color:#222;';
+        headRow.appendChild(th);
+      });
+      thead.appendChild(headRow);
+      contributorTable.appendChild(thead);
+      const tbody = document.createElement('tbody');
+      // 예시 데이터 (추후 추가/수정 가능)
+      [
+        { role: '장비해방', nick: '수고하세요', url: 'https://docs.google.com/spreadsheets/d/15E8F_qSxKPMqsL_ulfwm739PTjBLO64qN8jWuDZe7ng/edit?gid=468768394#gid=468768394', urlinfo: '해방정보 시트' },
+        { role: '어빌리티', nick: '먹물', url: 'https://lanis.me/board/view/6841a029abffb8c821c43e85', urlinfo: '어빌리티 게시글' },
+        { role: '위키운영', nick: '크루즈', url: 'https://laniswiki.lovestoblog.com/', urlinfo: '위키 바로가기' }
+      ].forEach(row => {
+        const tr = document.createElement('tr');
+        [row.role, row.nick, row.url].forEach((v, i) => {
+          const td = document.createElement('td');
+          if (i === 1) { // 닉네임
+            const a = document.createElement('a');
+            a.href = `https://lanis.me/users/${encodeURIComponent(v)}`;
+            a.textContent = v;
+            a.style.color = '#3366cc';
+            td.appendChild(a);
+          } else if (i === 2) { // url
+            const a = document.createElement('a');
+            a.href = v;
+            a.textContent = row.urlinfo || '바로가기';
+            a.style.color = '#3366cc';
+            a.style.textDecoration = 'underline';
+            td.appendChild(a);
+          } else {
+            td.textContent = v;
+          }
+          td.style.cssText = 'padding:5px 2px;border:1px solid #eee;text-align:center;word-break:break-all;color:#222;max-width:120px;';
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      contributorTable.appendChild(tbody);
+      content.appendChild(header);
+      content.appendChild(infoDiv);
+      // 3단행 꾸밈줄: 1,3줄 밧줄5개(무지개), 2줄 밧줄2+왕관+기여자+왕관+밧줄2(중앙정렬, 줄바꿈)
+      const decoDiv = document.createElement('div');
+      decoDiv.style.textAlign = 'center';
+      decoDiv.style.margin = '16px 0 8px 0';
+      decoDiv.style.fontWeight = 'bold';
+      decoDiv.style.letterSpacing = '2px';
+      decoDiv.innerHTML = `
+        <span style=\"background:linear-gradient(90deg,red,orange,yellow,green,blue,indigo,violet);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:18px;\">〰 〰 〰 〰 〰 〰 〰 〰 〰</span><br>
+        <span style=\"background:linear-gradient(90deg,red,orange,yellow,green,blue,indigo,violet);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:18px;\">〰 〰</span>
+        <span style=\"font-size:18px;\">👑</span>
+        <span style=\"font-size:15px;vertical-align:middle;color:#222;\">기여자</span>
+        <span style=\"font-size:18px;\">👑</span>
+        <span style=\"background:linear-gradient(90deg,red,orange,yellow,green,blue,indigo,violet);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:18px;\">〰 〰</span><br>
+        <span style=\"background:linear-gradient(90deg,red,orange,yellow,green,blue,indigo,violet);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:18px;\">〰 〰 〰 〰 〰 〰 〰 〰 〰</span>
+      `;
+      content.appendChild(decoDiv); // 표 위에 꾸밈줄 추가
+      content.appendChild(contributorTable);
+      modal.appendChild(content);
+      document.body.appendChild(modal);
+      setTimeout(() => { modal.classList.add('show'); }, 10);
+      // ESC, 외부 클릭 닫기
+      const handleEsc = (e) => { if (e.key === 'Escape') { modal.remove(); document.removeEventListener('keydown', handleEsc); } };
+      document.addEventListener('keydown', handleEsc);
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+    }
   }
 
 

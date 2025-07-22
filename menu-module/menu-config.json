@@ -19,15 +19,27 @@
         "title": "설정 메뉴"
       }
     ],
-    "itemGuide": {
+            "itemGuide": {
       "subMenu": {
         "title": "아이템 도감",
         "items": [
           {
             "id": "openGuide",
             "icon": "📖",
-            "text": "도감 열기",
-            "title": "아이템 도감 열기"
+            "text": "레어 장비 도감",
+            "title": "레어 장비 도감 열기"
+          },
+          {
+            "id": "enchantInfo",
+            "icon": "🔧",
+            "text": "장비 해방 정보",
+            "title": "장비 해방 정보 보기"
+          },
+          {
+            "id": "abilityInfo",
+            "icon": "🧬",
+            "text": "어빌리티 정보",
+            "title": "어빌리티 정보 보기"
           },
           {
             "id": "userSearch",
