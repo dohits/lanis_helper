@@ -411,7 +411,13 @@ class MenuManager {
         box-sizing: border-box;
       `;
       btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // 토글 상태 변경
+        const wasActive = btn.classList.contains('active');
         btn.classList.toggle('active');
+        
         // 스타일 동기화
         if (btn.classList.contains('active')) {
           btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
@@ -422,6 +428,8 @@ class MenuManager {
           btn.style.color = '#667eea';
           btn.style.border = '2px solid #667eea';
         }
+        
+        // 필터링 실행
         this.filterItems();
       });
       attributeButtons.appendChild(btn);
@@ -583,40 +591,6 @@ class MenuManager {
       if (abilitySearchInput) {
         abilitySearchInput.addEventListener('input', () => this.filterItems());
       }
-      
-      // 속성 버튼 이벤트
-      const attributeButtons = document.querySelectorAll('.attribute-btn');
-      attributeButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          btn.classList.toggle('active');
-          this.filterItems();
-        });
-      });
-      
-      // 메인 카테고리 버튼 이벤트
-      const mainCategories = document.querySelectorAll('.main-category');
-      mainCategories.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          // 활성 상태 변경
-          mainCategories.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          
-          const category = btn.getAttribute('data-category');
-          this.handleMainCategoryChange(category);
-        });
-      });
-      
-      // 서브 카테고리 버튼 이벤트
-      const subCategories = document.querySelectorAll('.sub-category');
-      subCategories.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          // 활성 상태 변경
-          subCategories.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          
-          this.filterItems();
-        });
-      });
     }, 100);
   }
 
@@ -831,7 +805,10 @@ class MenuManager {
       
       // 속성 매칭 (활성화된 속성이 없으면 모든 아이템 표시, 있으면 해당 속성만)
       const matchesAttribute = activeAttributes.length === 0 || 
-        activeAttributes.some(attr => itemAttributes.includes(attr));
+        activeAttributes.some(attr => {
+          // 속성명이 정확히 일치하는지 확인
+          return itemAttributes.includes(attr) || itemAttributes.includes(attr.toLowerCase());
+        });
       
       if (matchesSearch && matchesAbility && matchesAttribute && matchesMainCategory && matchesSubCategory) {
         item.style.display = 'block';
