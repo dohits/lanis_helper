@@ -55,10 +55,79 @@ async function fetchEnchantInfo(type = 'armor') {
   }
 }
 
+// 구글 시트에서 어빌리티 정보 데이터를 가져오는 함수
+// 참고: exam/ability-info-example.js에서 데이터 구조 및 예시 확인
+async function fetchAbilityInfo() {
+  try {
+    const sheetId = '1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo';
+    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
+    
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const csv = await response.text();
+    
+    // robust CSV 파싱 (쉼표, 줄바꿈, 따옴표 모두 처리)
+    function parseCSV(str) {
+      const rows = [];
+      let row = [];
+      let val = '';
+      let inQuotes = false;
+      let i = 0;
+      while (i < str.length) {
+        const c = str[i];
+        if (inQuotes) {
+          if (c === '"') {
+            if (str[i+1] === '"') { val += '"'; i++; }
+            else inQuotes = false;
+          } else {
+            val += c;
+          }
+        } else {
+          if (c === '"') inQuotes = true;
+          else if (c === ',') { row.push(val); val = ''; }
+          else if (c === '\n' || c === '\r') {
+            if (val !== '' || row.length > 0) { row.push(val); rows.push(row); row = []; val = ''; }
+            if (c === '\r' && str[i+1] === '\n') i++;
+          } else {
+            val += c;
+          }
+        }
+        i++;
+      }
+      if (val !== '' || row.length > 0) { row.push(val); rows.push(row); }
+      return rows;
+    }
+    
+    const rows = parseCSV(csv);
+    const header = rows[0].map(h => h.trim());
+    const data = rows.slice(1).map(cols => {
+      const obj = {};
+      header.forEach((h, i) => obj[h] = (cols[i]||'').trim());
+      return obj;
+    }).filter(row => row['직업'] && row['어빌리티명'] && row['효과']);
+    
+    return { success: true, data };
+  } catch (error) {
+    console.error('[Background] 어빌리티 정보 데이터 가져오기 실패:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'FETCH_ENCHANT_INFO') {
     const type = message.enchantType || 'armor';
     fetchEnchantInfo(type).then(result => {
+      sendResponse(result);
+    });
+    return true; // 비동기 응답을 위해 true 반환
+  }
+  
+  if (message.type === 'FETCH_ABILITY_INFO') {
+    fetchAbilityInfo().then(result => {
       sendResponse(result);
     });
     return true; // 비동기 응답을 위해 true 반환

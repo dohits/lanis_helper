@@ -331,13 +331,5 @@ class SettingsModalManager {
   }
 }
 
-// 전역 인스턴스 생성 (개선된 버전)
-
-// DOM이 준비된 후에 인스턴스 생성
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    window.settingsModalManager = new SettingsModalManager();
-  });
-} else {
-  window.settingsModalManager = new SettingsModalManager();
-} 
+// ES6 모듈로 export
+export default SettingsModalManager; 

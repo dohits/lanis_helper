@@ -16,10 +16,46 @@ class MenuManager {
 
   async loadMenuConfig() {
     try {
-      const response = await fetch(chrome.runtime.getURL('menu-module/menu-config.json'));
-      this.menuConfig = await response.json();
+      // Chrome 확장 프로그램의 web_accessible_resources를 통해 로드
+      const configUrl = chrome.runtime.getURL('menu-config.json');
+      console.log('메뉴 설정 로드 시도:', configUrl);
+      
+      const response = await fetch(configUrl);
+      if (response.ok) {
+        this.menuConfig = await response.json();
+        console.log('메뉴 설정 로드 성공');
+        return;
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      // 모든 경로 실패 시 기본 설정 사용
+      console.warn('모든 메뉴 설정 경로 실패, 기본 설정 사용');
+      this.menuConfig = {
+        mainMenu: {
+          button: {
+            icon: "⚡",
+            text: "",
+            title: "Lanis Helper 메뉴"
+          },
+          items: [
+            {
+              id: "itemGuide",
+              icon: "📚",
+              text: "아이템 도감",
+              title: "아이템 도감"
+            },
+            {
+              id: "settings",
+              icon: "⚙️",
+              text: "설정",
+              title: "설정 메뉴"
+            }
+          ]
+        }
+      };
     } catch (error) {
-      // 에러 발생 시 기본설정 사용하지 않고 렌더링도 하지 않음
+      console.error('메뉴 설정 로드 실패:', error);
       this.menuConfig = null;
       return;
     }
@@ -27,11 +63,21 @@ class MenuManager {
 
   async loadSettings() {
     try {
-      this.settings = await utils.SettingsManager.getSettings({
-        profileLink: true,
-        showItemStats: true
-      });
+      // utils가 전역에서 사용 가능한지 확인
+      if (typeof window !== 'undefined' && window.utils) {
+        this.settings = await window.utils.SettingsManager.getSettings({
+          profileLink: true,
+          showItemStats: true
+        });
+      } else {
+        // utils가 없으면 기본 설정 사용
+        this.settings = { 
+          profileLink: true, 
+          showItemStats: true 
+        };
+      }
     } catch (error) {
+      console.warn('설정 로드 실패, 기본값 사용:', error);
       this.settings = { 
         profileLink: true, 
         showItemStats: true 
@@ -1516,50 +1562,18 @@ class MenuManager {
     document.addEventListener('keydown', handleEsc);
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
 
-    // 구글 시트에서 데이터 fetch (CSV)
-    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo/export?format=csv';
-    fetch(SHEET_CSV_URL)
-      .then(res => res.text())
-      .then(csv => {
-        // robust CSV 파서 (셀 안의 쉼표, 줄바꿈, 따옴표 모두 처리)
-        function parseCSV(str) {
-          const rows = [];
-          let row = [];
-          let val = '';
-          let inQuotes = false;
-          let i = 0;
-          while (i < str.length) {
-            const c = str[i];
-            if (inQuotes) {
-              if (c === '"') {
-                if (str[i+1] === '"') { val += '"'; i++; }
-                else inQuotes = false;
-              } else {
-                val += c;
-              }
-            } else {
-              if (c === '"') inQuotes = true;
-              else if (c === ',') { row.push(val); val = ''; }
-              else if (c === '\n' || c === '\r') {
-                if (val !== '' || row.length > 0) { row.push(val); rows.push(row); row = []; val = ''; }
-                // \r\n 처리
-                if (c === '\r' && str[i+1] === '\n') i++;
-              } else {
-                val += c;
-              }
-            }
-            i++;
-          }
-          if (val !== '' || row.length > 0) { row.push(val); rows.push(row); }
-          return rows;
-        }
-        const rows = parseCSV(csv);
-        const header = rows[0].map(h => h.trim());
-        const data = rows.slice(1).map(cols => {
-          const obj = {};
-          header.forEach((h, i) => obj[h] = (cols[i]||'').trim());
-          return obj;
-        }).filter(row => row['직업'] && row['어빌리티명']);
+    // background.js에서 어빌리티 정보 데이터 가져오기
+    try {
+      const result = await new Promise((resolve) => {
+        chrome.runtime.sendMessage({ 
+          type: 'FETCH_ABILITY_INFO'
+        }, (response) => {
+          resolve(response);
+        });
+      });
+      
+      if (result && result.success && result.data) {
+        const data = result.data;
 
         // 직업 목록 추출
         const jobs = Array.from(new Set(data.map(row => row['직업'])));
@@ -1638,10 +1652,14 @@ class MenuManager {
         renderTable();
         updateToggles();
         searchInput.oninput = () => renderTable();
-      })
-      .catch(err => {
+      } else {
+        // 데이터가 없거나 오류인 경우
         tableContainer.innerHTML = '<div style="color:#f44336;text-align:center;padding:40px;">데이터를 불러오지 못했습니다.</div>';
-      });
+      }
+    } catch (error) {
+      console.error('[MenuManager] 어빌리티 정보 데이터 가져오기 실패:', error);
+      tableContainer.innerHTML = '<div style="color:#f44336;text-align:center;padding:40px;">데이터를 불러오지 못했습니다.</div>';
+    }
   }
 
   // 프로그램 정보 모달 복원
@@ -1776,22 +1794,5 @@ class MenuManager {
 
 }
 
-// 전역 인스턴스 생성 (개선된 버전)
-// console.log('MenuManager 클래스 정의 완료');
-// console.log('MenuManager 인스턴스 생성 시작');
-// console.log('현재 window 객체:', Object.keys(window).filter(key => key.includes('Manager') || key.includes('Engine')));
-
-// DOM이 준비된 후에 인스턴스 생성
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    // console.log('DOM 로드 완료 - MenuManager 인스턴스 생성');
-    window.menuManager = new MenuManager();
-    // console.log('MenuManager 인스턴스 생성 완료:', window.menuManager);
-    // console.log('생성 후 window 객체:', Object.keys(window).filter(key => key.includes('Manager') || key.includes('Engine')));
-  });
-} else {
-  // console.log('DOM 이미 로드됨 - MenuManager 인스턴스 즉시 생성');
-  window.menuManager = new MenuManager();
-  // console.log('MenuManager 인스턴스 생성 완료:', window.menuManager);
-  // console.log('생성 후 window 객체:', Object.keys(window).filter(key => key.includes('Manager') || key.includes('Engine')));
-} 
+// ES6 모듈로 export
+export default MenuManager; 

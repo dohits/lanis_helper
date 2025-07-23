@@ -1124,14 +1124,5 @@ class SearchEngine {
   }
 }
 
-// SearchEngine 클래스를 전역으로 노출
-window.SearchEngine = SearchEngine;
-
-// 전역 인스턴스 생성
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    window.searchEngine = new SearchEngine();
-  });
-} else {
-  window.searchEngine = new SearchEngine(); 
-} 
+// ES6 모듈로 export
+export default SearchEngine; 

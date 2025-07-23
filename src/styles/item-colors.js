@@ -48,9 +48,5 @@ const ITEM_COLORS = {
   }
 };
 
-// 전역에서 사용할 수 있도록 export
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = ITEM_COLORS;
-} else {
-  window.ITEM_COLORS = ITEM_COLORS;
-} 
+// ES6 모듈로 export
+export default ITEM_COLORS; 

@@ -1,33 +1,52 @@
 # Lanis Helper - 프로젝트 개요 (개발자용)
 
-**현재 버전**: 1.5.1  
-**최종 업데이트**: 2025년 1월
+**현재 버전**: 1.5.2 (Vite 마이그레이션 완료)  
+**최종 업데이트**: 2025년 7월 23일  
+**빌드 시스템**: Vite + ES6 모듈
 
-## 📁 프로젝트 구조
+## 📁 프로젝트 구조 (Vite 마이그레이션 후)
 
 ```
 lanis_helper/
-├── manifest.json              # 확장프로그램 매니페스트
-├── background.js              # 백그라운드 서비스 워커
-├── content.js                 # 메인 콘텐츠 스크립트
-├── popup.html                 # 팝업 UI
-├── popup.js                   # 팝업 로직
-├── popup.css                  # 팝업 스타일
-├── styles.css                 # 전역 스타일
-├── item-colors.js             # 아이템 색상 관리 시스템
-├── item-stats.js              # 아이템 감정 범위 표기 관리자
-├── search-engine.js           # 검색 엔진 및 아이템 도감
-├── user-profile.js            # 사용자 프로필 링크 관리자
-├── rare-items.json            # 레어 아이템 데이터
-├── menu-module/               # 메뉴 모듈
-│   ├── menu-manager.js        # 메뉴 관리자
+├── src/                       # 소스 코드 (Vite 빌드)
+│   ├── content/               # 콘텐츠 스크립트
+│   │   ├── index.js           # 메인 콘텐츠 스크립트
+│   │   ├── menu-module/       # 메뉴 모듈
+│   │   │   ├── menu-manager.js        # 메뉴 관리자
+│   │   │   ├── menu-config.json       # 메뉴 설정
+│   │   │   ├── settings-modal.js      # 설정 모달
+│   │   │   └── buttons/               # 버튼 모듈들
+│   │   ├── search-engine.js   # 검색 엔진 및 아이템 도감
+│   │   ├── item-stats.js      # 아이템 감정 범위 표기 관리자
+│   │   ├── user-profile.js    # 사용자 프로필 링크 관리자
+│   │   └── utils.js           # 공유 유틸리티
+│   ├── popup/                 # 팝업 UI
+│   │   ├── popup.html         # 팝업 HTML
+│   │   └── index.js           # 팝업 로직
+│   ├── background/            # 백그라운드 스크립트
+│   │   └── index.js           # 백그라운드 서비스 워커
+│   ├── styles/                # 스타일
+│   │   └── global.css         # 전역 스타일
+│   └── shared/                # 공유 리소스
+│       └── constants.js       # 상수 정의
+├── dist/                      # 빌드 결과물
+│   ├── manifest.json          # 확장프로그램 매니페스트
+│   ├── assets/                # 번들된 스크립트
+│   ├── popup.html             # 팝업 UI
+│   ├── styles.css             # 전역 스타일
 │   ├── menu-config.json       # 메뉴 설정
-│   └── settings-modal.js      # 설정 모달
-├── img/                       # 이미지 리소스
-└── exam/                      # 예시 파일
-    ├── enchant-info-armor-example.js  # 방어구 해방 정보 예시
-    ├── enchant-info-weapon-example.js # 무기 해방 정보 예시 (시트 미존재)
-    └── enchant-info-accessory-example.js # 장신구 해방 정보 예시 (시트 미존재)
+│   └── rare-items.json        # 레어 아이템 데이터
+├── public/                    # 정적 리소스
+│   ├── img/                   # 이미지 리소스
+│   └── exam/                  # 예시 파일
+│       ├── enchant-info-armor-example.js
+│       ├── enchant-info-weapon-example.js
+│       └── enchant-info-accessory-example.js
+├── scripts/                   # 빌드 스크립트
+│   └── update-manifest.cjs    # 매니페스트 업데이트 스크립트
+├── vite.config.js             # Vite 설정
+├── package.json               # 프로젝트 설정
+└── README.md                  # 사용자 문서
 ```
 
 ## 🔧 핵심 모듈 설명
@@ -187,14 +206,53 @@ const ITEM_COLORS = {
 2. 이벤트 리스너 효율적 관리
 3. 메모리 누수 방지
 
+## 🚀 Vite 마이그레이션 완료
+
+### 마이그레이션 개요
+- **기존**: 전역 변수 기반 구조
+- **현재**: ES6 모듈 + Vite 빌드 시스템
+- **완료일**: 2025년 7월 23일
+
+### 주요 변경사항
+1. **모듈화**: 모든 스크립트를 ES6 모듈로 변환
+2. **빌드 시스템**: Vite를 통한 번들링 및 최적화
+3. **파일 구조**: src/ 폴더 기반으로 재구성
+4. **자동화**: manifest.json, popup.html 자동 업데이트
+
+### 빌드 결과
+```bash
+✓ 11 modules transformed.
+dist/assets/background-oFEbL7Ch.js   1.89 kB │ gzip:  1.02 kB
+dist/assets/popup-KTNEYWro.js        7.35 kB │ gzip:  2.54 kB
+dist/assets/content-E9HtmiTM.js     78.59 kB │ gzip: 18.66 kB
+```
+
+### 개발 환경
+```bash
+# 개발 빌드
+npm run dev
+
+# 프로덕션 빌드  
+npm run build
+```
+
+### 모듈 구조
+- **content/index.js**: 메인 콘텐츠 스크립트 (모든 매니저 통합)
+- **menu-module/**: 메뉴 시스템 모듈
+- **utils.js**: 공유 유틸리티
+- **background/index.js**: 백그라운드 서비스 워커
+- **popup/index.js**: 팝업 로직
+
 ## 🔍 디버깅
 
 ### 주요 로그 포인트
 - `ItemStatsManager`: 아이템 매칭, 등급 계산
 - 색상 시스템: 색상 매핑 오류
 - 팝오버 위치 조정: 위치 계산 오류
+- **Vite 빌드**: 번들링 과정 및 오류
 
 ### 개발자 도구 활용
 - Chrome DevTools → Console
 - Elements 탭에서 DOM 구조 확인
-- Network 탭에서 데이터 로드 확인 
+- Network 탭에서 데이터 로드 확인
+- **Vite DevTools**: 빌드 과정 모니터링 

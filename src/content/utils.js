@@ -127,12 +127,5 @@ const utils = {
   setAttributes
 };
 
-// 전역 객체에 유틸리티 추가 (기존 코드와의 호환성을 위해)
-if (typeof window !== 'undefined') {
-  window.utils = utils;
-}
-
-// 모듈 시스템 지원
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = utils;
-} 
+// ES6 모듈로 export
+export default utils; 

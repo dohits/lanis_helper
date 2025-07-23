@@ -1,3 +1,6 @@
+// utils 모듈 import
+import utils from './utils.js';
+
 // 설정 창 제어 로직
 document.addEventListener('DOMContentLoaded', function() {
   // 설정 로드 (async 함수이므로 .then() 사용)
@@ -206,6 +209,24 @@ function closeItemsModal() {
   // 이 함수는 더 이상 사용하지 않지만, 기존 코드와의 호환성을 위해 남겨둠
 }
 
+// 현재 content script 파일명 가져오기
+function getContentScriptFile() {
+  try {
+    // manifest.json에서 content script 파일명 동적 가져오기 (동기적)
+    const manifest = chrome.runtime.getManifest();
+    if (manifest.content_scripts && manifest.content_scripts[0] && manifest.content_scripts[0].js) {
+      return Promise.resolve(manifest.content_scripts[0].js[0]);
+    } else {
+      // fallback: 기본 파일명
+      return Promise.resolve('assets/content-CkqkcPsI.js');
+    }
+  } catch (error) {
+    // 오류 시 fallback
+    console.warn('manifest 가져오기 실패, 기본 파일명 사용:', error);
+    return Promise.resolve('assets/content-CkqkcPsI.js');
+  }
+}
+
 // API 수집 시작
 function startCrawling() {
   const button = document.getElementById('crawlButton');
@@ -260,9 +281,11 @@ function startCrawling() {
         }
       }).catch(function(error) {
         // content script가 로드되지 않았으면 강제로 주입
-        return chrome.scripting.executeScript({
-          target: { tabId: tabs[0].id },
-          files: ['content.js']
+        return getContentScriptFile().then(contentScriptFile => {
+          return chrome.scripting.executeScript({
+            target: { tabId: tabs[0].id },
+            files: [contentScriptFile]
+          });
         }).then(function() {
           // 주입 후 잠시 대기
           return new Promise(resolve => setTimeout(resolve, 1000));
@@ -276,14 +299,20 @@ function startCrawling() {
         // 타임아웃 해제
         clearTimeout(timeoutId);
         
+        console.log('레어 아이템 수집 응답:', response); // 디버깅용
+        
         if (response && response.success) {
-          if (response.message && response.message.includes('기존 데이터 사용')) {
-            status.textContent = `${response.message} (${response.count}개 아이템)`;
+          const message = response.message || '수집 완료';
+          const count = response.count || response.data?.length || 0;
+          
+          if (message.includes('기존 데이터 사용')) {
+            status.textContent = `${message} (${count}개 아이템)`;
           } else {
-            status.textContent = `${response.message} (${response.count}개 아이템)`;
+            status.textContent = `${message} (${count}개 아이템)`;
           }
         } else {
-          status.textContent = `수집 실패: ${response.message || '알 수 없는 오류'}`;
+          const errorMessage = response?.message || response?.error || '알 수 없는 오류';
+          status.textContent = `수집 실패: ${errorMessage}`;
         }
       }).catch(function(error) {
         // 타임아웃 해제

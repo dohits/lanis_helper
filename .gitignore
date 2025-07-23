@@ -11,9 +11,29 @@ Thumbs.db
 *.swp
 *.swo
 
+# Node.js
+node_modules/
+
+# Vite 빌드 산출물
+dist/
+.vite/
+
 # 로그 파일
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# 임시 파일
+# 임시/백업 파일
 *.tmp
-*.temp 
+*.temp
+*.bak
+*.old
+
+# 테스트/커버리지
+coverage/
+
+# 환경설정
+.env
+.env.* 

@@ -770,11 +770,5 @@ class ItemStatsManager {
   }
 }
 
-// 전역 인스턴스 생성
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    window.itemStatsManager = new ItemStatsManager();
-  });
-} else {
-  window.itemStatsManager = new ItemStatsManager();
-}
+// ES6 모듈로 export
+export default ItemStatsManager;

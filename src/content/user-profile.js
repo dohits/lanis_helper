@@ -140,13 +140,5 @@ class UserProfileManager {
   }
 }
 
-// 전역 인스턴스 생성 (개선된 버전)
-// 모든 console.log 등 콘솔 출력 코드 삭제
-// DOM이 준비된 후에 인스턴스 생성
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    window.userProfileManager = new UserProfileManager();
-  });
-} else {
-  window.userProfileManager = new UserProfileManager();
-} 
+// ES6 모듈로 export
+export default UserProfileManager; 

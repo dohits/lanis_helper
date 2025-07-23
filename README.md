@@ -60,10 +60,16 @@ Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 ## 🛠️ 개발 정보
 
 - **Manifest Version**: 3
-- **현재 버전**: 1.5.1 (이전버전 1.5.0) (현재 마켓 릴리즈 1.3.1)
+- **현재 버전**: 1.5.2 (Vite 마이그레이션 완료 - 2025년 7월 23일)
+- **빌드 시스템**: Vite + ES6 모듈
 - **지원 브라우저**: Chrome, (모바일: Mises 브라우저)
-- **권한**: storage, tabs
+- **권한**: storage, tabs, scripting
+- **호스트 권한**: lanis.me, laniswiki.lovestoblog.com, docs.google.com
 - 본 확장 프로그램은 클라이언트 사이드에서만 동작합니다.
+
+## 📚 개발자 문서
+
+개발자를 위한 상세한 문서는 [docs/](./docs/) 폴더를 참조하세요.
 
 ## 📞 문의
 
