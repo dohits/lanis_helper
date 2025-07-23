@@ -6,8 +6,12 @@ Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 
 ## 🚀 설치 방법
 
-- 릴리즈 파일 다운로드 링크 
-- 1.5.2 : https://github.com/user-attachments/files/21381210/lanis_helper_1.5.2.zip
+크롬 웹스토어 (1.4.0) : https://chromewebstore.google.com/detail/lanis-helper/ciemdjbfifddfgbdlfimomejgpnfonjd?authuser=0&hl=ko
+
+- 최신릴리즈 (1.5.2) : https://github.com/user-attachments/files/21381210/lanis_helper_1.5.2.zip
+
+
+최신 릴리즈 다운 후 설치방법 (크롬 웹스토어는 해당 없음)
 
 ### PC (Chrome 브라우저)
 
