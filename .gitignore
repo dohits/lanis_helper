@@ -37,3 +37,5 @@ coverage/
 # 환경설정
 .env
 .env.* 
+program_info_light.md
+PROGRAM_INFO_LIGHT.md 

@@ -1,5 +1,4 @@
 // 메뉴 관리자
-const EXTENSION_VERSION = '1.5.0';
 class MenuManager {
   constructor() {
     this.menuConfig = null;
@@ -1663,12 +1662,18 @@ class MenuManager {
   }
 
   // 프로그램 정보 모달 복원
-  openProgramInfoModal() {
+  async openProgramInfoModal() {
     // 기존 모달 제거
     const existingModal = document.querySelector('.program-info-modal');
     if (existingModal) existingModal.remove();
 
-    showModal(EXTENSION_VERSION);
+    // manifest에서 버전 동적 추출
+    let version = 'unknown';
+    try {
+      const manifest = chrome.runtime.getManifest();
+      version = manifest.version || 'unknown';
+    } catch (e) {}
+    showModal(version);
 
     function showModal(version) {
       const modal = document.createElement('div');

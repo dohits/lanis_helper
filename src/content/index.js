@@ -315,6 +315,13 @@ function startInitialization() {
     managers.menuManager = new MenuManager();
     managers.settingsModalManager = new SettingsModalManager();
 
+    // === 전역 window에 직접 할당 (토글 등 menu-manager.js 호환) ===
+    window.userProfileManager = managers.userProfileManager;
+    window.itemStatsManager = managers.itemStatsManager;
+    window.menuManager = managers.menuManager;
+    window.settingsModalManager = managers.settingsModalManager;
+    // ==========================================================
+
     // DOM이 준비되면 초기화 실행
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initializeExtension);
