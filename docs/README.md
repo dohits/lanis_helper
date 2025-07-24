@@ -1,4 +1,4 @@
-# Lanis Helper - 개발자 문서
+# Lanis Helper 개발자 문서 (v1.6.0)
 
 이 폴더는 Lanis Helper Chrome Extension의 개발자용 문서들을 포함합니다.
 

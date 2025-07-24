@@ -6,7 +6,7 @@ Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 
 - 크롬 웹스토어 (1.4.0) : [이동하기](https://chromewebstore.google.com/detail/lanis-helper/ciemdjbfifddfgbdlfimomejgpnfonjd?authuser=0&hl=ko)
 
-- 최신릴리즈 (1.5.2) : [다운받기](https://github.com/user-attachments/files/21381210/lanis_helper_1.5.2.zip)
+- 최신릴리즈 (1.6.0) : [다운받기](https://github.com/user-attachments/files/21401797/lanis_helper_1.6.0.zip)
 
 - 깃허브 저장소 : [이동하기](https://github.com/dohits/lanis_helper?tab=readme-ov-file)
 
@@ -67,22 +67,19 @@ Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 - 어빌리티명/효과로 실시간 검색 가능, 직업별 토글 필터 제공
 - 구글 시트에서 실시간 데이터 연동
 
+### 시세 차트(그래프) 기능
+- 아이템명을 검색하면 최근 거래 시세가 그래프로 표시됩니다.
+- 최근 거래, 평균가, 거래별 가격 변동을 한눈에 확인할 수 있습니다.
+
 ## 🛠️ 개발 정보
 
 - **Manifest Version**: 3
-- **현재 버전**: 1.5.2 (Vite 마이그레이션 완료 - 2025년 7월 23일)
+- **현재 버전**: 1.6.0
 - **빌드 시스템**: Vite + ES6 모듈
 - **지원 브라우저**: Chrome, (모바일: Mises 브라우저)
 - **권한**: storage, tabs, scripting
 - **호스트 권한**: lanis.me, laniswiki.lovestoblog.com, docs.google.com
 - 본 확장 프로그램은 클라이언트 사이드에서만 동작합니다.
-
-### 최근 업데이트 (v1.5.2)
-- **Vite 마이그레이션 완료**: 빌드 시스템을 Vite로 전환하여 성능 향상
-- **아이템 스카우터 개선**: CSS 선택자 유연성 향상으로 다양한 HTML 구조에서 정상 작동
-- **초기화 순서 최적화**: 아이템 스카우터 우선 초기화로 안정성 향상
-- **모듈 import 문제 해결**: `ITEM_COLORS` import 누락으로 인한 ReferenceError 수정
-- **디버깅 개선**: 콘솔 로그 추가로 문제 추적 용이성 향상
 
 ## 📚 개발자 문서
 
@@ -94,6 +91,13 @@ Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 닉네임 : 도히님
 
 ## 🖼️ 사용 예시
+
+### 시세 차트(트레이드 그래프) 예시
+
+![시세 차트 예시](public/img/trade_chart.jpg)
+
+- 아이템명을 검색하면 최근 거래 시세가 그래프로 표시됩니다.
+- 최근 거래, 평균가, 거래별 가격 변동을 한눈에 확인할 수 있습니다.
 
 ### 레어 아이템 정보 툴팁 예시
 
