@@ -9,8 +9,8 @@ export const SHEET_IDS = {
 
 // GID 매핑
 export const GID_MAP = {
-  'armor': '468768394',  // 장비해방(방어구) 시트 GID
-  'weapon': '999999999', // 무기 시트 (미존재)
+  'armor': '468768394',    // 장비해방(방어구) 시트 GID
+  'weapon': '337738977',   // 장비해방(무기) 시트 GID
   'accessory': '999999998' // 장신구 시트 (미존재)
 };
 

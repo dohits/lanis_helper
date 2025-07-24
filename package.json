@@ -18,5 +18,8 @@
     "terser": "^5.43.1",
     "vite": "^7.0.5",
     "vite-plugin-chrome-extension": "^0.0.7"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.0"
   }
 }

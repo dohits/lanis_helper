@@ -27,13 +27,8 @@ function updateManifest() {
   // content_scripts 업데이트
   if (manifest.content_scripts && manifest.content_scripts[0]) {
     manifest.content_scripts[0].js = [
-      assets.utils,
-      assets.styles,
-      assets['user-profile'],
-      assets['item-stats'],
-      assets['search-engine'],
       assets.content
-    ].filter(Boolean); // undefined 값 제거
+    ].filter(Boolean); // 단일 번들 파일만 사용
   }
   
   // background service worker 업데이트

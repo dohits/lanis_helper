@@ -13,14 +13,30 @@
 - [x] 성능 최적화 (번들 크기 감소)
 - [x] 코드 구조 개선
 - [x] 자동화된 빌드 프로세스
+- [x] 아이템 스카우터 문제 해결
 
 ### 빌드 결과
 ```bash
-✓ 11 modules transformed.
-dist/assets/background-oFEbL7Ch.js   1.89 kB │ gzip:  1.02 kB
-dist/assets/popup-KTNEYWro.js        7.35 kB │ gzip:  2.54 kB
-dist/assets/content-E9HtmiTM.js     78.59 kB │ gzip: 18.66 kB
+✓ 16 modules transformed.
+dist/assets/background-oFEbL7Ch.js    1.89 kB │ gzip:  1.02 kB
+dist/assets/popup-KTNEYWro.js         7.35 kB │ gzip:  2.54 kB
+dist/assets/content-_rELxosm.js      85.49 kB │ gzip: 20.78 kB
+dist/assets/auto-DvwitU8W.js        206.00 kB │ gzip: 69.31 kB
 ```
+
+### 아이템 스카우터 문제 해결 (2025년 7월 23일)
+- **문제**: 마이그레이션 후 아이템 스카우터가 정상작동하지 않음
+- **원인**: 
+  - CSS 선택자가 너무 구체적이어서 HTML 구조 변경 시 작동하지 않음
+  - 초기화 순서 문제로 설정이 제대로 로드되지 않음
+  - 매니페스트 업데이트 스크립트의 content_scripts 설정 문제
+  - `ITEM_COLORS` 모듈 import 누락으로 ReferenceError 발생
+- **해결책**:
+  - CSS 선택자를 더 유연하게 변경 (`[class*="css-"]` 패턴 사용)
+  - 초기화 순서 개선 (아이템 스카우터 우선 초기화)
+  - 매니페스트 업데이트 스크립트 수정 (단일 번들 파일 사용)
+  - `item-stats.js`에 `ITEM_COLORS` import 추가
+  - 디버깅 로그 추가로 문제 추적 개선
 
 ---
 
@@ -302,3 +318,14 @@ lanis_helper/
 ---
 
 **마이그레이션 완료 후**: v1.5.2 릴리즈 예정 (기술적 개선, 사용자 변경 없음) 
+
+## 2025-07 최신 반영
+
+- 아이템 시세 그래프 모달 UI/UX 대폭 개선 (모달 80% 확장, 차트 영역 최대화, flex 레이아웃)
+- Chart.js maintainAspectRatio: false, min-height 등으로 차트가 항상 꽉 차게 표시
+- 가격 90,000 이하 데이터는 시세 계산에서 제외
+- robust CSV 파싱(쉼표/따옴표 포함 필드)
+- 무기해방 시트(GID: 337738977) 연동, 방어구/무기 모두 지원
+- 장비해방(방어구/무기) 시트 열 구조 변경(F~J열)
+- info 영역 텍스트: 검색어, 최근 판매가, 평균 판매가를 각각 한 줄씩 줄바꿈하여 표시
+- 라벨링: "최근 거래", "n건 이전 거래" 등으로 직관적 표기 

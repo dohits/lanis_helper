@@ -258,19 +258,33 @@ class MenuManager {
     
     const subMenuConfig = this.menuConfig.mainMenu.itemGuide.subMenu;
     
+    // [신규] 아이템 시세 조회 버튼 추가 (레어 장비 도감 위에)
+    const priceButton = document.createElement('button');
+    priceButton.className = 'main-menu-item sub-menu-item';
+    priceButton.innerHTML = '💹 아이템 시세 조회';
+    priceButton.title = '구글 시트 기반 아이템 시세 그래프';
+    priceButton.style.fontWeight = 'bold';
+    priceButton.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    priceButton.style.color = 'white';
+    priceButton.style.marginBottom = '8px';
+    priceButton.onclick = (e) => {
+      e.stopPropagation();
+      this.openItemPriceModal(); // 아래에 신규 함수로 기본 모달 오픈
+    };
+    container.appendChild(priceButton);
+
+    // 기존 도감/해방/어빌리티/검색 버튼 렌더링
     subMenuConfig.items.forEach(item => {
       const button = document.createElement('button');
       button.className = 'main-menu-item sub-menu-item';
       button.innerHTML = item.text;
       button.title = item.title;
       button.style.fontWeight = 'bold';
-      
       button.addEventListener('click', async (e) => {
         e.stopPropagation();
         await this.handleSubMenuItemClick(item);
         this.closeAllSubMenus();
       });
-      
       container.appendChild(button);
     });
   }
@@ -1774,6 +1788,312 @@ class MenuManager {
       document.addEventListener('keydown', handleEsc);
       modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
     }
+  }
+
+  // [신규] 아이템 시세 조회 모달 (기본 UI만, 차트/데이터 연동은 이후 단계)
+  openItemPriceModal() {
+    // 기존 모달 제거
+    const existing = document.querySelector('.item-price-modal');
+    if (existing) existing.remove();
+    // 모달 생성
+    const modal = document.createElement('div');
+    modal.className = 'item-price-modal user-search-modal';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100vw';
+    modal.style.height = '100vh';
+    modal.style.background = 'rgba(0,0,0,0.5)';
+    modal.style.zIndex = '10020';
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
+    // 컨텐츠 래퍼 (flex column, 80% 크기)
+    const content = document.createElement('div');
+    content.className = 'user-search-content';
+    content.style.width = '80vw';
+    content.style.height = '80vh';
+    content.style.maxWidth = '1200px';
+    content.style.maxHeight = '900px';
+    content.style.minWidth = '320px';
+    content.style.minHeight = '320px';
+    content.style.background = '#fff';
+    content.style.borderRadius = '16px';
+    content.style.boxShadow = '0 4px 32px rgba(0,0,0,0.18)';
+    content.style.display = 'flex';
+    content.style.flexDirection = 'column';
+    content.style.overflow = 'hidden';
+    // 헤더
+    const header = document.createElement('div');
+    header.className = 'user-search-header';
+    header.style.flex = '0 0 auto';
+    header.style.display = 'flex';
+    header.style.alignItems = 'center';
+    header.style.justifyContent = 'space-between';
+    header.style.padding = '18px 24px 8px 24px';
+    const title = document.createElement('h3');
+    title.textContent = '아이템 시세 조회';
+    title.style.margin = '0';
+    title.style.fontSize = '1.5rem';
+    const closeButton = document.createElement('button');
+    closeButton.className = 'user-search-close';
+    closeButton.textContent = '×';
+    closeButton.style.fontSize = '2rem';
+    closeButton.style.background = 'none';
+    closeButton.style.border = 'none';
+    closeButton.style.cursor = 'pointer';
+    closeButton.onclick = () => modal.remove();
+    header.appendChild(title);
+    header.appendChild(closeButton);
+    // 검색창
+    const searchSection = document.createElement('div');
+    searchSection.style.display = 'flex';
+    searchSection.style.gap = '8px';
+    searchSection.style.margin = '0 0 8px 0';
+    searchSection.style.flex = '0 0 auto';
+    searchSection.style.padding = '0 24px';
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.placeholder = '아이템명 입력...';
+    searchInput.className = 'search-input';
+    searchInput.style.flex = '1';
+    searchInput.style.fontSize = '1.1rem';
+    searchInput.style.padding = '8px 12px';
+    searchInput.style.borderRadius = '8px';
+    searchInput.style.border = '1px solid #ccc';
+    const searchBtn = document.createElement('button');
+    searchBtn.textContent = '검색';
+    searchBtn.className = 'search-btn';
+    searchBtn.style.fontSize = '1.1rem';
+    searchBtn.style.padding = '8px 18px';
+    searchBtn.style.borderRadius = '8px';
+    searchBtn.style.border = 'none';
+    searchBtn.style.background = '#667eea';
+    searchBtn.style.color = '#fff';
+    searchBtn.style.cursor = 'pointer';
+    // 차트/결과 영역 (flex-grow)
+    const chartDiv = document.createElement('div');
+    chartDiv.style.flex = '1 1 0';
+    chartDiv.style.display = 'flex';
+    chartDiv.style.flexDirection = 'column';
+    chartDiv.style.justifyContent = 'stretch';
+    chartDiv.style.alignItems = 'stretch';
+    chartDiv.style.background = '#f9f9fb';
+    chartDiv.style.color = '#888';
+    chartDiv.style.padding = '0 0 24px 0';
+    chartDiv.textContent = '아이템명을 입력 후 검색하면 최근 30건 시세 그래프가 표시됩니다.';
+    chartDiv.id = 'itemPriceChartDiv';
+    chartDiv.style.overflow = 'auto';
+    chartDiv.style.minHeight = '0';
+    chartDiv.style.minWidth = '0';
+    // 차트 캔버스(동적 생성)
+    let chartCanvas = null;
+    let chartInstance = null;
+
+    // 조립 순서: content → header, searchSection, chartDiv
+    content.appendChild(header);
+    content.appendChild(searchSection);
+    content.appendChild(chartDiv);
+    searchSection.appendChild(searchInput);
+    searchSection.appendChild(searchBtn);
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+
+    // 검색 함수
+    const handleSearch = async () => {
+      const itemName = (searchInput.value || '').trim();
+      if (!itemName) {
+        chartDiv.textContent = '아이템명을 입력해 주세요.';
+        return;
+      }
+      chartDiv.textContent = '데이터를 불러오는 중...';
+      chartDiv.style.color = '#888';
+      // 기존 차트 제거
+      if (chartCanvas) chartCanvas.remove();
+      chartCanvas = document.createElement('canvas');
+      chartCanvas.style.width = '100%';
+      chartCanvas.style.height = '100%';
+      chartCanvas.style.maxWidth = '100%';
+      chartCanvas.style.maxHeight = '100%';
+      chartCanvas.style.display = 'block';
+      chartCanvas.style.minHeight = '0';
+      chartCanvas.style.minWidth = '0';
+      chartCanvas.style.margin = '0 auto';
+      chartDiv.innerHTML = '';
+      chartDiv.appendChild(chartCanvas);
+      // 구글 시트 fetch (CSV)
+      try {
+        const sheetUrl = 'https://docs.google.com/spreadsheets/d/1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo/gviz/tq?tqx=out:csv&sheet=아이템시세';
+        const res = await fetch(sheetUrl);
+        if (!res.ok) throw new Error('시트 데이터 요청 실패');
+        const csv = await res.text();
+        // CSV 파싱 (쉼표가 포함된 데이터 처리)
+        const rows = csv.split('\n').map(line => {
+          // 쉼표가 포함된 필드를 올바르게 파싱
+          const result = [];
+          let current = '';
+          let inQuotes = false;
+          
+          for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            if (char === '"') {
+              inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+              result.push(current.trim());
+              current = '';
+            } else {
+              current += char;
+            }
+          }
+          result.push(current.trim()); // 마지막 필드
+          return result;
+        });
+        // 헤더 인덱스 파악
+        const header = rows[0].map(h => h.trim());
+        const idxSequence = header.findIndex(h => h.includes('순번'));
+        const idxName = header.findIndex(h => h.includes('아이템'));
+        const idxPrice = header.findIndex(h => h.includes('가격'));
+        if (idxName === -1 || idxPrice === -1) throw new Error('시트 구조 오류');
+        
+        // 필터링
+        const filtered = rows.slice(1).filter(r => {
+          const name = (r[idxName]||'').replace(/"/g,'').trim();
+          const baseName = name.replace(/ x \d+$/, '').trim();
+          return baseName === itemName;
+        });
+        if (!filtered.length) {
+          chartDiv.textContent = '해당 아이템의 시세 데이터가 없습니다.';
+          chartDiv.style.color = '#f44336';
+          return;
+        }
+        
+        // 순번 기준으로 최신순 정렬 (순번이 높을수록 최근)
+        if (idxSequence !== -1) {
+          filtered.sort((a, b) => {
+            const seqA = parseInt((a[idxSequence] || '0').replace(/"/g, ''), 10) || 0;
+            const seqB = parseInt((b[idxSequence] || '0').replace(/"/g, ''), 10) || 0;
+            return seqB - seqA; // 내림차순 (높은 순번이 위로)
+          });
+        } else {
+          // 순번 컬럼이 없으면 기존 방식 사용
+          filtered.reverse();
+        }
+        // 최대 50건
+        const dataN = filtered.slice(0, 50);
+        // robust 가격 파싱 및 수량 처리 (A, B, C 열만 사용)
+        const prices = [];
+        const labelArr = [];
+        dataN.forEach(row => {
+          let name = (row[idxName]||'').replace(/"/g,'').trim();
+          let count = 1;
+          const match = name.match(/ x (\d+)$/);
+          if (match) count = parseInt(match[1], 10) || 1;
+          
+          // C열(가격)만 정확히 파싱 (다른 표 데이터 제외)
+          let priceRaw = (row[idxPrice] || '').replace(/"/g, '').replace(/[^\d]/g, '');
+          let price = parseInt(priceRaw, 10);
+          
+          // 유효한 가격인지 확인 (90,000 초과, 10억 이하만 유효)
+          if (price && price > 90000 && price < 1000000000) {
+            if (count > 1) price = Math.round(price / count);
+            for (let i = 0; i < count; i++) {
+              prices.push(price);
+              labelArr.push(''); // 임시, 나중에 labels 생성
+            }
+          }
+        });
+        // labels: 시간순으로 '최근 거래', '1건 이전 거래', '2건 이전 거래' ... (왼쪽이 오래된 거래, 오른쪽이 최신 거래)
+        const labels = prices.map((_, i) => {
+          if (i === prices.length - 1) {
+            return '최근 거래'; // 가장 최신 거래
+          } else {
+            return `${prices.length - 1 - i}건 이전 거래`; // 그 이전 거래들
+          }
+        });
+        // 데이터를 시간순으로 뒤집기 (왼쪽이 오래된 거래, 오른쪽이 최신 거래)
+        const timeOrderedPrices = [...prices].reverse();
+        
+        // 최근 판매가(가장 최신 가격)
+        const recentPrice = prices.length > 0 ? prices[0] : null;
+        // 평균 판매가
+        const avgPrice = prices.length > 0 ? Math.round(prices.reduce((a, b) => a + b, 0) / prices.length) : null;
+        // 차트 영역 위에 텍스트 표시
+        const infoDiv = document.createElement('div');
+        infoDiv.style.textAlign = 'center';
+        infoDiv.style.fontSize = '15px';
+        infoDiv.style.fontWeight = 'bold';
+        infoDiv.style.marginBottom = '10px';
+        infoDiv.style.flex = '0 0 auto';
+        infoDiv.innerHTML =
+          `<span style='color:#374151; font-size:1.15em;'>${itemName}</span><br>
+          <span style='color:#374151;'>최근 판매가 :</span> <span style='color:#667eea;'>${recentPrice ? recentPrice.toLocaleString() + ' G' : '-'}</span><br>
+          <span style='color:#374151;'>평균 판매가 :</span> <span style='color:#764ba2;'>${avgPrice ? avgPrice.toLocaleString() + ' G' : '-'}</span>`;
+        // 차트 영역 초기화 및 infoDiv 추가
+        chartDiv.innerHTML = '';
+        chartDiv.appendChild(infoDiv);
+        chartCanvas = document.createElement('canvas');
+        chartCanvas.style.width = '100%';
+        chartCanvas.style.height = '100%';
+        chartCanvas.style.maxWidth = '100%';
+        chartCanvas.style.maxHeight = '100%';
+        chartCanvas.style.display = 'block';
+        chartCanvas.style.flex = '1 1 0';
+        chartCanvas.style.minHeight = '0';
+        chartCanvas.style.minWidth = '0';
+        chartCanvas.style.margin = '0 auto';
+        chartDiv.appendChild(chartCanvas);
+        // Chart.js 동적 import
+        const Chart = (await import('chart.js/auto')).default;
+        if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+        chartInstance = new Chart(chartCanvas.getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: itemName + ' 시세',
+              data: timeOrderedPrices,
+              borderColor: '#667eea',
+              backgroundColor: 'rgba(102,126,234,0.1)',
+              pointRadius: 3,
+              pointBackgroundColor: '#764ba2',
+              fill: false,
+              tension: 0.2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: true },
+              title: { display: false }
+            },
+            scales: {
+              x: { title: { display: true, text: '최근 거래 순서' } },
+              y: { title: { display: true, text: '가격(G)' }, beginAtZero: false }
+            }
+          }
+        });
+      } catch (err) {
+        chartDiv.textContent = '데이터 로드/파싱 오류: ' + (err.message || err);
+        chartDiv.style.color = '#f44336';
+      }
+    };
+    searchBtn.onclick = handleSearch;
+    searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleSearch(); });
+    // 조립
+    content.appendChild(header);
+    content.appendChild(searchSection);
+    content.appendChild(chartDiv);
+    searchSection.appendChild(searchInput);
+    searchSection.appendChild(searchBtn);
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+    // ESC, 외부 클릭 닫기
+    const handleEsc = (e) => { if (e.key === 'Escape') { modal.remove(); document.removeEventListener('keydown', handleEsc); } };
+    document.addEventListener('keydown', handleEsc);
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+    // [중요] 기존 모달들과 동일하게 .show 클래스 추가
+    setTimeout(() => { modal.classList.add('show'); }, 10);
   }
 
 

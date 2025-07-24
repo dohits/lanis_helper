@@ -42,7 +42,7 @@ export async function fetchArmorEnchantInfo() {
 }
 
 // 실제 구글 시트에서 획득한 데이터 (2025년 1월 기준)
-// 참고: 구글 시트 구조 - A열(빈칸), B열(스텟명), C열(동등급), D열(은등급), E열(금등급), F열(칠색등급)
+// 참고: 구글 시트 구조 - F열(스텟명), G열(동등급), H열(은등급), I열(금등급), J열(칠색등급)
 export const armorEnchantInfoExample = [
   { type: "스텟", bronze: "1~2.9%", silver: "3~4.9%", gold: "5~7.4%", rainbow: "7.5~10%" },
   { type: "회피치", bronze: "1~1.9%", silver: "2~3%", gold: "", rainbow: "" },

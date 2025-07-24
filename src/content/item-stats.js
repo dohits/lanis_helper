@@ -8,6 +8,8 @@
 // - 위력/무게 감정 정보: .power-range-processed/.weight-range-processed
 // - 퍼센트/점수 표기: .stat-detail-row
 //
+import ITEM_COLORS from '../styles/item-colors.js';
+
 class ItemStatsManager {
   constructor() {
     this.rareItemsData = [];
@@ -59,29 +61,41 @@ class ItemStatsManager {
     }
     this.isProcessing = true;
     try {
-      const itemContainers = document.querySelectorAll('.MuiBox-root.css-38zrbw');
+      // 더 유연한 선택자 사용
+      const itemContainers = document.querySelectorAll('.MuiBox-root.css-38zrbw, .MuiBox-root[class*="css-"], .MuiPopover-root .MuiBox-root');
       let foundContainers = 0;
       let matchedItems = 0;
+      
+      console.log('아이템 스카우터: 처리할 컨테이너 수:', itemContainers.length);
+      
       itemContainers.forEach(container => {
         if (container.classList.contains('item-stats-processed')) return;
-        const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2');
+        
+        // 더 유연한 아이템명 선택자
+        const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2, p[class*="MuiTypography"], .MuiTypography-root');
         if (!itemNameElement) return;
+        
         const text = itemNameElement.textContent.trim();
         if (!text || text.length < 2 || text.length > 50) return;
+        
         let cleanItemName = text;
         if (text.includes('(')) {
           cleanItemName = text.split('(')[0].trim();
         }
-        // DOM에서 범위 추출
-        const statContainers = container.querySelectorAll('.MuiBox-root.css-gg4vpm');
+        
+        // 더 유연한 스탯 컨테이너 선택자
+        const statContainers = container.querySelectorAll('.MuiBox-root.css-gg4vpm, .MuiBox-root[class*="css-"], .MuiBox-root');
         let domPowerMin = null, domPowerMax = null, domWeightMin = null, domWeightMax = null;
+        
         statContainers.forEach((statContainer) => {
-          const pElements = statContainer.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv');
-          if (pElements.length === 2) {
+          // 더 유연한 p 요소 선택자
+          const pElements = statContainer.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv, p[class*="MuiTypography"], p');
+          if (pElements.length >= 2) {
             const labelElement = pElements[0];
             const valueElement = pElements[1];
             const label = labelElement.textContent.trim();
             const value = valueElement.textContent.trim();
+            
             // (123~456) 또는 (123 ~ 456) 패턴 추출
             const rangeMatch = value.match(/\(([-\d]+)\s*~\s*([-\d]+)\)/);
             if (rangeMatch) {
@@ -97,6 +111,7 @@ class ItemStatsManager {
             }
           }
         });
+        
         // rareItemsData에서 정보 찾기
         let itemData = null;
         if (this.rareItemsData && this.rareItemsData.length > 0) {
@@ -106,8 +121,9 @@ class ItemStatsManager {
             return cleanItemName === itemName;
           });
         }
-        // 정보가 있으면, DOM의 범위와 수집된 정보의 범위가 다르면 위키아이콘 표기
+        
         let showWikiIcon = false;
+        
         if (itemData) {
           matchedItems++;
           // 위력 범위 비교
@@ -141,7 +157,8 @@ class ItemStatsManager {
             container.classList.add('item-stats-processed');
           }
         }
-        // 위키아이콘 표기
+        
+        // 위키 아이콘 추가 (위키 정보와 불일치하거나, 위키에 등록되지 않은 레어아이템)
         if (showWikiIcon && !itemNameElement.querySelector('.wiki-icon')) {
           const wikiIcon = document.createElement('span');
           wikiIcon.className = 'wiki-icon';
@@ -149,7 +166,7 @@ class ItemStatsManager {
           wikiIcon.title = '위키 정보와 불일치하거나, 위키에 등록되지 않은 레어아이템입니다.';
           wikiIcon.style.marginLeft = '4px';
           wikiIcon.style.fontSize = '1em';
-          // .final-tag 앞에 삽입, 없으면 아이템명 뒤에 append
+          
           const finalTag = container.querySelector('.final-tag');
           if (finalTag) {
             finalTag.parentNode.insertBefore(wikiIcon, finalTag);
@@ -157,8 +174,12 @@ class ItemStatsManager {
             itemNameElement.appendChild(wikiIcon);
           }
         }
+        
         foundContainers++;
       });
+      
+      console.log('아이템 스카우터: 처리 완료 - 찾은 컨테이너:', foundContainers, '매칭된 아이템:', matchedItems);
+      
     } catch (error) {
       console.error('아이템 감정 범위 표기 처리 오류:', error);
     } finally {

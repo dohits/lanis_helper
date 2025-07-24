@@ -15,13 +15,11 @@
  * (아래 export된 데이터 참고)
  *
  * [구글 시트 원본]
- * https://docs.google.com/spreadsheets/d/15E8F_qSxKPMqsL_ulfwm739PTjBLO64qN8jWuDZe7ng/edit#gid=무기시트GID
- * 
- * [참고] 현재 무기 시트는 존재하지 않으므로 실제 데이터는 로드되지 않습니다.
+ * https://docs.google.com/spreadsheets/d/15E8F_qSxKPMqsL_ulfwm739PTjBLO64qN8jWuDZe7ng/edit#gid=337738977
  */
 
 // 실제 구글 시트에서 획득한 데이터 (2025년 1월 기준)
-// 참고: 구글 시트 구조 - A열(빈칸), B열(스텟명), C열(동등급), D열(은등급), E열(금등급), F열(칠색등급)
+// 참고: 구글 시트 구조 - F열(스텟명), G열(동등급), H열(은등급), I열(금등급), J열(칠색등급)
 export const weaponEnchantInfoExample = [
   { type: "스텟", bronze: "1~2.9%", silver: "3~4.9%", gold: "5~7.4%", rainbow: "7.5~10%" },
   { type: "공격력", bronze: "1~1.9%", silver: "2~3%", gold: "", rainbow: "" },

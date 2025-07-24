@@ -53,6 +53,8 @@ function loadSettingsAndExecute() {
       utils.safeExecute(() => {
         const settings = items;
         
+        console.log('설정 로드 완료:', settings);
+        
         // 프로필 링크 처리
         utils.safeExecute(() => {
           if (settings.profileLink && managers.userProfileManager) {
@@ -63,13 +65,16 @@ function loadSettingsAndExecute() {
           }
         }, '프로필 링크 처리 중 오류');
 
-        // 아이템 등급 표기 처리
+        // 아이템 등급 표기 처리 (아이템 스카우터)
         utils.safeExecute(() => {
           if (managers.itemStatsManager) {
             managers.itemStatsManager.settings = settings;
+            console.log('아이템 스카우터 설정:', settings.showItemStats);
             if (settings.showItemStats) {
+              console.log('아이템 스카우터 활성화');
               managers.itemStatsManager.processItemStats();
             } else {
+              console.log('아이템 스카우터 비활성화');
               managers.itemStatsManager.removeItemStats();
             }
           }
@@ -92,15 +97,19 @@ async function initializeExtension() {
       return;
     }
 
+    console.log('Lanis Helper 초기화 시작...');
+
     // CSS 스타일 로드
     loadStyles();
 
-    // 메뉴 매니저 초기화
+    // 아이템 통계 매니저 초기화 (우선순위 높음)
     utils.safeExecuteAsync(async () => {
-      if (managers.menuManager && typeof managers.menuManager.init === 'function') {
-        await managers.menuManager.init();
+      if (managers.itemStatsManager && typeof managers.itemStatsManager.init === 'function') {
+        console.log('아이템 스카우터 초기화 시작...');
+        await managers.itemStatsManager.init();
+        console.log('아이템 스카우터 초기화 완료');
       }
-    }, '메뉴 매니저 초기화 중 오류');
+    }, '아이템 통계 매니저 초기화 중 오류');
 
     // 검색 엔진 초기화
     utils.safeExecuteAsync(async () => {
@@ -109,12 +118,12 @@ async function initializeExtension() {
       }
     }, '검색 엔진 초기화 중 오류');
 
-    // 아이템 통계 매니저 초기화
+    // 메뉴 매니저 초기화
     utils.safeExecuteAsync(async () => {
-      if (managers.itemStatsManager && typeof managers.itemStatsManager.init === 'function') {
-        await managers.itemStatsManager.init();
+      if (managers.menuManager && typeof managers.menuManager.init === 'function') {
+        await managers.menuManager.init();
       }
-    }, '아이템 통계 매니저 초기화 중 오류');
+    }, '메뉴 매니저 초기화 중 오류');
 
     // 사용자 프로필 매니저 초기화
     utils.safeExecute(() => {
@@ -130,8 +139,10 @@ async function initializeExtension() {
       }
     }, '설정 모달 매니저 초기화 중 오류');
 
-    // 설정 로드 및 실행
-    loadSettingsAndExecute();
+    // 설정 로드 및 실행 (약간의 지연 후)
+    setTimeout(() => {
+      loadSettingsAndExecute();
+    }, 500);
 
     // 초기화 완료 로그
     console.log('Lanis Helper 초기화 완료', {

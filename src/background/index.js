@@ -4,16 +4,17 @@
 // 참고: exam/enchant-info-armor-example.js에서 데이터 구조 및 예시 확인
 async function fetchEnchantInfo(type = 'armor') {
   try {
-    // 무기/장신구는 현재 시트가 존재하지 않으므로 빈 데이터 반환
-    if (type === 'weapon' || type === 'accessory') {
+    // 장신구는 현재 시트가 존재하지 않으므로 빈 데이터 반환
+    if (type === 'accessory') {
       return { success: true, data: [] };
     }
     
     const sheetId = '15E8F_qSxKPMqsL_ulfwm739PTjBLO64qN8jWuDZe7ng';
     
-    // 타입별 GID 매핑 (현재는 방어구만 실제 연결)
+    // 타입별 GID 매핑
     const gidMap = {
-      'armor': '468768394'  // 장비해방(방어구) 시트 GID
+      'armor': '468768394',   // 장비해방(방어구) 시트 GID
+      'weapon': '337738977'   // 장비해방(무기) 시트 GID
     };
     
     const gid = gidMap[type];
@@ -39,11 +40,11 @@ async function fetchEnchantInfo(type = 'armor') {
     const data = lines.slice(1).map((line, index) => {
       const cols = line.split(',').map(col => col.replace(/"/g, '').trim());
       const item = {
-        type: cols[1] || '',      // B열 (스텟명)
-        bronze: cols[2] || '',    // C열 (동 등급)
-        silver: cols[3] || '',    // D열 (은 등급)
-        gold: cols[4] || '',      // E열 (금 등급)
-        rainbow: cols[5] || ''    // F열 (칠색 등급)
+        type: cols[5] || '',      // F열 (스텟명) - 이전 B열
+        bronze: cols[6] || '',    // G열 (동 등급) - 이전 C열
+        silver: cols[7] || '',    // H열 (은 등급) - 이전 D열
+        gold: cols[8] || '',      // I열 (금 등급) - 이전 E열
+        rainbow: cols[9] || ''    // J열 (칠색 등급) - 이전 F열
       };
       return item;
     }).filter(item => item.type && item.type !== '');
