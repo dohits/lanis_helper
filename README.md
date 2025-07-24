@@ -6,7 +6,7 @@ Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 
 - 크롬 웹스토어 (1.4.0) : [이동하기](https://chromewebstore.google.com/detail/lanis-helper/ciemdjbfifddfgbdlfimomejgpnfonjd?authuser=0&hl=ko)
 
-- 최신릴리즈 (1.6.0) : [다운받기](https://github.com/user-attachments/files/21401797/lanis_helper_1.6.0.zip)
+- 최신릴리즈 (1.6.0) : [다운받기](https://github.com/user-attachments/files/21402610/lanis_helper_1.6.0.zip)
 
 - 깃허브 저장소 : [이동하기](https://github.com/dohits/lanis_helper?tab=readme-ov-file)
 
