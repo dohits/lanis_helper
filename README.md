@@ -1,4 +1,6 @@
-# Lanis Helper - 크롬 확장프로그램
+[![hits](https://myhits.vercel.app/api/hit/https%3A%2F%2Fgithub.com%2Fdohits%2Flanis_helper?color=blue&label=hits&size=small)](https://myhits.vercel.app)
+
+# Lanis Helper - 크롬 확장프로그램 
 
 > **본 확장 프로그램은 라니스 공식이 아닌 유저 비공식 확장입니다.**
 
