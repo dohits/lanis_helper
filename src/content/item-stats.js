@@ -159,21 +159,6 @@ class ItemStatsManager {
         }
         
         // 위키 아이콘 추가 (위키 정보와 불일치하거나, 위키에 등록되지 않은 레어아이템)
-        if (showWikiIcon && !itemNameElement.querySelector('.wiki-icon')) {
-          const wikiIcon = document.createElement('span');
-          wikiIcon.className = 'wiki-icon';
-          wikiIcon.textContent = '📚';
-          wikiIcon.title = '위키 정보와 불일치하거나, 위키에 등록되지 않은 레어아이템입니다.';
-          wikiIcon.style.marginLeft = '4px';
-          wikiIcon.style.fontSize = '1em';
-          
-          const finalTag = container.querySelector('.final-tag');
-          if (finalTag) {
-            finalTag.parentNode.insertBefore(wikiIcon, finalTag);
-          } else {
-            itemNameElement.appendChild(wikiIcon);
-          }
-        }
         
         foundContainers++;
       });

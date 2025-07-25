@@ -1878,10 +1878,10 @@ class MenuManager {
     chartDiv.style.flexDirection = 'column';
     chartDiv.style.justifyContent = 'stretch';
     chartDiv.style.alignItems = 'stretch';
-    chartDiv.style.background = '#f9f9fb';
+    chartDiv.style.background = '#fff';
     chartDiv.style.color = '#888';
     chartDiv.style.padding = '0 0 24px 0';
-    chartDiv.textContent = '아이템명을 입력 후 검색하면 최근 30건 시세 그래프가 표시됩니다.';
+    chartDiv.textContent = '최대 50회 트레이드의 최근 거래 동향을 확인 가능합니다.\n수량이 여러개일 경우 여러건으로 나뉘어 처리됩니다.';
     chartDiv.id = 'itemPriceChartDiv';
     chartDiv.style.overflow = 'auto';
     chartDiv.style.minHeight = '0';
@@ -2024,7 +2024,20 @@ class MenuManager {
         infoDiv.style.fontWeight = 'bold';
         infoDiv.style.marginBottom = '10px';
         infoDiv.style.flex = '0 0 auto';
+        // 시세시트 F2, F3 row에서 최종기록시간 정보 추출
+        let lastRecordLabel = '';
+        let lastRecordTime = '';
+        if (rows.length > 2) {
+          // F2: rows[1][5], F3: rows[2][5] (F열, 0-indexed)
+          lastRecordLabel = (rows[1][5] || '').trim();
+          lastRecordTime = (rows[2][5] || '').trim();
+        }
+        let lastRecordHtml = '';
+        if (lastRecordLabel && lastRecordTime) {
+          lastRecordHtml = `<div style='color:#888;font-size:13px;font-weight:normal;margin-bottom:2px;'>${lastRecordLabel} <span style='color:#374151;'>${lastRecordTime}</span>에 최신화 되었습니다.</div>`;
+        }
         infoDiv.innerHTML =
+          lastRecordHtml +
           `<span style='color:#374151; font-size:1.15em;'>${itemName}</span><br>
           <span style='color:#374151;'>최근 판매가 :</span> <span style='color:#667eea;'>${recentPrice ? recentPrice.toLocaleString() + ' G' : '-'}</span><br>
           <span style='color:#374151;'>평균 판매가 :</span> <span style='color:#764ba2;'>${avgPrice ? avgPrice.toLocaleString() + ' G' : '-'}</span>`;
@@ -2067,6 +2080,7 @@ class MenuManager {
               legend: { display: true },
               title: { display: false }
             },
+            interaction: { mode: 'nearest', axis: 'x', intersect: false },
             scales: {
               x: { title: { display: true, text: '최근 거래 순서' } },
               y: { title: { display: true, text: '가격(G)' }, beginAtZero: false }
