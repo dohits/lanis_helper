@@ -1534,7 +1534,7 @@ class MenuManager {
     searchSection.style.margin = '16px 0 8px 0';
     const searchInput = document.createElement('input');
     searchInput.type = 'text';
-    searchInput.placeholder = '어빌리티명/효과 검색...';
+    searchInput.placeholder = '어빌리티명/효과/무기 타입 효과 검색...';
     searchInput.className = 'search-input';
     searchInput.style.flex = '1';
     searchSection.appendChild(searchInput);
@@ -1551,6 +1551,8 @@ class MenuManager {
     tableContainer.style.overflow = 'auto';
     tableContainer.style.maxHeight = '50vh';
     tableContainer.style.marginTop = '8px';
+    tableContainer.style.overflowX = 'auto';
+    tableContainer.style.overflowY = 'auto';
 
     // 로딩 표시
     const loadingDiv = document.createElement('div');
@@ -1625,14 +1627,16 @@ class MenuManager {
         function renderTable() {
           tableContainer.innerHTML = '';
           const table = document.createElement('table');
-          table.style.cssText = 'width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed;';
+          table.style.cssText = 'width:100%;min-width:800px;border-collapse:collapse;font-size:14px;table-layout:fixed;';
           const thead = document.createElement('thead');
           const tr = document.createElement('tr');
-          ['직업','어빌리티명','효과'].forEach((h, idx) => {
+          ['직업','전직','어빌리티명','효과','무기 타입 효과','숙련도'].forEach((h, idx) => {
             const th = document.createElement('th');
             th.textContent = h;
             th.style.cssText = 'padding:6px 2px;background:#f5f5f5;border:1px solid #ddd;text-align:center;font-weight:bold;color:#222;'
-              + (idx === 0 ? 'width:56px;min-width:48px;max-width:72px;' : '');
+              + (idx === 0 ? 'width:56px;min-width:48px;max-width:72px;' : '')
+              + (idx === 1 ? 'width:48px;min-width:40px;max-width:56px;' : '')
+              + (idx === 5 ? 'width:80px;min-width:70px;max-width:90px;' : '');
             tr.appendChild(th);
           });
           thead.appendChild(tr);
@@ -1644,16 +1648,19 @@ class MenuManager {
           if (search) {
             filtered = filtered.filter(row =>
               row['어빌리티명'].toLowerCase().includes(search) ||
-              row['효과'].toLowerCase().includes(search)
+              row['효과'].toLowerCase().includes(search) ||
+              row['무기 타입 효과'].toLowerCase().includes(search)
             );
           }
           filtered.forEach(row => {
             const tr = document.createElement('tr');
-            ['직업','어빌리티명','효과'].forEach((h, idx) => {
+            ['직업','전직','어빌리티명','효과','무기 타입 효과','숙련도'].forEach((h, idx) => {
               const td = document.createElement('td');
-              td.textContent = row[h];
+              td.textContent = row[h] || '';
               td.style.cssText = 'padding:5px 2px;border:1px solid #eee;text-align:center;word-break:break-all;color:#222;'
-                + (idx === 0 ? 'width:56px;min-width:48px;max-width:72px;' : '');
+                + (idx === 0 ? 'width:56px;min-width:48px;max-width:72px;' : '')
+                + (idx === 1 ? 'width:48px;min-width:40px;max-width:56px;' : '')
+                + (idx === 5 ? 'width:80px;min-width:70px;max-width:90px;' : '');
               tr.appendChild(td);
             });
             tbody.appendChild(tr);
