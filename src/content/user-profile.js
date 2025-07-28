@@ -8,6 +8,10 @@ class UserProfileManager {
   init() {
     this.processUserNames();
     this.startDynamicContentObserver();
+    // 초기 스티커 추가
+    this.addTemporaryStickers();
+    this.addStatSumStickers();
+    this.addHpMpBonusStickers();
   }
 
   processUserNames() {
@@ -54,14 +58,14 @@ class UserProfileManager {
         li.classList.add('username-processed');
       });
 
-      // 직업/레벨 스티커에 임시 스티커 추가
-      this.addTemporaryStickers();
-      
-      // 기본 스탯 오른쪽에 스탯합계 스티커 추가
-      this.addStatSumStickers();
-      
-      // 기본 정보 오른쪽에 HP/MP 보너스 스티커 추가
-      this.addHpMpBonusStickers();
+              // 직업/레벨 스티커에 임시 스티커 추가
+        this.addTemporaryStickers();
+        
+        // 기본 스탯 오른쪽에 스탯합계 스티커 추가
+        this.addStatSumStickers();
+        
+        // 기본 정보 오른쪽에 HP/MP 보너스 스티커 추가
+        this.addHpMpBonusStickers();
 
     } catch (error) {
       console.error('사용자명 처리 중 오류:', error);
@@ -459,7 +463,7 @@ class UserProfileManager {
       this.observer.disconnect();
     }
     
-    // 구버전 방식: MutationObserver로 새 메시지 감지
+    // MutationObserver로 DOM 변경 감지 (빠른 스티커 처리)
     this.observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList') {
@@ -473,6 +477,13 @@ class UserProfileManager {
                 const messageElements = node.querySelectorAll('li[id^="message-"]');
                 if (messageElements.length > 0) {
                   this.processUserNames(); // 전체 재처리
+                }
+                
+                // 사용자 프로필 DOM 감지 (기존 방식 유지)
+                const profileContainers = node.querySelectorAll('.MuiBox-root.css-zwlyuw');
+                if (profileContainers.length > 0) {
+                  // 프로필이 감지되면 전체 재처리
+                  this.processUserNames();
                 }
               }
             }
