@@ -1170,7 +1170,7 @@ class MenuManager {
     const content = document.createElement('div');
     content.className = 'user-search-content';
     content.style.maxWidth = '800px';
-    content.style.maxHeight = '80vh';
+    content.style.maxHeight = '90vh';
     
     // 헤더
     const header = document.createElement('div');
@@ -1451,7 +1451,8 @@ class MenuManager {
     scrollContainer.style.cssText = `
       width: 100%;
       overflow-x: auto;
-      overflow-y: visible;
+      overflow-y: auto;
+      max-height: 400px;
       margin-top: 20px;
     `;
     
