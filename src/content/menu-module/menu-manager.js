@@ -1935,25 +1935,25 @@ class MenuManager {
         // CSV 파싱 함수
         const parseCSV = (csv) => {
           return csv.split('\n').map(line => {
-            // 쉼표가 포함된 필드를 올바르게 파싱
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-            
-            for (let i = 0; i < line.length; i++) {
-              const char = line[i];
-              if (char === '"') {
-                inQuotes = !inQuotes;
-              } else if (char === ',' && !inQuotes) {
-                result.push(current.trim());
-                current = '';
-              } else {
-                current += char;
-              }
+          // 쉼표가 포함된 필드를 올바르게 파싱
+          const result = [];
+          let current = '';
+          let inQuotes = false;
+          
+          for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            if (char === '"') {
+              inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+              result.push(current.trim());
+              current = '';
+            } else {
+              current += char;
             }
-            result.push(current.trim()); // 마지막 필드
-            return result;
-          });
+          }
+          result.push(current.trim()); // 마지막 필드
+          return result;
+        });
         };
         
         // 기존 데이터 파싱 (A,B,C열 형식)
@@ -2023,14 +2023,112 @@ class MenuManager {
         infoDiv.style.marginBottom = '10px';
         infoDiv.style.flex = '0 0 auto';
         
-        // 데이터 소스 정보
+                // 마지막 데이터 추가 정보
         let dataSourceInfo = '';
-        if (tradeData.prices.length > 0 && priceData.prices.length > 0) {
-          dataSourceInfo = `<div style='color:#888;font-size:12px;font-weight:normal;margin-bottom:2px;'>거래 데이터: ${tradeData.prices.length}건, 시세 데이터: ${priceData.prices.length}건</div>`;
-        } else if (tradeData.prices.length > 0) {
-          dataSourceInfo = `<div style='color:#888;font-size:12px;font-weight:normal;margin-bottom:2px;'>거래 데이터: ${tradeData.prices.length}건</div>`;
-        } else if (priceData.prices.length > 0) {
-          dataSourceInfo = `<div style='color:#888;font-size:12px;font-weight:normal;margin-bottom:2px;'>시세 데이터: ${priceData.prices.length}건</div>`;
+        
+        try {
+          // 모든 거래 데이터 파싱 (example.js 방식)
+          const allTradeItems = [];
+          
+          for (let i = 0; i < newRows.length; i++) {
+            const row = newRows[i];
+            if (row.length === 0) continue;
+            
+            const cellA = (row[0] || '').replace(/"/g, '').trim();
+            
+            // 새로운 형식: "거래 완료" 패턴 찾기
+            if (cellA.includes('거래 완료')) {
+              // 시간 정보 추출 (i+1 행)
+              let timeStr = '';
+              if (i + 1 < newRows.length) {
+                timeStr = (newRows[i + 1][0] || '').replace(/"/g, '').trim();
+              }
+              
+              // 아이템 정보 행 찾기 (i+2)
+              if (i + 2 < newRows.length) {
+                const itemRow = newRows[i + 2];
+                if (itemRow.length > 0) {
+                  const itemText = (itemRow[0] || '').replace(/"/g, '').trim();
+                  
+                  // 가격 추출
+                  const priceMatch = itemText.match(/(\d{1,3}(?:,\d{3})*)\s*Gold/);
+                  if (priceMatch) {
+                    const priceStr = priceMatch[1].replace(/,/g, '');
+                    const price = parseInt(priceStr, 10);
+                    
+                    // 수량 처리
+                    let count = 1;
+                    const countMatch = itemText.match(/(\d+)개가/);
+                    if (countMatch) {
+                      count = parseInt(countMatch[1], 10);
+                    }
+                    
+                    // 아이템명 추출
+                    const itemMatch = itemText.match(/(.+?)(?:\s+\d+개가|\s+가\s+거래소에서|\s+가\s+)/);
+                    const itemName = itemMatch ? itemMatch[1].trim() : '';
+                    
+                    // 유효한 가격인지 확인 (90,000 초과, 10억 이하만 유효)
+                    if (price && price > 90000 && price < 1000000000 && itemName) {
+                      // 시간 정보를 Date 객체로 변환
+                      let timestamp = new Date(0);
+                      if (timeStr) {
+                        const timeMatch = timeStr.match(/(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})\.\s*(오전|오후)\s*(\d{1,2}):(\d{2}):(\d{2})/);
+                        if (timeMatch) {
+                          const [, year, month, day, ampm, hour, minute, second] = timeMatch;
+                          let hour24 = parseInt(hour, 10);
+                          if (ampm === '오후' && hour24 !== 12) hour24 += 12;
+                          if (ampm === '오전' && hour24 === 12) hour24 = 0;
+                          
+                          timestamp = new Date(
+                            parseInt(year, 10),
+                            parseInt(month, 10) - 1,
+                            parseInt(day, 10),
+                            hour24,
+                            parseInt(minute, 10),
+                            parseInt(second, 10)
+                          );
+                        }
+                      }
+                      
+                      allTradeItems.push({
+                        timestamp: timestamp,
+                        item: itemName,
+                        count: count,
+                        price: price,
+                        originalText: itemText,
+                        format: 'new'
+                      });
+                    }
+                  }
+                }
+              }
+            }
+          }
+          
+          if (allTradeItems.length > 0) {
+            const itemsWithTimestamp = allTradeItems.filter(item => 
+              item.timestamp && item.timestamp !== new Date(0)
+            );
+            
+            if (itemsWithTimestamp.length > 0) {
+              const latestItem = itemsWithTimestamp.reduce((latest, current) => {
+                return current.timestamp > latest.timestamp ? current : latest;
+              });
+              
+              const latestDate = latestItem.timestamp.toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+              });
+              
+              dataSourceInfo = `<div style='color:#888;font-size:12px;font-weight:normal;margin-bottom:2px;'>마지막 데이터 추가 ${latestDate} ${latestItem.item} ${latestItem.count}개 ${latestItem.price.toLocaleString()}G</div>`;
+            }
+          }
+        } catch (error) {
+          console.warn('마지막 데이터 정보 추출 중 오류:', error);
         }
         
         infoDiv.innerHTML =
