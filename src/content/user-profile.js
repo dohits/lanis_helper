@@ -441,8 +441,7 @@ class UserProfileManager {
         });
       });
       
-      // 디버깅용 로그 (나중에 제거)
-      console.log('HP:', hp, 'MP:', mp, 'Total Stats:', totalPower);
+
       
       // 최종 전투력 계산: 스탯 합계 + (체력+마력)/3
       const hpMpBonus = Math.floor((hp + mp) / 3);
