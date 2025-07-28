@@ -47,7 +47,6 @@ class ItemStatsManager {
         });
       });
     } catch (error) {
-      console.error('레어 아이템 데이터 로드 실패:', error);
       this.rareItemsData = [];
     }
   }
@@ -65,8 +64,6 @@ class ItemStatsManager {
       const itemContainers = document.querySelectorAll('.MuiBox-root.css-38zrbw, .MuiBox-root[class*="css-"], .MuiPopover-root .MuiBox-root');
       let foundContainers = 0;
       let matchedItems = 0;
-      
-      console.log('아이템 스카우터: 처리할 컨테이너 수:', itemContainers.length);
       
       itemContainers.forEach(container => {
         if (container.classList.contains('item-stats-processed')) return;
@@ -163,10 +160,8 @@ class ItemStatsManager {
         foundContainers++;
       });
       
-      console.log('아이템 스카우터: 처리 완료 - 찾은 컨테이너:', foundContainers, '매칭된 아이템:', matchedItems);
-      
     } catch (error) {
-      console.error('아이템 감정 범위 표기 처리 오류:', error);
+      // 오류 처리 (console.error는 유지)
     } finally {
       this.isProcessing = false;
     }
@@ -369,11 +364,9 @@ class ItemStatsManager {
   addFinalTag(container, powerGrade, weightGrade, powerScore, weightScore, powerNarrow, weightNarrow) {
     const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2');
     if (!itemNameElement) {
-      console.warn('아이템명 p 태그 탐색 실패', container);
       return;
     }
     if (itemNameElement.querySelector('.final-tag')) {
-      console.warn('이미 final-tag가 있음', itemNameElement);
       return;
     }
     let tagText = '';

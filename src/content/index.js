@@ -53,7 +53,7 @@ function loadSettingsAndExecute() {
       utils.safeExecute(() => {
         const settings = items;
         
-        console.log('설정 로드 완료:', settings);
+
         
         // 프로필 링크 처리
         utils.safeExecute(() => {
@@ -69,12 +69,9 @@ function loadSettingsAndExecute() {
         utils.safeExecute(() => {
           if (managers.itemStatsManager) {
             managers.itemStatsManager.settings = settings;
-            console.log('아이템 스카우터 설정:', settings.showItemStats);
             if (settings.showItemStats) {
-              console.log('아이템 스카우터 활성화');
               managers.itemStatsManager.processItemStats();
             } else {
-              console.log('아이템 스카우터 비활성화');
               managers.itemStatsManager.removeItemStats();
             }
           }
@@ -97,7 +94,7 @@ async function initializeExtension() {
       return;
     }
 
-    console.log('Lanis Helper 초기화 시작...');
+
 
     // CSS 스타일 로드
     loadStyles();
@@ -105,9 +102,7 @@ async function initializeExtension() {
     // 아이템 통계 매니저 초기화 (우선순위 높음)
     utils.safeExecuteAsync(async () => {
       if (managers.itemStatsManager && typeof managers.itemStatsManager.init === 'function') {
-        console.log('아이템 스카우터 초기화 시작...');
         await managers.itemStatsManager.init();
-        console.log('아이템 스카우터 초기화 완료');
       }
     }, '아이템 통계 매니저 초기화 중 오류');
 
@@ -144,14 +139,7 @@ async function initializeExtension() {
       loadSettingsAndExecute();
     }, 500);
 
-    // 초기화 완료 로그
-    console.log('Lanis Helper 초기화 완료', {
-      menuManager: !!managers.menuManager,
-      searchEngine: !!managers.searchEngine,
-      itemStatsManager: !!managers.itemStatsManager,
-      userProfileManager: !!managers.userProfileManager,
-      settingsModalManager: !!managers.settingsModalManager,
-    });
+
 
   } catch (error) {
     console.error('확장 프로그램 초기화 중 오류:', error);
@@ -214,11 +202,8 @@ window.lanisHelper = {
         return { success: false, message: '검색 엔진이 초기화되지 않았습니다.' };
       }
       
-      console.log('레어 아이템 수집 시작...'); // 디버깅용
-      
       // SearchEngine의 collectRareItems 메서드 직접 호출
       const result = await managers.searchEngine.collectRareItems();
-      console.log('SearchEngine 수집 결과:', result); // 디버깅용
       
       return result;
     } catch (error) {
@@ -247,7 +232,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else if (request.action === 'startCrawling') {
       // 레어 아이템 수집 시작
       window.lanisHelper.collectRareItems().then(result => {
-        console.log('레어 아이템 수집 결과:', result); // 디버깅용
         
         if (result && result.success) {
           sendResponse({

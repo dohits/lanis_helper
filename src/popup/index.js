@@ -299,8 +299,6 @@ function startCrawling() {
         // 타임아웃 해제
         clearTimeout(timeoutId);
         
-        console.log('레어 아이템 수집 응답:', response); // 디버깅용
-        
         if (response && response.success) {
           const message = response.message || '수집 완료';
           const count = response.count || response.data?.length || 0;

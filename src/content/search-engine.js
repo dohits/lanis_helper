@@ -1094,8 +1094,8 @@ class SearchEngine {
 
   // 최종 거래소 검색 완료 모달 표시
   showFinalMarketModal(result) {
-    // 거래소 검색 모달 기능 삭제됨
-    console.log('거래소 검색 모달 기능이 삭제되었습니다.');
+    // 거래소 검색 모달 기능이 삭제되었습니다.
+    // 이전 버전과의 호환성을 위해 빈 함수로 남겨둠
   }
 
   async waitForElement(selector, timeout = 3000) {
