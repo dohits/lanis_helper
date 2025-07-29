@@ -6,9 +6,9 @@
 
 Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 
-- 크롬 웹스토어 (1.6.0) : [이동하기](https://chromewebstore.google.com/detail/lanis-helper/ciemdjbfifddfgbdlfimomejgpnfonjd?authuser=0&hl=ko)
+- 크롬 웹스토어 (1.7.0) : [이동하기](https://chromewebstore.google.com/detail/lanis-helper/ciemdjbfifddfgbdlfimomejgpnfonjd?authuser=0&hl=ko)
 
-- 최신릴리즈 (1.6.1) : [다운받기](https://github.com/user-attachments/files/21425932/lanis_helper_1.6.1.zip)
+- 최신릴리즈 (1.7.0) : [다운받기](https://github.com/user-attachments/files/21425932/lanis_helper_1.7.0.zip)
 
 - 깃허브 저장소 : [이동하기](https://github.com/dohits/lanis_helper?tab=readme-ov-file)
 
@@ -73,10 +73,16 @@ Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 - 아이템명을 검색하면 최근 거래 시세가 그래프로 표시됩니다.
 - 최근 거래, 평균가, 거래별 가격 변동을 한눈에 확인할 수 있습니다.
 
+### 기댓값 계산기
+- 아이템 조합/분해의 기댓값을 계산하여 최적의 조합을 제시합니다.
+- 8개 조합 아이템 지원 (활력의 포션, 봉인의 열쇠, 푸른 결정, 붉은 결정, 고급 가죽끈, 가죽끈, 낡은 가죽끈, 쇠망치)
+- 평균 거래가, 최근 거래가, 직접 입력 중 선택하여 시세 데이터 활용
+- 최적 조합 자동 계산 및 재료별 개별 시세 표시
+
 ## 🛠️ 개발 정보
 
 - **Manifest Version**: 3
-- **현재 버전**: 1.6.0
+- **현재 버전**: 1.7.0
 - **빌드 시스템**: Vite + ES6 모듈
 - **지원 브라우저**: Chrome, (모바일: Mises 브라우저)
 - **권한**: storage, tabs, scripting

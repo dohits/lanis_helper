@@ -7,6 +7,12 @@
     },
     "items": [
       {
+        "id": "calculator",
+        "icon": "🧮",
+        "text": "계산기",
+        "title": "계산기 메뉴"
+      },
+      {
         "id": "itemGuide",
         "icon": "📚",
         "text": "아이템 도감",
@@ -19,10 +25,37 @@
         "title": "설정 메뉴"
       }
     ],
-            "itemGuide": {
+    "calculator": {
+      "subMenu": {
+        "title": "계산기",
+        "items": [
+          {
+            "id": "expectedValue",
+            "icon": "📊",
+            "text": "기댓값 계산기",
+            "title": "기댓값 계산기"
+          }
+        ]
+      }
+    },
+    "itemGuide": {
       "subMenu": {
         "title": "아이템 도감",
         "items": [
+          {
+            "id": "itemPrice",
+            "icon": "💹",
+            "text": "아이템 시세 조회",
+            "title": "구글 시트 기반 아이템 시세 그래프",
+            "special": "highlight"
+          },
+          {
+            "id": "userSearch",
+            "icon": "🔍",
+            "text": "사용자 검색",
+            "title": "사용자 프로필 검색",
+            "special": "highlight"
+          },
           {
             "id": "openGuide",
             "icon": "📖",
@@ -40,12 +73,6 @@
             "icon": "🧬",
             "text": "어빌리티 정보",
             "title": "어빌리티 정보 보기"
-          },
-          {
-            "id": "userSearch",
-            "icon": "🔍",
-            "text": "사용자 검색",
-            "title": "사용자 프로필 검색"
           }
         ]
       }
