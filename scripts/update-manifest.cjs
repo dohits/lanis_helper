@@ -20,9 +20,14 @@ function getAssetFiles() {
 // manifest.json 업데이트
 function updateManifest() {
   const manifestPath = path.join(__dirname, '../dist/manifest.json');
+  const packagePath = path.join(__dirname, '../package.json');
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
   
   const assets = getAssetFiles();
+  
+  // 버전 업데이트
+  manifest.version = packageJson.version;
   
   // content_scripts 업데이트
   if (manifest.content_scripts && manifest.content_scripts[0]) {
