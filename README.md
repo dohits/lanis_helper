@@ -102,14 +102,14 @@ Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 
 ### 시세 차트(트레이드 그래프) 예시
 
-![시세 차트 예시](public/img/trade_chart.jpg)
+![시세 차트 예시](https://github.com/dohits/lanis_helper/raw/main/public/img/trade_chart.jpg)
 
 - 아이템명을 검색하면 최근 거래 시세가 그래프로 표시됩니다.
 - 최근 거래, 평균가, 거래별 가격 변동을 한눈에 확인할 수 있습니다.
 
 ### 레어 아이템 정보 툴팁 예시
 
-![레어 아이템 정보 툴팁 예시](public/img/item_range.png)
+![레어 아이템 정보 툴팁 예시](https://github.com/dohits/lanis_helper/raw/main/public/img/item_range.png)
 
 #### 📊 아이템 등급분류 조건
 
@@ -148,27 +148,32 @@ Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 
 ### 채팅창 사용자 프로필 링크 예시
 
-![채팅창 프로필 링크 예시](public/img/chat_profile.jpg)
+![채팅창 프로필 링크 예시](https://github.com/dohits/lanis_helper/raw/main/public/img/chat_profile.jpg)
 - Lanis 채팅창에서 사용자 이름을 클릭하면 해당 사용자의 프로필 페이지로 이동할 수 있습니다.
 
 ### 아이템 도감 예시
 
-![아이템 도감 예시](public/img/item_book.jpg)
+![아이템 도감 예시](https://github.com/dohits/lanis_helper/raw/main/public/img/item_book.jpg)
 - 카테고리별, 속성/어빌리티별로 아이템을 검색/필터링할 수 있습니다.
 - 모바일에서도 반응형으로 확인 가능 
 
 ### 어빌리티 정보 예시
 
-![어빌리티 정보 모달 예시](public/img/ability_info.png)
+![어빌리티 정보 모달 예시](https://github.com/dohits/lanis_helper/raw/main/public/img/ability_info.png)
 - 어빌리티명/효과 검색, 직업별 토글, 실시간 구글 시트 연동
 
 ### 장비 해방 정보 예시
 
-![장비 해방 정보 모달 예시](public/img/enchant_info.png)
+![장비 해방 정보 모달 예시](https://github.com/dohits/lanis_helper/raw/main/public/img/enchant_info.png)
 - 구글 시트에서 실시간으로 해방 정보 데이터를 가져와 테이블 형태로 표시
 - 동/은/금/칠색 등급별 해방 수치 정보 제공
 
 ### 프로그램 정보 예시
 
-![프로그램 정보 모달 예시](public/img/program_info.png)
+![프로그램 정보 모달 예시](https://github.com/dohits/lanis_helper/raw/main/public/img/program_info.png)
 - 버전, 문의, 기여자 목록 등 정보 제공 
+
+### 기댓값 계산기 예시
+
+![기댓값 계산기 예시](https://github.com/dohits/lanis_helper/raw/main/public/img/expected_value_calc_img.png)
+- 각 케이스에 맞는 기댓값을 시세에 따라 출력
