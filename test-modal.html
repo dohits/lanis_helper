@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모달 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .test-button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <h1>모달 테스트</h1>
+    <button class="test-button" onclick="testItemGuideModal()">아이템 도감 모달 테스트</button>
+    <button class="test-button" onclick="testBaseModal()">기본 모달 테스트</button>
+
+    <script type="module">
+        import ItemGuideModal from './src/content/menu-module/modal/item-guide-modal.js';
+        import BaseModal from './src/content/menu-module/modal/base-modal.js';
+
+        // 전역 변수로 모달 인스턴스 저장
+        window.itemGuideModal = new ItemGuideModal();
+        window.baseModal = new BaseModal({
+            title: '테스트 모달',
+            maxWidth: '500px'
+        });
+
+        // 테스트 함수들
+        window.testItemGuideModal = function() {
+            console.log('아이템 도감 모달 열기');
+            window.itemGuideModal.open();
+        };
+
+        window.testBaseModal = function() {
+            console.log('기본 모달 열기');
+            window.baseModal.setContent(`
+                <div style="padding: 20px;">
+                    <h3>테스트 콘텐츠</h3>
+                    <p>이것은 기본 모달의 테스트 콘텐츠입니다.</p>
+                    <p>모달이 제대로 작동하는지 확인해보세요.</p>
+                </div>
+            `);
+            window.baseModal.open();
+        };
+
+        // Chrome API 모킹 (테스트용)
+        if (typeof chrome === 'undefined') {
+            window.chrome = {
+                storage: {
+                    local: {
+                        get: function(keys, callback) {
+                            // 테스트용 더미 데이터
+                            setTimeout(() => {
+                                callback({
+                                    rareItems: [
+                                        {
+                                            name: '테스트 검',
+                                            type: '무기/검',
+                                            power_min: 100,
+                                            power_max: 150,
+                                            weight_min: 10,
+                                            weight_max: 15,
+                                            abilities: ['공격력 증가', '치명타 확률 증가'],
+                                            attributes: ['물', '불']
+                                        },
+                                        {
+                                            name: '테스트 방어구',
+                                            type: '방어구/갑옷',
+                                            power_min: 50,
+                                            power_max: 80,
+                                            weight_min: 20,
+                                            weight_max: 25,
+                                            abilities: ['방어력 증가'],
+                                            attributes: ['어둠']
+                                        }
+                                    ]
+                                });
+                            }, 100);
+                        }
+                    }
+                },
+                runtime: {
+                    getURL: function(path) {
+                        return path;
+                    }
+                }
+            };
+        }
+
+        console.log('모달 테스트 페이지 로드 완료');
+    </script>
+</body>
+</html> 
