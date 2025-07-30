@@ -289,7 +289,7 @@ class MenuManager {
     container.innerHTML = '';
     
     const subMenuConfig = this.menuConfig.mainMenu.itemGuide.subMenu;
-    
+
     // 설정 기반으로 모든 서브메뉴 아이템 렌더링
     subMenuConfig.items.forEach(item => {
       const button = document.createElement('button');
@@ -855,11 +855,29 @@ class MenuManager {
       // 무기 카테고리일 때만 서브카테고리 표시
       subCategories.style.display = 'block';
       // 서브카테고리 전체 버튼 활성화
-      document.querySelectorAll('.sub-category').forEach(btn => btn.classList.remove('active'));
-      document.querySelector('.sub-category[data-category=""]').classList.add('active');
+      document.querySelectorAll('.sub-category').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.background = 'white';
+        btn.style.color = '#667eea';
+        btn.style.border = '2px solid #667eea';
+      });
+      const allSubBtn = document.querySelector('.sub-category[data-category=""]');
+      if (allSubBtn) {
+        allSubBtn.classList.add('active');
+        allSubBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        allSubBtn.style.color = 'white';
+        allSubBtn.style.border = 'none';
+      }
     } else {
-      // 다른 카테고리일 때 서브카테고리 숨김
+      // 다른 카테고리일 때 서브카테고리 숨김 및 활성 상태 초기화
       subCategories.style.display = 'none';
+      // 서브카테고리 버튼들의 활성 상태 초기화
+      document.querySelectorAll('.sub-category').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.background = 'white';
+        btn.style.color = '#667eea';
+        btn.style.border = '2px solid #667eea';
+      });
     }
     
     this.filterItems();

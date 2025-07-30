@@ -38,7 +38,7 @@
         ]
       }
     },
-    "itemGuide": {
+            "itemGuide": {
       "subMenu": {
         "title": "아이템 도감",
         "items": [
