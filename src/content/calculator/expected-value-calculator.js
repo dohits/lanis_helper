@@ -1,135 +1,16 @@
+import { COMBINE_ITEM_CONFIGS, DISMANTLE_ITEM_CONFIGS, isCombineItem, isDismantleItem } from './item-configs.js';
+
 // 기댓값 계산기 클래스
 class ExpectedValueCalculator {
   constructor() {
     // 공통 조합비
     this.baseCost = 300000; // 1회 조합비용 30만원
     
-    this.itemData = {
-      vitality_potion: {
-        name: '활력의 포션',
-        materials: [
-          { name: '마녀의 레시피', key: 'recipe' }
-        ],
-        successRates: {
-          2: 0.30, // 마녀의 레시피 2개: 30%
-          3: 0.45, // 마녀의 레시피 3개: 45%
-          4: 0.60, // 마녀의 레시피 4개: 60%
-          5: 0.75, // 마녀의 레시피 5개: 75%
-          6: 0.90, // 마녀의 레시피 6개: 90%
-          7: 1.00  // 마녀의 레시피 7개: 100%
-        }
-      },
-      seal_key: {
-        name: '봉인의 열쇠',
-        materials: [
-          { name: '붉은 결정', key: 'redCrystal' },
-          { name: '푸른 결정', key: 'blueCrystal' },
-          { name: '고급 가죽끈', key: 'highGradeLeather' }
-        ],
-        successRates: {
-          3: 0.70, // 붉은 결정 1 + 푸른 결정 1 + 고급 가죽끈 1 + 30만 골드 = 70%
-          4: 0.80, // 아무 피스나 1개 추가시 +10%
-          5: 0.90, // 아무 피스나 1개 추가시 +10%
-          6: 1.00  // 붉은 결정 2 + 푸른 결정 2 + 고급 가죽끈 2 + 30만 골드 = 100%
-        }
-      },
-      blue_crystal: {
-        name: '푸른 결정',
-        materials: [
-          { name: '푸른 구슬', key: 'blueBead' },
-          { name: '슬라임의 체액', key: 'slimeFluid' }
-        ],
-        successRates: {
-          2: 0.70, // 푸른 구슬 1 + 슬라임의 체액 1 = 70%
-          3: 0.85, // 아무 피스나 1개 추가시 +15%
-          4: 1.00  // 푸른 구슬 2 + 슬라임의 체액 2 = 100%
-        }
-      },
-      red_crystal: {
-        name: '붉은 결정',
-        materials: [
-          { name: '붉은 구슬', key: 'redBead' },
-          { name: '까마귀의 발톱', key: 'crowClaw' }
-        ],
-        successRates: {
-          2: 0.70, // 붉은 구슬 1 + 까마귀의 발톱 1 = 70%
-          3: 0.85, // 아무 피스나 1개 추가시 +15%
-          4: 1.00  // 붉은 구슬 2 + 까마귀의 발톱 2 = 100%
-        }
-      },
-      old_leather_strap: {
-        name: '낡은 가죽끈',
-        materials: [
-          { name: '낡은 가죽', key: 'oldLeather' }
-        ],
-        successRates: {
-          2: 0.70, // 낡은 가죽 2개 = 70%
-          3: 0.85, // 낡은 가죽 3개 = 85%
-          4: 1.00  // 낡은 가죽 4개 = 100%
-        }
-      },
-
-      high_grade_leather: {
-        name: '고급 가죽끈',
-        materials: [
-          { name: '고급 가죽', key: 'highGradeLeather' },
-          { name: '가죽끈', key: 'leatherStrap' }
-        ],
-        successRates: {
-          2: 0.70, // 고급 가죽 2개 또는 가죽끈 2개 = 70%
-          3: 0.85, // 고급 가죽 3개 또는 가죽끈 3개 = 85%
-          4: 1.00  // 고급 가죽 4개 또는 가죽끈 4개 = 100%
-        },
-        // 특별한 조합 방식: 두 재료 중 하나만 선택
-        combinationType: 'single_material'
-      },
-      iron_hammer: {
-        name: '쇠망치',
-        materials: [
-          { name: '나무 막대기', key: 'woodenStick' },
-          { name: '코크스', key: 'coke' },
-          { name: '철광석', key: 'ironOre' }
-        ],
-        successRates: {
-          3: 0.70, // 나무 막대기 1 + 코크스 1 + 철광석 1 = 70%
-          4: 0.80, // 아무 재료나 1개 추가 = 80%
-          5: 0.90, // 아무 재료나 1개 추가 = 90%
-          6: 1.00  // 나무 막대기 2 + 코크스 2 + 철광석 2 = 100%
-        }
-      },
-      leather_strap: {
-        name: '가죽끈',
-        materials: [
-          { name: '가죽', key: 'leather' },
-          { name: '낡은 가죽끈', key: 'oldLeatherStrap' }
-        ],
-        successRates: {
-          2: 0.70, // 가죽 2개 또는 낡은 가죽끈 2개 = 70%
-          3: 0.85, // 가죽 3개 또는 낡은 가죽끈 3개 = 85%
-          4: 1.00  // 가죽 4개 또는 낡은 가죽끈 4개 = 100%
-        },
-        // 특별한 조합 방식: 두 재료 중 하나만 선택
-        combinationType: 'single_material'
-      },
-      yellow_equipment: {
-        name: '노랑 등급 장비',
-        baseCost: 0,
-        recipeCost: 0,
-        successRates: {}
-      },
-      purple_equipment: {
-        name: '보라 등급 장비',
-        baseCost: 0,
-        recipeCost: 0,
-        successRates: {}
-      },
-      red_equipment: {
-        name: '빨강 등급 장비',
-        baseCost: 0,
-        recipeCost: 0,
-        successRates: {}
-      }
-    };
+    // 조합 아이템 데이터
+    this.itemData = COMBINE_ITEM_CONFIGS;
+    
+    // 분해 관련 데이터
+    this.dismantleData = DISMANTLE_ITEM_CONFIGS;
   }
 
   // 공통 기댓값 계산 함수
@@ -384,6 +265,97 @@ class ExpectedValueCalculator {
       id: id,
       name: this.itemData[id].name
     }));
+  }
+
+  // 분해 기댓값 계산 메서드들
+  calculateDismantleExpectedValue(equipmentType, rewardPrices) {
+    const dismantleItem = this.dismantleData[equipmentType];
+    if (!dismantleItem) {
+      throw new Error(`Unknown dismantle equipment type: ${equipmentType}`);
+    }
+
+    const cost = dismantleItem.cost; // 분해 비용 (보통 0)
+    let totalExpectedValue = 0;
+    let minExpectedValue = 0;
+    let maxExpectedValue = 0;
+    const rewards = [];
+
+    // 각 보상 아이템의 기댓값 계산
+    for (const [rewardKey, reward] of Object.entries(dismantleItem.rewards)) {
+      const price = rewardPrices[rewardKey] || 0;
+      const expectedQuantity = reward.average; // 평균 개수
+      const minQuantity = reward.min;
+      const maxQuantity = reward.max;
+      
+      const expectedValue = price * expectedQuantity;
+      const minValue = price * minQuantity;
+      const maxValue = price * maxQuantity;
+      
+      totalExpectedValue += expectedValue;
+      minExpectedValue += minValue;
+      maxExpectedValue += maxValue;
+      
+      rewards.push({
+        name: reward.name,
+        min: reward.min,
+        max: reward.max,
+        average: reward.average,
+        price: price,
+        expectedValue: expectedValue,
+        minValue: minValue,
+        maxValue: maxValue
+      });
+    }
+
+    return {
+      equipmentType: equipmentType,
+      equipmentName: dismantleItem.name,
+      cost: cost,
+      totalExpectedValue: Math.round(totalExpectedValue),
+      minExpectedValue: Math.round(minExpectedValue),
+      maxExpectedValue: Math.round(maxExpectedValue),
+      netExpectedValue: Math.round(totalExpectedValue - cost), // 순 기댓값 (비용 차감)
+      rewards: rewards,
+      isProfitable: totalExpectedValue > cost
+    };
+  }
+
+  // 흰색 장비 분해 기댓값 계산
+  calculateWhiteEquipmentDismantleExpectedValue(rewardPrices) {
+    return this.calculateDismantleExpectedValue('white_equipment', rewardPrices);
+  }
+
+  // 파랑 장비 분해 기댓값 계산
+  calculateBlueEquipmentDismantleExpectedValue(rewardPrices) {
+    return this.calculateDismantleExpectedValue('blue_equipment', rewardPrices);
+  }
+
+  // 노랑 장비 분해 기댓값 계산
+  calculateYellowEquipmentDismantleExpectedValue(rewardPrices) {
+    return this.calculateDismantleExpectedValue('yellow_equipment', rewardPrices);
+  }
+
+                    // 보라 장비 분해 기댓값 계산
+                  calculatePurpleEquipmentDismantleExpectedValue(rewardPrices) {
+                    return this.calculateDismantleExpectedValue('purple_equipment', rewardPrices);
+                  }
+                
+                  // 빨강 장비 분해 기댓값 계산
+                  calculateRedEquipmentDismantleExpectedValue(rewardPrices) {
+                    return this.calculateDismantleExpectedValue('red_equipment', rewardPrices);
+                  }
+                
+                  // 분해 가능한 장비 목록 가져오기
+  getDismantleableEquipment() {
+    return Object.keys(this.dismantleData).map(key => ({
+      id: key,
+      name: this.dismantleData[key].name
+    }));
+  }
+
+  // 분해 데이터 가져오기
+  getDismantleData(equipmentType) {
+    return this.dismantleData[equipmentType] || null;
   }
 }
 

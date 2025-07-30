@@ -4,17 +4,13 @@
 // 참고: exam/enchant-info-armor-example.js에서 데이터 구조 및 예시 확인
 async function fetchEnchantInfo(type = 'armor') {
   try {
-    // 장신구는 현재 시트가 존재하지 않으므로 빈 데이터 반환
-    if (type === 'accessory') {
-      return { success: true, data: [] };
-    }
-    
     const sheetId = '15E8F_qSxKPMqsL_ulfwm739PTjBLO64qN8jWuDZe7ng';
     
     // 타입별 GID 매핑
     const gidMap = {
-      'armor': '468768394',   // 장비해방(방어구) 시트 GID
-      'weapon': '337738977'   // 장비해방(무기) 시트 GID
+      'armor': '468768394',     // 장비해방(방어구) 시트 GID
+      'weapon': '337738977',    // 장비해방(무기) 시트 GID
+      'accessory': '567672096'  // 장비해방(장신구) 시트 GID
     };
     
     const gid = gidMap[type];

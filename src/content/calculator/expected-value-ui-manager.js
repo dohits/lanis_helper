@@ -1,3 +1,5 @@
+import { COMBINE_ITEM_CONFIGS, DISMANTLE_ITEM_CONFIGS, isCombineItem, isDismantleItem } from './item-configs.js';
+
 /**
  * 기댓값 계산기 UI 관리 모듈
  * 모달 이벤트 처리, 입력 필드 관리, 결과 표시 등을 담당
@@ -7,69 +9,9 @@ export class ExpectedValueUIManager {
     this.calculator = calculator;
     this.priceFetcher = priceFetcher;
     
-    // 아이템별 설정 정보
-    this.itemConfigs = {
-      vitality_potion: {
-        name: '활력의 포션',
-        materials: [{ name: '마녀의 레시피', key: 'recipe' }],
-        type: 'single'
-      },
-      seal_key: {
-        name: '봉인의 열쇠',
-        materials: [
-          { name: '붉은 결정', key: 'redCrystal' },
-          { name: '푸른 결정', key: 'blueCrystal' },
-          { name: '고급 가죽끈', key: 'highGradeLeather' }
-        ],
-        type: 'multi'
-      },
-      blue_crystal: {
-        name: '푸른 결정',
-        materials: [
-          { name: '푸른 구슬', key: 'blueBead' },
-          { name: '슬라임의 체액', key: 'slimeFluid' }
-        ],
-        type: 'multi'
-      },
-      red_crystal: {
-        name: '붉은 결정',
-        materials: [
-          { name: '붉은 구슬', key: 'redBead' },
-          { name: '까마귀의 발톱', key: 'crowClaw' }
-        ],
-        type: 'multi'
-      },
-      old_leather_strap: {
-        name: '낡은 가죽끈',
-        materials: [{ name: '낡은 가죽', key: 'oldLeather' }],
-        type: 'single'
-      },
-      leather_strap: {
-        name: '가죽끈',
-        materials: [
-          { name: '가죽', key: 'leather' },
-          { name: '낡은 가죽끈', key: 'oldLeatherStrap' }
-        ],
-        type: 'single_material'
-      },
-      high_grade_leather: {
-        name: '고급 가죽끈',
-        materials: [
-          { name: '고급 가죽', key: 'highGradeLeather' },
-          { name: '가죽끈', key: 'leatherStrap' }
-        ],
-        type: 'single_material'
-      },
-      iron_hammer: {
-        name: '쇠망치',
-        materials: [
-          { name: '나무 막대기', key: 'woodenStick' },
-          { name: '코크스', key: 'coke' },
-          { name: '철광석', key: 'ironOre' }
-        ],
-        type: 'multi'
-      }
-    };
+    // 아이템별 설정 정보 (중앙 설정 파일 사용)
+    this.itemConfigs = COMBINE_ITEM_CONFIGS;
+    this.dismantleConfigs = DISMANTLE_ITEM_CONFIGS;
   }
 
   // 기댓값 계산기 모달 생성
@@ -78,6 +20,20 @@ export class ExpectedValueUIManager {
     const existingModal = document.querySelector('.expected-value-modal');
     if (existingModal) {
       existingModal.remove();
+    }
+
+    // 스켈레톤 애니메이션 CSS 추가
+    if (!document.querySelector('#skeleton-animation-style')) {
+      const style = document.createElement('style');
+      style.id = 'skeleton-animation-style';
+      style.textContent = `
+        @keyframes skeleton-pulse {
+          0% { opacity: 1; }
+          50% { opacity: 0.5; }
+          100% { opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
     }
 
     // 모달 생성
@@ -353,14 +309,29 @@ export class ExpectedValueUIManager {
       selectedToggle.dataset.selected = 'true';
       updateToggleStyles();
       
+      const itemSelect = modal.querySelector('#itemSelect');
+      const selectedItem = itemSelect.value;
       // 직접 입력이 선택된 경우에만 입력 필드 표시
       if (selectedToggle === manualInputToggle) {
-        recipeInputSection.style.display = 'block';
-        this.updateInputFields(modal, modal.querySelector('#itemSelect').value);
+        if (isDismantleItem(selectedItem)) {
+          // 분해 아이템인 경우
+          this.createDismantleInputFields(modal, selectedItem);
+        } else {
+          // 조합 아이템인 경우
+          recipeInputSection.style.display = 'block';
+          this.updateInputFields(modal, selectedItem);
+        }
       } else {
-        recipeInputSection.style.display = 'none';
-        recipeCostInput.value = '';
-        this.clearMultiInputFields(modal);
+        // 구글 시트에서 가져오는 경우
+        if (isDismantleItem(selectedItem)) {
+          // 분해 아이템인 경우 입력 필드 숨김
+          recipeInputSection.style.display = 'none';
+        } else {
+          // 조합 아이템인 경우
+          recipeInputSection.style.display = 'none';
+          recipeCostInput.value = '';
+          this.clearMultiInputFields(modal);
+        }
       }
     };
 
@@ -374,21 +345,24 @@ export class ExpectedValueUIManager {
     itemSelect.addEventListener('change', (e) => {
       const selectedItem = e.target.value;
       const supportedItems = Object.keys(this.itemConfigs);
-      const equipmentItems = ['white_equipment', 'blue_equipment', 'yellow_equipment', 'purple_equipment', 'red_equipment'];
       
       if (supportedItems.includes(selectedItem)) {
-        // 등급 장비 아이템들은 시세 데이터 소스 필드를 숨김
-        if (equipmentItems.includes(selectedItem)) {
-          priceSourceSection.style.display = 'none';
-          modal.querySelector('#recipeInputSection').style.display = 'none';
-          resultSection.style.display = 'none';
-          this.clearMultiInputFields(modal);
-        } else {
-          priceSourceSection.style.display = 'block';
-          resultSection.style.display = 'none';
-          // 기본값으로 평균 거래가 선택
-          avgPriceToggle.click();
-        }
+        // 조합 아이템들
+        priceSourceSection.style.display = 'block';
+        resultSection.style.display = 'none';
+        // 기본값으로 평균 거래가 선택
+        avgPriceToggle.click();
+      } else if (isDismantleItem(selectedItem)) {
+        // 분해 아이템들
+        priceSourceSection.style.display = 'block';
+        modal.querySelector('#recipeInputSection').style.display = 'none';
+        resultSection.style.display = 'none';
+        this.clearMultiInputFields(modal);
+        
+        // 기본값으로 평균 거래가 선택
+        avgPriceToggle.click();
+        
+        // 분해 아이템 선택 시에는 입력 필드를 생성하지 않음 (토글 버튼에서 처리)
       } else {
         priceSourceSection.style.display = 'none';
         modal.querySelector('#recipeInputSection').style.display = 'none';
@@ -396,6 +370,48 @@ export class ExpectedValueUIManager {
         this.clearMultiInputFields(modal);
       }
     });
+  }
+
+  // 분해 입력 필드 생성
+  createDismantleInputFields(modal, selectedItem) {
+    const config = this.dismantleConfigs[selectedItem];
+    if (!config || !config.rewards || Object.keys(config.rewards).length === 0) {
+      return;
+    }
+
+    const recipeInputSection = modal.querySelector('#recipeInputSection');
+    if (!recipeInputSection) return;
+
+    // 기존 내용 제거
+    recipeInputSection.innerHTML = '';
+
+    // 분해 보상 시세 입력 필드 생성
+    const title = document.createElement('h4');
+    title.textContent = `${config.name} 분해 보상 시세`;
+    title.style.cssText = 'margin-bottom: 15px; color: #333; font-size: 14px;';
+    recipeInputSection.appendChild(title);
+
+    Object.entries(config.rewards).forEach(([rewardKey, reward]) => {
+      const rewardDiv = document.createElement('div');
+      rewardDiv.style.cssText = 'margin-bottom: 12px;';
+
+      const rewardLabel = document.createElement('label');
+      rewardLabel.htmlFor = rewardKey;
+      rewardLabel.style.cssText = 'display: block; margin-bottom: 4px; font-weight: bold; color: #333; font-size: 12px;';
+      rewardLabel.textContent = `${reward.name} 시세 (G):`;
+
+      const rewardInput = document.createElement('input');
+      rewardInput.type = 'number';
+      rewardInput.id = rewardKey;
+      rewardInput.placeholder = `${reward.name} 시세를 입력하세요`;
+      rewardInput.style.cssText = 'width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;';
+
+      rewardDiv.appendChild(rewardLabel);
+      rewardDiv.appendChild(rewardInput);
+      recipeInputSection.appendChild(rewardDiv);
+    });
+
+    recipeInputSection.style.display = 'block';
   }
 
   // 계산 버튼 이벤트 설정
@@ -410,13 +426,106 @@ export class ExpectedValueUIManager {
         return;
       }
 
-      // 등급 장비 아이템들 체크 (준비중인 아이템들)
-      if (equipmentItems.includes(selectedItem)) {
-        const resultSection = modal.querySelector('#resultSection');
-        const calculationResult = modal.querySelector('#calculationResult');
-        if (resultSection && calculationResult) {
-          calculationResult.innerHTML = '<div style="color: #dc3545; text-align: center;">계산 로직이 준비 중입니다.</div>';
-          resultSection.style.display = 'block';
+      // 분해 아이템들 체크
+      if (isDismantleItem(selectedItem)) {
+        const config = this.dismantleConfigs[selectedItem];
+        console.log('분해 아이템 선택:', selectedItem);
+        console.log('분해 설정:', config);
+        
+        if (!config || !config.rewards || Object.keys(config.rewards).length === 0) {
+          console.log('분해 설정이 없거나 보상이 없음');
+          const resultSection = modal.querySelector('#resultSection');
+          const calculationResult = modal.querySelector('#calculationResult');
+          if (resultSection && calculationResult) {
+            calculationResult.innerHTML = '<div style="color: #dc3545; text-align: center;">계산 로직이 준비 중입니다.</div>';
+            resultSection.style.display = 'block';
+          }
+          return;
+        }
+
+        const selectedSource = modal.querySelector('[data-selected="true"]');
+        if (!selectedSource) {
+          alert('시세 데이터 소스를 선택해주세요.');
+          return;
+        }
+
+        // 로딩 상태 시작
+        this.showLoadingState(modal, calculateBtn);
+
+        // 분해 기댓값 계산
+        try {
+          const rewardPrices = {};
+          let allPricesEntered = true;
+
+          // 시세 데이터 소스에 따라 보상 시세 가져오기
+          if (selectedSource.id === 'manualInputToggle') {
+            // 직접 입력
+            Object.entries(config.rewards).forEach(([rewardKey, reward]) => {
+              const input = modal.querySelector(`#${rewardKey}`);
+              console.log(`보상 입력 필드 ${rewardKey}:`, input);
+              if (!input || !input.value) {
+                console.log(`보상 입력값 없음: ${rewardKey}`);
+                allPricesEntered = false;
+                return;
+              }
+              const price = parseInt(input.value) || 0;
+              if (price <= 0) {
+                console.log(`보상 가격이 0 이하: ${rewardKey} = ${price}`);
+                allPricesEntered = false;
+                return;
+              }
+              rewardPrices[rewardKey] = price;
+              console.log(`보상 가격 설정: ${rewardKey} = ${price}`);
+            });
+          } else {
+            // 구글 시트에서 가져오기
+            for (const [rewardKey, reward] of Object.entries(config.rewards)) {
+              try {
+                const price = await this.priceFetcher.fetchItemPriceFromGoogleSheet(reward.name, selectedSource);
+                if (price <= 0) {
+                  throw new Error(`구글 시트에서 ${reward.name} 시세를 가져올 수 없습니다.`);
+                }
+                rewardPrices[rewardKey] = price;
+                console.log(`구글 시트에서 보상 가격 가져옴: ${reward.name} = ${price}`);
+              } catch (error) {
+                console.error(`보상 시세 가져오기 실패: ${reward.name}`, error);
+                alert(`구글 시트에서 ${reward.name} 시세를 가져올 수 없습니다. 직접 입력해주세요.`);
+                allPricesEntered = false;
+                break;
+              }
+            }
+          }
+
+          if (!allPricesEntered) {
+            this.hideLoadingState(modal, calculateBtn);
+            return;
+          }
+
+          console.log('분해 계산 시작, 보상 가격:', rewardPrices);
+          // 분해 기댓값 계산
+          let result;
+          if (selectedItem === 'white_equipment') {
+            result = this.calculator.calculateWhiteEquipmentDismantleExpectedValue(rewardPrices);
+          } else if (selectedItem === 'blue_equipment') {
+            result = this.calculator.calculateBlueEquipmentDismantleExpectedValue(rewardPrices);
+          } else if (selectedItem === 'yellow_equipment') {
+            result = this.calculator.calculateYellowEquipmentDismantleExpectedValue(rewardPrices);
+          } else if (selectedItem === 'purple_equipment') {
+            result = this.calculator.calculatePurpleEquipmentDismantleExpectedValue(rewardPrices);
+          } else if (selectedItem === 'red_equipment') {
+            result = this.calculator.calculateRedEquipmentDismantleExpectedValue(rewardPrices);
+          } else {
+            // 기본 분해 계산 메서드 사용
+            result = this.calculator.calculateDismantleExpectedValue(selectedItem, rewardPrices);
+          }
+          console.log('분해 계산 결과:', result);
+          await this.displayDismantleResult(modal, selectedItem, result, selectedSource);
+        } catch (error) {
+          console.error('분해 계산 오류:', error);
+          alert('계산 중 오류가 발생했습니다: ' + error.message);
+        } finally {
+          // 로딩 상태 종료
+          this.hideLoadingState(modal, calculateBtn);
         }
         return;
       }
@@ -482,40 +591,32 @@ export class ExpectedValueUIManager {
   // 스켈레톤 템플릿 생성
   createSkeletonTemplate() {
     return `
-      <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; border-left: 4px solid #007bff;">
+      <div style="background: #f8f9fa; padding: 15px; border-radius: 4px;">
         <div style="margin-bottom: 15px;">
-          <div style="height: 20px; background: #e9ecef; border-radius: 4px; margin-bottom: 8px; animation: pulse 1.5s infinite;"></div>
-          <div style="height: 16px; background: #e9ecef; border-radius: 4px; width: 60%; animation: pulse 1.5s infinite;"></div>
+          <div style="height: 20px; background: #e9ecef; border-radius: 4px; margin-bottom: 8px; animation: skeleton-pulse 1.5s infinite;"></div>
+          <div style="height: 16px; background: #e9ecef; border-radius: 4px; width: 60%; animation: skeleton-pulse 1.5s infinite;"></div>
         </div>
         
         <div style="margin-bottom: 15px;">
-          <div style="height: 18px; background: #e9ecef; border-radius: 4px; margin-bottom: 8px; animation: pulse 1.5s infinite;"></div>
-          <div style="height: 16px; background: #e9ecef; border-radius: 4px; width: 70%; animation: pulse 1.5s infinite;"></div>
+          <div style="height: 18px; background: #e9ecef; border-radius: 4px; margin-bottom: 8px; animation: skeleton-pulse 1.5s infinite;"></div>
+          <div style="height: 16px; background: #e9ecef; border-radius: 4px; width: 70%; animation: skeleton-pulse 1.5s infinite;"></div>
         </div>
         
         <div style="margin-bottom: 15px;">
-          <div style="height: 18px; background: #e9ecef; border-radius: 4px; margin-bottom: 8px; animation: pulse 1.5s infinite;"></div>
-          <div style="height: 16px; background: #e9ecef; border-radius: 4px; width: 50%; animation: pulse 1.5s infinite;"></div>
+          <div style="height: 18px; background: #e9ecef; border-radius: 4px; margin-bottom: 8px; animation: skeleton-pulse 1.5s infinite;"></div>
+          <div style="height: 16px; background: #e9ecef; border-radius: 4px; width: 50%; animation: skeleton-pulse 1.5s infinite;"></div>
         </div>
         
         <div style="margin-bottom: 15px;">
-          <div style="height: 18px; background: #e9ecef; border-radius: 4px; margin-bottom: 8px; animation: pulse 1.5s infinite;"></div>
-          <div style="height: 16px; background: #e9ecef; border-radius: 4px; width: 80%; animation: pulse 1.5s infinite;"></div>
+          <div style="height: 18px; background: #e9ecef; border-radius: 4px; margin-bottom: 8px; animation: skeleton-pulse 1.5s infinite;"></div>
+          <div style="height: 16px; background: #e9ecef; border-radius: 4px; width: 80%; animation: skeleton-pulse 1.5s infinite;"></div>
         </div>
         
         <div>
-          <div style="height: 18px; background: #e9ecef; border-radius: 4px; margin-bottom: 8px; animation: pulse 1.5s infinite;"></div>
-          <div style="height: 16px; background: #e9ecef; border-radius: 4px; width: 40%; animation: pulse 1.5s infinite;"></div>
+          <div style="height: 18px; background: #e9ecef; border-radius: 4px; margin-bottom: 8px; animation: skeleton-pulse 1.5s infinite;"></div>
+          <div style="height: 16px; background: #e9ecef; border-radius: 4px; width: 40%; animation: skeleton-pulse 1.5s infinite;"></div>
         </div>
       </div>
-      
-      <style>
-        @keyframes pulse {
-          0% { opacity: 1; }
-          50% { opacity: 0.5; }
-          100% { opacity: 1; }
-        }
-      </style>
     `;
   }
 
@@ -792,5 +893,118 @@ export class ExpectedValueUIManager {
       console.error('현재 시세를 가져오는 중 오류:', error);
       return null;
     }
+  }
+
+  // 분해 결과 표시
+  async displayDismantleResult(modal, itemId, result, selectedSource) {
+    const resultSection = modal.querySelector('#resultSection');
+    const calculationResult = modal.querySelector('#calculationResult');
+    const config = this.dismantleConfigs[itemId];
+
+    if (!resultSection || !calculationResult || !config) {
+      console.error('결과 표시 요소를 찾을 수 없습니다.');
+      return;
+    }
+
+    // 보상 아이템들의 현재 시세 가져오기
+    const currentPrices = {};
+    for (const [rewardKey, reward] of Object.entries(config.rewards)) {
+      try {
+        const prices = await this.getCurrentPrices(reward.name);
+        currentPrices[rewardKey] = prices;
+      } catch (error) {
+        console.error(`${reward.name} 현재 시세를 가져오는 중 오류:`, error);
+        currentPrices[rewardKey] = null;
+      }
+    }
+
+    const template = this.createDismantleResultTemplate(config, result, selectedSource, currentPrices);
+    calculationResult.innerHTML = template;
+    resultSection.style.display = 'block';
+  }
+
+  // 분해 결과 템플릿 생성
+  createDismantleResultTemplate(config, result, selectedSource, currentPrices = null) {
+    // 보상 아이템 정보 생성
+    const rewardInfo = result.rewards.map(reward => 
+      `<div>• ${reward.name}: ${reward.min}~${reward.max}개 (평균 ${reward.average}개)</div>`
+    ).join('');
+
+    // 보상 아이템 현재 시세 정보 생성
+    let currentPriceInfo = '';
+    if (currentPrices) {
+      const priceInfo = Object.entries(config.rewards).map(([rewardKey, reward]) => {
+        const prices = currentPrices[rewardKey];
+        if (prices) {
+          return `
+            <div style="margin-bottom: 10px;">
+              <div style="font-weight: bold; color: #333; margin-bottom: 5px;">
+                ${reward.name}:
+              </div>
+              <div style="font-size: 12px; color: #333; margin-left: 15px;">
+                <div>• 최근 거래가: ${prices.recent ? prices.recent.toLocaleString() : 'N/A'} G</div>
+                <div>• 평균 거래가: ${prices.average ? prices.average.toLocaleString() : 'N/A'} G</div>
+              </div>
+            </div>
+          `;
+        }
+        return '';
+      }).join('');
+      
+      if (priceInfo) {
+        currentPriceInfo = `
+          <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+            <div style="font-weight: bold; color: #333; margin-bottom: 10px;">
+              보상 아이템 현재 시세
+            </div>
+            ${priceInfo}
+          </div>
+        `;
+      }
+    }
+
+    let sourceText = '';
+    if (selectedSource.id === 'avgPriceToggle') {
+      sourceText = '평균 거래가';
+    } else if (selectedSource.id === 'recentPriceToggle') {
+      sourceText = '최근 거래가';
+    } else if (selectedSource.id === 'manualInputToggle') {
+      sourceText = '직접 입력';
+    }
+
+    return `
+      <div style="margin-bottom: 15px;">
+        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
+          데이터 소스: ${sourceText}
+        </div>
+        <div style="font-weight: bold; color: #007bff; font-style: italic; font-size: 16px;">
+          ${config.name} 분해 기댓값 계산 결과
+        </div>
+      </div>
+      
+      <div style="margin-bottom: 8px;">
+        <span style="color: #333;">보상 아이템:</span>
+      </div>
+      <div style="margin-bottom: 15px; margin-left: 15px; font-size: 12px; color: #333;">
+        ${rewardInfo}
+      </div>
+      
+      <div style="margin-bottom: 8px;">
+        <span style="color: #333;">최소 기댓값:</span> 
+        <span style="font-weight: bold; color: #333;">${result.minExpectedValue.toLocaleString()} G</span>
+      </div>
+      
+      <div style="margin-bottom: 8px;">
+        <span style="color: #333;">최대 기댓값:</span> 
+        <span style="font-weight: bold; color: #333;">${result.maxExpectedValue.toLocaleString()} G</span>
+      </div>
+      
+      <div style="margin-bottom: 15px;">
+        <span style="color: #333;">평균 기댓값:</span> 
+        <span style="font-weight: bold; color: #007bff;">${result.totalExpectedValue.toLocaleString()} G</span>
+      </div>
+      
+      ${currentPriceInfo}
+    `;
   }
 } 

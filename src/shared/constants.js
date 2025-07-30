@@ -1,5 +1,5 @@
 // 공통 상수 정의
-export const EXTENSION_VERSION = '1.5.1';
+export const EXTENSION_VERSION = '1.7.1';
 
 // 구글 시트 ID들
 export const SHEET_IDS = {
@@ -11,7 +11,7 @@ export const SHEET_IDS = {
 export const GID_MAP = {
   'armor': '468768394',    // 장비해방(방어구) 시트 GID
   'weapon': '337738977',   // 장비해방(무기) 시트 GID
-  'accessory': '999999998' // 장신구 시트 (미존재)
+  'accessory': '567672096' // 장비해방(장신구) 시트 GID
 };
 
 // API 엔드포인트
