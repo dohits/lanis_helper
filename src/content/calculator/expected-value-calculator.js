@@ -111,13 +111,6 @@ class ExpectedValueCalculator {
         // 특별한 조합 방식: 두 재료 중 하나만 선택
         combinationType: 'single_material'
       },
-
-      iron_hammer: {
-        name: '쇠망치',
-        baseCost: 0,
-        recipeCost: 0,
-        successRates: {}
-      },
       yellow_equipment: {
         name: '노랑 등급 장비',
         baseCost: 0,
