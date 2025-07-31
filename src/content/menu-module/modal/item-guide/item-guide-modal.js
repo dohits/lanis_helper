@@ -1,18 +1,10 @@
-import BaseModal from './base-modal.js';
+import BaseModal from '../base/base-modal.js';
+import { MODAL_CONFIGS } from '../shared/modal-constants.js';
 
 // 아이템 도감 모달
 class ItemGuideModal extends BaseModal {
   constructor() {
-    super({
-      id: 'itemGuideModal',
-      title: '아이템 도감',
-      className: 'item-guide-modal',
-      contentClassName: 'item-guide-content',
-      maxWidth: '900px',
-      maxHeight: '85vh',
-      width: '90vw',
-      height: '85vh'
-    });
+    super(MODAL_CONFIGS.itemGuide);
     
     this.items = [];
     this.filteredItems = [];
@@ -204,41 +196,14 @@ class ItemGuideModal extends BaseModal {
       gap: 8px;
     `;
 
-    const itemSearchInput = document.createElement('input');
-    itemSearchInput.type = 'text';
+    const itemSearchInput = this.createInput('아이템명 검색...', 'text');
     itemSearchInput.id = 'itemSearchInput';
-    itemSearchInput.placeholder = '아이템명 검색...';
     itemSearchInput.className = 'search-input';
-    itemSearchInput.style.cssText = `
-      width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s ease;
-      box-sizing: border-box;
-    `;
-    itemSearchInput.addEventListener('focus', () => {
-      itemSearchInput.style.borderColor = '#667eea';
-    });
-    itemSearchInput.addEventListener('blur', () => {
-      itemSearchInput.style.borderColor = '#d1d5db';
-    });
     itemSearchInput.addEventListener('input', () => this.filterItems());
 
-    const abilitySearchInput = document.createElement('input');
-    abilitySearchInput.type = 'text';
+    const abilitySearchInput = this.createInput('어빌리티 검색...', 'text');
     abilitySearchInput.id = 'abilitySearchInput';
-    abilitySearchInput.placeholder = '어빌리티 검색...';
     abilitySearchInput.className = 'search-input';
-    abilitySearchInput.style.cssText = itemSearchInput.style.cssText;
-    abilitySearchInput.addEventListener('focus', () => {
-      abilitySearchInput.style.borderColor = '#667eea';
-    });
-    abilitySearchInput.addEventListener('blur', () => {
-      abilitySearchInput.style.borderColor = '#d1d5db';
-    });
     abilitySearchInput.addEventListener('input', () => this.filterItems());
 
     searchContent.appendChild(itemSearchInput);
@@ -293,10 +258,7 @@ class ItemGuideModal extends BaseModal {
           btn.style.border = '2px solid #667eea';
         }
         
-        console.log('속성 필터 클릭됨:', attr);
-        console.log('this.filterItems 호출 시도');
         this.filterItems();
-        console.log('this.filterItems 호출 완료');
       });
       
       attributeContent.appendChild(btn);
@@ -355,10 +317,7 @@ class ItemGuideModal extends BaseModal {
         btn.style.border = 'none';
         
         const category = btn.getAttribute('data-category');
-        console.log('메인 카테고리 클릭됨:', category);
-        console.log('this.handleMainCategoryChange 호출 시도');
         this.handleMainCategoryChange(category);
-        console.log('this.handleMainCategoryChange 호출 완료');
       });
       
       categoryContent.appendChild(btn);
@@ -415,10 +374,7 @@ class ItemGuideModal extends BaseModal {
         btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
         btn.style.color = 'white';
         btn.style.border = 'none';
-        console.log('서브 카테고리 클릭됨:', category);
-        console.log('this.filterItems 호출 시도');
         this.filterItems();
-        console.log('this.filterItems 호출 완료');
       });
       
       subCategories.appendChild(btn);
@@ -704,11 +660,9 @@ class ItemGuideModal extends BaseModal {
 
   // 메인 카테고리 변경 처리
   handleMainCategoryChange(category) {
-    console.log('handleMainCategoryChange 시작:', category);
     const subCategories = document.getElementById('subCategories');
     
     if (category === '무기') {
-      console.log('무기 카테고리 선택됨');
       subCategories.style.display = 'flex';
       document.querySelectorAll('.sub-category').forEach(btn => {
         btn.classList.remove('active');
@@ -724,7 +678,6 @@ class ItemGuideModal extends BaseModal {
         allSubBtn.style.border = 'none';
       }
     } else {
-      console.log('다른 카테고리 선택됨:', category);
       subCategories.style.display = 'none';
       document.querySelectorAll('.sub-category').forEach(btn => {
         btn.classList.remove('active');
@@ -734,21 +687,14 @@ class ItemGuideModal extends BaseModal {
       });
     }
     
-    console.log('this.filterItems 호출 시도');
     this.filterItems();
-    console.log('this.filterItems 호출 완료');
   }
 
   // 검색/필터
   filterItems() {
-    console.log('filterItems 메서드 시작');
     const searchInput = document.getElementById('itemSearchInput');
     const abilitySearchInput = document.getElementById('abilitySearchInput');
     const items = document.querySelectorAll('.item-guide-item');
-    
-    console.log('검색 입력 요소:', searchInput);
-    console.log('어빌리티 검색 입력 요소:', abilitySearchInput);
-    console.log('아이템 요소들:', items.length);
     
     // 검색 입력이 없어도 기본값 사용
     const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
@@ -760,17 +706,9 @@ class ItemGuideModal extends BaseModal {
       btn.getAttribute('data-attribute').toLowerCase()
     );
     
-    // 디버깅 로그
-    console.log('=== 필터링 디버깅 ===');
-    console.log('선택된 메인 카테고리:', selectedMainCategory);
-    console.log('선택된 서브 카테고리:', selectedSubCategory);
-    console.log('활성 속성들:', activeAttributes);
-    console.log('검색어:', searchTerm);
-    console.log('어빌리티 검색어:', abilitySearchTerm);
-    
     let visibleCount = 0;
 
-    items.forEach((item, index) => {
+    items.forEach((item) => {
       const itemName = item.getAttribute('data-name');
       const itemMainCategory = item.getAttribute('data-main-category');
       const itemSubCategory = item.getAttribute('data-sub-category');
@@ -787,22 +725,6 @@ class ItemGuideModal extends BaseModal {
           return itemAttributes.includes(attr) || itemAttributes.includes(attr.toLowerCase());
         });
       
-      // 첫 번째 아이템만 디버깅 로그 출력
-      if (index === 0) {
-        console.log('첫 번째 아이템 데이터:');
-        console.log('- 아이템명:', itemName);
-        console.log('- 메인 카테고리:', itemMainCategory);
-        console.log('- 서브 카테고리:', itemSubCategory);
-        console.log('- 어빌리티:', itemAbilities);
-        console.log('- 속성:', itemAttributes);
-        console.log('매칭 결과:');
-        console.log('- 검색 매칭:', matchesSearch);
-        console.log('- 어빌리티 매칭:', matchesAbility);
-        console.log('- 메인 카테고리 매칭:', matchesMainCategory);
-        console.log('- 서브 카테고리 매칭:', matchesSubCategory);
-        console.log('- 속성 매칭:', matchesAttribute);
-      }
-      
       if (matchesSearch && matchesAbility && matchesAttribute && matchesMainCategory && matchesSubCategory) {
         item.style.display = 'block';
         visibleCount++;
@@ -815,8 +737,6 @@ class ItemGuideModal extends BaseModal {
     if (countElement) {
       countElement.textContent = visibleCount;
     }
-    
-    console.log('총 표시된 아이템 수:', visibleCount);
   }
 }
 

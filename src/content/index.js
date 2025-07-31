@@ -5,15 +5,14 @@ import SearchEngine from './search-engine.js';
 import UserProfileManager from './user-profile.js';
 import ITEM_COLORS from '../styles/item-colors.js';
 import MenuManager from './menu-module/menu-manager.js';
-import SettingsModalManager from './menu-module/settings-modal.js';
+
 
 // 전역 인스턴스들을 저장할 객체
 const managers = {
   itemStatsManager: null,
   searchEngine: null,
   userProfileManager: null,
-  menuManager: null,
-  settingsModalManager: null
+  menuManager: null
 };
 
 // CSS 스타일 로드 (안전한 방식)
@@ -308,13 +307,11 @@ function startInitialization() {
     managers.searchEngine = new SearchEngine();
     managers.userProfileManager = new UserProfileManager();
     managers.menuManager = new MenuManager();
-    managers.settingsModalManager = new SettingsModalManager();
 
     // === 전역 window에 직접 할당 (토글 등 menu-manager.js 호환) ===
     window.userProfileManager = managers.userProfileManager;
     window.itemStatsManager = managers.itemStatsManager;
     window.menuManager = managers.menuManager;
-    window.settingsModalManager = managers.settingsModalManager;
     // ==========================================================
 
     // DOM이 준비되면 초기화 실행

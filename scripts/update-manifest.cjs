@@ -105,6 +105,8 @@ function copyMenuConfig() {
   }
 }
 
+
+
 // 메인 실행
 try {
   updateManifest();
