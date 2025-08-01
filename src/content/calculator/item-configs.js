@@ -18,7 +18,8 @@ export const COMBINE_ITEM_CONFIGS = {
       6: 0.90, // 마녀의 레시피 6개: 90%
       7: 1.00  // 마녀의 레시피 7개: 100%
     },
-    type: 'single'
+    type: 'single',
+    calculationType: 'single_material'
   },
   seal_key: {
     name: '봉인의 열쇠',
@@ -33,7 +34,8 @@ export const COMBINE_ITEM_CONFIGS = {
       5: 0.90, // 아무 피스나 1개 추가시 +10%
       6: 1.00  // 붉은 결정 2 + 푸른 결정 2 + 고급 가죽끈 2 + 30만 골드 = 100%
     },
-    type: 'multi'
+    type: 'multi',
+    calculationType: 'multi_material'
   },
   blue_crystal: {
     name: '푸른 결정',
@@ -46,7 +48,8 @@ export const COMBINE_ITEM_CONFIGS = {
       3: 0.85, // 아무 피스나 1개 추가시 +15%
       4: 1.00  // 푸른 구슬 2 + 슬라임의 체액 2 = 100%
     },
-    type: 'multi'
+    type: 'multi',
+    calculationType: 'multi_material'
   },
   red_crystal: {
     name: '붉은 결정',
@@ -59,7 +62,8 @@ export const COMBINE_ITEM_CONFIGS = {
       3: 0.85, // 아무 피스나 1개 추가시 +15%
       4: 1.00  // 붉은 구슬 2 + 까마귀의 발톱 2 = 100%
     },
-    type: 'multi'
+    type: 'multi',
+    calculationType: 'multi_material'
   },
   old_leather_strap: {
     name: '낡은 가죽끈',
@@ -71,7 +75,8 @@ export const COMBINE_ITEM_CONFIGS = {
       3: 0.85, // 낡은 가죽 3개 = 85%
       4: 1.00  // 낡은 가죽 4개 = 100%
     },
-    type: 'single'
+    type: 'single',
+    calculationType: 'single_material'
   },
   leather_strap: {
     name: '가죽끈',
@@ -84,7 +89,8 @@ export const COMBINE_ITEM_CONFIGS = {
       3: 0.85, // 가죽 3개 또는 낡은 가죽끈 3개 = 85%
       4: 1.00  // 가죽 4개 또는 낡은 가죽끈 4개 = 100%
     },
-    type: 'single_material'
+    type: 'single_material',
+    calculationType: 'single_material_choice'
   },
   high_grade_leather: {
     name: '고급 가죽끈',
@@ -97,7 +103,8 @@ export const COMBINE_ITEM_CONFIGS = {
       3: 0.85, // 고급 가죽 3개 또는 가죽끈 3개 = 85%
       4: 1.00  // 고급 가죽 4개 또는 가죽끈 4개 = 100%
     },
-    type: 'single_material'
+    type: 'single_material',
+    calculationType: 'single_material_choice'
   },
   iron_hammer: {
     name: '쇠망치',
@@ -108,11 +115,11 @@ export const COMBINE_ITEM_CONFIGS = {
     ],
     successRates: {
       3: 0.70, // 나무 막대기 1 + 코크스 1 + 철광석 1 = 70%
-      4: 0.80, // 아무 재료나 1개 추가 = 80%
-      5: 0.90, // 아무 재료나 1개 추가 = 90%
-      6: 1.00  // 나무 막대기 2 + 코크스 2 + 철광석 2 = 100%
+      4: 0.85, // 아무 피스나 1개 추가시 +15%
+      5: 1.00  // 나무 막대기 2 + 코크스 1 + 철광석 2 = 100%
     },
-    type: 'multi'
+    type: 'multi',
+    calculationType: 'multi_material'
   }
 };
 
@@ -214,6 +221,147 @@ export const DISMANTLE_ITEM_CONFIGS = {
     }
   }
 };
+
+// 계산 규칙 설정
+export const CALCULATION_RULES = {
+  vitality_potion: {
+    type: 'single_material',
+    baseCost: 300000,
+    materialCostFormula: (materialCosts, count) => {
+      return count * materialCosts.recipe;
+    },
+    combinationFormula: (materials, count) => {
+      return `${materials[0].name} ${count}개`;
+    }
+  },
+  
+  seal_key: {
+    type: 'multi_material',
+    baseCost: 300000,
+    materialCostFormula: (materialCosts, count) => {
+      // 다중 재료 최적 분배 계산
+      return calculateOptimalDistribution(materialCosts, count, COMBINE_ITEM_CONFIGS.seal_key.materials);
+    },
+    combinationFormula: (materials, count) => {
+      return `재료 ${count}개 조합`;
+    }
+  },
+  
+  blue_crystal: {
+    type: 'multi_material',
+    baseCost: 300000,
+    materialCostFormula: (materialCosts, count) => {
+      return calculateOptimalDistribution(materialCosts, count, COMBINE_ITEM_CONFIGS.blue_crystal.materials);
+    },
+    combinationFormula: (materials, count) => {
+      return `재료 ${count}개 조합`;
+    }
+  },
+  
+  red_crystal: {
+    type: 'multi_material',
+    baseCost: 300000,
+    materialCostFormula: (materialCosts, count) => {
+      return calculateOptimalDistribution(materialCosts, count, COMBINE_ITEM_CONFIGS.red_crystal.materials);
+    },
+    combinationFormula: (materials, count) => {
+      return `재료 ${count}개 조합`;
+    }
+  },
+  
+  old_leather_strap: {
+    type: 'single_material',
+    baseCost: 300000,
+    materialCostFormula: (materialCosts, count) => {
+      return count * materialCosts.oldLeather;
+    },
+    combinationFormula: (materials, count) => {
+      return `${materials[0].name} ${count}개`;
+    }
+  },
+  
+  leather_strap: {
+    type: 'single_material_choice',
+    baseCost: 300000,
+    materialCostFormula: (materialCosts, count) => {
+      // 두 재료 중 더 싼 것 선택
+      const cost1 = materialCosts.leather;
+      const cost2 = materialCosts.oldLeatherStrap;
+      return count * Math.min(cost1, cost2);
+    },
+    combinationFormula: (materials, materialCosts, count) => {
+      const cost1 = materialCosts.leather;
+      const cost2 = materialCosts.oldLeatherStrap;
+      const cheaperMaterial = cost1 <= cost2 ? materials[0] : materials[1];
+      return `${cheaperMaterial.name} ${count}개`;
+    }
+  },
+  
+  high_grade_leather: {
+    type: 'single_material_choice',
+    baseCost: 300000,
+    materialCostFormula: (materialCosts, count) => {
+      // 두 재료 중 더 싼 것 선택
+      const cost1 = materialCosts.highGradeLeather;
+      const cost2 = materialCosts.leatherStrap;
+      return count * Math.min(cost1, cost2);
+    },
+    combinationFormula: (materials, materialCosts, count) => {
+      const cost1 = materialCosts.highGradeLeather;
+      const cost2 = materialCosts.leatherStrap;
+      const cheaperMaterial = cost1 <= cost2 ? materials[0] : materials[1];
+      return `${cheaperMaterial.name} ${count}개`;
+    }
+  },
+  
+  iron_hammer: {
+    type: 'multi_material',
+    baseCost: 300000,
+    materialCostFormula: (materialCosts, count) => {
+      return calculateOptimalDistribution(materialCosts, count, COMBINE_ITEM_CONFIGS.iron_hammer.materials);
+    },
+    combinationFormula: (materials, count) => {
+      return `재료 ${count}개 조합`;
+    }
+  }
+};
+
+// 다중 재료 최적 분배 계산 함수
+function calculateOptimalDistribution(materialCosts, totalCount, materialConfigs) {
+  // materialCosts와 materialConfigs를 매핑
+  const materials = materialConfigs.map(material => ({
+    key: material.key,
+    name: material.name,
+    cost: materialCosts[material.key],
+    count: 0
+  }));
+  
+  // 기본 조합 (모든 재료 1개씩)
+  const baseCount = Math.floor(totalCount / materials.length);
+  const remainingCount = totalCount % materials.length;
+  
+  // 기본 분배
+  materials.forEach(material => {
+    material.count = baseCount;
+  });
+  
+  // 남은 개수를 가장 싼 재료부터 추가
+  if (remainingCount > 0) {
+    const sortedMaterials = [...materials].sort((a, b) => a.cost - b.cost);
+    for (let i = 0; i < remainingCount; i++) {
+      sortedMaterials[i].count++;
+    }
+  }
+  
+  return {
+    totalCost: materials.reduce((sum, material) => 
+      sum + (material.count * material.cost), 0),
+    combination: materials
+      .filter(material => material.count > 0)
+      .map(material => `${material.name} ${material.count}개`)
+      .join(' + ')
+  };
+}
 
 // 모든 아이템 설정 통합
 export const ALL_ITEM_CONFIGS = {

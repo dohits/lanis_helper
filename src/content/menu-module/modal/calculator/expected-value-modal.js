@@ -14,7 +14,7 @@ export class ExpectedValueModal extends BaseModal {
       title: '기댓값 계산기',
       className: 'expected-value-modal',
       contentClassName: 'expected-value-modal-content',
-      maxWidth: '500px',
+      maxWidth: '600px',
       maxHeight: '80vh',
       closeOnOutsideClick: true,
       closeOnEsc: true
@@ -44,33 +44,18 @@ export class ExpectedValueModal extends BaseModal {
   // 모달 열기 (오버라이드)
   open() {
     super.open();
+    this.addSkeletonAnimation();
     this.createContent();
     this.setupEvents();
-    this.addSkeletonAnimation();
-  }
-
-  // 스켈레톤 애니메이션 CSS 추가
-  addSkeletonAnimation() {
-    if (!document.querySelector('#skeleton-animation-style')) {
-      const style = document.createElement('style');
-      style.id = 'skeleton-animation-style';
-      style.textContent = `
-        @keyframes skeleton-pulse {
-          0% { opacity: 1; }
-          50% { opacity: 0.5; }
-          100% { opacity: 1; }
-        }
-      `;
-      document.head.appendChild(style);
-    }
   }
 
   // 모달 내용 생성
   createContent() {
     const content = document.createElement('div');
     content.style.cssText = `
-      padding: 20px;
-      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
       height: 100%;
     `;
 
@@ -82,6 +67,10 @@ export class ExpectedValueModal extends BaseModal {
     this.priceSourceSection = this.createPriceSourceSection();
     content.appendChild(this.priceSourceSection);
 
+    // 계산 버튼 섹션
+    const calculateButtonSection = this.createCalculateButtonSection();
+    content.appendChild(calculateButtonSection);
+
     // 결과 섹션
     this.resultSection = this.createResultSection();
     content.appendChild(this.resultSection);
@@ -92,16 +81,30 @@ export class ExpectedValueModal extends BaseModal {
   // 상품 선택 섹션 생성
   createItemSelectSection() {
     const section = document.createElement('div');
-    section.style.marginBottom = '20px';
 
-    const label = document.createElement('label');
-    label.htmlFor = 'itemSelect';
-    label.style.cssText = 'display: block; margin-bottom: 8px; font-weight: bold; color: #333;';
-    label.textContent = '기댓값 계산 케이스 선택:';
+    const label = this.createLabel('기댓값 계산 케이스 선택:');
 
     this.itemSelect = document.createElement('select');
     this.itemSelect.id = 'itemSelect';
-    this.itemSelect.style.cssText = 'width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;';
+    this.itemSelect.style.cssText = `
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+      outline: none;
+      transition: border-color 0.2s ease;
+      box-sizing: border-box;
+    `;
+
+    // 포커스 효과
+    this.itemSelect.addEventListener('focus', () => {
+      this.itemSelect.style.borderColor = '#667eea';
+    });
+    this.itemSelect.addEventListener('blur', () => {
+      this.itemSelect.style.borderColor = '#d1d5db';
+    });
 
     const defaultOption = document.createElement('option');
     defaultOption.value = '';
@@ -142,36 +145,18 @@ export class ExpectedValueModal extends BaseModal {
   createPriceSourceSection() {
     const section = document.createElement('div');
     section.id = 'priceSourceSection';
-    section.style.cssText = 'display: none; margin-bottom: 20px;';
+    section.style.cssText = 'display: none;';
 
-    const sourceLabel = document.createElement('label');
-    sourceLabel.style.cssText = 'display: block; margin-bottom: 8px; font-weight: bold; color: #333;';
-    sourceLabel.textContent = '시세 데이터 소스:';
+    const sourceLabel = this.createLabel('시세 데이터 소스:');
 
     // 토글 버튼 컨테이너
     const toggleContainer = document.createElement('div');
     toggleContainer.style.cssText = 'display: flex; gap: 10px; margin-bottom: 15px;';
 
-    // 평균 거래가 토글
-    this.avgPriceToggle = document.createElement('button');
-    this.avgPriceToggle.id = 'avgPriceToggle';
-    this.avgPriceToggle.textContent = '평균 거래가';
-    this.avgPriceToggle.style.cssText = 'padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; background: #f8f9fa; cursor: pointer; font-size: 12px;';
-    this.avgPriceToggle.dataset.selected = 'false';
-
-    // 최근 거래가 토글
-    this.recentPriceToggle = document.createElement('button');
-    this.recentPriceToggle.id = 'recentPriceToggle';
-    this.recentPriceToggle.textContent = '최근 거래가';
-    this.recentPriceToggle.style.cssText = 'padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; background: #f8f9fa; cursor: pointer; font-size: 12px;';
-    this.recentPriceToggle.dataset.selected = 'false';
-
-    // 직접 입력 토글
-    this.manualInputToggle = document.createElement('button');
-    this.manualInputToggle.id = 'manualInputToggle';
-    this.manualInputToggle.textContent = '직접 입력';
-    this.manualInputToggle.style.cssText = 'padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; background: #f8f9fa; cursor: pointer; font-size: 12px;';
-    this.manualInputToggle.dataset.selected = 'false';
+    // 평균가 토글
+    this.avgPriceToggle = this.createToggleButton('평균가', 'avgPriceToggle');
+    this.recentPriceToggle = this.createToggleButton('최근가', 'recentPriceToggle');
+    this.manualInputToggle = this.createToggleButton('직접입력', 'manualInputToggle');
 
     toggleContainer.appendChild(this.avgPriceToggle);
     toggleContainer.appendChild(this.recentPriceToggle);
@@ -180,24 +165,16 @@ export class ExpectedValueModal extends BaseModal {
     // 레시피 입력 섹션
     this.recipeInputSection = document.createElement('div');
     this.recipeInputSection.id = 'recipeInputSection';
-    this.recipeInputSection.style.cssText = 'display: none; margin-bottom: 20px;';
+    this.recipeInputSection.style.cssText = 'display: none; margin-top: 15px;';
 
     // 기본 입력 필드 (활력의 포션용)
-    const recipeLabel = document.createElement('label');
-    recipeLabel.htmlFor = 'recipeCost';
-    recipeLabel.style.cssText = 'display: block; margin-bottom: 8px; font-weight: bold; color: #333;';
-    recipeLabel.textContent = '마녀의 레시피 시세 (G):';
-
-    this.recipeCostInput = document.createElement('input');
-    this.recipeCostInput.type = 'number';
-    this.recipeCostInput.id = 'recipeCost';
-    this.recipeCostInput.placeholder = '레시피 시세를 입력하세요';
-    this.recipeCostInput.style.cssText = 'width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;';
+    const recipeLabel = this.createLabel('마녀의 레시피 시세 (G):');
+    this.recipeCostInput = this.createInput('레시피 시세를 입력하세요', 'number');
 
     // 봉인의 열쇠용 다중 입력 필드 컨테이너
     this.multiInputContainer = document.createElement('div');
     this.multiInputContainer.id = 'multiInputContainer';
-    this.multiInputContainer.style.cssText = 'display: none;';
+    this.multiInputContainer.style.cssText = 'display: none; margin-top: 15px;';
 
     this.recipeInputSection.appendChild(recipeLabel);
     this.recipeInputSection.appendChild(this.recipeCostInput);
@@ -210,35 +187,158 @@ export class ExpectedValueModal extends BaseModal {
     return section;
   }
 
+  // 토글 버튼 생성
+  createToggleButton(text, id) {
+    const button = document.createElement('button');
+    button.id = id;
+    button.textContent = text;
+    button.type = 'button';
+    button.style.cssText = `
+      padding: 8px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: #f9fafb;
+      color: #6b7280;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      outline: none;
+    `;
+    button.dataset.selected = 'false';
+
+    // 호버 효과
+    button.addEventListener('mouseenter', () => {
+      if (button.dataset.selected === 'false') {
+        button.style.background = '#f3f4f6';
+        button.style.borderColor = '#9ca3af';
+      }
+    });
+    button.addEventListener('mouseleave', () => {
+      if (button.dataset.selected === 'false') {
+        button.style.background = '#f9fafb';
+        button.style.borderColor = '#d1d5db';
+      }
+    });
+
+    return button;
+  }
+
+  // 계산 버튼 섹션 생성
+  createCalculateButtonSection() {
+    const section = document.createElement('div');
+    section.style.cssText = 'margin-top: 10px;';
+
+    // 계산 버튼
+    this.calculateBtn = this.createButton('계산하기', 'primary');
+    this.calculateBtn.disabled = true;
+    
+    // 비활성화 상태 스타일 적용
+    this.updateCalculateButtonStyle();
+
+    section.appendChild(this.calculateBtn);
+    return section;
+  }
+
+  // 계산 버튼 스타일 업데이트
+  updateCalculateButtonStyle() {
+    if (this.calculateBtn.disabled) {
+      this.calculateBtn.style.background = '#d1d5db';
+      this.calculateBtn.style.color = '#9ca3af';
+      this.calculateBtn.style.cursor = 'not-allowed';
+      this.calculateBtn.style.opacity = '0.6';
+    } else {
+      this.calculateBtn.style.background = '#667eea';
+      this.calculateBtn.style.color = 'white';
+      this.calculateBtn.style.cursor = 'pointer';
+      this.calculateBtn.style.opacity = '1';
+    }
+  }
+
+  // 직접 입력 유효성 검사
+  validateDirectInput() {
+    const selectedItem = this.itemSelect.value;
+    const selectedSource = this.getSelectedSource();
+    
+    if (selectedSource !== this.manualInputToggle) {
+      return true; // 직접 입력이 아닌 경우 유효
+    }
+    
+    if (!selectedItem) {
+      return false;
+    }
+    
+    // 분해 아이템인 경우
+    if (isDismantleItem(selectedItem)) {
+      const inputs = this.multiInputContainer.querySelectorAll('input');
+      for (const input of inputs) {
+        const value = parseFloat(input.value);
+        if (isNaN(value) || value <= 0 || value % 1 !== 0) {
+          return false;
+        }
+      }
+      return true;
+    }
+    
+    // 조합 아이템인 경우
+    const config = this.itemConfigs[selectedItem];
+    if (!config) {
+      return false;
+    }
+    
+    if (config.type === 'single') {
+      // 단일 재료
+      const value = parseFloat(this.recipeCostInput.value);
+      return !isNaN(value) && value > 0 && value % 1 === 0;
+    } else {
+      // 다중 재료
+      const inputs = this.multiInputContainer.querySelectorAll('input');
+      for (const input of inputs) {
+        const value = parseFloat(input.value);
+        if (isNaN(value) || value <= 0 || value % 1 !== 0) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+
+  // 버튼 활성화/비활성화 업데이트
+  updateCalculateButtonState() {
+    const selectedItem = this.itemSelect.value;
+    const selectedSource = this.getSelectedSource();
+    
+    if (!selectedItem || !selectedSource) {
+      this.calculateBtn.disabled = true;
+    } else if (selectedSource === this.manualInputToggle) {
+      // 직접 입력인 경우 유효성 검사
+      this.calculateBtn.disabled = !this.validateDirectInput();
+    } else {
+      // 구글 시트 데이터인 경우 활성화
+      this.calculateBtn.disabled = false;
+    }
+    
+    this.updateCalculateButtonStyle();
+  }
+
   // 결과 섹션 생성
   createResultSection() {
     const section = document.createElement('div');
     section.id = 'resultSection';
-    section.style.cssText = 'display: none; margin-top: 20px; padding: 16px; background: #f8f9fa; border-radius: 8px; min-height: 100px;';
+    section.style.cssText = 'display: none; margin-top: 20px;';
 
-    const calculationResult = document.createElement('div');
-    calculationResult.id = 'calculationResult';
-    calculationResult.innerHTML = '<p style="text-align: center; color: #666;">케이스를 선택하고 계산 버튼을 클릭하세요.</p>';
-
-    // 계산 버튼
-    this.calculateBtn = document.createElement('button');
-    this.calculateBtn.textContent = '계산하기';
-    this.calculateBtn.style.cssText = `
-      width: 100%;
-      padding: 12px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 16px;
+    const resultContainer = document.createElement('div');
+    resultContainer.id = 'calculationResult';
+    resultContainer.style.cssText = `
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      min-height: 100px;
     `;
-    this.calculateBtn.disabled = true;
+    resultContainer.innerHTML = '<p style="text-align: center; color: #6b7280;">케이스를 선택하고 계산 버튼을 클릭하세요.</p>';
 
-    section.appendChild(calculationResult);
-    section.appendChild(this.calculateBtn);
-
+    section.appendChild(resultContainer);
     return section;
   }
 
@@ -255,13 +355,44 @@ export class ExpectedValueModal extends BaseModal {
       const selectedItem = this.itemSelect.value;
       if (selectedItem) {
         this.priceSourceSection.style.display = 'block';
-        this.calculateBtn.disabled = false;
-        this.updateInputFields(selectedItem);
+        this.resultSection.style.display = 'none';
+        
+        // 분해 아이템이 아닌 경우에만 입력 필드 업데이트
+        if (!isDismantleItem(selectedItem)) {
+          this.updateInputFields(selectedItem);
+        } else {
+          // 분해 아이템인 경우 입력 필드 숨김
+          this.recipeInputSection.style.display = 'none';
+          this.recipeCostInput.style.display = 'none';
+          // 라벨도 숨김
+          const recipeLabel = this.recipeInputSection.querySelector('label');
+          if (recipeLabel) {
+            recipeLabel.style.display = 'none';
+          }
+        }
+        
+        // 현재 선택된 데이터 소스 확인
+        const selectedSource = this.getSelectedSource();
+        if (selectedSource) {
+          // 직접 입력이 선택된 경우 입력 필드 표시
+          if (selectedSource === this.manualInputToggle) {
+            this.recipeInputSection.style.display = 'block';
+            if (isDismantleItem(selectedItem)) {
+              this.createDismantleInputFields(selectedItem);
+            } else {
+              // 조합 아이템인 경우에만 updateInputFields 호출
+              this.updateInputFields(selectedItem);
+            }
+          }
+        }
       } else {
         this.priceSourceSection.style.display = 'none';
-        this.calculateBtn.disabled = true;
         this.resultSection.style.display = 'none';
+        this.recipeInputSection.style.display = 'none';
       }
+      
+      // 버튼 상태 업데이트
+      this.updateCalculateButtonState();
     });
   }
 
@@ -271,24 +402,45 @@ export class ExpectedValueModal extends BaseModal {
 
     const updateToggleStyles = () => {
       toggles.forEach(toggle => {
-        toggle.style.background = '#f8f9fa';
-        toggle.style.color = '#333';
+        toggle.style.background = '#f9fafb';
+        toggle.style.color = '#6b7280';
+        toggle.style.borderColor = '#d1d5db';
         toggle.dataset.selected = 'false';
       });
     };
 
     const setupToggleClick = (selectedToggle) => {
       updateToggleStyles();
-      selectedToggle.style.background = '#007bff';
+      selectedToggle.style.background = '#667eea';
       selectedToggle.style.color = 'white';
+      selectedToggle.style.borderColor = '#667eea';
       selectedToggle.dataset.selected = 'true';
       
       // 직접 입력 선택 시 레시피 입력 섹션 표시
       if (selectedToggle === this.manualInputToggle) {
         this.recipeInputSection.style.display = 'block';
+        // 현재 선택된 아이템에 따라 입력 필드 업데이트
+        const selectedItem = this.itemSelect.value;
+        if (selectedItem) {
+          if (isDismantleItem(selectedItem)) {
+            this.createDismantleInputFields(selectedItem);
+          } else {
+            this.updateInputFields(selectedItem);
+          }
+        }
       } else {
         this.recipeInputSection.style.display = 'none';
+        // 입력 필드 초기화
+        if (this.recipeCostInput) {
+          this.recipeCostInput.value = '';
+        }
+        if (this.multiInputContainer) {
+          this.multiInputContainer.innerHTML = '';
+        }
       }
+      
+      // 버튼 상태 업데이트
+      this.updateCalculateButtonState();
     };
 
     toggles.forEach(toggle => {
@@ -313,13 +465,38 @@ export class ExpectedValueModal extends BaseModal {
             const result = this.calculator.calculateDismantleExpectedValue(selectedItem, materialCosts);
             this.displayDismantleResult(selectedItem, result, selectedSource);
           } else {
+            // 새로운 범용 계산 엔진 사용
             const result = this.calculator.calculateExpectedValue(selectedItem, materialCosts);
+            
+            // 결과 검증 및 기본값 설정
+            if (!result) {
+              throw new Error('계산 결과가 없습니다.');
+            }
+            
+            // 필수 속성들이 없으면 기본값 설정
+            if (typeof result.bestTotalCost === 'undefined') {
+              result.bestTotalCost = 0;
+            }
+            if (typeof result.bestExpectedValue === 'undefined') {
+              result.bestExpectedValue = 0;
+            }
+            if (typeof result.bestSuccessRate === 'undefined') {
+              result.bestSuccessRate = 0;
+            }
+            if (typeof result.bestRecipeCount === 'undefined') {
+              result.bestRecipeCount = 0;
+            }
+            if (typeof result.bestCombination === 'undefined') {
+              result.bestCombination = '';
+            }
+            
             this.displayCalculationResult(selectedItem, result, selectedSource);
           }
         }
       } catch (error) {
         console.error('Calculation error:', error);
-        this.resultSection.querySelector('#calculationResult').innerHTML = '<p style="color: red; text-align: center;">계산 중 오류가 발생했습니다.</p>';
+        this.resultSection.querySelector('#calculationResult').innerHTML = 
+          '<p style="color: #dc3545; text-align: center;">계산 중 오류가 발생했습니다: ' + error.message + '</p>';
       } finally {
         this.hideLoadingState();
       }
@@ -352,10 +529,10 @@ export class ExpectedValueModal extends BaseModal {
   createSkeletonTemplate() {
     return `
       <div style="padding: 16px;">
-        <div class="skeleton" style="height: 20px; margin-bottom: 12px; border-radius: 4px; background: #e0e0e0;"></div>
-        <div class="skeleton" style="height: 16px; margin-bottom: 8px; border-radius: 4px; background: #e0e0e0;"></div>
-        <div class="skeleton" style="height: 16px; margin-bottom: 8px; border-radius: 4px; background: #e0e0e0;"></div>
-        <div class="skeleton" style="height: 16px; margin-bottom: 8px; border-radius: 4px; background: #e0e0e0;"></div>
+        <div style="height: 20px; margin-bottom: 12px; border-radius: 4px; background: #e0e0e0; animation: skeleton-pulse 1.5s ease-in-out infinite;"></div>
+        <div style="height: 16px; margin-bottom: 8px; border-radius: 4px; background: #e0e0e0; animation: skeleton-pulse 1.5s ease-in-out infinite;"></div>
+        <div style="height: 16px; margin-bottom: 8px; border-radius: 4px; background: #e0e0e0; animation: skeleton-pulse 1.5s ease-in-out infinite;"></div>
+        <div style="height: 16px; margin-bottom: 8px; border-radius: 4px; background: #e0e0e0; animation: skeleton-pulse 1.5s ease-in-out infinite;"></div>
       </div>
     `;
   }
@@ -363,31 +540,65 @@ export class ExpectedValueModal extends BaseModal {
   // 재료 비용 가져오기
   async getMaterialCosts(selectedItem, selectedSource) {
     if (selectedSource === this.manualInputToggle) {
-      if (selectedItem === 'vitality_potion') {
-        const recipeCost = parseInt(this.recipeCostInput.value) || 0;
-        return recipeCost;
-      } else {
-        // 다중 입력 필드에서 값 가져오기
+      const config = this.itemConfigs[selectedItem];
+      const dismantleConfig = this.dismantleConfigs[selectedItem];
+      
+      if (config && config.type === 'single') {
+        // 단일 재료 아이템 (활력의 포션, 낡은 가죽끈)
+        const material = config.materials[0];
+        const cost = parseInt(this.recipeCostInput.value) || 0;
+        return { [material.key]: cost };
+      } else if (config && config.type !== 'single') {
+        // 다중 재료 아이템
         const inputs = this.multiInputContainer.querySelectorAll('input');
-        const costs = Array.from(inputs).map(input => parseInt(input.value) || 0);
+        const materialCosts = {};
+        config.materials.forEach((material, index) => {
+          const input = inputs[index];
+          if (input) {
+            materialCosts[material.key] = parseInt(input.value) || 0;
+          }
+        });
+        return materialCosts;
+      } else if (dismantleConfig) {
+        // 분해 아이템의 경우 다중 입력 필드에서 값 가져오기
+        const inputs = this.multiInputContainer.querySelectorAll('input');
+        const costs = {};
+        if (dismantleConfig.rewards) {
+          Object.keys(dismantleConfig.rewards).forEach((rewardKey, index) => {
+            const input = inputs[index];
+            if (input) {
+              costs[rewardKey] = parseInt(input.value) || 0;
+            }
+          });
+        }
         return costs;
       }
     }
 
     // 구글 시트에서 가격 가져오기
     try {
-      if (selectedItem === 'vitality_potion') {
-        const recipeCost = await this.priceFetcher.fetchItemPriceFromGoogleSheet('마녀의 레시피', selectedSource);
-        return recipeCost;
-      } else {
-        // 다중 재료 아이템의 경우
-        const config = this.itemConfigs[selectedItem];
-        if (!config) return null;
-
+      const config = this.itemConfigs[selectedItem];
+      const dismantleConfig = this.dismantleConfigs[selectedItem];
+      
+      if (config && config.type === 'single') {
+        // 단일 재료 아이템
+        const material = config.materials[0];
+        const price = await this.priceFetcher.fetchItemPriceFromGoogleSheet(material.name, selectedSource);
+        return { [material.key]: price };
+      } else if (config && config.type !== 'single') {
+        // 다중 재료 아이템
         const materialCosts = {};
         for (const material of config.materials) {
           const price = await this.priceFetcher.fetchItemPriceFromGoogleSheet(material.name, selectedSource);
           materialCosts[material.key] = price;
+        }
+        return materialCosts;
+      } else if (dismantleConfig) {
+        // 분해 아이템의 경우
+        const materialCosts = {};
+        for (const [rewardKey, reward] of Object.entries(dismantleConfig.rewards)) {
+          const price = await this.priceFetcher.fetchItemPriceFromGoogleSheet(reward.name, selectedSource);
+          materialCosts[rewardKey] = price;
         }
         return materialCosts;
       }
@@ -408,7 +619,7 @@ export class ExpectedValueModal extends BaseModal {
     if (config) {
       if (config.type === 'single') {
         const material = config.materials[0];
-        const cost = result.recipeCost;
+        const cost = result.recipeCost || 0;
         materialInfo = `
           <div style="margin-bottom: 8px;">
             <span style="color: #333;">재료 시세:</span>
@@ -423,23 +634,49 @@ export class ExpectedValueModal extends BaseModal {
             <span style="color: #333;">재료 시세:</span>
           </div>
           <div style="margin-bottom: 8px; margin-left: 15px; font-size: 12px; color: #333;">
-            ${config.materials.map(material => 
-              `<div>• ${material.name}: ${result.materialCosts[material.key].toLocaleString()} G</div>`
-            ).join('')}
+            ${config.materials.map(material => {
+              const cost = result.materialCosts && result.materialCosts[material.key] ? result.materialCosts[material.key] : 0;
+              return `<div>• ${material.name}: ${cost.toLocaleString()} G</div>`;
+            }).join('')}
           </div>
         `;
       }
     }
 
-    const template = this.createCalculationResultTemplate(itemInfo, sourceText, materialInfo, result);
-    this.resultSection.querySelector('#calculationResult').innerHTML = template;
-    this.resultSection.style.display = 'block';
+    // 현재 시세 가져오기
+    this.getCurrentPrices(itemInfo.name).then(currentPrices => {
+      const template = this.createCalculationResultTemplate(itemInfo, sourceText, materialInfo, result, currentPrices);
+      this.resultSection.querySelector('#calculationResult').innerHTML = template;
+      this.resultSection.style.display = 'block';
+    }).catch(() => {
+      const template = this.createCalculationResultTemplate(itemInfo, sourceText, materialInfo, result);
+      this.resultSection.querySelector('#calculationResult').innerHTML = template;
+      this.resultSection.style.display = 'block';
+    });
   }
 
   // 분해 결과 표시
-  displayDismantleResult(itemId, result, selectedSource) {
-    const sourceText = this.getSourceText(selectedSource);
-    const template = this.createDismantleResultTemplate(result, sourceText);
+  async displayDismantleResult(itemId, result, selectedSource) {
+    const config = this.dismantleConfigs[itemId];
+    
+    if (!config) {
+      console.error('분해 설정을 찾을 수 없습니다.');
+      return;
+    }
+
+    // 보상 아이템들의 현재 시세 가져오기
+    const currentPrices = {};
+    for (const [rewardKey, reward] of Object.entries(config.rewards)) {
+      try {
+        const prices = await this.getCurrentPrices(reward.name);
+        currentPrices[reward.name] = prices;
+      } catch (error) {
+        console.error(`${reward.name} 현재 시세를 가져오는 중 오류:`, error);
+        currentPrices[reward.name] = null;
+      }
+    }
+
+    const template = this.createDismantleResultTemplate(config, result, selectedSource, currentPrices);
     this.resultSection.querySelector('#calculationResult').innerHTML = template;
     this.resultSection.style.display = 'block';
   }
@@ -480,58 +717,181 @@ export class ExpectedValueModal extends BaseModal {
         <span style="color: #333;">최적 조합:</span> 
         <span style="font-weight: bold; color: #28a745;">${result.bestCombination || `재료 ${result.bestRecipeCount}개`} (${(result.bestSuccessRate * 100).toFixed(0)}%)</span>
       </div>
-      <div style="margin-bottom: 8px;">
+      <div style="margin-bottom: 15px;">
         <span style="color: #333;">기댓값:</span> 
-        <span style="font-weight: bold; color: #dc3545; font-size: 18px;">${result.bestExpectedValue.toLocaleString()} G</span>
+        <span style="font-weight: bold; color: #007bff;">${result.bestExpectedValue.toLocaleString()} G</span>
       </div>
       ${currentPriceInfo}
     `;
   }
 
   // 분해 결과 템플릿 생성
-  createDismantleResultTemplate(result, sourceText) {
+  createDismantleResultTemplate(config, result, selectedSource, currentPrices = null) {
+    // 보상 아이템 정보 생성
+    const rewardInfo = result.rewards.map(reward => 
+      `<div>• ${reward.name}: ${reward.min}~${reward.max}개 (평균 ${reward.average}개)</div>`
+    ).join('');
+
+    // 보상 아이템 현재 시세 정보 생성
+    let currentPriceInfo = '';
+    if (currentPrices) {
+      const priceInfo = result.rewards.map(reward => {
+        const prices = currentPrices[reward.name];
+        if (prices) {
+          return `
+            <div style="margin-bottom: 10px;">
+              <div style="font-weight: bold; color: #333; margin-bottom: 5px;">
+                ${reward.name}:
+              </div>
+              <div style="font-size: 12px; color: #333; margin-left: 15px;">
+                <div>• 최근 거래가: ${prices.recent ? prices.recent.toLocaleString() : 'N/A'} G</div>
+                <div>• 평균 거래가: ${prices.average ? prices.average.toLocaleString() : 'N/A'} G</div>
+              </div>
+            </div>
+          `;
+        }
+        return '';
+      }).join('');
+      
+      if (priceInfo) {
+        currentPriceInfo = `
+          <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+            <div style="font-weight: bold; color: #333; margin-bottom: 10px;">
+              보상 아이템 현재 시세
+            </div>
+            ${priceInfo}
+          </div>
+        `;
+      }
+    }
+
+    let sourceText = '';
+    if (selectedSource.id === 'avgPriceToggle') {
+      sourceText = '평균가';
+    } else if (selectedSource.id === 'recentPriceToggle') {
+      sourceText = '최근가';
+    } else if (selectedSource.id === 'manualInputToggle') {
+      sourceText = '직접입력';
+    }
+
     return `
       <div style="margin-bottom: 15px;">
         <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
           데이터 소스: ${sourceText}
         </div>
         <div style="font-weight: bold; color: #007bff; font-style: italic; font-size: 16px;">
-          ${result.equipmentName} 분해 기댓값 계산 결과
+          ${config.name} 분해 기댓값 계산 결과
         </div>
       </div>
+      
       <div style="margin-bottom: 8px;">
-        <span style="color: #333;">분해 비용:</span> 
-        <span style="font-weight: bold; color: #333;">${result.cost.toLocaleString()} G</span>
+        <span style="color: #333;">보상 아이템:</span>
       </div>
+      <div style="margin-bottom: 15px; margin-left: 15px; font-size: 12px; color: #333;">
+        ${rewardInfo}
+      </div>
+      
       <div style="margin-bottom: 8px;">
-        <span style="color: #333;">총 기댓값:</span> 
-        <span style="font-weight: bold; color: #28a745;">${result.totalExpectedValue.toLocaleString()} G</span>
+        <span style="color: #333;">최소 기댓값:</span> 
+        <span style="font-weight: bold; color: #333;">${result.minExpectedValue.toLocaleString()} G</span>
       </div>
+      
       <div style="margin-bottom: 8px;">
-        <span style="color: #333;">순 기댓값:</span> 
-        <span style="font-weight: bold; color: ${result.isProfitable ? '#dc3545' : '#6c757d'}; font-size: 18px;">${result.netExpectedValue.toLocaleString()} G</span>
+        <span style="color: #333;">최대 기댓값:</span> 
+        <span style="font-weight: bold; color: #333;">${result.maxExpectedValue.toLocaleString()} G</span>
       </div>
+      
+      <div style="margin-bottom: 15px;">
+        <span style="color: #333;">평균 기댓값:</span> 
+        <span style="font-weight: bold; color: #007bff;">${result.totalExpectedValue.toLocaleString()} G</span>
+      </div>
+      
+      ${currentPriceInfo}
     `;
   }
 
   // 소스 텍스트 가져오기
   getSourceText(selectedSource) {
-    if (selectedSource === this.avgPriceToggle) return '평균 거래가';
-    if (selectedSource === this.recentPriceToggle) return '최근 거래가';
-    if (selectedSource === this.manualInputToggle) return '직접 입력';
+    if (selectedSource === this.avgPriceToggle) return '평균가';
+    if (selectedSource === this.recentPriceToggle) return '최근가';
+    if (selectedSource === this.manualInputToggle) return '직접입력';
     return '알 수 없음';
+  }
+
+  // 현재 시세 가져오기
+  async getCurrentPrices(itemName) {
+    try {
+      return await this.priceFetcher.getCurrentPrices(itemName);
+    } catch (error) {
+      console.error('현재 시세를 가져오는 중 오류:', error);
+      return null;
+    }
   }
 
   // 입력 필드 업데이트
   updateInputFields(selectedItem) {
-    if (selectedItem === 'vitality_potion') {
-      this.recipeInputSection.style.display = 'block';
-      this.multiInputContainer.style.display = 'none';
-    } else if (isCombineItem(selectedItem)) {
-      this.recipeInputSection.style.display = 'none';
-      this.multiInputContainer.style.display = 'none';
-    } else if (isDismantleItem(selectedItem)) {
-      this.createDismantleInputFields(selectedItem);
+    const config = this.itemConfigs[selectedItem];
+    
+    // 기존 ExpectedValueUIManager와 동일한 방식으로 DOM 요소 찾기
+    const recipeLabel = this.recipeInputSection.querySelector('label');
+    const recipeCostInput = this.recipeCostInput;
+    const multiInputContainer = this.multiInputContainer;
+
+    if (!recipeLabel || !recipeCostInput || !multiInputContainer) {
+      console.error('필요한 DOM 요소를 찾을 수 없습니다.');
+      return;
+    }
+
+    if (config && config.type === 'single') {
+      // 단일 재료 (조합 아이템)
+      recipeLabel.textContent = `${config.materials[0].name} 시세 (G):`;
+      recipeCostInput.placeholder = `${config.materials[0].name} 시세를 입력하세요`;
+      recipeCostInput.style.display = 'block';
+      multiInputContainer.style.display = 'none';
+      
+      // 기존 이벤트 리스너 제거 (cloneNode로 새로운 요소로 교체)
+      const newRecipeCostInput = recipeCostInput.cloneNode(true);
+      recipeCostInput.parentNode.replaceChild(newRecipeCostInput, recipeCostInput);
+      this.recipeCostInput = newRecipeCostInput;
+      
+      // 새로운 이벤트 리스너 추가
+      this.recipeCostInput.addEventListener('input', () => {
+        this.updateCalculateButtonState();
+      });
+    } else if (config && config.type !== 'single') {
+      // 다중 재료 (조합 아이템)
+      recipeLabel.textContent = '재료 시세 (G):';
+      recipeCostInput.style.display = 'none';
+      multiInputContainer.style.display = 'block';
+      
+      // 기존 필드 제거
+      multiInputContainer.innerHTML = '';
+      
+      // 새로운 입력 필드들 생성
+      config.materials.forEach(material => {
+        const materialDiv = document.createElement('div');
+        materialDiv.style.cssText = 'margin-bottom: 12px;';
+        
+        const materialLabel = document.createElement('label');
+        materialLabel.htmlFor = material.key;
+        materialLabel.style.cssText = 'display: block; margin-bottom: 4px; font-weight: bold; color: #333; font-size: 12px;';
+        materialLabel.textContent = material.name + ':';
+        
+        const materialInput = document.createElement('input');
+        materialInput.type = 'number';
+        materialInput.id = material.key;
+        materialInput.placeholder = `${material.name} 시세를 입력하세요`;
+        materialInput.style.cssText = 'width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;';
+        
+        // 실시간 유효성 검사 이벤트 추가
+        materialInput.addEventListener('input', () => {
+          this.updateCalculateButtonState();
+        });
+        
+        materialDiv.appendChild(materialLabel);
+        materialDiv.appendChild(materialInput);
+        multiInputContainer.appendChild(materialDiv);
+      });
     }
   }
 
@@ -542,22 +902,39 @@ export class ExpectedValueModal extends BaseModal {
 
     this.recipeInputSection.style.display = 'block';
     this.multiInputContainer.style.display = 'block';
+    this.recipeCostInput.style.display = 'none'; // 단일 입력 필드 숨김
+    
+    // 라벨도 숨김
+    const recipeLabel = this.recipeInputSection.querySelector('label');
+    if (recipeLabel) {
+      recipeLabel.style.display = 'none';
+    }
+    
     this.multiInputContainer.innerHTML = '';
 
     Object.entries(config.rewards).forEach(([rewardKey, reward]) => {
-      const label = document.createElement('label');
-      label.htmlFor = rewardKey;
-      label.style.cssText = 'display: block; margin-bottom: 8px; font-weight: bold; color: #333;';
-      label.textContent = `${reward.name} 시세 (G):`;
-
-      const input = document.createElement('input');
-      input.type = 'number';
-      input.id = rewardKey;
-      input.placeholder = `${reward.name} 시세를 입력하세요`;
-      input.style.cssText = 'width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; margin-bottom: 12px;';
-
-      this.multiInputContainer.appendChild(label);
-      this.multiInputContainer.appendChild(input);
+      const materialDiv = document.createElement('div');
+      materialDiv.style.cssText = 'margin-bottom: 12px;';
+      
+      const materialLabel = document.createElement('label');
+      materialLabel.htmlFor = rewardKey;
+      materialLabel.style.cssText = 'display: block; margin-bottom: 4px; font-weight: bold; color: #333; font-size: 12px;';
+      materialLabel.textContent = reward.name + ':';
+      
+      const materialInput = document.createElement('input');
+      materialInput.type = 'number';
+      materialInput.id = rewardKey;
+      materialInput.placeholder = `${reward.name} 시세를 입력하세요`;
+      materialInput.style.cssText = 'width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;';
+      
+      // 실시간 유효성 검사 이벤트 추가
+      materialInput.addEventListener('input', () => {
+        this.updateCalculateButtonState();
+      });
+      
+      materialDiv.appendChild(materialLabel);
+      materialDiv.appendChild(materialInput);
+      this.multiInputContainer.appendChild(materialDiv);
     });
   }
-} 
+}

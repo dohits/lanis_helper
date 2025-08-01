@@ -349,6 +349,22 @@ class BaseModal {
     `;
     return label;
   }
+
+  // 스켈레톤 애니메이션 CSS 추가
+  addSkeletonAnimation() {
+    if (!document.querySelector('#skeleton-animation-style')) {
+      const style = document.createElement('style');
+      style.id = 'skeleton-animation-style';
+      style.textContent = `
+        @keyframes skeleton-pulse {
+          0% { opacity: 1; }
+          50% { opacity: 0.5; }
+          100% { opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }
 }
 
 export default BaseModal; 

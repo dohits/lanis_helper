@@ -17,10 +17,7 @@ class MenuActionHandler {
       enchantInfo: menuManager.enchantInfoModal,
       itemPrice: menuManager.itemPriceModal
     };
-    this.uiManager = menuManager.uiManager;
-    
-    // ExpectedValueModal 초기화
-    this.expectedValueModal = new ExpectedValueModal();
+    this.expectedValueModal = menuManager.expectedValueModal;
   }
 
   // 서브메뉴 아이템 액션 실행

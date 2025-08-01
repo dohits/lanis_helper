@@ -1,4 +1,4 @@
-# Lanis Helper 개발자 문서 (v1.7.1)
+# Lanis Helper 개발자 문서 (v1.7.2)
 
 이 폴더는 Lanis Helper Chrome Extension의 개발자용 문서들을 포함합니다.
 
@@ -35,7 +35,36 @@
 - **빌드 결과**: [../dist/](../dist/)
 - **정적 리소스**: [../public/](../public/)
 
-## 🆕 최신 업데이트 (v1.7.1)
+## 🆕 최신 업데이트 (v1.7.2)
+
+### 기댓값 계산기 모달 리팩토링
+- ExpectedValueUIManager를 ExpectedValueModal로 완전 리팩토링
+- BaseModal 상속을 통한 일관된 모달 구조 구현
+- UI 스타일링 통일 및 개선 (색상, 폰트, 간격 등)
+- 토글 버튼 상태 관리 개선 및 호버 효과 추가
+- 스켈레톤 애니메이션을 BaseModal에 통합
+- 분해 아이템 입력 필드 생성 로직 개선
+
+### 모듈 구조 개선
+- ExpectedValueUIManager.js 파일 삭제
+- MenuManager에서 ExpectedValueModal 직접 사용
+- MenuActionHandler에서 메뉴 매니저의 모달 인스턴스 사용
+- 모듈 간 의존성 정리 및 중복 코드 제거
+
+### UI/UX 개선사항
+- BaseModal의 공통 스타일 시스템 활용
+- 일관된 색상 팔레트 적용 (#667eea, #10b981, #ef4444 등)
+- 포커스 효과 및 호버 애니메이션 추가
+- 반응형 디자인 개선 (maxWidth: 600px)
+- 스켈레톤 로딩 애니메이션 개선
+
+### 코드 품질 향상
+- BaseModal의 createButton, createInput, createLabel 메서드 활용
+- 인라인 스타일 대신 BaseModal 스타일 시스템 사용
+- 이벤트 처리 로직 개선 및 에러 핸들링 강화
+- 분해 아이템 데이터 처리 로직 개선
+
+## 🆕 이전 업데이트 (v1.7.1)
 
 ### 시세 검색 로직 개선
 - 정확한 아이템명 매칭으로 변경 (부분 문자열 검색에서 완전 일치 검색으로)
@@ -62,4 +91,4 @@
 
 ---
 
-**마지막 업데이트**: 2025년 7월 29일 (v1.7.0) 
+**마지막 업데이트**: 2025년 7월 29일 (v1.7.2) 

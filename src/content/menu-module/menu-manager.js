@@ -1,7 +1,7 @@
 // 기댓값 계산기 import
 import ExpectedValueCalculator from '../calculator/expected-value-calculator.js';
 import PriceFetcher from '../calculator/price-fetcher.js';
-import { ExpectedValueUIManager } from '../calculator/expected-value-ui-manager.js';
+import { ExpectedValueModal } from './modal/calculator/expected-value-modal.js';
 import ItemGuideModal from './modal/item-guide/item-guide-modal.js';
 import UserSearchModal from './modal/settings/user-search-modal.js';
 import ProgramInfoModal from './modal/settings/program-info-modal.js';
@@ -20,7 +20,7 @@ class MenuManager {
     this.stateManager = new MenuStateManager();
     this.calculator = new ExpectedValueCalculator();
     this.priceFetcher = new PriceFetcher();
-    this.uiManager = new ExpectedValueUIManager(this.calculator, this.priceFetcher);
+    this.expectedValueModal = new ExpectedValueModal();
     this.itemGuideModal = new ItemGuideModal();
     this.userSearchModal = new UserSearchModal();
     this.programInfoModal = new ProgramInfoModal();
