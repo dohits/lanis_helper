@@ -55,7 +55,7 @@ export class ExpectedValueModal extends BaseModal {
     content.style.cssText = `
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 5px;
       height: 100%;
     `;
 
@@ -151,7 +151,7 @@ export class ExpectedValueModal extends BaseModal {
 
     // 토글 버튼 컨테이너
     const toggleContainer = document.createElement('div');
-    toggleContainer.style.cssText = 'display: flex; gap: 10px; margin-bottom: 15px;';
+    toggleContainer.style.cssText = 'display: flex; gap: 5px; margin-bottom: 15px;';
 
     // 평균가 토글
     this.avgPriceToggle = this.createToggleButton('평균가', 'avgPriceToggle');
@@ -165,7 +165,7 @@ export class ExpectedValueModal extends BaseModal {
     // 레시피 입력 섹션
     this.recipeInputSection = document.createElement('div');
     this.recipeInputSection.id = 'recipeInputSection';
-    this.recipeInputSection.style.cssText = 'display: none; margin-top: 15px;';
+    this.recipeInputSection.style.cssText = 'display: none; margin-top: 10px;';
 
     // 기본 입력 필드 (활력의 포션용)
     const recipeLabel = this.createLabel('마녀의 레시피 시세 (G):');
@@ -174,7 +174,7 @@ export class ExpectedValueModal extends BaseModal {
     // 봉인의 열쇠용 다중 입력 필드 컨테이너
     this.multiInputContainer = document.createElement('div');
     this.multiInputContainer.id = 'multiInputContainer';
-    this.multiInputContainer.style.cssText = 'display: none; margin-top: 15px;';
+    this.multiInputContainer.style.cssText = 'display: none; margin-top: 10px;';
 
     this.recipeInputSection.appendChild(recipeLabel);
     this.recipeInputSection.appendChild(this.recipeCostInput);
@@ -227,11 +227,18 @@ export class ExpectedValueModal extends BaseModal {
   // 계산 버튼 섹션 생성
   createCalculateButtonSection() {
     const section = document.createElement('div');
-    section.style.cssText = 'margin-top: 10px;';
+    section.style.cssText = 'margin-top: 5px;';
 
     // 계산 버튼
     this.calculateBtn = this.createButton('계산하기', 'primary');
     this.calculateBtn.disabled = true;
+    
+    // 버튼을 가로로 길게 만들기
+    this.calculateBtn.style.width = '100%';
+    this.calculateBtn.style.margin = '0';
+    this.calculateBtn.style.padding = '12px 16px';
+    this.calculateBtn.style.fontSize = '14px';
+    this.calculateBtn.style.fontWeight = '600';
     
     // 비활성화 상태 스타일 적용
     this.updateCalculateButtonStyle();
@@ -325,7 +332,7 @@ export class ExpectedValueModal extends BaseModal {
   createResultSection() {
     const section = document.createElement('div');
     section.id = 'resultSection';
-    section.style.cssText = 'display: none; margin-top: 20px;';
+    section.style.cssText = 'display: none; margin-top: 15px;';
 
     const resultContainer = document.createElement('div');
     resultContainer.id = 'calculationResult';
@@ -687,8 +694,8 @@ export class ExpectedValueModal extends BaseModal {
     
     if (currentPrices) {
       currentPriceInfo = `
-        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
-          <div style="font-weight: bold; color: #333; margin-bottom: 10px;">
+        <div style="margin-top: 15px; padding-top: 12px; border-top: 1px solid #eee;">
+          <div style="font-weight: bold; color: #333; margin-bottom: 8px;">
             ${itemInfo.name} 현재 시세
           </div>
           <div style="font-size: 12px; color: #333;">
@@ -755,8 +762,8 @@ export class ExpectedValueModal extends BaseModal {
       
       if (priceInfo) {
         currentPriceInfo = `
-          <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
-            <div style="font-weight: bold; color: #333; margin-bottom: 10px;">
+          <div style="margin-top: 15px; padding-top: 12px; border-top: 1px solid #eee;">
+            <div style="font-weight: bold; color: #333; margin-bottom: 8px;">
               보상 아이템 현재 시세
             </div>
             ${priceInfo}
