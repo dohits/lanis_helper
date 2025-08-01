@@ -11,6 +11,13 @@ class ItemGuideModal extends BaseModal {
     this.currentMainCategory = '';
     this.currentSubCategory = '';
     this.selectedAttributes = [];
+    
+    // 필터 상태 저장
+    this.filterStates = {
+      search: { value: '' },
+      attribute: { selected: [] },
+      category: { main: '', sub: '' }
+    };
   }
 
   // 모달 열기
@@ -223,12 +230,20 @@ class ItemGuideModal extends BaseModal {
     const itemSearchInput = this.createInput('아이템명 검색...', 'text');
     itemSearchInput.id = 'itemSearchInput';
     itemSearchInput.className = 'search-input';
-    itemSearchInput.addEventListener('input', () => this.filterItems());
+    itemSearchInput.value = this.filterStates.search.itemValue || '';
+    itemSearchInput.addEventListener('input', (e) => {
+      this.filterStates.search.itemValue = e.target.value;
+      this.filterItems();
+    });
 
     const abilitySearchInput = this.createInput('어빌리티 검색...', 'text');
     abilitySearchInput.id = 'abilitySearchInput';
     abilitySearchInput.className = 'search-input';
-    abilitySearchInput.addEventListener('input', () => this.filterItems());
+    abilitySearchInput.value = this.filterStates.search.abilityValue || '';
+    abilitySearchInput.addEventListener('input', (e) => {
+      this.filterStates.search.abilityValue = e.target.value;
+      this.filterItems();
+    });
 
     searchContent.appendChild(itemSearchInput);
     searchContent.appendChild(abilitySearchInput);
@@ -265,21 +280,32 @@ class ItemGuideModal extends BaseModal {
         box-sizing: border-box;
       `;
       
+      // 저장된 상태 복원
+      if (this.filterStates.attribute.selected.includes(attr)) {
+        btn.classList.add('active');
+        btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        btn.style.color = 'white';
+        btn.style.border = 'none';
+      }
+      
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         
-        const wasActive = btn.classList.contains('active');
         btn.classList.toggle('active');
         
         if (btn.classList.contains('active')) {
           btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
           btn.style.color = 'white';
           btn.style.border = 'none';
+          if (!this.filterStates.attribute.selected.includes(attr)) {
+            this.filterStates.attribute.selected.push(attr);
+          }
         } else {
           btn.style.background = 'white';
           btn.style.color = '#667eea';
           btn.style.border = '2px solid #667eea';
+          this.filterStates.attribute.selected = this.filterStates.attribute.selected.filter(a => a !== attr);
         }
         
         this.filterItems();
@@ -321,7 +347,9 @@ class ItemGuideModal extends BaseModal {
         box-sizing: border-box;
       `;
       
-      if (category === '전체') {
+      // 저장된 상태 복원
+      const savedMainCategory = this.filterStates.category.main || '';
+      if ((category === '전체' && !savedMainCategory) || (category === savedMainCategory)) {
         btn.classList.add('active');
         btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
         btn.style.color = 'white';
@@ -341,6 +369,7 @@ class ItemGuideModal extends BaseModal {
         btn.style.border = 'none';
         
         const category = btn.getAttribute('data-category');
+        this.filterStates.category.main = category;
         this.handleMainCategoryChange(category);
       });
       
@@ -380,7 +409,9 @@ class ItemGuideModal extends BaseModal {
         box-sizing: border-box;
       `;
       
-      if (category === '전체') {
+      // 저장된 상태 복원
+      const savedSubCategory = this.filterStates.category.sub || '';
+      if ((category === '전체' && !savedSubCategory) || (category === savedSubCategory)) {
         btn.classList.add('active');
         btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
         btn.style.color = 'white';
@@ -398,6 +429,9 @@ class ItemGuideModal extends BaseModal {
         btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
         btn.style.color = 'white';
         btn.style.border = 'none';
+        
+        const category = btn.getAttribute('data-category');
+        this.filterStates.category.sub = category;
         this.filterItems();
       });
       
@@ -715,19 +749,14 @@ class ItemGuideModal extends BaseModal {
 
   // 검색/필터
   filterItems() {
-    const searchInput = document.getElementById('itemSearchInput');
-    const abilitySearchInput = document.getElementById('abilitySearchInput');
     const items = document.querySelectorAll('.item-guide-item');
     
-    // 검색 입력이 없어도 기본값 사용
-    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
-    const abilitySearchTerm = abilitySearchInput ? abilitySearchInput.value.toLowerCase() : '';
-    const selectedMainCategory = document.querySelector('.main-category.active')?.getAttribute('data-category') || '';
-    const selectedSubCategory = document.querySelector('.sub-category.active')?.getAttribute('data-category') || '';
-    
-    const activeAttributes = Array.from(document.querySelectorAll('.attribute-btn.active')).map(btn => 
-      btn.getAttribute('data-attribute').toLowerCase()
-    );
+    // 저장된 필터 상태 사용
+    const searchTerm = (this.filterStates.search.itemValue || '').toLowerCase();
+    const abilitySearchTerm = (this.filterStates.search.abilityValue || '').toLowerCase();
+    const selectedMainCategory = this.filterStates.category.main || '';
+    const selectedSubCategory = this.filterStates.category.sub || '';
+    const activeAttributes = this.filterStates.attribute.selected.map(attr => attr.toLowerCase());
     
     let visibleCount = 0;
 
@@ -738,10 +767,15 @@ class ItemGuideModal extends BaseModal {
       const itemAbilities = item.getAttribute('data-abilities');
       const itemAttributes = item.getAttribute('data-attributes');
       
-      const matchesSearch = itemName.includes(searchTerm);
-      const matchesAbility = itemAbilities.includes(abilitySearchTerm);
+      const matchesSearch = !searchTerm || itemName.includes(searchTerm);
+      const matchesAbility = !abilitySearchTerm || itemAbilities.includes(abilitySearchTerm);
       const matchesMainCategory = !selectedMainCategory || itemMainCategory === selectedMainCategory.toLowerCase();
-      const matchesSubCategory = !selectedSubCategory || itemSubCategory === selectedSubCategory.toLowerCase();
+      
+      // 서브 카테고리는 무기 카테고리일 때만 적용
+      let matchesSubCategory = true;
+      if (selectedMainCategory === '무기' && selectedSubCategory) {
+        matchesSubCategory = itemSubCategory === selectedSubCategory.toLowerCase();
+      }
       
       const matchesAttribute = activeAttributes.length === 0 || 
         activeAttributes.some(attr => {
