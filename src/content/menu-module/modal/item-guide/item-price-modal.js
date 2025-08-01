@@ -143,6 +143,13 @@ class ItemPriceModal extends BaseModal {
         // PriceFetcher를 사용하여 차트 데이터 가져오기
         const chartData = await this.priceFetcher.getChartData(itemName);
 
+        // 데이터가 없는 경우 처리
+        if (chartData.noData) {
+          this.chartDiv.textContent = `${itemName}의 거래 데이터는 존재하지 않습니다.`;
+          this.chartDiv.style.color = '#f39c12';
+          return;
+        }
+
         // 차트 영역 위에 텍스트 표시
         const infoDiv = document.createElement('div');
         infoDiv.style.cssText = `

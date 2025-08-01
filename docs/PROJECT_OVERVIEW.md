@@ -1,6 +1,6 @@
 # Lanis Helper - 프로젝트 개요 (개발자용)
 
-**현재 버전**: 1.7.0 (기댓값 계산기 기능 추가)
+**현재 버전**: 1.7.3 (구글 시트 API 모듈화)
 **최종 업데이트**: 2025년 7월 29일
 **빌드 시스템**: Vite + ES6 모듈
 
@@ -24,6 +24,12 @@ lanis_helper/
 │   │   │   ├── expected-value-ui-manager.js    # UI 관리자
 │   │   │   └── price-fetcher.js                # 시세 데이터 가져오기
 │   │   └── utils.js           # 공유 유틸리티
+│   ├── api/                   # API 모듈
+│   │   └── googleSheetLoad/   # 구글 시트 API
+│   │       ├── index.js               # 기본 구글 시트 API
+│   │       ├── priceDataAPI.js        # 시세 데이터 API
+│   │       ├── enchantInfoAPI.js      # 해방 정보 API
+│   │       └── abilityInfoAPI.js      # 어빌리티 정보 API
 │   ├── popup/                 # 팝업 UI
 │   │   ├── popup.html         # 팝업 HTML
 │   │   └── index.js           # 팝업 로직
@@ -84,10 +90,24 @@ lanis_helper/
 - **구성**: 메뉴 관리자, 설정 모달, 메뉴 설정
 - **새로운 기능**: 해방 정보 모달 (장비 해방 정보 표시)
 
-### 6. 해방 정보 시스템
+### 6. 구글 시트 API 모듈 (`api/googleSheetLoad/`)
+- **목적**: 구글 시트 데이터 호출 로직을 공통 API로 모듈화
+- **구성**:
+  - `index.js`: 기본 구글 시트 API 클래스 (CSV 파싱, 에러 처리, 재시도 로직)
+  - `priceDataAPI.js`: 시세 데이터 전용 API (2개 시트 조합, 아이템 검색)
+  - `enchantInfoAPI.js`: 해방 정보 전용 API (타입별 GID 매핑)
+  - `abilityInfoAPI.js`: 어빌리티 정보 전용 API (직업별, 효과별 검색)
+- **공통 기능**:
+  - 재시도 로직 및 타임아웃 처리
+  - CSV 파싱 및 데이터 유효성 검사
+  - 에러 처리 및 응답 표준화
+  - 헤더 인덱스 자동 추출
+
+### 7. 해방 정보 시스템
 - **목적**: 구글 시트에서 장비 해방 정보를 실시간으로 가져와 표시
 - **구성**: 
-  - `background.js`: 구글 시트 API 연동 및 데이터 fetch
+  - `enchantInfoAPI.js`: 해방 정보 API 모듈
+  - `background.js`: API 모듈을 통한 데이터 fetch
   - `menu-manager.js`: 해방 정보 모달 UI 및 테이블 렌더링
   - `exam/enchant-info-armor-example.js`: 방어구 해방 정보 예시 및 참조
   - `exam/enchant-info-weapon-example.js`: 무기 해방 정보 예시 (시트 미존재)
@@ -96,7 +116,7 @@ lanis_helper/
   1. 사용자 → "해방 정보 보기" 버튼 클릭
   2. `openEnchantInfoModal()` → 모달 생성
   3. `fetchEnchantInfoData()` → background.js에 메시지 전송
-  4. `background.js` → 구글 시트 CSV 데이터 fetch
+  4. `background.js` → enchantInfoAPI를 통한 데이터 fetch
   5. `displayEnchantInfoTable()` → 테이블 형태로 데이터 렌더링
 - **데이터 구조**: 
   - 구글 시트 구조: A열(빈칸), B열(스텟명), C열(동등급), D열(은등급), E열(금등급), F열(칠색등급)
@@ -112,7 +132,7 @@ lanis_helper/
 - **구성**:
   - `expected-value-calculator.js`: 기댓값 계산 로직 및 수식
   - `expected-value-ui-manager.js`: 모달 UI 및 이벤트 관리
-  - `price-fetcher.js`: 구글 시트에서 시세 데이터 가져오기
+  - `price-fetcher.js`: priceDataAPI를 통한 시세 데이터 가져오기
 - **지원 아이템**:
   - 조합 아이템: 활력의 포션, 봉인의 열쇠, 푸른 결정, 붉은 결정, 고급 가죽끈, 가죽끈, 낡은 가죽끈, 쇠망치
   - 분해 아이템: 흰색/파랑/노랑/보라/빨강 등급 장비 (준비중)
@@ -129,6 +149,26 @@ lanis_helper/
   - 공통 기본 비용: 300,000 Gold
   - 아이템별 성공률 및 재료 조합 정의
   - 다중 재료 아이템의 경우 최적 재료 분배 계산
+
+### 8. 시세 데이터 시스템
+- **목적**: 구글 시트에서 실시간 시세 데이터를 가져와 다양한 기능에서 활용
+- **구성**:
+  - `priceDataAPI.js`: 시세 데이터 전용 API (2개 시트 조합)
+  - `price-fetcher.js`: API를 사용하는 시세 데이터 관리자
+  - `background/index.js`: 어빌리티 정보 API 사용
+- **데이터 소스**:
+  - 기존 시트 (A,B,C열 형식): 순번, 아이템, 가격
+  - 새로운 시트 (A열 세로형): 거래 완료, 시간, 아이템 정보
+- **주요 기능**:
+  - 정확한 아이템명 매칭 (부분 문자열 검색에서 완전 일치로 변경)
+  - 최근 거래가/평균 거래가 계산
+  - 아이템 검색 (자동완성용)
+  - 차트 데이터 생성 (트레이드 그래프용)
+- **API 모듈화 효과**:
+  - 재시도 로직 및 타임아웃 처리 중앙화
+  - CSV 파싱 및 데이터 유효성 검사 통합
+  - 에러 처리 및 응답 표준화
+  - 모듈 간 결합도 감소
 
 ## 🎨 색상 시스템 아키텍처
 
@@ -266,6 +306,7 @@ npm run build
 ### 모듈 구조
 - **content/index.js**: 메인 콘텐츠 스크립트 (모든 매니저 통합)
 - **menu-module/**: 메뉴 시스템 모듈
+- **api/googleSheetLoad/**: 구글 시트 API 모듈
 - **utils.js**: 공유 유틸리티
 - **background/index.js**: 백그라운드 서비스 워커
 - **popup/index.js**: 팝업 로직

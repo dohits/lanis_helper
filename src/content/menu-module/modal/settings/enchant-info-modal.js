@@ -1,5 +1,6 @@
 import BaseModal from '../base/base-modal.js';
 import { MODAL_CONFIGS } from '../shared/modal-constants.js';
+import EnchantInfoAPI from '../../../../api/googleSheetLoad/enchantInfoAPI.js';
 
 // 장비 해방 정보 모달
 class EnchantInfoModal extends BaseModal {
@@ -145,15 +146,9 @@ class EnchantInfoModal extends BaseModal {
     tableContainer.style.display = 'none';
 
     try {
-      // background.js에 메시지 전송
-      const result = await new Promise((resolve) => {
-        chrome.runtime.sendMessage({ 
-          type: 'FETCH_ENCHANT_INFO',
-          enchantType: this.currentType 
-        }, (response) => {
-          resolve(response);
-        });
-      });
+      // 직접 API 호출
+      const enchantAPI = new EnchantInfoAPI();
+      const result = await enchantAPI.fetchEnchantInfo(this.currentType);
 
       if (result && result.success) {
         if (result.data && result.data.length > 0) {

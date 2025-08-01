@@ -1,5 +1,6 @@
 import BaseModal from '../base/base-modal.js';
 import { MODAL_CONFIGS } from '../shared/modal-constants.js';
+import AbilityInfoAPI from '../../../../api/googleSheetLoad/abilityInfoAPI.js';
 
 // 어빌리티 정보 모달
 class AbilityInfoModal extends BaseModal {
@@ -108,13 +109,9 @@ class AbilityInfoModal extends BaseModal {
   // 데이터 로드
   async loadData(tableContainer, jobToggleSection) {
     try {
-      const result = await new Promise((resolve) => {
-        chrome.runtime.sendMessage({ 
-          type: 'FETCH_ABILITY_INFO'
-        }, (response) => {
-          resolve(response);
-        });
-      });
+      // 직접 API 호출
+      const abilityAPI = new AbilityInfoAPI();
+      const result = await abilityAPI.fetchAbilityInfo();
       
       if (result && result.success && result.data) {
         this.data = result.data;
