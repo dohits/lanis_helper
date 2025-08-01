@@ -344,18 +344,25 @@ class ItemStatsManager {
     // 첫 번째 텍스트 노드만 추출
     const powerText = this.getFirstNumberText(statPower);
     const weightText = this.getFirstNumberText(statWeight);
+    
+    // DOM에서 추출한 범위를 우선 사용 (위키 데이터와 관계없이)
+    const powerMin = domPowerMin !== null ? domPowerMin : itemData.power_min;
+    const powerMax = domPowerMax !== null ? domPowerMax : itemData.power_max;
+    const weightMin = domWeightMin !== null ? domWeightMin : itemData.weight_min;
+    const weightMax = domWeightMax !== null ? domWeightMax : itemData.weight_max;
+    
     if (statPower && powerText.match(/^-?\d+$/)) {
-      powerInfo = this.calculateGrade(parseInt(powerText), itemData.power_min, itemData.power_max);
+      powerInfo = this.calculateGrade(parseInt(powerText), powerMin, powerMax);
     }
     if (statWeight && weightText.match(/^-?\d+$/)) {
-      weightInfo = this.calculateGrade(parseInt(weightText), itemData.weight_min, itemData.weight_max, true);
+      weightInfo = this.calculateGrade(parseInt(weightText), weightMin, weightMax, true);
     }
     const powerScore = powerInfo.score;
     const weightScore = weightInfo.score;
     const powerGradeVal = powerInfo.grade;
     const weightGradeVal = weightInfo.grade;
-    const powerNarrow = Math.abs(itemData.power_max - itemData.power_min) <= 9;
-    const weightNarrow = Math.abs(itemData.weight_max - itemData.weight_min) <= 9;
+    const powerNarrow = Math.abs(powerMax - powerMin) <= 9;
+    const weightNarrow = Math.abs(weightMax - weightMin) <= 9;
     // addFinalTag는 항상 실행
     this.addFinalTag(container, powerGradeVal, weightGradeVal, powerScore, weightScore, powerNarrow, weightNarrow);
   }

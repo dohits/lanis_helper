@@ -38,7 +38,7 @@
         ]
       }
     },
-            "itemGuide": {
+    "itemGuide": {
       "subMenu": {
         "title": "아이템 도감",
         "items": [
@@ -47,14 +47,14 @@
             "icon": "💹",
             "text": "아이템 시세 조회",
             "title": "구글 시트 기반 아이템 시세 그래프",
-            "special": "highlight"
+            "btnType": "purpleGradient"
           },
           {
             "id": "userSearch",
             "icon": "🔍",
             "text": "사용자 검색",
             "title": "사용자 프로필 검색",
-            "special": "highlight"
+            "btnType": "purpleGradient"
           },
           {
             "id": "openGuide",
@@ -91,13 +91,15 @@
             "id": "profileLink",
             "icon": "👤",
             "text": "프로필 링크",
-            "title": "사용자 프로필 링크 표시"
+            "title": "사용자 프로필 링크 표시",
+            "btnType": "toggle"
           },
           {
             "id": "showItemStats",
             "icon": "📊",
             "text": "아이템 스카우터",
-            "title": "아이템 감정 정보 표시"
+            "title": "아이템 감정 정보 표시",
+            "btnType": "toggle"
           },
           {
             "id": "wikiLink",

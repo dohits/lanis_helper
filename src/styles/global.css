@@ -179,15 +179,7 @@
   transition: all 0.1s ease;
 }
 
-.main-menu-item.sub-menu-item {
-  font-size: 15px;
-  font-family: inherit;
-  height: 44px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
 
 .main-menu-row {
   display: flex;
@@ -243,91 +235,7 @@
   visibility: visible !important;
 }
 
-.sub-menu-item {
-  width: 160px;
-  height: 44px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.95) 0%, 
-    rgba(255, 255, 255, 0.85) 50%, 
-    rgba(255, 255, 255, 0.75) 100%);
-  color: #1f2937;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
-  backdrop-filter: blur(15px);
-  box-shadow: 
-    0 4px 20px rgba(0, 0, 0, 0.06),
-    0 2px 10px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-  position: relative;
-  overflow: hidden;
-  font-size: 0.6rem;
-}
 
-.sub-menu-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.4), 
-    transparent);
-  transition: left 0.6s ease;
-}
-
-.sub-menu-item:hover::before {
-  left: 100%;
-}
-
-.sub-menu-item:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 
-    0 8px 30px rgba(0, 0, 0, 0.12),
-    0 4px 15px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 1),
-    0 0 0 1px rgba(255, 255, 255, 0.2);
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 1) 0%, 
-    rgba(255, 255, 255, 0.95) 50%, 
-    rgba(255, 255, 255, 0.9) 100%);
-  border-color: rgba(255, 255, 255, 0.6);
-}
-
-.sub-menu-item:active {
-  transform: translateY(-1px) scale(0.98);
-  transition: all 0.1s ease;
-}
-
-.sub-menu-item.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  color: white;
-  border-color: rgba(102, 126, 234, 0.4);
-  box-shadow: 
-    0 8px 30px rgba(102, 126, 234, 0.4),
-    0 4px 15px rgba(102, 126, 234, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    0 0 0 1px rgba(102, 126, 234, 0.2);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.sub-menu-item.active::before {
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.3), 
-    transparent);
-}
 
 .btn-primary {
   background: linear-gradient(135deg, #667eea, #764ba2);
@@ -633,11 +541,6 @@ button.delete-btn {
   overflow-y: auto !important;
 }
 
-/* 아이템 팝오버 특별 처리 */
-.MuiPopover-root .MuiPaper-root .item-stats-processed {
-  /* 가로 제한 제거 - 사용자 요청에 따라 */
-}
-
 /* 팝오버 내용이 길 때 스크롤 처리 */
 .MuiPopover-root .MuiPaper-root .MuiBox-root {
   max-height: 70vh !important;
@@ -669,77 +572,7 @@ button.delete-btn {
   overflow-wrap: anywhere !important;
 }
 
-/* 토글 버튼 스타일 */
-.sub-menu-item.toggle-button {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-size: 14px;
-  font-weight: 500;
-  padding: 8px 12px;
-  min-width: 120px;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
-.sub-menu-item.toggle-button.enabled {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-  border-color: #10b981;
-  box-shadow: 
-    0 4px 16px rgba(16, 185, 129, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.sub-menu-item.toggle-button:not(.enabled) {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: white;
-  border-color: #ef4444;
-  box-shadow: 
-    0 4px 16px rgba(239, 68, 68, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.sub-menu-item.toggle-button:hover {
-  transform: translateY(-1px) scale(1.02);
-}
-
-.sub-menu-item.toggle-button.enabled:hover {
-  background: linear-gradient(135deg, #059669, #047857);
-  box-shadow: 
-    0 6px 20px rgba(16, 185, 129, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.sub-menu-item.toggle-button:not(.enabled):hover {
-  background: linear-gradient(135deg, #dc2626, #b91c1c);
-  box-shadow: 
-    0 6px 20px rgba(239, 68, 68, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.sub-menu-item.toggle-button:active {
-  transform: translateY(0) scale(0.98);
-  transition: all 0.1s ease;
-}
-
-.sub-menu-item.toggle-button::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
-}
-
-.sub-menu-item.toggle-button.enabled::after {
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-} 
+ 
 
  
 

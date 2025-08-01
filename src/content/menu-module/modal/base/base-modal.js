@@ -153,7 +153,7 @@ class BaseModal {
     this.body = document.createElement('div');
     this.body.className = 'modal-body';
     this.body.style.cssText = `
-      flex: 0 0 auto;
+      flex: 1;
       padding: 24px;
       overflow: auto;
       min-height: 0;

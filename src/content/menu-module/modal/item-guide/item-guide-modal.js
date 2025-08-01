@@ -27,11 +27,36 @@ class ItemGuideModal extends BaseModal {
       display: flex;
       flex-direction: column;
       height: 100%;
-      gap: 16px;
     `;
 
-    // 필터 섹션 (한 줄에 3개 배치)
+    // BaseModal의 상단 패딩 제거
+    if (this.body) {
+      this.body.style.paddingTop = '0';
+    }
+
+    // 필터 섹션 (고정)
     const filterSection = this.createFilterSection();
+    filterSection.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 0 0 auto;
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 10;
+    `;
+    
+    // 스크롤 가능한 컨테이너
+    const scrollableContainer = document.createElement('div');
+    scrollableContainer.style.cssText = `
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    `;
     
     // 아이템 목록 섹션
     const listSection = this.createListSection();
@@ -40,8 +65,9 @@ class ItemGuideModal extends BaseModal {
     const footerSection = this.createFooterSection();
 
     content.appendChild(filterSection);
-    content.appendChild(listSection);
-    content.appendChild(footerSection);
+    scrollableContainer.appendChild(listSection);
+    scrollableContainer.appendChild(footerSection);
+    content.appendChild(scrollableContainer);
 
     this.setContent(content);
   }
@@ -50,11 +76,7 @@ class ItemGuideModal extends BaseModal {
   createFilterSection() {
     const filterSection = document.createElement('div');
     filterSection.className = 'filter-section';
-    filterSection.style.cssText = `
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    `;
+    // 스타일은 createContent에서 설정
 
     // 필터 헤더들 (한 줄에 3개)
     const filterHeaders = document.createElement('div');
@@ -62,6 +84,8 @@ class ItemGuideModal extends BaseModal {
     filterHeaders.style.cssText = `
       display: flex;
       gap: 8px;
+      background: white;
+      padding: 8px;
     `;
 
     // 검색 헤더
@@ -391,12 +415,11 @@ class ItemGuideModal extends BaseModal {
     listSection.className = 'item-guide-list';
     listSection.id = 'itemGuideList';
     listSection.style.cssText = `
-      flex: 1;
-      overflow-y: auto;
       border: 1px solid #e5e7eb;
       border-radius: 8px;
       padding: 16px;
       background: #fafafa;
+      margin-bottom: 16px;
     `;
 
     const loadingDiv = document.createElement('div');

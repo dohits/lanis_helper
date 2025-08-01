@@ -69,9 +69,6 @@ class ItemPriceModal extends BaseModal {
       gap: 8px;
     `;
 
-    // 라벨 생성 (BaseModal의 공통 메서드 사용)
-    const label = this.createLabel('아이템명');
-
     // 입력 필드와 버튼을 한 라인에 배치
     const inputButtonRow = document.createElement('div');
     inputButtonRow.style.cssText = `
@@ -95,7 +92,6 @@ class ItemPriceModal extends BaseModal {
     inputButtonRow.appendChild(input);
     inputButtonRow.appendChild(submitButton);
 
-    searchGroup.appendChild(label);
     searchGroup.appendChild(inputButtonRow);
 
     // 폼 조립
@@ -120,7 +116,7 @@ class ItemPriceModal extends BaseModal {
       align-items: stretch;
       background: #fff;
       color: #888;
-      padding: 0 0 24px 0;
+      padding: 0;
       min-height: 300px;
       min-width: 0;
     `;
@@ -151,8 +147,8 @@ class ItemPriceModal extends BaseModal {
         const infoDiv = document.createElement('div');
         infoDiv.style.cssText = `
           text-align: center;
-          font-size: 15px;
-          font-weight: bold;
+          font-size: 10px;
+          font-weight: normal;
           margin-bottom: 10px;
           flex: 0 0 auto;
         `;
@@ -202,8 +198,11 @@ class ItemPriceModal extends BaseModal {
                     const itemMatch = itemText.match(/(.+?)(?:\s+\d+개가|\s+가\s+거래소에서|\s+가\s+)/);
                     const extractedItemName = itemMatch ? itemMatch[1].trim() : '';
                     
-                    // 유효한 가격인지 확인 (90,000 초과, 10억 이하만 유효)
-                    if (price && price > 90000 && price < 1000000000 && extractedItemName) {
+                    // 정확한 아이템명 매칭 (검색어와 정확히 일치하는지 확인)
+                    const isExactMatch = extractedItemName === itemName;
+                    
+                    // 유효한 가격인지 확인 (90,000 초과, 10억 이하만 유효) 및 정확한 매칭
+                    if (price && price > 90000 && price < 1000000000 && extractedItemName && isExactMatch) {
                       // 시간 정보를 Date 객체로 변환
                       let timestamp = new Date(0);
                       if (timeStr) {
@@ -259,7 +258,7 @@ class ItemPriceModal extends BaseModal {
                 second: '2-digit'
               });
               
-              dataSourceInfo = `<div style='color:#888;font-size:12px;font-weight:normal;margin-bottom:2px;'>마지막 데이터 추가 ${latestDate} ${latestItem.item} ${latestItem.count}개 ${latestItem.price.toLocaleString()}G</div>`;
+                             dataSourceInfo = `<div style='color:#888;font-size:10px;font-weight:normal;'>마지막 데이터 추가 <strong>${latestDate}</strong><br>${latestItem.item} ${latestItem.count}개 ${latestItem.price.toLocaleString()}G</div>`;
             }
           }
         } catch (error) {
@@ -268,8 +267,7 @@ class ItemPriceModal extends BaseModal {
         
         infoDiv.innerHTML =
           dataSourceInfo +
-          `<span style='color:#374151; font-size:1.15em;'>${itemName}</span><br>
-          <span style='color:#374151;'>최근 판매가 :</span> <span style='color:#667eea;'>${chartData.recentPrice ? chartData.recentPrice.toLocaleString() + ' G' : '-'}</span><br>
+          `<span style='color:#374151;'>최근 판매가 :</span> <span style='color:#667eea;'>${chartData.recentPrice ? chartData.recentPrice.toLocaleString() + ' G' : '-'}</span><br>
           <span style='color:#374151;'>평균 판매가 :</span> <span style='color:#764ba2;'>${chartData.avgPrice ? chartData.avgPrice.toLocaleString() + ' G' : '-'}</span>`;
         
         // 차트 영역 초기화 및 infoDiv 추가

@@ -33,6 +33,21 @@ class PriceFetcher {
     }
   }
 
+  // 정확한 아이템명 매칭 함수
+  isExactItemMatch(itemText, searchItemName) {
+    // 아이템명에서 수량 정보 제거 (예: "붉은 구슬 6개가" -> "붉은 구슬")
+    const cleanItemText = itemText.replace(/\s+\d+개가.*$/, '').trim();
+    
+    // 정확한 매칭 또는 단어 경계 매칭
+    if (cleanItemText === searchItemName) {
+      return true;
+    }
+    
+    // 단어 경계 매칭 (예: "붉은" 검색시 "붉은 구슬"은 매칭되지만 "붉은색 구슬"은 매칭 안됨)
+    const words = cleanItemText.split(/\s+/);
+    return words.some(word => word === searchItemName);
+  }
+
   // CSV 파싱
   parseCSV(csv) {
     const lines = csv.split('\n');
@@ -94,8 +109,12 @@ class PriceFetcher {
                 
                 // 시간 정보가 아닌 실제 아이템 정보인지 확인
                 if (itemText && !itemText.match(/^\d{4}\.\s*\d{1,2}\.\s*\d{1,2}\.\s*(오전|오후)/)) {
-                  // 아이템명 매칭
-                  if (itemText.includes(itemName)) {
+                                  // 아이템명 추출 및 정확한 매칭
+                const itemMatch = itemText.match(/(.+?)(?:\s+\d+개가|\s+가\s+거래소에서|\s+가\s+)/);
+                const extractedItemName = itemMatch ? itemMatch[1].trim() : '';
+                
+                // 정확한 아이템명 매칭 (검색어와 정확히 일치하는지 확인)
+                if (extractedItemName === itemName) {
                     // 가격 추출
                     const priceMatch = itemText.match(/(\d{1,3}(?:,\d{3})*)\s*Gold/);
                     if (priceMatch) {
@@ -173,8 +192,8 @@ class PriceFetcher {
               // 아이템명 추출
               const extractedItemName = itemText.replace(/\s*x\s*\d+$/, '').trim();
               
-              // 아이템명 매칭
-              if (extractedItemName.includes(itemName)) {
+              // 정확한 아이템명 매칭 (검색어와 정확히 일치하는지 확인)
+              if (extractedItemName === itemName) {
                 // 유효한 가격인지 확인 (90,000 초과, 10억 이하만 유효)
                 if (price && price > 90000 && price < 1000000000) {
                   const unitPrice = Math.round(price / count);
@@ -397,8 +416,12 @@ class PriceFetcher {
                 
                 // 시간 정보가 아닌 실제 아이템 정보인지 확인
                 if (itemText && !itemText.match(/^\d{4}\.\s*\d{1,2}\.\s*\d{1,2}\.\s*(오전|오후)/)) {
-                  // 아이템명 매칭
-                  if (itemText.includes(itemName)) {
+                  // 아이템명 추출 및 정확한 매칭
+                  const itemMatch = itemText.match(/(.+?)(?:\s+\d+개가|\s+가\s+거래소에서|\s+가\s+)/);
+                  const extractedItemName = itemMatch ? itemMatch[1].trim() : '';
+                  
+                  // 정확한 아이템명 매칭 (검색어와 정확히 일치하는지 확인)
+                  if (extractedItemName === itemName) {
                     // 가격 추출
                     const priceMatch = itemText.match(/(\d{1,3}(?:,\d{3})*)\s*Gold/);
                     if (priceMatch) {
@@ -476,8 +499,8 @@ class PriceFetcher {
               // 아이템명 추출
               const extractedItemName = itemText.replace(/\s*x\s*\d+$/, '').trim();
               
-              // 아이템명 매칭
-              if (extractedItemName.includes(itemName)) {
+              // 정확한 아이템명 매칭 (검색어와 정확히 일치하는지 확인)
+              if (extractedItemName === itemName) {
                 // 유효한 가격인지 확인 (90,000 초과, 10억 이하만 유효)
                 if (price && price > 90000 && price < 1000000000) {
                   const unitPrice = Math.round(price / count);
@@ -534,11 +557,11 @@ class PriceFetcher {
           return { prices: [], labels: [] };
         }
         
-        // 필터링
+        // 필터링 (정확한 아이템명 매칭)
         const filtered = rows.slice(1).filter(r => {
           const name = (r[idxName]||'').replace(/"/g,'').trim();
           const baseName = name.replace(/ x \d+$/, '').trim();
-          return baseName === itemName;
+          return baseName === itemName; // 정확한 매칭
         });
         
         if (filtered.length === 0) {
