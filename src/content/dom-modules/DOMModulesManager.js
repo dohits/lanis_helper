@@ -22,15 +22,15 @@ class DOMModulesManager {
       await this.modules.searchEngine.init();
       await this.modules.itemStats.init();
       
-      console.log('DOMModulesManager 초기화 완료');
+  
     } catch (error) {
       console.error('DOMModulesManager 초기화 중 오류:', error);
     }
   }
 
   // 사용자 네비게이션 관련 메서드들
-  processUserNames() {
-    this.modules.userNavigation.processUserNames();
+  async processUserNames() {
+    await this.modules.userNavigation.processUserNames();
   }
 
   processProfileEnhancement() {
@@ -61,8 +61,9 @@ class DOMModulesManager {
     return await this.modules.searchEngine.collectRareItems();
   }
 
+  // DOM 기반 계산이므로 희귀 아이템 데이터 불필요
   getRareItemsData() {
-    return this.modules.searchEngine.getRareItemsData();
+    return [];
   }
 
   sleep(ms) {
@@ -70,8 +71,8 @@ class DOMModulesManager {
   }
 
   // 아이템 스탯 관련 메서드들
-  processItemStats() {
-    this.modules.itemStats.processItemStats();
+  async processItemStats() {
+    await this.modules.itemStats.processItemStats();
   }
 
   removeItemStats() {
@@ -89,7 +90,7 @@ class DOMModulesManager {
       this.modules.profileEnhancement.destroy();
       this.modules.itemStats.removeItemStats();
       
-      console.log('DOMModulesManager 정리 완료');
+  
     } catch (error) {
       console.error('DOMModulesManager 정리 중 오류:', error);
     }

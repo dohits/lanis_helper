@@ -23,7 +23,7 @@ class ProfileEnhancementManager {
       this.modules.hpMpBonusSticker.init();
       this.modules.dynamicObserver.init(this);
       
-      console.log('ProfileEnhancementManager 초기화 완료');
+  
     } catch (error) {
       console.error('ProfileEnhancementManager 초기화 중 오류:', error);
     }
@@ -57,7 +57,7 @@ class ProfileEnhancementManager {
       this.modules.hpMpBonusSticker.destroy();
       this.modules.dynamicObserver.destroy();
       
-      console.log('ProfileEnhancementManager 정리 완료');
+  
     } catch (error) {
       console.error('ProfileEnhancementManager 정리 중 오류:', error);
     }

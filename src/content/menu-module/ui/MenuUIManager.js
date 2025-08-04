@@ -97,13 +97,16 @@ class MenuUIManager {
   // 서브메뉴 내용 채우기
   async populateSubMenuContent(subMenu, item) {
     if (item.id === 'calculator') {
-      this.renderers.sub.createCalculatorSubMenu(subMenu);
+      await this.renderers.sub.createCalculatorSubMenu(subMenu);
     } else if (item.id === 'itemGuide') {
-      this.renderers.sub.createItemGuideSubMenu(subMenu);
+      await this.renderers.sub.createItemGuideSubMenu(subMenu);
     } else if (item.id === 'settings') {
       // 설정 메뉴는 최신 설정을 가져와서 렌더링
       await this.actionHandler.updateSettingsAndRender(subMenu);
     }
+    
+    // 서브메뉴 버튼에 이벤트 리스너 추가
+    this.addSubMenuButtonListeners(subMenu);
   }
 
   // 위치 조정 관련 상수

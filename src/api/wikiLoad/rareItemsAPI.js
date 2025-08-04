@@ -7,20 +7,27 @@ class RareItemsAPI extends WikiAPI {
     this.categoryTitle = 'Category:레어_아이템';
   }
 
-  // 희귀 아이템 목록 수집
+    // 희귀 아이템 목록 수집
   async collectRareItems() {
+
+    
     try {
-      // 1. 카테고리 멤버 조회
+
+      
+      // 1. 카테고리 멤버 조회 (GET 요청)
       const categoryData = await this.getCategoryMembers(this.categoryTitle, 500);
       
       if (!categoryData.query || !categoryData.query.categorymembers) {
         throw new Error('카테고리 멤버를 가져올 수 없습니다.');
       }
-
+  
       const itemTitles = categoryData.query.categorymembers.map(member => member.title);
       
-      // 2. 아이템 정보 수집
+      
+      // 2. 아이템 정보 수집 (POST 요청)
       const items = await this.collectItemDetails(itemTitles);
+      
+      
       
       return {
         success: true,
@@ -28,67 +35,51 @@ class RareItemsAPI extends WikiAPI {
         message: `레어 아이템 데이터 수집 완료 (${items.length}개 아이템)`,
         items
       };
-
+  
     } catch (error) {
-      console.error('희귀 아이템 수집 실패:', error);
+      console.error('❌ POST 수집 실패:', error.message);
       
-      // 대안 방법 시도
-      try {
-        const alternativeResult = await this.collectRareItemsAlternative();
-        if (alternativeResult.success) {
-          return alternativeResult;
-        }
-      } catch (altError) {
-        console.error('대안 방법도 실패:', altError);
-      }
-
       return {
         success: false,
-        message: `API 수집 실패: ${error.message}. 위키 API에 접근할 수 없습니다.`
+        message: `수집 실패: ${error.message}`
       };
     }
   }
 
-  // 아이템 상세 정보 수집
+  // 아이템 상세 정보 수집 (POST 요청만 사용)
   async collectItemDetails(itemTitles) {
+    
+    
     const items = [];
-
-    if (itemTitles.length <= 50) {
-      // 50개 이하면 한 번에 처리
-      const result = await this.processBatch([itemTitles], 1, async (batch) => {
-        const titles = batch[0];
-        const allItemsData = await this.getPageContent(titles);
-        
-        const batchItems = [];
-        let successCount = 0;
-        let failCount = 0;
-
-        for (const pageId in allItemsData.query.pages) {
-          const page = allItemsData.query.pages[pageId];
-          if (page.revisions && page.revisions[0]) {
-            const content = page.revisions[0]['*'];
-            const itemInfo = this.parseItemFromWikiText(content, page.title);
-            if (itemInfo) {
-              batchItems.push(itemInfo);
-              successCount++;
-            } else {
-              failCount++;
-            }
-          }
+    const batchSize = 50; // MediaWiki API 제한
+    const totalBatches = Math.ceil(itemTitles.length / batchSize);
+    
+    // 50개씩 배치로 나누어 POST 요청
+    for (let i = 0; i < itemTitles.length; i += batchSize) {
+      const batch = itemTitles.slice(i, i + batchSize);
+      const currentBatch = Math.floor(i / batchSize) + 1;
+      
+      
+      // 프로그레스바 업데이트 (이벤트로 전달)
+      window.dispatchEvent(new CustomEvent('itemCollectionProgress', {
+        detail: { 
+          current: items.length, // 현재까지 수집된 아이템 개수
+          total: itemTitles.length, // 전체 아이템 개수
+          batch: currentBatch,
+          totalBatches: totalBatches
         }
-
-        return { items: batchItems, successCount, failCount };
-      });
-
-      return result.items;
-
-    } else {
-      // 50개 초과면 배치 처리
-      const result = await this.processBatch(itemTitles, 50, async (batch) => {
+      }));
+      
+      try {
         const titles = batch.join('|');
         const itemData = await this.getPageContent(titles);
         
-        const batchItems = [];
+        // 응답 구조 확인
+        if (!itemData || !itemData.query || !itemData.query.pages) {
+          console.error('잘못된 POST 응답 구조:', itemData);
+          continue;
+        }
+
         let successCount = 0;
         let failCount = 0;
 
@@ -98,59 +89,31 @@ class RareItemsAPI extends WikiAPI {
             const content = page.revisions[0]['*'];
             const itemInfo = this.parseItemFromWikiText(content, page.title);
             if (itemInfo) {
-              batchItems.push(itemInfo);
+              items.push(itemInfo);
               successCount++;
             } else {
               failCount++;
             }
           }
         }
+        
 
-        return { items: batchItems, successCount, failCount };
-      });
-
-      return result.items;
+        
+        // 배치 간 지연 (성공적으로 작동하므로 지연 시간 단축)
+        if (i + batchSize < itemTitles.length) {
+          await this.sleep(50);
+        }
+        
+      } catch (error) {
+        console.error(`❌ POST 배치 실패:`, error.message);
+      }
     }
+    
+    
+    return items;
   }
 
-  // 대안 방법: 간단한 API 재시도
-  async collectRareItemsAlternative() {
-    try {
-      const simpleQuery = `${this.baseUrl}?action=query&format=json&list=categorymembers&cmtitle=${encodeURIComponent(this.categoryTitle)}&cmlimit=10`;
-      
-      const response = await fetch(simpleQuery, {
-        method: 'GET',
-        headers: this.headers
-      });
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      const text = await response.text();
-
-      if (text.trim().startsWith('<html') || text.trim().startsWith('<!DOCTYPE')) {
-        throw new Error('서버가 HTML을 반환했습니다.');
-      }
-
-      const result = JSON.parse(text);
-
-      if (result.query && result.query.categorymembers) {
-        return {
-          success: true,
-          count: result.query.categorymembers.length,
-          items: result.query.categorymembers,
-          message: `직접 fetch API 재시도 성공 (${result.query.categorymembers.length}개 아이템)`
-        };
-      } else {
-        throw new Error('API 응답 형식이 올바르지 않습니다.');
-      }
-
-    } catch (error) {
-      console.error('대안 방법 실패:', error);
-      return { success: false, message: `직접 fetch API 재시도 실패: ${error.message}` };
-    }
-  }
 
   // 위키 텍스트에서 아이템 정보 파싱
   parseItemFromWikiText(wikiText, itemName) {

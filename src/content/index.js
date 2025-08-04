@@ -56,20 +56,22 @@ function loadSettingsAndExecute() {
         
         // 프로필 링크 처리
         utils.safeExecute(() => {
-          if (settings.profileLink && managers.userProfileManager) {
-            managers.userProfileManager.processUserNames();
-            managers.userProfileManager.processDynamicContent();
-          } else if (managers.userProfileManager) {
-            managers.userProfileManager.removeUserNames();
+          if (managers.userProfileManager) {
+            if (settings.profileLink) {
+              managers.userProfileManager.processUserNames();
+              managers.userProfileManager.processDynamicContent();
+            } else {
+              managers.userProfileManager.removeUserNames();
+            }
           }
         }, '프로필 링크 처리 중 오류');
 
         // 아이템 등급 표기 처리 (아이템 스카우터)
-        utils.safeExecute(() => {
+        utils.safeExecuteAsync(async () => {
           if (managers.itemStatsManager) {
             managers.itemStatsManager.settings = settings;
             if (settings.showItemStats) {
-              managers.itemStatsManager.processItemStats();
+              await managers.itemStatsManager.processItemStats();
             } else {
               managers.itemStatsManager.removeItemStats();
             }
@@ -228,6 +230,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
     } else if (request.action === 'ping') {
       sendResponse({ success: true });
+    } else if (request.action === 'showAlert') {
+      // alert 메시지 표시
+      alert(request.message || '알림');
+      sendResponse({ success: true });
     } else if (request.action === 'startCrawling') {
       // 레어 아이템 수집 시작
       window.lanisHelper.collectRareItems().then(result => {
@@ -269,24 +275,35 @@ setInterval(() => {
     if (window.location.href !== currentUrl) {
       currentUrl = window.location.href;
       
-      // URL 변경 시 동적 콘텐츠 재처리
-      utils.safeExecute(() => {
-        if (managers.userProfileManager && typeof managers.userProfileManager.processUserNames === 'function') {
-          managers.userProfileManager.processUserNames();
-        }
-      }, 'URL 변경 시 사용자명 처리 중 오류');
-
-      utils.safeExecute(() => {
-        if (managers.userProfileManager && typeof managers.userProfileManager.processDynamicContent === 'function') {
-          managers.userProfileManager.processDynamicContent();
+            // URL 변경 시 설정에 따라 동적 콘텐츠 재처리
+      utils.safeExecuteAsync(async () => {
+        try {
+          // 확장 프로그램 컨텍스트 유효성 검사
+          if (!utils.isValidExtensionContext()) {
+            console.warn('확장 프로그램 컨텍스트가 무효화되었습니다. URL 변경 처리를 건너뜁니다.');
+            return;
+          }
+          
+          // 설정 로드 및 기능 실행
+          const settings = await utils.SettingsManager.getSettings({
+            profileLink: true,
+            showItemStats: true
+          });
+          
+          // 프로필 링크 처리 (설정에 따라)
+          if (settings.profileLink && managers.userProfileManager) {
+            await managers.userProfileManager.processUserNames();
+            managers.userProfileManager.processDynamicContent();
+          }
+          
+          // 아이템 스카우터 처리 (설정에 따라)
+          if (settings.showItemStats && managers.itemStatsManager) {
+            await managers.itemStatsManager.processItemStats();
+          }
+        } catch (error) {
+          console.warn('URL 변경 시 동적 콘텐츠 처리 중 오류:', error);
         }
       }, 'URL 변경 시 동적 콘텐츠 처리 중 오류');
-
-      utils.safeExecute(() => {
-        if (managers.itemStatsManager && typeof managers.itemStatsManager.processItemStats === 'function') {
-          managers.itemStatsManager.processItemStats();
-        }
-      }, 'URL 변경 시 아이템 통계 처리 중 오류');
     }
   } catch (error) {
     console.warn('URL 변경 감지 중 오류:', error);

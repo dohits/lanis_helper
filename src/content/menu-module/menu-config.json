@@ -77,46 +77,53 @@
         ]
       }
     },
-    "settings": {
-      "subMenu": {
-        "title": "설정",
-        "items": [
-          {
-            "id": "programInfo",
-            "icon": "ℹ️",
-            "text": "프로그램 정보",
-            "title": "프로그램 정보 및 문의"
-          },
-          {
-            "id": "profileLink",
-            "icon": "👤",
-            "text": "프로필 링크",
-            "title": "사용자 프로필 링크 표시",
-            "btnType": "toggle"
-          },
-          {
-            "id": "showItemStats",
-            "icon": "📊",
-            "text": "아이템 스카우터",
-            "title": "아이템 감정 정보 표시",
-            "btnType": "toggle"
-          },
-          {
-            "id": "wikiLink",
-            "icon": "📚",
-            "text": "위키 이동",
-            "title": "Lanis 위키로 이동",
-            "url": "https://laniswiki.lovestoblog.com/"
-          },
-          {
-            "id": "lanisLink",
-            "icon": "🎮",
-            "text": "라니스 이동",
-            "title": "Lanis 게임으로 이동",
-            "url": "https://lanis.me/"
+            "settings": {
+          "subMenu": {
+            "title": "설정",
+            "items": [
+              {
+                "id": "itemCollection",
+                "icon": "📦",
+                "text": "아이템 수집",
+                "title": "레어 아이템 데이터 수집 및 관리",
+                "btnType": "purpleGradient"
+              },
+              {
+                "id": "profileLink",
+                "icon": "👤",
+                "text": "프로필 링크",
+                "title": "사용자 프로필 링크 표시",
+                "btnType": "toggle"
+              },
+              {
+                "id": "showItemStats",
+                "icon": "📊",
+                "text": "아이템 스카우터",
+                "title": "아이템 감정 정보 표시",
+                "btnType": "toggle"
+              },
+              {
+                "id": "wikiLink",
+                "icon": "📚",
+                "text": "위키 이동",
+                "title": "Lanis 위키로 이동",
+                "url": "https://laniswiki.lovestoblog.com/"
+              },
+              {
+                "id": "lanisLink",
+                "icon": "🎮",
+                "text": "라니스 이동",
+                "title": "Lanis 게임으로 이동",
+                "url": "https://lanis.me/"
+              },
+              {
+                "id": "programInfo",
+                "icon": "ℹ️",
+                "text": "프로그램 정보",
+                "title": "프로그램 정보 및 문의"
+              }
+            ]
           }
-        ]
-      }
-    }
+        }
   }
 } 

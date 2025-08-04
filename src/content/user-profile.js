@@ -22,9 +22,9 @@ class UserProfileManager {
     await initUserProfile();
   }
 
-  processUserNames() {
+  async processUserNames() {
     if (domModulesManager) {
-      domModulesManager.processUserNames();
+      await domModulesManager.processUserNames();
     }
   }
 

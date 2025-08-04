@@ -33,8 +33,13 @@ class SubMenuRenderer {
   }
 
   // 서브메뉴 렌더링 공통 메서드
-  renderSubMenu(container, menuType, options = {}) {
+  async renderSubMenu(container, menuType, options = {}) {
     container.innerHTML = '';
+    
+    // 설정 메뉴인 경우 최신 설정을 다시 로드
+    if (menuType === 'settings') {
+      await this.loadLatestSettings();
+    }
     
     const subMenuConfig = this.menuConfig.mainMenu[menuType].subMenu;
     
@@ -47,16 +52,31 @@ class SubMenuRenderer {
     });
   }
 
-  createCalculatorSubMenu(container) {
-    this.renderSubMenu(container, 'calculator');
+  // 최신 설정 로드
+  async loadLatestSettings() {
+    try {
+      if (window.utils && window.utils.SettingsManager) {
+        const latestSettings = await window.utils.SettingsManager.getSettings({
+          profileLink: true,
+          showItemStats: true
+        });
+        this.settings = latestSettings;
+      }
+    } catch (error) {
+      console.warn('최신 설정 로드 실패:', error);
+    }
   }
 
-  createItemGuideSubMenu(container) {
-    this.renderSubMenu(container, 'itemGuide');
+  async createCalculatorSubMenu(container) {
+    await this.renderSubMenu(container, 'calculator');
   }
 
-  createSettingsSubMenu(container) {
-    this.renderSubMenu(container, 'settings');
+  async createItemGuideSubMenu(container) {
+    await this.renderSubMenu(container, 'itemGuide');
+  }
+
+  async createSettingsSubMenu(container) {
+    await this.renderSubMenu(container, 'settings');
   }
 
   updateToggleButton(button, item) {

@@ -6,42 +6,22 @@ import FinalTagAdder from './FinalTagAdder.js';
 
 class ItemStatsProcessor {
   constructor() {
-    this.rareItemsData = [];
     this.gradeCalculator = new GradeCalculator();
     this.rangeInfoAdder = new RangeInfoAdder();
     this.finalTagAdder = new FinalTagAdder();
   }
 
   async init() {
-    await this.loadRareItemsData();
+    // DOM 기반 계산이므로 별도 데이터 로드 불필요
   }
 
-  // Chrome 스토리지에서 희귀 아이템 데이터 로드
-  async loadRareItemsData() {
-    try {
-      return new Promise((resolve) => {
-        chrome.storage.local.get(['rareItems'], (result) => {
-          if (result.rareItems && result.rareItems.length > 0) {
-            this.rareItemsData = result.rareItems;
-            this.processItemStats();
-          } else {
-            this.rareItemsData = [];
-          }
-          resolve();
-        });
-      });
-    } catch (error) {
-      this.rareItemsData = [];
-    }
-  }
-
-  // 아이템 스탯 처리 메인 로직
+  // 아이템 스탯 처리 메인 로직 (DOM 기반 계산)
   processItemStats() {
     try {
       // 더 유연한 선택자 사용
       const itemContainers = document.querySelectorAll('.MuiBox-root.css-38zrbw, .MuiBox-root[class*="css-"], .MuiPopover-root .MuiBox-root');
       let foundContainers = 0;
-      let matchedItems = 0;
+      let processedItems = 0;
       
       itemContainers.forEach(container => {
         if (container.classList.contains('item-stats-processed')) return;
@@ -61,54 +41,27 @@ class ItemStatsProcessor {
         // DOM에서 스탯 정보 추출
         const { domPowerMin, domPowerMax, domWeightMin, domWeightMax } = this.extractStatsFromDOM(container);
         
-        // rareItemsData에서 정보 찾기
-        let itemData = null;
-        if (this.rareItemsData && this.rareItemsData.length > 0) {
-          itemData = this.rareItemsData.find(item => {
-            if (!item.name) return false;
-            const itemName = item.name.trim();
-            return cleanItemName === itemName;
-          });
-        }
-        
-        let showWikiIcon = false;
-        
-        if (itemData) {
-          matchedItems++;
-          // 위력 범위 비교
-          if (
-            domPowerMin !== null && domPowerMax !== null &&
-            (itemData.power_min !== domPowerMin || itemData.power_max !== domPowerMax)
-          ) {
-            showWikiIcon = true;
-          }
-          // 무게 범위 비교
-          if (
-            domWeightMin !== null && domWeightMax !== null &&
-            (itemData.weight_min !== domWeightMin || itemData.weight_max !== domWeightMax)
-          ) {
-            showWikiIcon = true;
-          }
-          this.rangeInfoAdder.addRangeInfoToStats(container, itemData, domPowerMin, domPowerMax, domWeightMin, domWeightMax);
+        // DOM에 범위 정보가 있으면 점수 계산 및 표시
+        if ((domPowerMin !== null && domPowerMax !== null) || (domWeightMin !== null && domWeightMax !== null)) {
+          // DOM 기반 임시 아이템 데이터 생성
+          const tempItemData = {
+            name: cleanItemName,
+            power_min: domPowerMin,
+            power_max: domPowerMax,
+            weight_min: domWeightMin,
+            weight_max: domWeightMax
+          };
+          
+          // 범위 정보 추가 및 점수 계산
+          this.rangeInfoAdder.addRangeInfoToStats(container, tempItemData, domPowerMin, domPowerMax, domWeightMin, domWeightMax);
           container.classList.add('item-stats-processed');
-        } else {
-          // 수집된 정보가 없더라도, DOM에 범위가 있으면 임시 itemData 생성하여 판정 수행
-          if ((domPowerMin !== null && domPowerMax !== null) || (domWeightMin !== null && domWeightMax !== null)) {
-            showWikiIcon = true;
-            const tempItemData = {
-              name: cleanItemName,
-              power_min: domPowerMin,
-              power_max: domPowerMax,
-              weight_min: domWeightMin,
-              weight_max: domWeightMax
-            };
-            this.rangeInfoAdder.addRangeInfoToStats(container, tempItemData, domPowerMin, domPowerMax, domWeightMin, domWeightMax);
-            container.classList.add('item-stats-processed');
-          }
+          processedItems++;
         }
         
         foundContainers++;
       });
+      
+      
       
     } catch (error) {
       console.error('아이템 스탯 처리 중 오류:', error);
@@ -195,9 +148,9 @@ class ItemStatsProcessor {
     });
   }
 
-  // 희귀 아이템 데이터 반환
+  // DOM 기반 계산이므로 희귀 아이템 데이터 불필요
   getRareItemsData() {
-    return this.rareItemsData;
+    return [];
   }
 }
 

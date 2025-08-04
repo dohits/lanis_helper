@@ -9,7 +9,7 @@ class SearchEngineManager {
   async init() {
     try {
       await this.rareItemsDataManager.init();
-      console.log('SearchEngineManager 초기화 완료');
+  
     } catch (error) {
       console.error('SearchEngineManager 초기화 중 오류:', error);
     }

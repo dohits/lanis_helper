@@ -17,13 +17,13 @@ class UserNavigationManager {
       this.modules.usernameHandler.init();
       this.modules.dynamicObserver.init(this);
       
-      console.log('UserNavigationManager 초기화 완료');
+  
     } catch (error) {
       console.error('UserNavigationManager 초기화 중 오류:', error);
     }
   }
 
-  processUserNames() {
+  async processUserNames() {
     if (this.isProcessing) {
       return;
     }
@@ -32,7 +32,7 @@ class UserNavigationManager {
 
     try {
       // 사용자명 클릭 기능만 처리
-      this.modules.usernameHandler.process();
+      await this.modules.usernameHandler.process();
 
     } catch (error) {
       console.error('사용자 네비게이션 처리 중 오류:', error);
@@ -47,7 +47,7 @@ class UserNavigationManager {
       this.modules.usernameHandler.destroy();
       this.modules.dynamicObserver.destroy();
       
-      console.log('UserNavigationManager 정리 완료');
+  
     } catch (error) {
       console.error('UserNavigationManager 정리 중 오류:', error);
     }

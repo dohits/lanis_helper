@@ -60,11 +60,27 @@ function updateManifest() {
 function updatePopup() {
   const srcPopupPath = path.join(__dirname, '../src/popup/popup.html');
   const distPopupPath = path.join(__dirname, '../dist/popup.html');
+  const srcPopupJsPath = path.join(__dirname, '../src/popup/popup.js');
+  const distPopupJsPath = path.join(__dirname, '../dist/popup.js');
   
   // src/popup/popup.html을 dist로 복사
   if (fs.existsSync(srcPopupPath)) {
     fs.copyFileSync(srcPopupPath, distPopupPath);
     console.log('✅ popup.html 복사 완료');
+  }
+  
+  // src/popup/popup.js를 dist로 복사
+  if (fs.existsSync(srcPopupJsPath)) {
+    fs.copyFileSync(srcPopupJsPath, distPopupJsPath);
+    console.log('✅ popup.js 복사 완료');
+  }
+  
+  // src/popup/popup.css를 dist로 복사
+  const srcPopupCssPath = path.join(__dirname, '../src/popup/popup.css');
+  const distPopupCssPath = path.join(__dirname, '../dist/popup.css');
+  if (fs.existsSync(srcPopupCssPath)) {
+    fs.copyFileSync(srcPopupCssPath, distPopupCssPath);
+    console.log('✅ popup.css 복사 완료');
   }
   
   // popup.html 내용 업데이트

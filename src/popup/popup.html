@@ -1,140 +1,159 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lanis Helper</title>
+  <link rel="stylesheet" href="popup.css">
   <style>
     body {
-      width: 300px;
+      width: 400px;
+      min-height: 500px;
+      margin: 0;
       padding: 20px;
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #ffffff;
+      color: #374151;
     }
+    
     .header {
       text-align: center;
       margin-bottom: 20px;
-      color: #333;
     }
-    .feature-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
+    
+    .header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #374151;
     }
-    .feature-item:last-child {
-      border-bottom: none;
+    
+    .info-section {
+      margin: 24px 0 12px 0;
+      font-size: 16px;
+      color: #374151;
+      line-height: 1.5;
     }
-    .feature-name {
-      font-weight: bold;
-      color: #555;
+    
+    .info-section b {
+      color: #1f2937;
     }
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 50px;
-      height: 24px;
+    
+    hr {
+      margin: 18px 0 10px 0;
+      border: 0;
+      border-top: 1.5px solid #e5e7eb;
     }
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-      border-radius: 24px;
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
-    }
-    input:checked + .slider {
-      background-color: #2196F3;
-    }
-    input:checked + .slider:before {
-      transform: translateX(26px);
-    }
-    .description {
-      font-size: 12px;
-      color: #888;
-      margin-top: 5px;
-    }
-    .crawler-section {
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 2px solid #eee;
-    }
-    .crawler-button {
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-    .crawler-button:hover {
-      background-color: #45a049;
-    }
-    .crawler-button:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
-    }
-    .status {
-      font-size: 12px;
-      color: #666;
+    
+    .decoration {
       text-align: center;
+      margin: 16px 0 8px 0;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+    
+    .decoration span {
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 18px;
+    }
+    
+    .contributor-table {
+      width: 100%;
+      margin-top: 24px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    
+    .contributor-table th {
+      padding: 6px 2px;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      text-align: center;
+      font-weight: bold;
+      color: #222;
+    }
+    
+    .contributor-table td {
+      padding: 5px 2px;
+      border: 1px solid #eee;
+      text-align: center;
+      word-break: break-all;
+      color: #222;
+      max-width: 120px;
+    }
+    
+    .contributor-table a {
+      color: #3366cc;
+      text-decoration: none;
+    }
+    
+    .contributor-table a:hover {
+      text-decoration: underline;
+    }
+    
+    .version {
+      font-size: 12px;
+      color: #6b7280;
+      text-align: center;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
   <div class="header">
-    <h3>Lanis Helper 설정</h3>
+    <h1>Lanis Helper</h1>
   </div>
   
-  <div class="feature-item">
-    <div>
-      <div class="feature-name">사용자 프로필 링크</div>
-      <div class="description">채팅에서 사용자 이름을 클릭하면 해당 사용자의 프로필 페이지로 이동합니다.</div>
-    </div>
-    <label class="toggle-switch">
-      <input type="checkbox" id="profileLink" checked>
-      <span class="slider"></span>
-    </label>
+  <div class="info-section">
+    <b>버전:</b> v<span id="version">unknown</span><br><br>
+    본 프로그램은 <b>유저 비공식 확장</b>입니다.<br><br>
+    문의: 인게임 메일 <b>도히님</b>
+    <hr>
   </div>
-
-  <div class="feature-item">
-    <div>
-      <div class="feature-name">아이템 등급 표기</div>
-      <div class="description">아이템 감정 등급 및 점수 표기 (Lanis wiki 연동)</div>
-    </div>
-    <label class="toggle-switch">
-      <input type="checkbox" id="showItemStats" checked>
-      <span class="slider"></span>
-    </label>
+  
+  <div class="decoration">
+    <span>〰 〰 〰 〰 〰 〰 〰 〰 〰</span><br>
+    <span>〰 〰</span>
+    <span style="font-size:18px;">👑</span>
+    <span style="font-size:15px;vertical-align:middle;color:#222;">기여자</span>
+    <span style="font-size:18px;">👑</span>
+    <span>〰 〰</span><br>
+    <span>〰 〰 〰 〰 〰 〰 〰 〰 〰</span>
   </div>
-
-  <div class="crawler-section">
-    <button id="crawlButton" class="crawler-button">레어 아이템 데이터 수집</button>
-    <div id="status" class="status">대기 중...</div>
-    
-    <button id="viewItemsButton" class="crawler-button" style="background-color: #2196F3; margin-top: 10px;">스캔된 아이템 목록 보기</button>
+  
+  <table class="contributor-table">
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th>닉네임</th>
+        <th>url</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>장비해방</td>
+        <td><a href="https://lanis.me/users/수고하세요" target="_blank">수고하세요</a></td>
+        <td><a href="https://docs.google.com/spreadsheets/d/15E8F_qSxKPMqsL_ulfwm739PTjBLO64qN8jWuDZe7ng/edit?gid=468768394#gid=468768394" target="_blank">해방정보 시트</a></td>
+      </tr>
+      <tr>
+        <td>어빌리티</td>
+        <td><a href="https://lanis.me/users/먹물" target="_blank">먹물</a></td>
+        <td><a href="https://lanis.me/board/view/6841a029abffb8c821c43e85" target="_blank">어빌리티 게시글</a></td>
+      </tr>
+      <tr>
+        <td>위키운영</td>
+        <td><a href="https://lanis.me/users/크루즈" target="_blank">크루즈</a></td>
+        <td><a href="https://laniswiki.lovestoblog.com/" target="_blank">위키 바로가기</a></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="version">
+    Lanis Helper v<span id="version2">unknown</span>
   </div>
-
-  <script type="module" src="index.js"></script>
+  
+  <script src="popup.js"></script>
 </body>
 </html> 

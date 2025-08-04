@@ -26,15 +26,30 @@ class ItemStatsManager {
       this.modules.dynamicObserver.init(this);
       this.modules.popoverObserver.init();
       
-      console.log('ItemStatsManager 초기화 완료');
+  
     } catch (error) {
       console.error('ItemStatsManager 초기화 중 오류:', error);
     }
   }
 
   // 아이템 스탯 처리
-  processItemStats() {
-    if (!this.settings.showItemStats) {
+  async processItemStats() {
+    // 설정 상태 확인 - 아이템 스카우터가 OFF면 처리하지 않음
+    if (window.utils && window.utils.SettingsManager) {
+      try {
+        const settings = await window.utils.SettingsManager.getSettings({
+          showItemStats: true
+        });
+        
+        if (!settings.showItemStats) {
+          // 아이템 스카우터가 OFF면 처리하지 않음
+          return;
+        }
+      } catch (error) {
+        console.warn('아이템 스카우터 설정 확인 실패:', error);
+        return;
+      }
+    } else if (!this.settings.showItemStats) {
       return;
     }
     
@@ -60,7 +75,7 @@ class ItemStatsManager {
       this.modules.dynamicObserver.destroy();
       this.modules.popoverObserver.destroy();
       
-      console.log('ItemStatsManager 정리 완료');
+  
     } catch (error) {
       console.error('ItemStatsManager 정리 중 오류:', error);
     }
@@ -71,8 +86,9 @@ class ItemStatsManager {
     return this.isProcessing;
   }
 
+  // DOM 기반 계산이므로 희귀 아이템 데이터 불필요
   getRareItemsData() {
-    return this.modules.processor.getRareItemsData();
+    return [];
   }
 }
 

@@ -8,8 +8,20 @@ class UsernameClickHandler {
     // 초기화 시 필요한 작업이 있다면 여기에 추가
   }
 
-  process() {
+  async process() {
     try {
+      // 설정 상태 확인 - 프로필 링크가 OFF면 처리하지 않음
+      if (window.utils && window.utils.SettingsManager) {
+        const settings = await window.utils.SettingsManager.getSettings({
+          profileLink: true
+        });
+        
+        if (!settings.profileLink) {
+          // 프로필 링크가 OFF면 처리하지 않음
+          return;
+        }
+      }
+      
       // 구버전 방식: li 태그들을 찾아서 사용자 이름 처리
       const messageItems = document.querySelectorAll('li[id^="message-"]');
       
@@ -56,14 +68,26 @@ class UsernameClickHandler {
       // 클릭 가능한 요소들 제거
       const clickableElements = document.querySelectorAll('.username-clickable');
       clickableElements.forEach(element => {
+        // 클릭 이벤트 리스너 제거
         element.classList.remove('username-clickable');
-        // 이벤트 리스너 제거 (새로운 요소로 교체)
+        
+        // 모든 클릭 이벤트 리스너 제거
         const newElement = element.cloneNode(true);
-        element.parentNode.replaceChild(newElement, element);
+        if (element.parentNode) {
+          element.parentNode.replaceChild(newElement, element);
+        }
+        
+        // 추가적으로 스타일도 제거 (pointer-events 등)
+        newElement.style.pointerEvents = '';
+        newElement.style.cursor = '';
+        newElement.style.textDecoration = '';
+        newElement.style.color = '';
       });
       
       // 처리된 요소 목록 초기화
       this.processedElements.clear();
+      
+      
       
     } catch (error) {
       console.error('사용자명 링크 제거 중 오류:', error);

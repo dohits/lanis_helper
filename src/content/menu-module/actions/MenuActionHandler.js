@@ -15,7 +15,8 @@ class MenuActionHandler {
       programInfo: menuManager.programInfoModal,
       abilityInfo: menuManager.abilityInfoModal,
       enchantInfo: menuManager.enchantInfoModal,
-      itemPrice: menuManager.itemPriceModal
+      itemPrice: menuManager.itemPriceModal,
+      itemCollection: menuManager.itemCollectionModal
     };
     this.expectedValueModal = menuManager.expectedValueModal;
   }
@@ -40,6 +41,9 @@ class MenuActionHandler {
         break;
       case 'programInfo':
         this.modals.programInfo.open();
+        break;
+      case 'itemCollection':
+        this.modals.itemCollection.open();
         break;
       case 'profileLink':
       case 'showItemStats':
@@ -78,17 +82,20 @@ class MenuActionHandler {
     switch (settingId) {
       case 'profileLink':
         if (settings[settingId]) {
+          // ON 상태: 기능 활성화
           window.userProfileManager.processUserNames();
-          // 동적 콘텐츠 처리 시작
           window.userProfileManager.processDynamicContent();
         } else {
+          // OFF 상태: 기능 비활성화
           window.userProfileManager.removeUserNames();
         }
         break;
-      case 'showItemStats':  // 구버전 방식으로 변경
+      case 'showItemStats':
         if (settings[settingId]) {
+          // ON 상태: 기능 활성화
           window.itemStatsManager.processItemStats();
         } else {
+          // OFF 상태: 기능 비활성화
           window.itemStatsManager.removeItemStats();
         }
         break;
@@ -100,7 +107,7 @@ class MenuActionHandler {
     // 최신 설정을 다시 로드
     await this.stateManager.loadSettings();
     this.renderers.sub.setSettings(this.stateManager.getSettings());
-    this.renderers.sub.createSettingsSubMenu(container);
+    await this.renderers.sub.createSettingsSubMenu(container);
   }
 
   // 토글 버튼 업데이트
