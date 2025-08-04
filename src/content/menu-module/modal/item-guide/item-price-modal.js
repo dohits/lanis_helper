@@ -143,13 +143,6 @@ class ItemPriceModal extends BaseModal {
         // PriceFetcher를 사용하여 차트 데이터 가져오기
         const chartData = await this.priceFetcher.getChartData(itemName);
 
-        // 데이터가 없는 경우 처리
-        if (chartData.noData) {
-          this.chartDiv.textContent = `${itemName}의 거래 데이터는 존재하지 않습니다.`;
-          this.chartDiv.style.color = '#f39c12';
-          return;
-        }
-
         // 차트 영역 위에 텍스트 표시
         const infoDiv = document.createElement('div');
         infoDiv.style.cssText = `
@@ -159,123 +152,11 @@ class ItemPriceModal extends BaseModal {
           margin-bottom: 10px;
           flex: 0 0 auto;
         `;
-
-        // 마지막 데이터 추가 정보
-        let dataSourceInfo = '';
-        try {
-          const { oldRows, newRows } = await this.priceFetcher.fetchData();
-          
-          // 모든 거래 데이터 파싱
-          const allTradeItems = [];
-          
-          for (let i = 0; i < newRows.length; i++) {
-            const row = newRows[i];
-            if (row.length === 0) continue;
-            
-            const cellA = (row[0] || '').replace(/"/g, '').trim();
-            
-            // 새로운 형식: "거래 완료" 패턴 찾기
-            if (cellA.includes('거래 완료')) {
-              // 시간 정보 추출 (i+1 행)
-              let timeStr = '';
-              if (i + 1 < newRows.length) {
-                timeStr = (newRows[i + 1][0] || '').replace(/"/g, '').trim();
-              }
-              
-              // 아이템 정보 행 찾기 (i+2)
-              if (i + 2 < newRows.length) {
-                const itemRow = newRows[i + 2];
-                if (itemRow.length > 0) {
-                  const itemText = (itemRow[0] || '').replace(/"/g, '').trim();
-                  
-                  // 가격 추출
-                  const priceMatch = itemText.match(/(\d{1,3}(?:,\d{3})*)\s*Gold/);
-                  if (priceMatch) {
-                    const priceStr = priceMatch[1].replace(/,/g, '');
-                    const price = parseInt(priceStr, 10);
-                    
-                    // 수량 처리
-                    let count = 1;
-                    const countMatch = itemText.match(/(\d+)개가/);
-                    if (countMatch) {
-                      count = parseInt(countMatch[1], 10);
-                    }
-                    
-                    // 아이템명 추출
-                    const itemMatch = itemText.match(/(.+?)(?:\s+\d+개가|\s+가\s+거래소에서|\s+가\s+)/);
-                    const extractedItemName = itemMatch ? itemMatch[1].trim() : '';
-                    
-                    // 정확한 아이템명 매칭 (검색어와 정확히 일치하는지 확인)
-                    const isExactMatch = extractedItemName === itemName;
-                    
-                    // 유효한 가격인지 확인 (90,000 초과, 10억 이하만 유효) 및 정확한 매칭
-                    if (price && price > 90000 && price < 1000000000 && extractedItemName && isExactMatch) {
-                      // 시간 정보를 Date 객체로 변환
-                      let timestamp = new Date(0);
-                      if (timeStr) {
-                        const timeMatch = timeStr.match(/(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})\.\s*(오전|오후)\s*(\d{1,2}):(\d{2}):(\d{2})/);
-                        if (timeMatch) {
-                          const [, year, month, day, ampm, hour, minute, second] = timeMatch;
-                          let hour24 = parseInt(hour, 10);
-                          if (ampm === '오후' && hour24 !== 12) hour24 += 12;
-                          if (ampm === '오전' && hour24 === 12) hour24 = 0;
-                          
-                          timestamp = new Date(
-                            parseInt(year, 10),
-                            parseInt(month, 10) - 1,
-                            parseInt(day, 10),
-                            hour24,
-                            parseInt(minute, 10),
-                            parseInt(second, 10)
-                          );
-                        }
-                      }
-                      
-                      allTradeItems.push({
-                        timestamp: timestamp,
-                        item: extractedItemName,
-                        count: count,
-                        price: price,
-                        originalText: itemText,
-                        format: 'new'
-                      });
-                    }
-                  }
-                }
-              }
-            }
-          }
-          
-          if (allTradeItems.length > 0) {
-            const itemsWithTimestamp = allTradeItems.filter(item => 
-              item.timestamp && item.timestamp !== new Date(0)
-            );
-            
-            if (itemsWithTimestamp.length > 0) {
-              const latestItem = itemsWithTimestamp.reduce((latest, current) => {
-                return current.timestamp > latest.timestamp ? current : latest;
-              });
-              
-              const latestDate = latestItem.timestamp.toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-              });
-              
-                             dataSourceInfo = `<div style='color:#888;font-size:10px;font-weight:normal;'>마지막 데이터 추가 <strong>${latestDate}</strong><br>${latestItem.item} ${latestItem.count}개 ${latestItem.price.toLocaleString()}G</div>`;
-            }
-          }
-        } catch (error) {
-          console.warn('마지막 데이터 정보 추출 중 오류:', error);
-        }
         
         infoDiv.innerHTML =
-          dataSourceInfo +
           `<span style='color:#374151;'>최근 판매가 :</span> <span style='color:#667eea;'>${chartData.recentPrice ? chartData.recentPrice.toLocaleString() + ' G' : '-'}</span><br>
-          <span style='color:#374151;'>평균 판매가 :</span> <span style='color:#764ba2;'>${chartData.avgPrice ? chartData.avgPrice.toLocaleString() + ' G' : '-'}</span>`;
+          <span style='color:#374151;'>평균 판매가 :</span> <span style='color:#764ba2;'>${chartData.averagePrice ? chartData.averagePrice.toLocaleString() + ' G' : '-'}</span><br>
+          <span style='color:#374151;'>총 거래 건수 :</span> <span style='color:#10b981;'>${chartData.totalTrades}건</span>`;
         
         // 차트 영역 초기화 및 infoDiv 추가
         this.chartDiv.innerHTML = '';
@@ -303,10 +184,10 @@ class ItemPriceModal extends BaseModal {
         this.chartInstance = new Chart(this.chartCanvas.getContext('2d'), {
           type: 'line',
           data: {
-            labels: chartData.timeOrderedLabels,
+            labels: chartData.labels,
             datasets: [{
               label: itemName + ' 시세',
-              data: chartData.timeOrderedPrices,
+              data: chartData.prices,
               borderColor: '#667eea',
               backgroundColor: 'rgba(102,126,234,0.1)',
               pointRadius: 3,

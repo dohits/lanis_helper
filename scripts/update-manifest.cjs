@@ -19,9 +19,16 @@ function getAssetFiles() {
 
 // manifest.json 업데이트
 function updateManifest() {
-  const manifestPath = path.join(__dirname, '../dist/manifest.json');
+  const srcManifestPath = path.join(__dirname, '../public/manifest.json');
+  const distManifestPath = path.join(__dirname, '../dist/manifest.json');
   const packagePath = path.join(__dirname, '../package.json');
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  
+  // public/manifest.json을 dist로 복사
+  if (fs.existsSync(srcManifestPath)) {
+    fs.copyFileSync(srcManifestPath, distManifestPath);
+  }
+  
+  const manifest = JSON.parse(fs.readFileSync(distManifestPath, 'utf8'));
   const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
   
   const assets = getAssetFiles();
@@ -45,14 +52,13 @@ function updateManifest() {
   if (manifest.web_accessible_resources && manifest.web_accessible_resources[0]) {
     manifest.web_accessible_resources[0].resources = [
       'assets/*',
-      'rare-items.json',
       'menu-config.json',
       'styles.css'
     ];
   }
   
   // 업데이트된 manifest.json 저장
-  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  fs.writeFileSync(distManifestPath, JSON.stringify(manifest, null, 2));
   console.log('✅ manifest.json 업데이트 완료');
 }
 

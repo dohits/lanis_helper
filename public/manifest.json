@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Lanis Helper",
-  "version": "1.6.2",
+  "version": "1.7.2",
   "description": "Lanis 게임을 위한 도우미 확장프로그램",
   "permissions": [
     "activeTab",
@@ -21,13 +21,6 @@
         "https://laniswiki.lovestoblog.com/api.php*"
       ],
       "js": [
-        "utils.js",
-        "item-colors.js",
-        "menu-module/menu-manager.js",
-        "search-engine.js", 
-        "item-stats.js",
-        "menu-module/settings-modal.js",
-        "user-profile.js",
         "content.js"
       ],
       "run_at": "document_end"
@@ -36,16 +29,9 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "styles.css",
-        "utils.js",
-        "item-colors.js",
-        "menu-module/menu-config.json",
-        "menu-module/menu-manager.js",
-        "search-engine.js",
-        "item-stats.js",
-        "menu-module/settings-modal.js",
-        "user-profile.js",
-        "rare-items.json"
+        "assets/*",
+        "menu-config.json",
+        "styles.css"
       ],
       "matches": [
         "https://lanis.me/*",
@@ -64,4 +50,4 @@
   "background": {
     "service_worker": "background.js"
   }
-}
+} 
