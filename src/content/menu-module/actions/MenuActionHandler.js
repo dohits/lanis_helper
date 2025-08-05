@@ -1,4 +1,5 @@
 import { ExpectedValueModal } from '../modal/calculator/expected-value-modal.js';
+import { FishingCalculatorModal } from '../modal/calculator/fishing-calculator-modal.js';
 
 // 메뉴 액션 처리 클래스
 class MenuActionHandler {
@@ -19,6 +20,7 @@ class MenuActionHandler {
       itemCollection: menuManager.itemCollectionModal
     };
     this.expectedValueModal = menuManager.expectedValueModal;
+    this.fishingCalculatorModal = menuManager.fishingCalculatorModal;
   }
 
   // 서브메뉴 아이템 액션 실행
@@ -26,6 +28,9 @@ class MenuActionHandler {
     switch (item.id) {
       case 'expectedValue':
         this.openExpectedValueModal();
+        break;
+      case 'fishingCalculator':
+        this.openFishingCalculatorModal();
         break;
       case 'itemPrice':
         this.modals.itemPrice.open();
@@ -119,6 +124,12 @@ class MenuActionHandler {
   openExpectedValueModal() {
     // 직접 ExpectedValueModal 사용
     this.expectedValueModal.open();
+  }
+
+  // 낚시 계산기 모달 열기
+  openFishingCalculatorModal() {
+    // 직접 FishingCalculatorModal 사용
+    this.fishingCalculatorModal.open();
   }
 }
 

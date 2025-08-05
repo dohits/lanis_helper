@@ -32,28 +32,101 @@ const safeExecuteAsync = async (fn, errorMessage) => {
   }
 };
 
-// 확장 프로그램 컨텍스트 검사
+// 확장 프로그램 컨텍스트 검사 (개선된 버전)
 const isValidExtensionContext = () => {
-  return !!(chrome && chrome.runtime && chrome.runtime.id);
+  try {
+    // 기본 확장 프로그램 컨텍스트 확인
+    if (!chrome || !chrome.runtime || !chrome.runtime.id) {
+      return false;
+    }
+    
+    // 페이지 상태 확인
+    if (document.readyState === 'loading') {
+      return false;
+    }
+    
+    // DOM 접근 가능성 확인
+    if (!document.body) {
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.warn('확장 프로그램 컨텍스트 검사 중 오류:', error);
+    return false;
+  }
 };
 
 // Chrome Storage 설정 관리자
 class SettingsManager {
   static async getSettings(defaultSettings = {}) {
     return new Promise((resolve) => {
-      chrome.storage.sync.get(defaultSettings, resolve);
+      try {
+        // 확장 프로그램 컨텍스트 유효성 검사
+        if (!chrome || !chrome.runtime || !chrome.runtime.id) {
+          console.warn('확장 프로그램 컨텍스트가 유효하지 않습니다. 기본 설정을 반환합니다.');
+          resolve(defaultSettings);
+          return;
+        }
+        
+        chrome.storage.sync.get(defaultSettings, (result) => {
+          if (chrome.runtime.lastError) {
+            console.warn('Chrome Storage 접근 오류:', chrome.runtime.lastError);
+            resolve(defaultSettings);
+          } else {
+            resolve(result);
+          }
+        });
+      } catch (error) {
+        console.warn('설정 가져오기 중 오류:', error);
+        resolve(defaultSettings);
+      }
     });
   }
   
   static async setSettings(settings) {
     return new Promise((resolve) => {
-      chrome.storage.sync.set(settings, resolve);
+      try {
+        // 확장 프로그램 컨텍스트 유효성 검사
+        if (!chrome || !chrome.runtime || !chrome.runtime.id) {
+          console.warn('확장 프로그램 컨텍스트가 유효하지 않습니다. 설정 저장을 건너뜁니다.');
+          resolve();
+          return;
+        }
+        
+        chrome.storage.sync.set(settings, () => {
+          if (chrome.runtime.lastError) {
+            console.warn('Chrome Storage 저장 오류:', chrome.runtime.lastError);
+          }
+          resolve();
+        });
+      } catch (error) {
+        console.warn('설정 저장 중 오류:', error);
+        resolve();
+      }
     });
   }
   
   static async removeSettings(keys) {
     return new Promise((resolve) => {
-      chrome.storage.sync.remove(keys, resolve);
+      try {
+        // 확장 프로그램 컨텍스트 유효성 검사
+        if (!chrome || !chrome.runtime || !chrome.runtime.id) {
+          console.warn('확장 프로그램 컨텍스트가 유효하지 않습니다. 설정 제거를 건너뜁니다.');
+          resolve();
+          return;
+        }
+        
+        chrome.storage.sync.remove(keys, () => {
+          if (chrome.runtime.lastError) {
+            console.warn('Chrome Storage 제거 오류:', chrome.runtime.lastError);
+          }
+          resolve();
+        });
+      } catch (error) {
+        console.warn('설정 제거 중 오류:', error);
+        resolve();
+      }
     });
   }
 }

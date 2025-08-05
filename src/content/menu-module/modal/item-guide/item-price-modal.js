@@ -26,6 +26,7 @@ class ItemPriceModal extends BaseModal {
       flex-direction: column;
       height: 100%;
       gap: 16px;
+      width: 100%;
     `;
 
     // 검색 폼 생성
@@ -119,6 +120,7 @@ class ItemPriceModal extends BaseModal {
       padding: 0;
       min-height: 300px;
       min-width: 0;
+      width: 100%;
     `;
     chartDiv.textContent = '최대 50회 트레이드의 최근 거래 동향을 확인 가능합니다.\n수량이 여러개일 경우 여러건으로 나뉘어 처리됩니다.';
     chartDiv.id = 'itemPriceChartDiv';
@@ -143,6 +145,23 @@ class ItemPriceModal extends BaseModal {
         // PriceFetcher를 사용하여 차트 데이터 가져오기
         const chartData = await this.priceFetcher.getChartData(itemName);
 
+        // 데이터가 없는 경우 메시지 표시
+        if (chartData.totalTrades === 0 || chartData.prices.length === 0) {
+          this.chartDiv.innerHTML = '';
+          this.chartDiv.style.cssText = `
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+            font-size: 16px;
+            text-align: center;
+            padding: 20px;
+          `;
+          this.chartDiv.textContent = `"${itemName}"의 거래 데이터가 존재하지 않습니다.`;
+          return;
+        }
+
         // 차트 영역 위에 텍스트 표시
         const infoDiv = document.createElement('div');
         infoDiv.style.cssText = `
@@ -151,6 +170,7 @@ class ItemPriceModal extends BaseModal {
           font-weight: normal;
           margin-bottom: 10px;
           flex: 0 0 auto;
+          order: 1;
         `;
         
         infoDiv.innerHTML =
@@ -172,8 +192,45 @@ class ItemPriceModal extends BaseModal {
           min-height: 0;
           min-width: 0;
           margin: 0 auto;
+          order: 2;
         `;
         this.chartDiv.appendChild(this.chartCanvas);
+
+        // 최신 거래내역 표시 영역 추가
+        const latestTradeDiv = document.createElement('div');
+        latestTradeDiv.style.cssText = `
+          margin-top: 10px;
+          padding: 10px;
+          font-size: 12px;
+          color: #666;
+          text-align: right;
+          order: 3;
+        `;
+        this.chartDiv.appendChild(latestTradeDiv);
+
+        // 최신 거래 데이터 가져오기
+        try {
+          const latestTrade = await this.priceFetcher.getLatestTradeData();
+          if (latestTrade) {
+            const timeStr = latestTrade.timeStr || '';
+            const itemName = latestTrade.itemName || '';
+            const count = latestTrade.count || 1;
+            const price = latestTrade.price || 0;
+            
+            latestTradeDiv.innerHTML = `
+              <div style="font-weight: bold; margin-bottom: 5px; color: #333;">마지막으로 추가된 거래내역</div>
+              <div style="line-height: 1.4;">
+                <div>${timeStr}</div>
+                <div>${itemName} ${count}개 ${price.toLocaleString()} Gold</div>
+              </div>
+            `;
+          } else {
+            latestTradeDiv.innerHTML = '<div style="color: #999;">거래 데이터를 불러올 수 없습니다.</div>';
+          }
+        } catch (error) {
+          console.error('최신 거래 데이터 로드 실패:', error);
+          latestTradeDiv.innerHTML = '<div style="color: #999;">거래 데이터를 불러올 수 없습니다.</div>';
+        }
         
         // Chart.js 동적 import
         const Chart = (await import('chart.js/auto')).default;
@@ -201,7 +258,24 @@ class ItemPriceModal extends BaseModal {
             maintainAspectRatio: false,
             plugins: {
               legend: { display: true },
-              title: { display: false }
+              title: { display: false },
+              tooltip: {
+                callbacks: {
+                  title: function(context) {
+                    const dataIndex = context[0].dataIndex;
+                    const actualDate = chartData.actualDates[dataIndex];
+                    if (actualDate) {
+                      const year = actualDate.getFullYear();
+                      const month = String(actualDate.getMonth() + 1).padStart(2, '0');
+                      const day = String(actualDate.getDate()).padStart(2, '0');
+                      const hours = String(actualDate.getHours()).padStart(2, '0');
+                      const minutes = String(actualDate.getMinutes()).padStart(2, '0');
+                      return `${year}-${month}-${day} ${hours}:${minutes}`;
+                    }
+                    return context[0].label;
+                  }
+                }
+              }
             },
             interaction: { mode: 'nearest', axis: 'x', intersect: false },
             scales: {

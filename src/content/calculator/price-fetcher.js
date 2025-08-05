@@ -55,7 +55,11 @@ class PriceFetcher {
         avgPrice: null,
         finalPrices: [],
         finalLabels: [],
-        noData: true
+        totalTrades: 0,
+        averagePrice: 0,
+        recentPrice: 0,
+        noData: true,
+        actualDates: []
       };
     }
   }
@@ -82,6 +86,16 @@ class PriceFetcher {
     } catch (error) {
       console.error(`${itemName} 시세 가져오기 실패:`, error);
       throw error;
+    }
+  }
+
+  // 최신 거래 데이터 가져오기
+  async getLatestTradeData() {
+    try {
+      return await this.priceAPI.getLatestTradeData();
+    } catch (error) {
+      console.error('최신 거래 데이터 가져오기 실패:', error);
+      return null;
     }
   }
 

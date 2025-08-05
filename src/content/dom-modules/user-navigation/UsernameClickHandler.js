@@ -12,13 +12,24 @@ class UsernameClickHandler {
     try {
       // 설정 상태 확인 - 프로필 링크가 OFF면 처리하지 않음
       if (window.utils && window.utils.SettingsManager) {
-        const settings = await window.utils.SettingsManager.getSettings({
-          profileLink: true
-        });
-        
-        if (!settings.profileLink) {
-          // 프로필 링크가 OFF면 처리하지 않음
-          return;
+        try {
+          const settings = await window.utils.SettingsManager.getSettings({
+            profileLink: true
+          });
+          
+          if (!settings.profileLink) {
+            // 프로필 링크가 OFF면 처리하지 않음
+            return;
+          }
+        } catch (error) {
+          // Extension context invalidated 오류를 포함한 모든 오류 처리
+          if (error.message && error.message.includes('Extension context invalidated')) {
+            console.warn('확장 프로그램 컨텍스트가 무효화되었습니다. 기본 설정을 사용합니다.');
+            // 기본 설정으로 계속 진행
+          } else {
+            console.warn('프로필 링크 설정 확인 실패:', error);
+            return;
+          }
         }
       }
       

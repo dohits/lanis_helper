@@ -63,7 +63,17 @@ class SubMenuRenderer {
         this.settings = latestSettings;
       }
     } catch (error) {
-      console.warn('최신 설정 로드 실패:', error);
+      // Extension context invalidated 오류를 포함한 모든 오류 처리
+      if (error.message && error.message.includes('Extension context invalidated')) {
+        console.warn('확장 프로그램 컨텍스트가 무효화되었습니다. 기본 설정을 사용합니다.');
+        // 기본 설정 사용
+        this.settings = {
+          profileLink: true,
+          showItemStats: true
+        };
+      } else {
+        console.warn('최신 설정 로드 실패:', error);
+      }
     }
   }
 

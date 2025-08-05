@@ -125,6 +125,7 @@ export class PriceCalculator {
     // TradeDataParser에서 이미 50개 제한을 적용했으므로 추가 제한하지 않음
     const prices = tradeData.prices;
     const labels = tradeData.labels;
+    const actualDates = tradeData.actualDates || [];
     
     if (prices.length === 0) {
       return {
@@ -132,7 +133,9 @@ export class PriceCalculator {
         labels: [],
         averagePrice: 0,
         recentPrice: 0,
-        totalTrades: 0
+        totalTrades: 0,
+        noData: true,
+        actualDates: []
       };
     }
     
@@ -141,7 +144,8 @@ export class PriceCalculator {
       labels: labels,
       averagePrice: Math.round(prices.reduce((a, b) => a + b, 0) / prices.length),
       recentPrice: prices[0],
-      totalTrades: prices.length
+      totalTrades: prices.length,
+      actualDates: actualDates
     };
   }
 
@@ -153,7 +157,7 @@ export class PriceCalculator {
    */
   static calculatePrice(prices, priceType = 'recent') {
     if (prices.length === 0) {
-      throw new Error('유효한 가격 데이터가 없습니다.');
+      return 0; // 에러 대신 0 반환
     }
     
     if (priceType === 'average') {
@@ -163,7 +167,7 @@ export class PriceCalculator {
       // 최근 판매가(가장 최신 가격)
       return prices[0];
     } else {
-      throw new Error(`알 수 없는 가격 타입: ${priceType}`);
+      return 0; // 알 수 없는 타입도 0 반환
     }
   }
 

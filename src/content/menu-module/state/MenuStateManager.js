@@ -92,7 +92,12 @@ class MenuStateManager {
       }
       return true;
     } catch (error) {
-      console.warn('설정 로드 실패, 기본 설정 사용:', error);
+      // Extension context invalidated 오류를 포함한 모든 오류 처리
+      if (error.message && error.message.includes('Extension context invalidated')) {
+        console.warn('확장 프로그램 컨텍스트가 무효화되었습니다. 기본 설정을 사용합니다.');
+      } else {
+        console.warn('설정 로드 실패, 기본 설정 사용:', error);
+      }
       this.settings = { ...this.DEFAULT_SETTINGS };
       return false;
     }

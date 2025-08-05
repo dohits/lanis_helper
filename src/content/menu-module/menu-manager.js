@@ -2,6 +2,7 @@
 import ExpectedValueCalculator from '../calculator/expected-value-calculator.js';
 import PriceFetcher from '../calculator/price-fetcher.js';
 import { ExpectedValueModal } from './modal/calculator/expected-value-modal.js';
+import { FishingCalculatorModal } from './modal/calculator/fishing-calculator-modal.js';
 import ItemGuideModal from './modal/item-guide/item-guide-modal.js';
 import UserSearchModal from './modal/settings/user-search-modal.js';
 import ProgramInfoModal from './modal/settings/program-info-modal.js';
@@ -22,6 +23,7 @@ class MenuManager {
     this.calculator = new ExpectedValueCalculator();
     this.priceFetcher = new PriceFetcher();
     this.expectedValueModal = new ExpectedValueModal();
+    this.fishingCalculatorModal = new FishingCalculatorModal();
     this.itemGuideModal = new ItemGuideModal();
     this.userSearchModal = new UserSearchModal();
     this.programInfoModal = new ProgramInfoModal();

@@ -275,12 +275,18 @@ setInterval(() => {
     if (window.location.href !== currentUrl) {
       currentUrl = window.location.href;
       
-            // URL 변경 시 설정에 따라 동적 콘텐츠 재처리
+      // URL 변경 시 설정에 따라 동적 콘텐츠 재처리
       utils.safeExecuteAsync(async () => {
         try {
           // 확장 프로그램 컨텍스트 유효성 검사
           if (!utils.isValidExtensionContext()) {
-            console.warn('확장 프로그램 컨텍스트가 무효화되었습니다. URL 변경 처리를 건너뜁니다.');
+            // URL 변경 시 정상적인 현상이므로 조용히 처리
+            return;
+          }
+          
+          // 페이지 로딩 상태 확인
+          if (document.readyState !== 'complete') {
+            console.warn('페이지가 아직 로딩 중입니다. URL 변경 처리를 건너뜁니다.');
             return;
           }
           
@@ -308,7 +314,7 @@ setInterval(() => {
   } catch (error) {
     console.warn('URL 변경 감지 중 오류:', error);
   }
-}, 1000);
+}, 2000); // 간격을 2초로 늘려서 부하 감소
 
 // 초기화 시작 함수
 function startInitialization() {

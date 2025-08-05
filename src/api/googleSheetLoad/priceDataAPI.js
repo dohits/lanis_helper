@@ -16,17 +16,14 @@ class PriceDataAPI extends GoogleSheetAPI {
 
   /**
    * 가격 데이터 가져오기
-   * @returns {Promise<Object>} 구형/신형 데이터
+   * @returns {Promise<Array>} 새로운 형식 데이터
    */
   async fetchPriceData() {
     try {
-      // 기존 데이터 (A,B,C열 형식) - gid=439005150
-      const oldRows = await this.fetchCSVData(this.priceSheetId, '439005150');
-      
       // 새로운 데이터 (A열 세로형 형식) - gid=1489625214
       const newRows = await this.fetchCSVData(this.priceSheetId, '1489625214');
 
-      return { oldRows, newRows };
+      return newRows;
     } catch (error) {
       console.error('가격 데이터 가져오기 실패:', error);
       throw error;
@@ -41,13 +38,12 @@ class PriceDataAPI extends GoogleSheetAPI {
    */
   async getItemPrice(itemName, priceType = 'recent') {
     try {
-      const { oldRows, newRows } = await this.fetchPriceData();
+      const newRows = await this.fetchPriceData();
       
-      if (!this.validateData(oldRows) && !this.validateData(newRows)) {
+      if (!this.validateData(newRows)) {
         throw new Error('데이터가 충분하지 않습니다.');
       }
       
-      // 신형 로직만 사용 (구형 로직 제거)
       const tradeData = TradeDataParser.parseTradeData(newRows, itemName);
       
       if (tradeData.prices.length === 0) {
@@ -70,10 +66,15 @@ class PriceDataAPI extends GoogleSheetAPI {
    */
   async getMultipleItemPrices(items, priceType = 'recent') {
     try {
-      const { oldRows, newRows } = await this.fetchPriceData();
+      const newRows = await this.fetchPriceData();
       
-      if (!this.validateData(oldRows) && !this.validateData(newRows)) {
-        throw new Error('데이터가 충분하지 않습니다.');
+      if (!this.validateData(newRows)) {
+        // 데이터가 충분하지 않으면 빈 객체 반환
+        const emptyResult = {};
+        items.forEach(itemName => {
+          emptyResult[itemName] = 0;
+        });
+        return emptyResult;
       }
       
       const priceData = {};
@@ -83,7 +84,7 @@ class PriceDataAPI extends GoogleSheetAPI {
           const tradeData = TradeDataParser.parseTradeData(newRows, itemName);
           priceData[itemName] = tradeData.prices;
         } catch (error) {
-          console.error(`${itemName} 시세 가져오기 실패:`, error);
+          // 개별 아이템 실패 시 빈 배열로 처리
           priceData[itemName] = [];
         }
       }
@@ -91,8 +92,12 @@ class PriceDataAPI extends GoogleSheetAPI {
       return PriceCalculator.calculateMultiplePrices(priceData, priceType);
       
     } catch (error) {
-      console.error('다중 아이템 시세 가져오기 실패:', error);
-      throw error;
+      // 전체 실패 시 빈 객체 반환
+      const emptyResult = {};
+      items.forEach(itemName => {
+        emptyResult[itemName] = 0;
+      });
+      return emptyResult;
     }
   }
 
@@ -103,20 +108,21 @@ class PriceDataAPI extends GoogleSheetAPI {
    */
   async getChartData(itemName) {
     try {
-      const { oldRows, newRows } = await this.fetchPriceData();
+      const newRows = await this.fetchPriceData();
       
-      if (!this.validateData(oldRows) && !this.validateData(newRows)) {
+      if (!this.validateData(newRows)) {
         // 데이터가 충분하지 않을 때 빈 차트 데이터 반환
         return {
           prices: [],
           labels: [],
           averagePrice: 0,
           recentPrice: 0,
-          totalTrades: 0
+          totalTrades: 0,
+          noData: true,
+          actualDates: []
         };
       }
       
-      // 신형 로직만 사용 (구형 로직 제거)
       const tradeData = TradeDataParser.parseTradeData(newRows, itemName);
       
       if (tradeData.prices.length === 0) {
@@ -126,7 +132,9 @@ class PriceDataAPI extends GoogleSheetAPI {
           labels: [],
           averagePrice: 0,
           recentPrice: 0,
-          totalTrades: 0
+          totalTrades: 0,
+          noData: true,
+          actualDates: []
         };
       }
       
@@ -140,8 +148,30 @@ class PriceDataAPI extends GoogleSheetAPI {
         labels: [],
         averagePrice: 0,
         recentPrice: 0,
-        totalTrades: 0
+        totalTrades: 0,
+        noData: true,
+        actualDates: []
       };
+    }
+  }
+
+  /**
+   * 최신 거래 데이터 가져오기
+   * @returns {Promise<Object|null>} 최신 거래 정보 또는 null
+   */
+  async getLatestTradeData() {
+    try {
+      const newRows = await this.fetchPriceData();
+      
+      if (!this.validateData(newRows)) {
+        return null;
+      }
+      
+      return TradeDataParser.getLatestTradeData(newRows);
+      
+    } catch (error) {
+      console.error('최신 거래 데이터 가져오기 실패:', error);
+      return null;
     }
   }
 
@@ -152,9 +182,9 @@ class PriceDataAPI extends GoogleSheetAPI {
    */
   async searchItems(query) {
     try {
-      const { oldRows, newRows } = await this.fetchPriceData();
+      const newRows = await this.fetchPriceData();
       
-      if (!this.validateData(oldRows) && !this.validateData(newRows)) {
+      if (!this.validateData(newRows)) {
         return [];
       }
       

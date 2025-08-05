@@ -46,8 +46,14 @@ class ItemStatsManager {
           return;
         }
       } catch (error) {
-        console.warn('아이템 스카우터 설정 확인 실패:', error);
-        return;
+        // Extension context invalidated 오류를 포함한 모든 오류 처리
+        if (error.message && error.message.includes('Extension context invalidated')) {
+          console.warn('확장 프로그램 컨텍스트가 무효화되었습니다. 기본 설정을 사용합니다.');
+          // 기본 설정으로 계속 진행
+        } else {
+          console.warn('아이템 스카우터 설정 확인 실패:', error);
+          return;
+        }
       }
     } else if (!this.settings.showItemStats) {
       return;
