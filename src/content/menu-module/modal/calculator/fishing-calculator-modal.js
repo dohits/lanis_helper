@@ -33,6 +33,17 @@ export class FishingCalculatorModal extends BaseModal {
   // 모달 열기 (오버라이드)
   open() {
     super.open();
+    
+    // modal-body 패딩 제거
+    if (this.body) {
+      this.body.style.padding = '0';
+    }
+    
+    // max-width를 800px로 설정
+    if (this.content) {
+      this.content.style.maxWidth = '800px';
+    }
+    
     this.createContent();
   }
 
@@ -64,7 +75,7 @@ export class FishingCalculatorModal extends BaseModal {
 
     // 토글 버튼들 생성
     const buttons = [
-      { id: 'tab1', text: '예비1', active: true },
+      { id: 'tab1', text: '기댓값', active: true },
       { id: 'tab2', text: '시뮬레이터', active: false },
       { id: 'tab3', text: '확률표', active: false }
     ];
@@ -161,24 +172,16 @@ export class FishingCalculatorModal extends BaseModal {
   async showTab1Content() {
     const content = document.createElement('div');
     content.style.cssText = `
-      padding: 16px;
+      padding: 8px;
       height: 100%;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
+      max-width: 100%;
+      overflow-x: hidden;
     `;
 
-    // 제목
-    const titleSection = document.createElement('div');
-    titleSection.style.cssText = `
-      text-align: center;
-      margin-bottom: 16px;
-    `;
-    titleSection.innerHTML = `
-      <h4 style="margin: 0 0 8px 0; color: #333; font-size: 18px;">🎣 낚시 보상 기댓값 계산기</h4>
-      <p style="margin: 0; color: #666; font-size: 14px;">실제 시세를 반영한 각 단계별 보상의 기댓값을 계산합니다</p>
-    `;
-    content.appendChild(titleSection);
+    // 제목 섹션 제거됨
 
     // 시세 소스 선택 섹션
     const sourceSection = document.createElement('div');
@@ -188,41 +191,58 @@ export class FishingCalculatorModal extends BaseModal {
       justify-content: center;
       margin-bottom: 16px;
       flex-wrap: wrap;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.3s ease;
     `;
 
     const recentBtn = document.createElement('button');
     recentBtn.textContent = '최신 시세';
     recentBtn.id = 'recentPriceBtn';
     recentBtn.style.cssText = `
-      padding: 8px 16px;
+      padding: 6px 12px;
       border: 2px solid #28a745;
       background: #28a745;
       color: white;
       border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 12px;
       transition: all 0.3s ease;
+      flex: 1;
+      min-width: 80px;
+      white-space: nowrap;
     `;
 
     const avgBtn = document.createElement('button');
     avgBtn.textContent = '평균 시세';
     avgBtn.id = 'avgPriceBtn';
     avgBtn.style.cssText = `
-      padding: 8px 16px;
+      padding: 6px 12px;
       border: 2px solid #28a745;
       background: white;
       color: #28a745;
       border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 12px;
       transition: all 0.3s ease;
+      flex: 1;
+      min-width: 80px;
+      white-space: nowrap;
     `;
 
     sourceSection.appendChild(recentBtn);
     sourceSection.appendChild(avgBtn);
     content.appendChild(sourceSection);
+
+    // 애니메이션으로 토글 버튼 표시
+    setTimeout(() => {
+      if (sourceSection) {
+        sourceSection.style.opacity = '1';
+        sourceSection.style.transform = 'translateY(0)';
+      }
+    }, 100);
 
     // 로딩 상태
     const loadingSection = document.createElement('div');
@@ -242,6 +262,8 @@ export class FishingCalculatorModal extends BaseModal {
     resultSection.style.cssText = `
       flex: 1;
       overflow-y: auto;
+      overflow-x: hidden;
+      max-width: 100%;
     `;
     content.appendChild(resultSection);
 
@@ -453,112 +475,264 @@ export class FishingCalculatorModal extends BaseModal {
 
   // 인터렉티브 시뮬레이터
   showInteractiveSimulator() {
-         const content = document.createElement('div');
-     content.style.cssText = `
-       display: flex;
-       flex-direction: column;
-       gap: 16px;
-       padding: 16px;
-       height: 100%;
-     `;
+    const content = document.createElement('div');
+    content.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 8px;
+      max-width: 100%;
+      overflow-x: hidden;
+      height: 100%;
+    `;
 
-    // 현재 상태 섹션
+    // 현재 상태 섹션 (카드 스타일)
     const statusSection = document.createElement('div');
     statusSection.style.cssText = `
-      background: #f8f9fa;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #e9ecef;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid #dee2e6;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 4px;
     `;
-         statusSection.innerHTML = `
-       <h5 style="margin: 0 0 12px 0; color: #333; font-size: 16px;">현재 상태</h5>
-       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px; color: #333;">
-         <div><strong>현재 단계:</strong> <span id="currentLevel">1</span>단계</div>
-         <div><strong>총 시도 횟수:</strong> <span id="totalAttempts">0</span>회</div>
-         <div><strong>총 물고기 소모:</strong> <span id="totalFish">0</span>개</div>
-         <div><strong>누적 물고기:</strong> <span id="cumulativeFish">0</span>개</div>
-       </div>
-     `;
+    
+    const statusHeader = document.createElement('h5');
+    statusHeader.textContent = '🎯 현재 상태';
+    statusHeader.style.cssText = `
+      margin: 0 0 12px 0;
+      color: #495057;
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    `;
+    statusSection.appendChild(statusHeader);
+    
+    const statusGrid = document.createElement('div');
+    statusGrid.style.cssText = `
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      font-size: 13px;
+    `;
+    
+    const statusItems = [
+      { label: '현재 단계', id: 'currentLevel', value: '1', unit: '단계', icon: '🎣' },
+      { label: '총 시도 횟수', id: 'totalAttempts', value: '0', unit: '회', icon: '🔄' },
+      { label: '총 물고기 소모', id: 'totalFish', value: '0', unit: '개', icon: '🐟' },
+      { label: '누적 물고기', id: 'cumulativeFish', value: '0', unit: '개', icon: '📊' }
+    ];
+    
+    statusItems.forEach(item => {
+      const itemDiv = document.createElement('div');
+      itemDiv.style.cssText = `
+        background: rgba(255, 255, 255, 0.7);
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        min-height: 60px;
+        justify-content: center;
+      `;
+      
+      itemDiv.innerHTML = `
+        <div style="color: #6c757d; font-size: 11px; margin-bottom: 4px; font-weight: 500;">
+          ${item.icon} ${item.label}
+        </div>
+        <div style="color: #212529; font-size: 16px; font-weight: 600;">
+          <span id="${item.id}">${item.value}</span>${item.unit}
+        </div>
+      `;
+      statusGrid.appendChild(itemDiv);
+    });
+    
+    statusSection.appendChild(statusGrid);
     content.appendChild(statusSection);
 
-    // 버튼 섹션
+    // 버튼 섹션 (카드 스타일)
     const buttonSection = document.createElement('div');
     buttonSection.style.cssText = `
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid #dee2e6;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       display: flex;
-      gap: 8px;
+      gap: 12px;
       justify-content: center;
       flex-wrap: wrap;
     `;
 
     const upgradeBtn = document.createElement('button');
-    upgradeBtn.textContent = '🎣 낚시 시도하기';
+    upgradeBtn.textContent = '🎣 업그레이드';
     upgradeBtn.style.cssText = `
-      background: #28a745;
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
+      padding: 12px 24px;
+      border-radius: 8px;
       font-size: 14px;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
-      min-width: 120px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      min-width: 140px;
+      box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+      position: relative;
+      overflow: hidden;
     `;
+    
+    upgradeBtn.addEventListener('mouseenter', () => {
+      upgradeBtn.style.transform = 'translateY(-2px)';
+      upgradeBtn.style.boxShadow = '0 4px 12px rgba(0, 123, 255, 0.4)';
+    });
+    
+    upgradeBtn.addEventListener('mouseleave', () => {
+      upgradeBtn.style.transform = 'translateY(0)';
+      upgradeBtn.style.boxShadow = '0 2px 8px rgba(0, 123, 255, 0.3)';
+    });
+    
     upgradeBtn.addEventListener('click', () => this.upgrade());
 
     const resetBtn = document.createElement('button');
     resetBtn.textContent = '🔄 초기화';
     resetBtn.style.cssText = `
-      background: #dc3545;
+      background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
+      padding: 12px 24px;
+      border-radius: 8px;
       font-size: 14px;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
-      min-width: 120px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      min-width: 140px;
+      box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+      position: relative;
+      overflow: hidden;
     `;
+    
+    resetBtn.addEventListener('mouseenter', () => {
+      resetBtn.style.transform = 'translateY(-2px)';
+      resetBtn.style.boxShadow = '0 4px 12px rgba(108, 117, 125, 0.4)';
+    });
+    
+    resetBtn.addEventListener('mouseleave', () => {
+      resetBtn.style.transform = 'translateY(0)';
+      resetBtn.style.boxShadow = '0 2px 8px rgba(108, 117, 125, 0.3)';
+    });
+    
     resetBtn.addEventListener('click', () => this.resetSimulator());
 
     buttonSection.appendChild(upgradeBtn);
     buttonSection.appendChild(resetBtn);
     content.appendChild(buttonSection);
 
-         // 결과 표시 영역 (고정 높이로 미리 할당)
-     const resultSection = document.createElement('div');
-     resultSection.id = 'upgradeResult';
-     resultSection.style.cssText = `
-       margin: 10px 0;
-       padding: 10px;
-       border-radius: 4px;
-       text-align: center;
-       font-weight: bold;
-       height: 50px;
-       display: flex;
-       align-items: center;
-       justify-content: center;
-       background: transparent;
-       color: transparent;
-       border: 1px solid transparent;
-     `;
-     resultSection.innerHTML = `<span style="color: #999; font-size: 12px;">결과가 여기에 표시됩니다</span>`;
-     content.appendChild(resultSection);
+    // 결과 표시 영역 (카드 스타일)
+    const resultSection = document.createElement('div');
+    resultSection.id = 'upgradeResult';
+    resultSection.style.cssText = `
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid #dee2e6;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      font-weight: 600;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    `;
+    
+    const resultContent = document.createElement('div');
+    resultContent.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    `;
+    
+    resultContent.innerHTML = `
+      <div style="color: #6c757d; font-size: 12px; font-weight: 500;">
+        ⚡ 시뮬레이션 결과
+      </div>
+      <div style="color: #adb5bd; font-size: 13px;">
+        결과가 여기에 표시됩니다
+      </div>
+    `;
+    
+    resultSection.appendChild(resultContent);
+    content.appendChild(resultSection);
 
-     // 히스토리 섹션 (고정 높이로 미리 할당)
-     const historySection = document.createElement('div');
-     historySection.style.cssText = `
-       margin-top: 20px;
-       height: 250px;
-     `;
-     historySection.innerHTML = `
-       <h5 style="margin: 0 0 10px 0; color: #333;">업그레이드 히스토리</h5>
-       <div id="upgradeHistory" style="height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #f8f9fa; border-radius: 4px; color: #333;">
-         <div style="text-align: center; color: #999; padding: 20px; font-size: 12px;">히스토리가 여기에 표시됩니다</div>
-          </div>
-        `;
-     content.appendChild(historySection);
+    // 히스토리 섹션 (카드 스타일)
+    const historySection = document.createElement('div');
+    historySection.style.cssText = `
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid #dee2e6;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      height: 280px;
+      display: flex;
+      flex-direction: column;
+    `;
+    
+    const historyHeader = document.createElement('h5');
+    historyHeader.textContent = '📜 업그레이드 히스토리';
+    historyHeader.style.cssText = `
+      margin: 0 0 12px 0;
+      color: #495057;
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    `;
+    historySection.appendChild(historyHeader);
+    
+    const historyContainer = document.createElement('div');
+    historyContainer.id = 'upgradeHistory';
+    historyContainer.style.cssText = `
+      flex: 1;
+      overflow-y: auto;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 12px;
+      border-radius: 8px;
+      color: #495057;
+      font-size: 13px;
+    `;
+    
+    const emptyState = document.createElement('div');
+    emptyState.style.cssText = `
+      text-align: center;
+      color: #adb5bd;
+      padding: 40px 20px;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      height: 100%;
+      justify-content: center;
+    `;
+    emptyState.innerHTML = `
+      <div style="font-size: 24px; opacity: 0.5;">🎣</div>
+      <div>히스토리가 여기에 표시됩니다</div>
+      <div style="font-size: 11px; opacity: 0.7;">낚시 시도하기 버튼을 눌러보세요!</div>
+    `;
+    
+    historyContainer.appendChild(emptyState);
+    historySection.appendChild(historyContainer);
+    content.appendChild(historySection);
 
     this.simulatorContentArea.appendChild(content);
 
@@ -661,26 +835,76 @@ export class FishingCalculatorModal extends BaseModal {
     if (cumulativeFishEl) cumulativeFishEl.textContent = this.simulatorState.cumulativeFish.toFixed(1);
   }
 
-     // 업그레이드 결과 표시
-   showUpgradeResult(result) {
-     const resultDiv = document.getElementById('upgradeResult');
-     if (!resultDiv) return;
-     
-     resultDiv.style.background = '#d4edda';
-     resultDiv.style.color = '#155724';
-     resultDiv.style.border = '1px solid #c3e6cb';
-     resultDiv.innerHTML = `<strong>${result}</strong> (물고기 5개 소모)`;
-     
-     // 3초 후 원래 상태로 복원
-     setTimeout(() => {
-       if (resultDiv) {
-         resultDiv.style.background = 'transparent';
-         resultDiv.style.color = 'transparent';
-         resultDiv.style.border = '1px solid transparent';
-         resultDiv.innerHTML = `<span style="color: #999; font-size: 12px;">결과가 여기에 표시됩니다</span>`;
-       }
-     }, 3000);
-   }
+  // 업그레이드 결과 표시
+  showUpgradeResult(result) {
+    const resultDiv = document.getElementById('upgradeResult');
+    if (!resultDiv) return;
+    
+    // 결과에 따른 색상 및 이모지 설정
+    let bgColor, textColor, emoji, borderColor;
+    if (result.includes('🎉')) {
+      bgColor = 'linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)';
+      textColor = '#155724';
+      borderColor = '#c3e6cb';
+      emoji = '🎉';
+    } else if (result.includes('👍')) {
+      bgColor = 'linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%)';
+      textColor = '#0c5460';
+      borderColor = '#bee5eb';
+      emoji = '👍';
+    } else if (result.includes('➡️')) {
+      bgColor = 'linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%)';
+      textColor = '#856404';
+      borderColor = '#ffeeba';
+      emoji = '➡️';
+    } else if (result.includes('👎')) {
+      bgColor = 'linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%)';
+      textColor = '#721c24';
+      borderColor = '#f5c6cb';
+      emoji = '👎';
+    } else {
+      bgColor = 'linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%)';
+      textColor = '#721c24';
+      borderColor = '#f5c6cb';
+      emoji = '💥';
+    }
+    
+    resultDiv.style.background = bgColor;
+    resultDiv.style.border = `1px solid ${borderColor}`;
+    resultDiv.style.transform = 'scale(1.02)';
+    resultDiv.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+    
+    resultDiv.innerHTML = `
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+        <div style="color: ${textColor}; font-size: 14px; font-weight: 600;">
+          ${emoji} ${result}
+        </div>
+        <div style="color: ${textColor}; font-size: 12px; opacity: 0.8;">
+          물고기 5개 소모
+        </div>
+      </div>
+    `;
+    
+    // 3초 후 원래 상태로 복원
+    setTimeout(() => {
+      if (resultDiv) {
+        resultDiv.style.background = 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)';
+        resultDiv.style.border = '1px solid #dee2e6';
+        resultDiv.style.transform = 'scale(1)';
+        resultDiv.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+        resultDiv.innerHTML = `
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <div style="color: #6c757d; font-size: 12px; font-weight: 500;">
+              ⚡ 시뮬레이션 결과
+            </div>
+            <div style="color: #adb5bd; font-size: 13px;">
+              결과가 여기에 표시됩니다
+            </div>
+          </div>
+        `;
+      }
+    }, 3000);
+  }
 
   // 히스토리 업데이트
   updateHistory() {
@@ -692,40 +916,112 @@ export class FishingCalculatorModal extends BaseModal {
     // 최근 10개만 표시
     const recentHistory = this.simulatorState.history.slice(-10).reverse();
     
-    recentHistory.forEach(entry => {
-      html += `<div style="margin: 5px 0; padding: 5px; border-bottom: 1px solid #ddd; color: #333;">
-        <strong>${entry.timestamp}</strong> - ${entry.result} (시도 ${entry.attempt}회)
-      </div>`;
-    });
+    if (recentHistory.length === 0) {
+      html = `
+        <div style="text-align: center; color: #adb5bd; padding: 40px 20px; font-size: 13px; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: center;">
+          <div style="font-size: 24px; opacity: 0.5;">🎣</div>
+          <div>히스토리가 여기에 표시됩니다</div>
+          <div style="font-size: 11px; opacity: 0.7;">낚시 시도하기 버튼을 눌러보세요!</div>
+        </div>
+      `;
+    } else {
+      recentHistory.forEach((entry, index) => {
+        // 결과에 따른 색상 설정
+        let bgColor, textColor, borderColor;
+        if (entry.result.includes('🎉')) {
+          bgColor = 'rgba(212, 237, 218, 0.3)';
+          textColor = '#155724';
+          borderColor = '#c3e6cb';
+        } else if (entry.result.includes('👍')) {
+          bgColor = 'rgba(209, 236, 241, 0.3)';
+          textColor = '#0c5460';
+          borderColor = '#bee5eb';
+        } else if (entry.result.includes('➡️')) {
+          bgColor = 'rgba(255, 243, 205, 0.3)';
+          textColor = '#856404';
+          borderColor = '#ffeeba';
+        } else if (entry.result.includes('👎')) {
+          bgColor = 'rgba(248, 215, 218, 0.3)';
+          textColor = '#721c24';
+          borderColor = '#f5c6cb';
+        } else {
+          bgColor = 'rgba(248, 215, 218, 0.3)';
+          textColor = '#721c24';
+          borderColor = '#f5c6cb';
+        }
+        
+        html += `
+          <div style="
+            margin: 6px 0;
+            padding: 10px;
+            background: ${bgColor};
+            border-left: 3px solid ${borderColor};
+            border-radius: 6px;
+            color: ${textColor};
+            font-size: 12px;
+            transition: all 0.2s ease;
+          ">
+            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 4px;">
+              <span style="font-weight: 600; font-size: 11px; opacity: 0.8;">
+                #${entry.attempt} · ${entry.timestamp}
+              </span>
+            </div>
+            <div style="font-weight: 600; font-size: 13px;">
+              ${entry.result}
+            </div>
+            <div style="font-size: 11px; opacity: 0.7; margin-top: 2px;">
+              물고기 ${entry.fish}개 소모
+            </div>
+          </div>
+        `;
+      });
+    }
     
     historyDiv.innerHTML = html;
+    historyDiv.scrollTop = 0; // 최신 항목이 위에 오도록
   }
 
-     // 시뮬레이터 초기화
-   resetSimulator() {
-     this.simulatorState = {
-       currentLevel: 1,
-       totalAttempts: 0,
-       totalFish: 0,
-       cumulativeFish: 0,
-       history: []
-     };
-     
-     this.updateSimulatorUI();
-     
-     const historyDiv = document.getElementById('upgradeHistory');
-     const resultDiv = document.getElementById('upgradeResult');
-     
-     if (historyDiv) {
-       historyDiv.innerHTML = '<div style="text-align: center; color: #999; padding: 20px; font-size: 12px;">히스토리가 여기에 표시됩니다</div>';
-     }
-     if (resultDiv) {
-       resultDiv.style.background = 'transparent';
-       resultDiv.style.color = 'transparent';
-       resultDiv.style.border = '1px solid transparent';
-       resultDiv.innerHTML = '<span style="color: #999; font-size: 12px;">결과가 여기에 표시됩니다</span>';
-     }
-   }
+  // 시뮬레이터 초기화
+  resetSimulator() {
+    this.simulatorState = {
+      currentLevel: 1,
+      totalAttempts: 0,
+      totalFish: 0,
+      cumulativeFish: 0,
+      history: []
+    };
+    
+    this.updateSimulatorUI();
+    
+    const historyDiv = document.getElementById('upgradeHistory');
+    const resultDiv = document.getElementById('upgradeResult');
+    
+    if (historyDiv) {
+      historyDiv.innerHTML = `
+        <div style="text-align: center; color: #adb5bd; padding: 40px 20px; font-size: 13px; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: center;">
+          <div style="font-size: 24px; opacity: 0.5;">🎣</div>
+          <div>히스토리가 여기에 표시됩니다</div>
+          <div style="font-size: 11px; opacity: 0.7;">낚시 시도하기 버튼을 눌러보세요!</div>
+        </div>
+      `;
+    }
+    if (resultDiv) {
+      resultDiv.style.background = 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)';
+      resultDiv.style.border = '1px solid #dee2e6';
+      resultDiv.style.transform = 'scale(1)';
+      resultDiv.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+      resultDiv.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+          <div style="color: #6c757d; font-size: 12px; font-weight: 500;">
+            ⚡ 시뮬레이션 결과
+          </div>
+          <div style="color: #adb5bd; font-size: 13px;">
+            결과가 여기에 표시됩니다
+          </div>
+        </div>
+      `;
+    }
+  }
 
            // 다이렉트 시뮬레이터
     showDirectSimulator() {
@@ -884,13 +1180,18 @@ export class FishingCalculatorModal extends BaseModal {
      let maxAttempts = 0;
      let minFish = Infinity;
      let maxFish = 0;
+     let totalEfficiency = 0;
+     let expectedFish = 0;
 
      for (let i = 0; i < count; i++) {
        const result = this.simulateToTargetLevel(targetLevel);
        if (result.success) {
+         // 목표 레벨에 도달한 경우 성공으로 간주
          successCount++;
          totalAttempts += result.attempts;
          totalFish += result.totalFish;
+         totalEfficiency += result.efficiency;
+         expectedFish = result.expectedFish; // 모든 결과가 동일한 기댓값을 가짐
          minAttempts = Math.min(minAttempts, result.attempts);
          maxAttempts = Math.max(maxAttempts, result.attempts);
          minFish = Math.min(minFish, result.totalFish);
@@ -898,13 +1199,25 @@ export class FishingCalculatorModal extends BaseModal {
        }
      }
 
+     // 기댓값 이하로 도달한 비율 계산
+     let efficientCount = 0;
+     for (let i = 0; i < count; i++) {
+       const result = this.simulateToTargetLevel(targetLevel);
+       if (result.success && result.totalFish <= result.expectedFish) {
+         efficientCount++;
+       }
+     }
+     
      return {
        totalSimulations: count,
        successCount,
        failedCount: count - successCount,
        successRate: (successCount / count) * 100,
+       efficientRate: (efficientCount / count) * 100, // 기댓값 이하 비율
        averageAttempts: successCount > 0 ? totalAttempts / successCount : 0,
        averageFish: successCount > 0 ? totalFish / successCount : 0,
+       averageEfficiency: successCount > 0 ? totalEfficiency / successCount : 0,
+       expectedFish: expectedFish,
        minAttempts: minAttempts === Infinity ? 0 : minAttempts,
        maxAttempts,
        minFish: minFish === Infinity ? 0 : minFish,
@@ -912,14 +1225,16 @@ export class FishingCalculatorModal extends BaseModal {
      };
    }
 
-   // 목표 레벨까지 시뮬레이션
+   // 목표 레벨까지 시뮬레이션 (마코프 체인 기댓값 기준)
    simulateToTargetLevel(targetLevel) {
      let level = 1;
      let attempts = 0;
      let totalFish = 0;
-     const maxAttempts = 20000;
+     
+     // 마코프 체인으로 계산된 기댓값 (기준치)
+     const expectedFishToTarget = this.calculator.calculateExpectedFishToLevel(targetLevel);
 
-     while (level < targetLevel && attempts < maxAttempts) {
+     while (level < targetLevel) {
        attempts++;
        totalFish += this.calculator.fishPerAttempt;
 
@@ -964,18 +1279,16 @@ export class FishingCalculatorModal extends BaseModal {
        }
      }
 
-     // 실패한 경우 더 현실적인 처리
-     if (attempts >= maxAttempts) {
-       const remainingAttempts = this.estimateRemainingAttempts(level, targetLevel);
-       attempts += remainingAttempts;
-       totalFish += remainingAttempts * this.calculator.fishPerAttempt;
-     }
+     // 성공 기준: 목표 레벨에 도달했을 때 (기댓값은 참고용)
+     const success = level >= targetLevel;
 
      return {
-       success: level >= targetLevel,
+       success: success,
        attempts,
        totalFish,
-       finalLevel: level
+       finalLevel: level,
+       expectedFish: expectedFishToTarget,
+       efficiency: success ? (expectedFishToTarget / totalFish * 100) : 0
      };
    }
 
@@ -1016,8 +1329,8 @@ export class FishingCalculatorModal extends BaseModal {
                    <div style="font-size: 14px; opacity: 0.9;">목표 단계</div>
                  </div>
                  <div style="text-align: center; padding: 15px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; border-radius: 10px;">
-                   <div style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">${results.successRate.toFixed(1)}%</div>
-                   <div style="font-size: 14px; opacity: 0.9;">성공률</div>
+                   <div style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">${results.efficientRate.toFixed(1)}%</div>
+                   <div style="font-size: 14px; opacity: 0.9;">기댓값 이하 비율</div>
                  </div>
                </div>
                
@@ -1029,6 +1342,17 @@ export class FishingCalculatorModal extends BaseModal {
                  <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid #17a2b8;">
                    <div style="font-weight: bold; color: #17a2b8; margin-bottom: 5px;">평균 물고기</div>
                    <div style="font-size: 18px; font-weight: bold;">${results.averageFish.toFixed(1)}개</div>
+                 </div>
+               </div>
+               
+               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                 <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid #ffc107;">
+                   <div style="font-weight: bold; color: #ffc107; margin-bottom: 5px;">기댓값 (마코프 체인)</div>
+                   <div style="font-size: 18px; font-weight: bold;">${results.expectedFish.toFixed(1)}개</div>
+                 </div>
+                 <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid #20c997;">
+                   <div style="font-weight: bold; color: #20c997; margin-bottom: 5px;">평균 효율성</div>
+                   <div style="font-size: 18px; font-weight: bold;">${results.averageEfficiency.toFixed(1)}%</div>
                  </div>
                </div>
                
@@ -1045,10 +1369,11 @@ export class FishingCalculatorModal extends BaseModal {
                </div>
                
                <div style="text-align: center; margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); border-radius: 10px;">
-                 <div style="font-weight: bold; color: #495057; margin-bottom: 5px;">💡 참고사항</div>
+                 <div style="font-weight: bold; color: #495057; margin-bottom: 5px;">💡 성공 기준</div>
                  <div style="font-size: 12px; color: #6c757d;">
-                   • 계산 결과는 확률적 기댓값이며, 실제 결과는 다를 수 있습니다<br>
-                   • 높은 등급일수록 실패 확률이 높아집니다<br>
+                   • <strong>성공률:</strong> 기댓값 이하로 목표 레벨 도달한 비율<br>
+                   • <strong>평균:</strong> 모든 목표 달성 케이스의 평균<br>
+                   • <strong>효율성:</strong> 기댓값 대비 실제 소모 물고기 비율<br>
                    • 1회 시도당 물고기 5개를 소모합니다
                  </div>
                </div>
@@ -1137,7 +1462,8 @@ export class FishingCalculatorModal extends BaseModal {
        height: 100%;
      `;
     content.innerHTML = `
-      <h4 style="margin: 0 0 10px 0; color: #333;">등급별 레벨업 확률</h4>
+      <h4 style="margin: 0 0 5px 0; color: #333;">등급별 레벨업 확률</h4>
+      <p style="margin: 0 0 10px 0; color: #666; font-size: 11px;">* 소수점 반올림</p>
     `;
     content.appendChild(FishingUIHelper.createProbabilityTable());
     this.contentArea.appendChild(content);

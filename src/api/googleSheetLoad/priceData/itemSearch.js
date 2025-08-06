@@ -32,9 +32,54 @@ export class ItemSearch {
             // 가격 추출
             const priceMatch = itemText.match(/(\d{1,3}(?:,\d{3})*)\s*Gold/);
             if (priceMatch) {
-              // 아이템명 추출 - exam 파일과 동일한 정규식
-              const itemMatch = itemText.match(/(.+?)(?:\s+\d+개가|\s+가\s+거래소에서|\s+가\s+)/);
-              const extractedItemName = itemMatch ? itemMatch[1].trim() : '';
+              // 아이템명 추출 - 개선된 로직 (수량 패턴 우선)
+              let extractedItemName = '';
+              
+              // 패턴 5: "아이템명 N개가 가격 Gold에 판매되었다." (N개, 거래소 없음)
+              let match = itemText.match(/^(.+?)\s+\d+개가\s+\d{1,3}(?:,\d{3})*\s*Gold에\s+판매되었다\.$/);
+              if (match) {
+                extractedItemName = match[1].trim();
+              }
+              
+              // 패턴 6: "아이템명 N개가 거래소에서 가격 Gold에 판매되었다." (N개, 거래소 있음)
+              if (!extractedItemName) {
+                match = itemText.match(/^(.+?)\s+\d+개가\s+거래소에서\s+\d{1,3}(?:,\d{3})*\s*Gold에\s+판매되었다\.$/);
+                if (match) {
+                  extractedItemName = match[1].trim();
+                }
+              }
+              
+              // 패턴 1: "아이템명이 가격 Gold에 판매되었다." (1개, 거래소 없음)
+              if (!extractedItemName) {
+                match = itemText.match(/^(.+?)이\s+\d{1,3}(?:,\d{3})*\s*Gold에\s+판매되었다\.$/);
+                if (match) {
+                  extractedItemName = match[1].trim();
+                }
+              }
+              
+              // 패턴 2: "아이템명가 가격 Gold에 판매되었다." (1개, 거래소 없음)
+              if (!extractedItemName) {
+                match = itemText.match(/^(.+?)가\s+\d{1,3}(?:,\d{3})*\s*Gold에\s+판매되었다\.$/);
+                if (match) {
+                  extractedItemName = match[1].trim();
+                }
+              }
+              
+              // 패턴 3: "아이템명이 거래소에서 가격 Gold에 판매되었다." (1개, 거래소 있음)
+              if (!extractedItemName) {
+                match = itemText.match(/^(.+?)이\s+거래소에서\s+\d{1,3}(?:,\d{3})*\s*Gold에\s+판매되었다\.$/);
+                if (match) {
+                  extractedItemName = match[1].trim();
+                }
+              }
+              
+              // 패턴 4: "아이템명가 거래소에서 가격 Gold에 판매되었다." (1개, 거래소 있음)
+              if (!extractedItemName) {
+                match = itemText.match(/^(.+?)가\s+거래소에서\s+\d{1,3}(?:,\d{3})*\s*Gold에\s+판매되었다\.$/);
+                if (match) {
+                  extractedItemName = match[1].trim();
+                }
+              }
               
               if (extractedItemName && extractedItemName.toLowerCase().includes(query.toLowerCase())) {
                 allItems.add(extractedItemName);

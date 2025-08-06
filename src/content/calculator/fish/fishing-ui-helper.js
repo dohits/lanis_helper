@@ -23,8 +23,8 @@ export class FishingUIHelper {
     const headerRow = document.createElement('tr');
     headerRow.style.cssText = 'background: #f8f9fa;';
     
-    const headers = ['단계', '+2', '+1', '0', '-1', '초기화', '누적 물고기'];
-    headers.forEach(header => {
+    const headers = ['단계', '누적 물고기', '+2', '+1', '0', '-1', '초기화'];
+    headers.forEach((header, index) => {
       const th = document.createElement('th');
       th.textContent = header;
       th.style.cssText = `
@@ -33,6 +33,7 @@ export class FishingUIHelper {
         text-align: center;
         font-weight: bold;
         color: #000;
+        ${index === 1 ? 'background: #ffe6e6;' : ''}
       `;
       headerRow.appendChild(th);
     });
@@ -59,21 +60,7 @@ export class FishingUIHelper {
       `;
       row.appendChild(levelCell);
       
-      // 확률들
-      const probabilities = [prob.plus2, prob.plus1, prob.zero, prob.minus1, prob.reset];
-      probabilities.forEach(probValue => {
-        const cell = document.createElement('td');
-        cell.textContent = `${probValue}%`;
-        cell.style.cssText = `
-          padding: 6px 8px;
-          border: 1px solid #ddd;
-          text-align: center;
-          color: #000;
-        `;
-        row.appendChild(cell);
-      });
-      
-      // 누적 물고기 수량 계산
+      // 누적 물고기 수량 계산 (2번째 컬럼)
       let cumulativeFish = 0;
       if (level === 1) {
         // 1단계는 시작점이므로 0개
@@ -84,15 +71,32 @@ export class FishingUIHelper {
       }
       
       const cumulativeCell = document.createElement('td');
-      cumulativeCell.textContent = `${cumulativeFish.toLocaleString()}개`;
+      cumulativeCell.textContent = `${Math.round(cumulativeFish).toLocaleString()}개`;
       cumulativeCell.style.cssText = `
         padding: 6px 8px;
         border: 1px solid #ddd;
         text-align: center;
         color: #000;
         font-weight: bold;
+        background: #ffe6e6;
       `;
       row.appendChild(cumulativeCell);
+      
+      // 확률들 (소수점 반올림 처리)
+      const probabilities = [prob.plus2, prob.plus1, prob.zero, prob.minus1, prob.reset];
+      probabilities.forEach(probValue => {
+        const cell = document.createElement('td');
+        // 소수점이 있는 경우 반올림 처리
+        const roundedValue = Math.round(probValue * 10) / 10;
+        cell.textContent = `${roundedValue}%`;
+        cell.style.cssText = `
+          padding: 6px 8px;
+          border: 1px solid #ddd;
+          text-align: center;
+          color: #000;
+        `;
+        row.appendChild(cell);
+      });
       
       tbody.appendChild(row);
     }
