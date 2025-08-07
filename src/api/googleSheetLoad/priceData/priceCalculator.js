@@ -188,7 +188,7 @@ export class PriceCalculator {
       prices: prices,
       labels: labels,
       averagePrice: Math.round(prices.reduce((a, b) => a + b, 0) / prices.length),
-      recentPrice: prices[0],
+      recentPrice: prices[prices.length - 1], // 차트에서 오른쪽이 최신이므로 마지막 요소
       totalTrades: prices.length,
       actualDates: actualDates
     };
@@ -209,8 +209,8 @@ export class PriceCalculator {
       // 평균 판매가
       return Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
     } else if (priceType === 'recent') {
-      // 최근 판매가(가장 최신 가격)
-      return prices[0];
+      // 최근 판매가(가장 최신 가격) - 차트에서 오른쪽이 최신이므로 마지막 요소
+      return prices[prices.length - 1];
     } else {
       return 0; // 알 수 없는 타입도 0 반환
     }

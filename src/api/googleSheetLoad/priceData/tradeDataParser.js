@@ -167,7 +167,7 @@ export class TradeDataParser {
       }
     });
     
-    // 가격과 라벨 추출
+    // 가격과 라벨 추출 (차트 렌더링을 위해 오래된 거래가 왼쪽, 최신 거래가 오른쪽에 오도록 reverse)
     const prices = finalTradeItems.map(item => item.price).reverse();
     const labels = finalTradeItems.map((item, index) => {
       // 날짜 포맷팅 함수
