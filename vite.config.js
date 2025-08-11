@@ -3,6 +3,11 @@ import { visualizer } from 'rollup-plugin-visualizer'
 
 // 프로덕션용 설정
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@': '/src'
+    }
+  },
   plugins: [
     visualizer({
       filename: 'dist/stats.html',

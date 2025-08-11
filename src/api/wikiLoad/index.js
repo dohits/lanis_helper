@@ -1,7 +1,9 @@
 // 위키 API 공통 모듈
+import { API_ENDPOINTS, DOMAINS } from '../../shared/constants.js';
+
 class WikiAPI {
   constructor() {
-    this.baseUrl = 'https://laniswiki.lovestoblog.com/api.php';
+    this.baseUrl = API_ENDPOINTS.LANIS_WIKI;
     this.headers = {
       'Accept': 'application/json, text/plain, */*',
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -12,8 +14,8 @@ class WikiAPI {
       'Sec-Fetch-Dest': 'empty',
       'Sec-Fetch-Mode': 'cors',
       'Sec-Fetch-Site': 'same-origin',
-      'Referer': 'https://laniswiki.lovestoblog.com/',
-      'Origin': 'https://laniswiki.lovestoblog.com',
+      'Referer': `https://${DOMAINS.LANIS_WIKI}/`,
+      'Origin': `https://${DOMAINS.LANIS_WIKI}`,
       'DNT': '1',
       'Connection': 'keep-alive',
       'Upgrade-Insecure-Requests': '1',

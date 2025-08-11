@@ -1,5 +1,6 @@
 import BaseModal from '../base/base-modal.js';
 import { MODAL_CONFIGS } from '../shared/modal-constants.js';
+import { API_ENDPOINTS, LANIS_ME_PATHS } from '../../../../shared/constants.js';
 
 // 사용자 검색 모달
 class UserSearchModal extends BaseModal {
@@ -140,7 +141,7 @@ class UserSearchModal extends BaseModal {
     }
     
     // URL 생성 및 이동
-    const userUrl = `https://lanis.me/users/${encodeURIComponent(sanitizedUsername)}`;
+            const userUrl = `${API_ENDPOINTS.LANIS_ME}${LANIS_ME_PATHS.USERS}/${encodeURIComponent(sanitizedUsername)}`;
     
     // 현재 페이지에서 이동
     window.location.href = userUrl;

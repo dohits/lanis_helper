@@ -1,6 +1,7 @@
 // 시세 데이터 전용 API 모듈
 import GoogleSheetAPI from './index.js';
 import { TradeDataParser, ItemSearch, PriceCalculator } from './priceData/index.js';
+import { SHEET_IDS, PRICE_DATA_GID, SHEET_NAMES } from '../../shared/constants.js';
 
 /**
  * 가격 데이터 API 클래스
@@ -9,9 +10,9 @@ import { TradeDataParser, ItemSearch, PriceCalculator } from './priceData/index.
 class PriceDataAPI extends GoogleSheetAPI {
   constructor() {
     super();
-    this.priceSheetId = '1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo';
-    this.priceSheetName = '시세';
-    this.tradeSheetName = '거래';
+    this.priceSheetId = SHEET_IDS.PRICE_DATA;
+    this.priceSheetName = SHEET_NAMES.PRICE_SHEET;
+    this.tradeSheetName = SHEET_NAMES.TRADE_SHEET;
   }
 
   /**
@@ -20,8 +21,8 @@ class PriceDataAPI extends GoogleSheetAPI {
    */
   async fetchPriceData() {
     try {
-      // 새로운 데이터 (A열 세로형 형식) - gid=1489625214
-      const newRows = await this.fetchCSVData(this.priceSheetId, '1489625214');
+      // 새로운 데이터 (A열 세로형 형식)
+      const newRows = await this.fetchCSVData(this.priceSheetId, PRICE_DATA_GID);
 
       return newRows;
     } catch (error) {

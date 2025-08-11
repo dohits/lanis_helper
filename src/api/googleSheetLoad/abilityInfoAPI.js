@@ -1,11 +1,12 @@
 // 어빌리티 정보 전용 API 모듈
 import GoogleSheetAPI from './index.js';
+import { SHEET_IDS } from '../../shared/constants.js';
 
 class AbilityInfoAPI extends GoogleSheetAPI {
   constructor() {
     super();
     // 어빌리티 정보 시트 ID
-    this.sheetId = '1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo';
+    this.sheetId = SHEET_IDS.ABILITY_INFO;
   }
 
   /**

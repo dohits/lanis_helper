@@ -572,6 +572,139 @@ button.delete-btn {
   overflow-wrap: anywhere !important;
 }
 
+/* 시간 게이지바 스타일 */
+.time-gauge-container {
+  position: fixed;
+  top: 80px;
+  left: 24px;
+  width: 200px;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 12px;
+  padding: 2px;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.time-gauge-container:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.time-gauge-background {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.time-gauge-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.time-gauge-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  z-index: 2;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .time-gauge-container {
+    width: 160px;
+    height: 20px;
+    top: 70px;
+    left: 16px;
+  }
+  
+  .time-gauge-text {
+    font-size: 10px;
+  }
+}
+
+/* 시간 게이지바 툴팁 스타일 */
+.time-gauge-container[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  white-space: pre-line;
+  text-align: center;
+  z-index: 10001;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+}
+
+/* 통발 낚시 게이지바 특별 스타일 */
+.time-gauge-container.fishing-active {
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+}
+
+.time-gauge-container.fishing-active:hover {
+  border: 1px solid rgba(34, 197, 94, 0.5);
+  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.3);
+}
+
+/* 통발 낚시 초과 상태 스타일 */
+.time-gauge-container.fishing-active.overdue {
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+  animation: pulse-warning 2s ease-in-out infinite;
+}
+
+.time-gauge-container.fishing-active.overdue:hover {
+  border: 1px solid rgba(249, 115, 22, 0.5);
+  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.3);
+}
+
+@keyframes pulse-warning {
+  0%, 100% { 
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+  }
+  50% { 
+    box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4);
+  }
+}
+
+/* 통발 미설치 상태 스타일 */
+.time-gauge-container:not(.fishing-active) {
+  border: 1px solid rgba(156, 163, 175, 0.3);
+  box-shadow: 0 4px 12px rgba(156, 163, 175, 0.2);
+}
+
+.time-gauge-container:not(.fishing-active):hover {
+  border: 1px solid rgba(156, 163, 175, 0.5);
+  box-shadow: 0 6px 16px rgba(156, 163, 175, 0.3);
+}
+
  
 
  

@@ -1,18 +1,15 @@
 // 해방 정보 전용 API 모듈
 import GoogleSheetAPI from './index.js';
+import { SHEET_IDS, ENCHANT_GID_MAP } from '../../shared/constants.js';
 
 class EnchantInfoAPI extends GoogleSheetAPI {
   constructor() {
     super();
     // 해방 정보 시트 ID
-    this.sheetId = '15E8F_qSxKPMqsL_ulfwm739PTjBLO64qN8jWuDZe7ng';
+    this.sheetId = SHEET_IDS.ENCHANT_INFO;
     
     // 타입별 GID 매핑
-    this.gidMap = {
-      'armor': '468768394',     // 장비해방(방어구) 시트 GID
-      'weapon': '337738977',    // 장비해방(무기) 시트 GID
-      'accessory': '567672096'  // 장비해방(장신구) 시트 GID
-    };
+    this.gidMap = ENCHANT_GID_MAP;
   }
 
   /**

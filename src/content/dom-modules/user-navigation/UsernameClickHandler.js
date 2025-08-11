@@ -1,3 +1,5 @@
+import { API_ENDPOINTS, LANIS_ME_PATHS } from '../../../shared/constants.js';
+
 // 사용자명 클릭 핸들러 모듈
 class UsernameClickHandler {
   constructor() {
@@ -59,7 +61,7 @@ class UsernameClickHandler {
             usernameSpan.addEventListener('click', (e) => {
               e.preventDefault();
               e.stopPropagation();
-              const profileUrl = `https://lanis.me/users/${encodeURIComponent(username)}`;
+              const profileUrl = `${API_ENDPOINTS.LANIS_ME}${LANIS_ME_PATHS.USERS}/${encodeURIComponent(username)}`;
               window.location.href = profileUrl; // 현재 창에서 이동
             });
           }

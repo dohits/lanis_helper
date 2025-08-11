@@ -5,6 +5,8 @@ import SearchEngine from './search-engine.js';
 import UserProfileManager from './user-profile.js';
 import ITEM_COLORS from '../styles/item-colors.js';
 import MenuManager from './menu-module/menu-manager.js';
+import TimeGaugeManager from './dom-modules/time-gauge/TimeGaugeManager.js';
+import { LANIS_ME_PATHS } from '../shared/constants.js';
 
 
 // 전역 인스턴스들을 저장할 객체
@@ -12,7 +14,8 @@ const managers = {
   itemStatsManager: null,
   searchEngine: null,
   userProfileManager: null,
-  menuManager: null
+  menuManager: null,
+  timeGaugeManager: null
 };
 
 // CSS 스타일 로드 (안전한 방식)
@@ -47,7 +50,8 @@ function loadSettingsAndExecute() {
       profileLink: true,
       feature2: false,
       feature3: false,
-      showItemStats: true
+      showItemStats: true,
+      showTimeGauge: true
     }).then(function(items) {
       utils.safeExecute(() => {
         const settings = items;
@@ -77,6 +81,17 @@ function loadSettingsAndExecute() {
             }
           }
         }, '아이템 등급 표기 처리 중 오류');
+
+        // 시간 게이지바 처리
+        utils.safeExecuteAsync(async () => {
+          if (managers.timeGaugeManager) {
+            if (settings.showTimeGauge) {
+              await managers.timeGaugeManager.init();
+            } else {
+              managers.timeGaugeManager.destroy();
+            }
+          }
+        }, '시간 게이지바 처리 중 오류');
       }, '설정 실행 중 오류');
     }).catch(function(error) {
       console.warn('설정 로드 실패:', error);
@@ -120,6 +135,9 @@ async function initializeExtension() {
         await managers.menuManager.init();
       }
     }, '메뉴 매니저 초기화 중 오류');
+
+    // 시간 게이지바 매니저 초기화 (설정에 따라 처리됨)
+    // 실제 초기화는 설정 로드 후에 수행됨
 
     // 사용자 프로필 매니저 초기화
     utils.safeExecute(() => {
@@ -293,7 +311,8 @@ setInterval(() => {
           // 설정 로드 및 기능 실행
           const settings = await utils.SettingsManager.getSettings({
             profileLink: true,
-            showItemStats: true
+            showItemStats: true,
+            showTimeGauge: true
           });
           
           // 프로필 링크 처리 (설정에 따라)
@@ -305,6 +324,17 @@ setInterval(() => {
           // 아이템 스카우터 처리 (설정에 따라)
           if (settings.showItemStats && managers.itemStatsManager) {
             await managers.itemStatsManager.processItemStats();
+          }
+
+          // 시간 게이지바 처리 (설정에 따라)
+          if (settings.showTimeGauge && managers.timeGaugeManager) {
+            await managers.timeGaugeManager.init();
+                      // URL 변경 시 통발 설치 시간 재감지
+          if (window.location.href.includes(LANIS_ME_PATHS.FISHING)) {
+              managers.timeGaugeManager.checkFishingInstallationTime();
+            }
+          } else if (managers.timeGaugeManager) {
+            managers.timeGaugeManager.destroy();
           }
         } catch (error) {
           console.warn('URL 변경 시 동적 콘텐츠 처리 중 오류:', error);
@@ -330,11 +360,13 @@ function startInitialization() {
     managers.searchEngine = new SearchEngine();
     managers.userProfileManager = new UserProfileManager();
     managers.menuManager = new MenuManager();
+    managers.timeGaugeManager = new TimeGaugeManager();
 
     // === 전역 window에 직접 할당 (토글 등 menu-manager.js 호환) ===
     window.userProfileManager = managers.userProfileManager;
     window.itemStatsManager = managers.itemStatsManager;
     window.menuManager = managers.menuManager;
+    window.timeGaugeManager = managers.timeGaugeManager;
     // ==========================================================
 
     // DOM이 준비되면 초기화 실행

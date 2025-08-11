@@ -1,5 +1,6 @@
 import BaseModal from '../base/base-modal.js';
 import { MODAL_CONFIGS } from '../shared/modal-constants.js';
+import { API_ENDPOINTS, LANIS_ME_PATHS, LANIS_ME_PAGE_IDS, SHEET_IDS, ENCHANT_GID_MAP } from '../../../../shared/constants.js';
 
 // 프로그램 정보 모달
 class ProgramInfoModal extends BaseModal {
@@ -79,9 +80,9 @@ class ProgramInfoModal extends BaseModal {
     // 본문
     const tbody = document.createElement('tbody');
     const contributors = [
-      { role: '장비해방', nick: '수고하세요', url: 'https://docs.google.com/spreadsheets/d/15E8F_qSxKPMqsL_ulfwm739PTjBLO64qN8jWuDZe7ng/edit?gid=468768394#gid=468768394', urlinfo: '해방정보 시트' },
-      { role: '어빌리티', nick: '먹물', url: 'https://lanis.me/board/view/6841a029abffb8c821c43e85', urlinfo: '어빌리티 게시글' },
-      { role: '위키운영', nick: '크루즈', url: 'https://laniswiki.lovestoblog.com/', urlinfo: '위키 바로가기' }
+      { role: '장비해방', nick: '수고하세요', url: `https://docs.google.com/spreadsheets/d/${SHEET_IDS.ENCHANT_INFO}/edit?gid=${ENCHANT_GID_MAP.armor}#gid=${ENCHANT_GID_MAP.armor}`, urlinfo: '해방정보 시트' },
+              { role: '어빌리티', nick: '먹물', url: `${API_ENDPOINTS.LANIS_ME}${LANIS_ME_PATHS.BOARD_VIEW}/${LANIS_ME_PAGE_IDS.ABILITY_GUIDE}`, urlinfo: '어빌리티 게시글' },
+      { role: '위키운영', nick: '크루즈', url: `${API_ENDPOINTS.LANIS_WIKI.replace('/api.php', '/')}`, urlinfo: '위키 바로가기' }
     ];
 
     contributors.forEach(row => {
@@ -90,7 +91,7 @@ class ProgramInfoModal extends BaseModal {
         const td = document.createElement('td');
         if (i === 1) { // 닉네임
           const a = document.createElement('a');
-          a.href = `https://lanis.me/users/${encodeURIComponent(v)}`;
+          a.href = `${API_ENDPOINTS.LANIS_ME}${LANIS_ME_PATHS.USERS}/${encodeURIComponent(v)}`;
           a.textContent = v;
           a.style.color = '#3366cc';
           td.appendChild(a);

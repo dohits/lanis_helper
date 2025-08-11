@@ -1,5 +1,11 @@
 // Lanis Helper 백그라운드 서비스 워커
 
+// 도메인 설정 (Service Worker 호환성을 위해 직접 정의)
+const DOMAINS = {
+  LANIS_ME: 'lanis.me',
+  LANIS_WIKI: 'laniswiki.lovestoblog.com'
+};
+
 // 기본 메시지 처리
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
@@ -33,16 +39,16 @@ async function handleItemCollection(sendResponse) {
     }
     
     // laniswiki 도메인이 아닌 경우 경고
-    if (!activeTab.url.includes('laniswiki.lovestoblog.com')) {
+    if (!activeTab.url.includes(DOMAINS.LANIS_WIKI)) {
       // alert으로 경고 표시
       chrome.tabs.sendMessage(activeTab.id, {
         action: 'showAlert',
-        message: '⚠️ 아이템 수집은 https://laniswiki.lovestoblog.com/ 에서 실행해주세요.\n\n현재 페이지에서는 아이템 수집이 불가능합니다.'
+        message: `⚠️ 아이템 수집은 https://${DOMAINS.LANIS_WIKI}/ 에서 실행해주세요.\n\n현재 페이지에서는 아이템 수집이 불가능합니다.`
       }).catch(() => {
         // content script가 없는 경우 무시
       });
       
-      sendResponse({ success: false, error: '아이템 수집은 https://laniswiki.lovestoblog.com/ 에서 실행해주세요.' });
+      sendResponse({ success: false, error: `아이템 수집은 https://${DOMAINS.LANIS_WIKI}/ 에서 실행해주세요.` });
       return;
     }
     
