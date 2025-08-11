@@ -5,8 +5,7 @@
   "description": "Lanis 게임을 위한 도우미 확장프로그램",
   "permissions": [
     "activeTab",
-    "storage",
-    "scripting"
+    "storage"
   ],
   "host_permissions": [
     "https://lanis.me/*",
