@@ -46,7 +46,7 @@ class TimeGaugeManager {
     // 헤더 찾기
     const header = document.querySelector('header');
     if (!header) {
-      console.warn('헤더를 찾을 수 없습니다.');
+      // 헤더를 찾을 수 없으면 조용히 처리 (로그인 페이지 등)
       return;
     }
 

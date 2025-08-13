@@ -3,6 +3,7 @@ import UserNavigationManager from './user-navigation/UserNavigationManager.js';
 import ProfileEnhancementManager from './profile-enhancement/ProfileEnhancementManager.js';
 import SearchEngineManager from './search-engine/SearchEngineManager.js';
 import ItemStatsManager from './item-stats/ItemStatsManager.js';
+import { NicknameChecker } from './nickname-checker/NicknameChecker.js';
 
 class DOMModulesManager {
   constructor() {
@@ -10,7 +11,8 @@ class DOMModulesManager {
       userNavigation: new UserNavigationManager(),
       profileEnhancement: new ProfileEnhancementManager(),
       searchEngine: new SearchEngineManager(),
-      itemStats: new ItemStatsManager()
+      itemStats: new ItemStatsManager(),
+      nicknameChecker: new NicknameChecker()
     };
   }
 
@@ -21,8 +23,8 @@ class DOMModulesManager {
       await this.modules.profileEnhancement.init();
       await this.modules.searchEngine.init();
       await this.modules.itemStats.init();
+      this.modules.nicknameChecker.init();
       
-  
     } catch (error) {
       console.error('DOMModulesManager 초기화 중 오류:', error);
     }
@@ -83,14 +85,23 @@ class DOMModulesManager {
     return this.modules.itemStats.isProcessingStats();
   }
 
+  // 닉네임 체커 관련 메서드들
+  getCurrentNickname() {
+    return this.modules.nicknameChecker.getCurrentNickname();
+  }
+
+  getStoredNickname() {
+    return this.modules.nicknameChecker.getStoredNickname();
+  }
+
   // 전체 정리
   destroy() {
     try {
       this.modules.userNavigation.destroy();
       this.modules.profileEnhancement.destroy();
       this.modules.itemStats.removeItemStats();
+      this.modules.nicknameChecker.destroy();
       
-  
     } catch (error) {
       console.error('DOMModulesManager 정리 중 오류:', error);
     }

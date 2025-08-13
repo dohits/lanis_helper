@@ -1,4 +1,4 @@
-# Lanis Helper 개발자 문서 (v1.7.3)
+# Lanis Helper 개발자 문서 (v1.7.4)
 
 이 폴더는 Lanis Helper Chrome Extension의 개발자용 문서들을 포함합니다.
 
@@ -35,7 +35,22 @@
 - **빌드 결과**: [../dist/](../dist/)
 - **정적 리소스**: [../public/](../public/)
 
-## 🆕 최신 업데이트 (v1.7.3)
+## 🆕 최신 업데이트 (v1.7.4)
+
+### 장비 셋팅 시뮬레이션 기능 추가
+- 계산기 메뉴에 "장비 셋팅 시뮬" 항목 추가 (⚔️ 아이콘)
+- EquipmentSettingSimModal 클래스 생성
+- BaseModal 상속을 통한 일관된 모달 구조 구현
+- 현재는 "Coming Soon" 상태의 임시 UI 제공
+- 향후 실제 장비 셋팅 시뮬레이션 기능 구현 예정
+
+### 메뉴 시스템 확장
+- MenuManager에 EquipmentSettingSimModal 인스턴스 추가
+- MenuActionHandler에 equipmentSettingSim 액션 처리 추가
+- 계산기 서브메뉴에 새로운 항목 통합
+- 기존 메뉴 구조와 일관된 UI/UX 제공
+
+## 🆕 이전 업데이트 (v1.7.3)
 
 ### 시간 게이지바 기능 추가
 - 헤더 바로 아래에 통발 낚시 시간을 표시하는 게이지바 추가
@@ -198,4 +213,4 @@
 
 ---
 
-**마지막 업데이트**: 2025년 7월 29일 (v1.7.2) 
+**마지막 업데이트**: 2025년 7월 29일 (v1.7.4) 

@@ -40,6 +40,12 @@
             "icon": "🎣",
             "text": "낚시 계산기",
             "title": "낚시 계산기"
+          },
+          {
+            "id": "equipmentSettingSim",
+            "icon": "⚔️",
+            "text": "장비 셋팅 시뮬",
+            "title": "장비 셋팅 시뮬레이션"
           }
         ]
       }
