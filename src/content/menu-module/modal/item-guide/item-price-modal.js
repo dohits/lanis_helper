@@ -178,8 +178,20 @@ class ItemPriceModal extends BaseModal {
           <span style='color:#374151;'>평균 판매가 :</span> <span style='color:#764ba2;'>${chartData.averagePrice ? chartData.averagePrice.toLocaleString() + ' G' : '-'}</span><br>
           <span style='color:#374151;'>총 거래 건수 :</span> <span style='color:#10b981;'>${chartData.totalTrades}건</span>`;
         
-        // 차트 영역 초기화 및 infoDiv 추가
+        // 차트 영역 초기화 및 스타일 재설정
         this.chartDiv.innerHTML = '';
+        this.chartDiv.style.cssText = `
+          display: flex;
+          flex-direction: column;
+          justify-content: stretch;
+          align-items: stretch;
+          background: #fff;
+          color: #374151;
+          padding: 0;
+          min-height: 300px;
+          min-width: 0;
+          width: 100%;
+        `;
         this.chartDiv.appendChild(infoDiv);
         this.chartCanvas = document.createElement('canvas');
         this.chartCanvas.style.cssText = `
