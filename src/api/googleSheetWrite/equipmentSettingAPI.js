@@ -1,4 +1,5 @@
 import GoogleSheetWriteAPI from './index.js';
+import { SHEET_IDS, EQUIPMENT_RECOMMEND_SCRIPT_URL } from '../../shared/constants.js';
 
 // 장비 셋팅 시뮬레이션 전용 구글 시트 쓰기 API
 export class EquipmentSettingAPI extends GoogleSheetWriteAPI {
@@ -6,7 +7,7 @@ export class EquipmentSettingAPI extends GoogleSheetWriteAPI {
     super();
     
     // 장비 셋팅 시트 설정
-    this.sheetId = '1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo';
+    this.sheetId = SHEET_IDS.EQUIPMENT_SETTING;
     this.sheetName = '추천셋팅';
   }
 
@@ -60,7 +61,7 @@ export class EquipmentSettingAPI extends GoogleSheetWriteAPI {
       }
 
       // Google Apps Script 웹 앱을 통한 추천 업데이트
-      const webAppUrl = 'https://script.google.com/macros/s/AKfycbx_blLMp2K_iFufSZxybfHkLGMuZT6TsRaIsJyF9ACkkY8cd7YC18FYqBbpRmTqbZMvjA/exec';
+      const webAppUrl = EQUIPMENT_RECOMMEND_SCRIPT_URL;
       
       const { timeout = this.defaultTimeout } = options;
 
@@ -110,7 +111,7 @@ export class EquipmentSettingAPI extends GoogleSheetWriteAPI {
    */
   async getCurrentRecommenders(rowIndex) {
     try {
-      const webAppUrl = 'https://script.google.com/macros/s/AKfycbx_blLMp2K_iFufSZxybfHkLGMuZT6TsRaIsJyF9ACkkY8cd7YC18FYqBbpRmTqbZMvjA/exec';
+      const webAppUrl = EQUIPMENT_RECOMMEND_SCRIPT_URL;
 
       return new Promise((resolve, reject) => {
         chrome.runtime.sendMessage({

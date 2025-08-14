@@ -59,5 +59,29 @@ export const MODAL_CONFIGS = {
     maxHeight: '90vh',
     width: '90vw',
     height: 'auto'
+  },
+  guildWarInfo: {
+    id: 'guild-war-info-modal',
+    title: '길드전 정보',
+    className: 'guild-war-info-modal',
+    contentClassName: 'guild-war-info-modal-content',
+    maxWidth: '95vw',
+    maxHeight: '95vh',
+    width: '95vw',
+    height: 'auto',
+    closeOnOutsideClick: true,
+    closeOnEsc: true
+  },
+  equipmentSettingSim: {
+    id: 'equipment-setting-sim-modal',
+    title: '⚔️ 장비 셋팅 시뮬레이션',
+    className: 'equipment-setting-sim-modal',
+    contentClassName: 'equipment-setting-sim-content',
+    maxWidth: '800px',
+    maxHeight: '90vh',
+    width: '90%',
+    height: 'auto',
+    closeOnOutsideClick: true,
+    closeOnEsc: true
   }
 }; 

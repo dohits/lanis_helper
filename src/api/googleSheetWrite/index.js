@@ -1,3 +1,5 @@
+import { EQUIPMENT_RECOMMEND_SCRIPT_URL } from '../../shared/constants.js';
+
 // 구글 시트 쓰기 API 공통 모듈 (Apps Script 전용)
 class GoogleSheetWriteAPI {
   constructor() {
@@ -56,7 +58,7 @@ class GoogleSheetWriteAPI {
   async writeBatch(sheetId, sheetName, batchData, timeout) {
     try {
       // Google Apps Script 웹 앱을 통한 쓰기
-      const webAppUrl = 'https://script.google.com/macros/s/AKfycbx_blLMp2K_iFufSZxybfHkLGMuZT6TsRaIsJyF9ACkkY8cd7YC18FYqBbpRmTqbZMvjA/exec';
+      const webAppUrl = EQUIPMENT_RECOMMEND_SCRIPT_URL;
       
       // 새로운 데이터를 2D 배열로 변환
       const values = batchData.map(row => {

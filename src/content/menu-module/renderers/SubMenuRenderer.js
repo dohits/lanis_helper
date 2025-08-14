@@ -89,6 +89,10 @@ class SubMenuRenderer {
     await this.renderSubMenu(container, 'settings');
   }
 
+  async createGuildSubMenu(container) {
+    await this.renderSubMenu(container, 'guild');
+  }
+
   updateToggleButton(button, item) {
     const isEnabled = this.settings[item.id];
     this.styles.updateToggleButton(button, item, isEnabled);

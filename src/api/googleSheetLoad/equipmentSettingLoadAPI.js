@@ -1,4 +1,5 @@
 import GoogleSheetAPI from './index.js';
+import { SHEET_IDS, EQUIPMENT_SETTING_GID } from '../../shared/constants.js';
 
 // 장비 셋팅 데이터 로드 API
 export class EquipmentSettingLoadAPI extends GoogleSheetAPI {
@@ -6,7 +7,7 @@ export class EquipmentSettingLoadAPI extends GoogleSheetAPI {
     super();
     
     // 장비 셋팅 시트 설정
-    this.sheetId = '1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo';
+    this.sheetId = SHEET_IDS.EQUIPMENT_SETTING;
     this.sheetName = '추천셋팅';
   }
 
@@ -17,8 +18,8 @@ export class EquipmentSettingLoadAPI extends GoogleSheetAPI {
    */
   async getAllSettings(options = {}) {
     try {
-      // 구글 시트에서 CSV 데이터 가져오기 (GID: 1210758692)
-      const csvData = await this.fetchCSVData(this.sheetId, '1210758692', options);
+      // 구글 시트에서 CSV 데이터 가져오기
+      const csvData = await this.fetchCSVData(this.sheetId, EQUIPMENT_SETTING_GID, options);
       
       if (!this.validateData(csvData, 2)) {
         return this.createErrorResponse('데이터가 비어있거나 유효하지 않습니다.');
@@ -28,9 +29,9 @@ export class EquipmentSettingLoadAPI extends GoogleSheetAPI {
       const headers = csvData[0];
       const dataRows = csvData.slice(1);
 
-      // 데이터 파싱
-      const settings = dataRows.map((row, index) => {
-        return this.parseSettingRow(row, headers, index + 1);
+      // 데이터 파싱 (역순으로 처리하여 최신 데이터가 먼저 오도록)
+      const settings = dataRows.reverse().map((row, index) => {
+        return this.parseSettingRow(row, headers, dataRows.length - index);
       }).filter(setting => setting !== null);
 
       return this.createSuccessResponse({

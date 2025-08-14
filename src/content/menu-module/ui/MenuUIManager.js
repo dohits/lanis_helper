@@ -103,6 +103,8 @@ class MenuUIManager {
     } else if (item.id === 'settings') {
       // 설정 메뉴는 최신 설정을 가져와서 렌더링
       await this.actionHandler.updateSettingsAndRender(subMenu);
+    } else if (item.id === 'guild') {
+      await this.renderers.sub.createGuildSubMenu(subMenu);
     }
     
     // 서브메뉴 버튼에 이벤트 리스너 추가
@@ -284,6 +286,14 @@ class MenuUIManager {
     const itemGuideItem = menuConfig.mainMenu.itemGuide.subMenu.items.find(item => item.id === itemId);
     if (itemGuideItem) {
       this.actionHandler.executeSubMenuItemAction(itemGuideItem, button);
+      this.closeAllSubMenus();
+      return;
+    }
+    
+    // 길드 메뉴 아이템 찾기
+    const guildItem = menuConfig.mainMenu.guild.subMenu.items.find(item => item.id === itemId);
+    if (guildItem) {
+      this.actionHandler.executeSubMenuItemAction(guildItem, button);
       this.closeAllSubMenus();
       return;
     }

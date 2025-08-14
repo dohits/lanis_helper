@@ -4,6 +4,8 @@ import ProfileEnhancementManager from './profile-enhancement/ProfileEnhancementM
 import SearchEngineManager from './search-engine/SearchEngineManager.js';
 import ItemStatsManager from './item-stats/ItemStatsManager.js';
 import { NicknameChecker } from './nickname-checker/NicknameChecker.js';
+import GuildInfoCollector from './guild-info-collector/GuildInfoCollector.js';
+import WarLogCollector from './war-log-collector/WarLogCollector.js';
 
 class DOMModulesManager {
   constructor() {
@@ -12,7 +14,9 @@ class DOMModulesManager {
       profileEnhancement: new ProfileEnhancementManager(),
       searchEngine: new SearchEngineManager(),
       itemStats: new ItemStatsManager(),
-      nicknameChecker: new NicknameChecker()
+      nicknameChecker: new NicknameChecker(),
+      guildInfoCollector: new GuildInfoCollector(),
+      warLogCollector: new WarLogCollector()
     };
   }
 
@@ -24,6 +28,12 @@ class DOMModulesManager {
       await this.modules.searchEngine.init();
       await this.modules.itemStats.init();
       this.modules.nicknameChecker.init();
+      this.modules.guildInfoCollector.init();
+      this.modules.warLogCollector.init();
+      
+      // window 객체에 수집기들 등록 (길드전 정보 모달에서 사용)
+      window.guildInfoCollector = this.modules.guildInfoCollector;
+      window.warLogCollector = this.modules.warLogCollector;
       
     } catch (error) {
       console.error('DOMModulesManager 초기화 중 오류:', error);
@@ -94,6 +104,52 @@ class DOMModulesManager {
     return this.modules.nicknameChecker.getStoredNickname();
   }
 
+  // 길드 정보 수집기 관련 메서드들
+  collectGuildInfo() {
+    return this.modules.guildInfoCollector.collectAndSave();
+  }
+
+  getSavedGuildList() {
+    return this.modules.guildInfoCollector.getSavedGuildList();
+  }
+
+  loadGuildInfo(guildName) {
+    return this.modules.guildInfoCollector.loadGuildInfo(guildName);
+  }
+
+  deleteGuildInfo(guildName) {
+    return this.modules.guildInfoCollector.deleteGuildInfo(guildName);
+  }
+
+  clearAllGuildInfo() {
+    return this.modules.guildInfoCollector.clearAllGuildInfo();
+  }
+
+  // 전쟁 로그 수집기 관련 메서드들
+  collectWarLogs() {
+    return this.modules.warLogCollector.collectAndSave();
+  }
+
+  getWarLogStats() {
+    return this.modules.warLogCollector.getWarLogStats();
+  }
+
+  loadAllWarLogs() {
+    return this.modules.warLogCollector.loadAllWarLogs();
+  }
+
+  loadWarLogsByDateRange(startDate, endDate) {
+    return this.modules.warLogCollector.loadWarLogsByDateRange(startDate, endDate);
+  }
+
+  deleteWarLogs() {
+    return this.modules.warLogCollector.deleteWarLogs();
+  }
+
+  deleteLogsByDate(targetDate) {
+    return this.modules.warLogCollector.deleteLogsByDate(targetDate);
+  }
+
   // 전체 정리
   destroy() {
     try {
@@ -101,6 +157,8 @@ class DOMModulesManager {
       this.modules.profileEnhancement.destroy();
       this.modules.itemStats.removeItemStats();
       this.modules.nicknameChecker.destroy();
+      this.modules.guildInfoCollector.destroy();
+      this.modules.warLogCollector.destroy();
       
     } catch (error) {
       console.error('DOMModulesManager 정리 중 오류:', error);

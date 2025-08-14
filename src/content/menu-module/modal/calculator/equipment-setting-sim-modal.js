@@ -1,3 +1,5 @@
+import BaseModal from '../base/base-modal.js';
+import { MODAL_CONFIGS } from '../shared/modal-constants.js';
 import { JobSelector } from './equipment-setting-sim-modal/selectors/job-selector.js';
 import { ElementSelector } from './equipment-setting-sim-modal/selectors/element-selector.js';
 import { AbilitySelector } from './equipment-setting-sim-modal/selectors/ability-selector.js';
@@ -11,8 +13,10 @@ import { EquipmentSettingAPI } from '../../../../api/googleSheetWrite/equipmentS
 import { EquipmentSettingLoadAPI } from '../../../../api/googleSheetLoad/equipmentSettingLoadAPI.js';
 
 // 장비 셋팅 시뮬레이션 모달
-export class EquipmentSettingSimModal {
+export class EquipmentSettingSimModal extends BaseModal {
   constructor() {
+    super(MODAL_CONFIGS.equipmentSettingSim);
+    
     this.jobSelector = new JobSelector();
     this.elementSelector = new ElementSelector();
     this.abilitySelector = new AbilitySelector();
@@ -96,78 +100,21 @@ export class EquipmentSettingSimModal {
     });
   }
 
-  // 모달 열기
+  // 모달 열기 (오버라이드)
   open() {
-    this.createModal();
+    super.open();
+    
+    // 모달 바디 패딩을 16px로 설정
+    if (this.body) {
+      this.body.style.padding = '16px';
+    }
+    
+    this.createContent();
     this.preloadData();
   }
 
-  // 모달 생성
-  createModal() {
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      animation: fadeIn 0.3s ease;
-    `;
-
-    const modalContent = document.createElement('div');
-    modalContent.style.cssText = `
-      background: white;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 800px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      animation: slideIn 0.3s ease;
-    `;
-
-    const header = document.createElement('div');
-    header.style.cssText = `
-      padding: 24px 24px 0 24px;
-      border-bottom: 1px solid #e5e7eb;
-    `;
-
-    const title = document.createElement('h2');
-    title.style.cssText = `
-      margin: 0 0 16px 0;
-      font-size: 24px;
-      font-weight: 700;
-      color: #1f2937;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    `;
-    title.innerHTML = '⚔️ 장비 셋팅 시뮬레이션';
-
-    const closeButton = document.createElement('button');
-    closeButton.style.cssText = `
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: #6b7280;
-      padding: 4px;
-      border-radius: 4px;
-      transition: all 0.2s ease;
-    `;
-    closeButton.textContent = '×';
-    closeButton.addEventListener('click', () => {
-      this.close();
-    });
-
+  // 모달 콘텐츠 생성
+  createContent() {
     // 탭 구조 생성
     const container = document.createElement('div');
     container.style.cssText = `
@@ -175,7 +122,7 @@ export class EquipmentSettingSimModal {
       flex-direction: column;
       height: 100%;
       gap: 0px;
-      padding: 16px;
+      padding: 0px;
       min-height: 400px;
       max-height: calc(90vh - 120px);
     `;
@@ -235,35 +182,8 @@ export class EquipmentSettingSimModal {
     `;
     container.appendChild(this.contentArea);
 
-    // 애니메이션 CSS 추가
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-      @keyframes slideIn {
-        from { transform: translateY(-20px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-      }
-    `;
-    document.head.appendChild(style);
-
-    header.appendChild(title);
-    header.appendChild(closeButton);
-    modalContent.appendChild(header);
-    modalContent.appendChild(container);
-    modal.appendChild(modalContent);
-
-    this.modal = modal;
-    document.body.appendChild(modal);
-
-    // 모달 외부 클릭 시 닫기
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        this.close();
-      }
-    });
+    // BaseModal의 setContent 메서드 사용
+    this.setContent(container);
 
     // 초기 탭 설정
     this.currentTab = 'tab1';
@@ -353,16 +273,12 @@ export class EquipmentSettingSimModal {
           padding: 0 4px;
         `;
 
-        // 최신 순으로 정렬 (저장 시간 기준)
-        const sortedSettings = result.data.settings.sort((a, b) => {
-          const timeA = new Date(a.saveTime.replace('저장 시간: ', ''));
-          const timeB = new Date(b.saveTime.replace('저장 시간: ', ''));
-          return timeB - timeA;
-        });
+        // 데이터는 이미 최신순으로 정렬되어 있음 (API에서 역순으로 처리)
+        const settings = result.data.settings;
 
         // 각 셋팅을 아코디언으로 표시
-        for (let i = 0; i < sortedSettings.length; i++) {
-          const setting = sortedSettings[i];
+        for (let i = 0; i < settings.length; i++) {
+          const setting = settings[i];
           // 행 인덱스는 헤더(1행) + 데이터 시작 행(2행) + 정렬된 인덱스
           const rowIndex = 2 + i;
           const accordion = this.createSettingAccordion(setting, rowIndex);
@@ -383,7 +299,7 @@ export class EquipmentSettingSimModal {
           background: #f9fafb;
           border-radius: 0 0 8px 8px;
         `;
-        countInfo.textContent = `총 ${result.data.totalCount || sortedSettings.length}개의 추천 셋팅`;
+        countInfo.textContent = `총 ${result.data.totalCount || settings.length}개의 추천 셋팅`;
         content.appendChild(countInfo);
 
       } else {
@@ -592,7 +508,7 @@ export class EquipmentSettingSimModal {
         const currentUserName = this.getCurrentUserName();
         
         if (!currentUserName) {
-          alert('사용자 닉네임을 설정에서 먼저 입력해주세요.');
+          alert('Lanis 로그인을 해 주세요.');
           recommendButton.disabled = false;
           recommendButton.textContent = '추천하기';
           recommendButton.style.background = '#ef4444';
@@ -1095,10 +1011,8 @@ export class EquipmentSettingSimModal {
     });
   }
 
-  // 모달 닫기
+  // 모달 닫기 (오버라이드)
   close() {
-    if (this.modal && this.modal.parentNode) {
-      this.modal.parentNode.removeChild(this.modal);
-    }
+    super.close();
   }
 }

@@ -7,6 +7,12 @@
     },
     "items": [
       {
+        "id": "guild",
+        "icon": "🏰",
+        "text": "길드",
+        "title": "길드 정보"
+      },
+      {
         "id": "calculator",
         "icon": "🧮",
         "text": "계산기",
@@ -46,6 +52,19 @@
             "icon": "⚔️",
             "text": "장비 셋팅 시뮬",
             "title": "장비 셋팅 시뮬레이션"
+          }
+        ]
+      }
+    },
+    "guild": {
+      "subMenu": {
+        "title": "길드 정보",
+        "items": [
+          {
+            "id": "guildWarInfo",
+            "icon": "⚔️",
+            "text": "길드전(구현중)",
+            "title": "길드전 정보 및 통계"
           }
         ]
       }

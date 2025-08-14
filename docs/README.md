@@ -44,6 +44,23 @@
 - 현재는 "Coming Soon" 상태의 임시 UI 제공
 - 향후 실제 장비 셋팅 시뮬레이션 기능 구현 예정
 
+### 길드전 정보 모달 리팩토링
+- `guild-war-info-modal`을 `equipment-setting-sim-modal`과 동일한 구조로 리팩토링
+- 기능별 모듈 분리:
+  - `data/guild-data-manager.js`: 데이터 관리 로직
+  - `ui/guild-card.js`: 길드 카드 UI 컴포넌트
+  - `ui/war-log-ui.js`: 전쟁 로그 UI 컴포넌트
+  - `ui/activity-ui.js`: 활동량 UI 컴포넌트
+- BaseModal 상속을 통한 일관된 모달 구조 구현
+- 코드 재사용성 및 유지보수성 향상
+
+### 전쟁 로그 중복 방지 기능 추가
+- 전쟁 로그 수집 시 중복 방지 로직 구현
+- `timestamp`와 `content`를 조합한 고유 키로 중복 체크
+- 수집 중 상태 관리로 동시 수집 방지
+- 수집 결과에 따른 적절한 메시지 표시 (성공/정보/에러)
+- 기존 로그와 비교하여 새로운 로그만 저장
+
 ### 메뉴 시스템 확장
 - MenuManager에 EquipmentSettingSimModal 인스턴스 추가
 - MenuActionHandler에 equipmentSettingSim 액션 처리 추가

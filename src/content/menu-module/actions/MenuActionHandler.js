@@ -18,7 +18,8 @@ class MenuActionHandler {
       abilityInfo: menuManager.abilityInfoModal,
       enchantInfo: menuManager.enchantInfoModal,
       itemPrice: menuManager.itemPriceModal,
-      itemCollection: menuManager.itemCollectionModal
+      itemCollection: menuManager.itemCollectionModal,
+      guildWarInfo: menuManager.guildWarInfoModal
     };
     this.expectedValueModal = menuManager.expectedValueModal;
     this.fishingCalculatorModal = menuManager.fishingCalculatorModal;
@@ -68,6 +69,9 @@ class MenuActionHandler {
         break;
       case 'abilityInfo':
         this.modals.abilityInfo.open();
+        break;
+      case 'guildWarInfo':
+        this.modals.guildWarInfo.open();
         break;
       default:
         // 알 수 없는 서브메뉴 아이템
