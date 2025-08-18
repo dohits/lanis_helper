@@ -351,17 +351,10 @@
 
 /* 종결/준종결 태그 색상은 JavaScript의 item-colors.js에서 관리됩니다 */
 
-/* 사용자 프로필 링크 스타일 - 색상과 언더라인, 호버만 유지 */
+/* 사용자 프로필 링크 스타일 - 언더라인과 커서만 적용 */
 .username-clickable {
-  color: #FFD700 !important; /* 골드색 */
   text-decoration: underline !important;
-  text-decoration-color: #FFD700 !important;
   cursor: pointer !important;
-}
-
-.username-clickable:hover {
-  color: #FFA500 !important; /* 주황색 */
-  text-decoration-color: #FFA500 !important;
 } 
 
 .sub-menu-popup {

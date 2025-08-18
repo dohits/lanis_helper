@@ -279,8 +279,9 @@ export class EquipmentSettingSimModal extends BaseModal {
         // 각 셋팅을 아코디언으로 표시
         for (let i = 0; i < settings.length; i++) {
           const setting = settings[i];
-          // 행 인덱스는 헤더(1행) + 데이터 시작 행(2행) + 정렬된 인덱스
-          const rowIndex = 2 + i;
+          // 행 인덱스는 헤더(1행) + 데이터 시작 행(2행) + 역순 정렬된 인덱스
+          // API에서 역순으로 처리했으므로, 실제 시트의 행 번호를 계산
+          const rowIndex = 2 + (settings.length - 1 - i);
           const accordion = this.createSettingAccordion(setting, rowIndex);
           settingsList.appendChild(accordion);
         }
