@@ -11,7 +11,7 @@ import AbilityInfoModal from './modal/settings/ability-info-modal.js';
 import EnchantInfoModal from './modal/settings/enchant-info-modal.js';
 import ItemPriceModal from './modal/item-guide/item-price-modal.js';
 import ItemCollectionModal from './modal/settings/item-collection-modal.js';
-import GuildWarInfoModal from './modal/guild/guild-war-info-modal.js';
+import { GuildWarInfoModal } from './modal/guild/guild-war-info-modal.js';
 import MainMenuRenderer from './renderers/MainMenuRenderer.js';
 import SubMenuRenderer from './renderers/SubMenuRenderer.js';
 import MenuStateManager from './state/MenuStateManager.js';

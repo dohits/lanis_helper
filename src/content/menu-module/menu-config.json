@@ -63,7 +63,7 @@
           {
             "id": "guildWarInfo",
             "icon": "⚔️",
-            "text": "길드전(구현중)",
+            "text": "길드전(BETA)",
             "title": "길드전 정보 및 통계"
           }
         ]

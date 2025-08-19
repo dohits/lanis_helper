@@ -930,17 +930,16 @@ export class EquipmentSettingSimModal extends BaseModal {
       position: fixed;
       top: 20px;
       right: 20px;
-      padding: 16px 20px;
-      border-radius: 8px;
+      padding: 12px 16px;
+      border-radius: 6px;
+      color: white;
+      font-weight: 600;
       font-size: 14px;
-      font-weight: 500;
-      z-index: 10001;
-      max-width: 350px;
+      z-index: 10025;
+      max-width: 300px;
       word-wrap: break-word;
-      white-space: pre-line;
-      line-height: 1.4;
-      animation: slideInRight 0.3s ease;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: opacity 0.3s ease;
     `;
 
     // 타입에 따른 스타일 설정

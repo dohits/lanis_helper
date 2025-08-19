@@ -12,7 +12,6 @@ class GuildInfoCollector {
     this.observer = null;
     this.isCollecting = false;
     this.lastCollectedUrl = null;
-    this.collectionInterval = null;
   }
 
   /**
@@ -22,7 +21,6 @@ class GuildInfoCollector {
     console.log('길드 정보 수집기 초기화 완료');
     this.setupObserver();
     this.setupEventListeners();
-    this.startPeriodicCollection();
   }
 
   /**
@@ -112,26 +110,7 @@ class GuildInfoCollector {
     setInterval(checkUrlChange, 1000);
   }
 
-  /**
-   * 주기적 수집 시작
-   */
-  startPeriodicCollection() {
-    // 기존 인터벌 제거
-    if (this.collectionInterval) {
-      clearInterval(this.collectionInterval);
-    }
 
-    // 10초마다 길드 페이지 확인 및 수집
-    this.collectionInterval = setInterval(() => {
-      if (this.isGuildPage()) {
-        const currentUrl = window.location.href;
-        if (currentUrl !== this.lastCollectedUrl) {
-          console.log('주기적 확인 - 새로운 길드 페이지 감지');
-          this.collectNewGuildInfo();
-        }
-      }
-    }, 10000);
-  }
 
   /**
    * 새로운 길드 정보만 수집
@@ -415,9 +394,6 @@ class GuildInfoCollector {
   destroy() {
     if (this.observer) {
       this.observer.disconnect();
-    }
-    if (this.collectionInterval) {
-      clearInterval(this.collectionInterval);
     }
   }
 }
