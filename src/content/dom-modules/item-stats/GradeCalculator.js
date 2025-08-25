@@ -135,7 +135,8 @@ class GradeCalculator {
     
     const span = valueElement.querySelector('span');
     if (span) {
-      const rangeMatch = span.textContent.match(/\(([-\d]+)\s*~\s*([-\d]+)\)/);
+      // 새로운 범위 패턴: (123 - 456) 또는 (123~456) 또는 (123 ~ 456) 패턴 추출
+      const rangeMatch = span.textContent.match(/\(([-\d]+)\s*[-~]\s*([-\d]+)\)/);
       if (rangeMatch) {
         min = parseInt(rangeMatch[1]);
         max = parseInt(rangeMatch[2]);

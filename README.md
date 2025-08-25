@@ -6,9 +6,9 @@
 
 Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 
-- 크롬 웹스토어 (1.6.1) : [이동하기](https://chromewebstore.google.com/detail/lanis-helper/ciemdjbfifddfgbdlfimomejgpnfonjd?authuser=0&hl=ko)
+- 크롬 웹스토어 (1.8.0) : [이동하기](https://chromewebstore.google.com/detail/lanis-helper/ciemdjbfifddfgbdlfimomejgpnfonjd?authuser=0&hl=ko)
 
-- 최신릴리즈 (1.7.0) : [다운받기](https://github.com/user-attachments/files/21487984/lanis_helper_1.7.0.zip)
+- 최신릴리즈 (1.8.1) : [다운받기](https://github.com/user-attachments/files/21487984/lanis_helper_1.7.0.zip)
 
 - 깃허브 저장소 : [이동하기](https://github.com/dohits/lanis_helper?tab=readme-ov-file)
 
@@ -81,6 +81,10 @@ Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 - 장비 셋팅 시뮬레이션 기능 (준비 중)
 - 향후 실제 장비 셋팅 시뮬레이션 기능 구현 예정
 
+### 장비 감정 시뮬레이션
+- 장비 감정 시뮬레이션 기능 (준비 중)
+- 향후 실제 장비 감정 시뮬레이션 기능 구현 예정
+
 ### 전쟁로그 데이터 구조화 및 길드 정보 매칭
 - 전쟁로그 데이터를 길드 정보와 자동 매칭하여 구조화
 - 플레이어와 대상에 길드명 표시 `[길드명]` 형식
@@ -90,7 +94,7 @@ Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 ## 🛠️ 개발 정보
 
 - **Manifest Version**: 3
-- **현재 버전**: 1.7.5 (전쟁로그 데이터 구조화 및 길드 정보 매칭)
+- **현재 버전**: 1.8.1 (사용자명 클릭 시 색상별 밑줄 표시 기능 개선)
 - **빌드 시스템**: Vite + ES6 모듈
 - **지원 브라우저**: Chrome, (모바일: Mises 브라우저)
 - **권한**: storage, tabs, scripting

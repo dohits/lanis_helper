@@ -83,5 +83,17 @@ export const MODAL_CONFIGS = {
     height: 'auto',
     closeOnOutsideClick: true,
     closeOnEsc: true
+  },
+  equipmentEnchantSim: {
+    id: 'equipment-enchant-sim-modal',
+    title: '🔮 장비 감정 시뮬레이션',
+    className: 'equipment-enchant-sim-modal',
+    contentClassName: 'equipment-enchant-sim-content',
+    maxWidth: '800px',
+    maxHeight: '90vh',
+    width: '90%',
+    height: 'auto',
+    closeOnOutsideClick: true,
+    closeOnEsc: true
   }
 }; 

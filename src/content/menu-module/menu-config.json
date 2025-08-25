@@ -52,6 +52,12 @@
             "icon": "⚔️",
             "text": "장비 셋팅 시뮬",
             "title": "장비 셋팅 시뮬레이션"
+          },
+          {
+            "id": "equipmentEnchantSim",
+            "icon": "🔮",
+            "text": "장비 감정 시뮬",
+            "title": "장비 감정 시뮬레이션"
           }
         ]
       }

@@ -1,0 +1,240 @@
+<!-- 
+사용자 네비게이션 DOM 구조 예시
+참조: user-navigation 모듈 코드 수정 시 이 구조를 참조하여 DOM 조작을 수행한다.
+
+주요 구조:
+- .MuiList-root: 채팅 메시지 목록 컨테이너
+- .MuiListItem-root: 개별 채팅 메시지 아이템
+- .MuiTypography-body2: 메시지 내용을 포함하는 요소
+- span[style*="font-weight: 600"]: 사용자명을 나타내는 요소 (클릭 가능)
+- 사용자명 클릭 시 프로필 페이지로 이동하는 기능
+
+=== 최신 채팅창 구조 (2025-01-XX) ===
+사용자 네비게이션 적용전 원본 형식:
+-->
+<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-9secm0" style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);">
+  <div class="MuiBox-root css-7sgcx1">
+    <div class="MuiBox-root css-e1ns02">
+      <p class="MuiTypography-root MuiTypography-body2 css-4d87p5">접속중인 유저 수 : 99명</p>
+      <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-nei2k3" tabindex="0" type="button">
+        <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-vh810p" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="MuiBox-root css-70qvj9">
+      <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1mh14pi" tabindex="0" type="button">
+        <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-vh810p" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path>
+        </svg>
+      </button>
+      <div class="MuiTabs-root css-z1qmet">
+        <div class="MuiTabs-scroller MuiTabs-fixed css-2xu61f" style="overflow: hidden; margin-bottom: 0px;">
+          <div role="tablist" class="MuiTabs-list MuiTabs-flexContainer css-17do188">
+            <button class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary MuiTab-fullWidth Mui-selected css-5hxhd2" tabindex="0" type="button" role="tab" aria-selected="true">
+              <div class="MuiBox-root css-171onha">일반</div>
+            </button>
+            <button class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary MuiTab-fullWidth css-5hxhd2" tabindex="-1" type="button" role="tab" aria-selected="false">
+              <div class="MuiBox-root css-171onha">거래<div class="MuiBox-root css-18q6bj9"></div></div>
+            </button>
+            <button class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary MuiTab-fullWidth css-5hxhd2" tabindex="-1" type="button" role="tab" aria-selected="false">
+              <div class="MuiBox-root css-171onha">길드</div>
+            </button>
+          </div>
+          <span class="MuiTabs-indicator css-zgfzot" style="left: 0px; width: 127.2px;"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul class="MuiList-root MuiList-padding css-126tnii">
+    <li class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-1p0h4yl" id="message-2025-08-25T05:18:08.129Z">
+      <div class="MuiBox-root css-q149wm">
+        <div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-96prgn" style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);">
+          <div class="MuiTypography-root MuiTypography-body2 css-1hfuy9o">
+            <span class="" style="font-weight: 600; font-size: 13px; color: white;">404</span><span> : </span><span style="word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap;">ㄷㄷ</span>
+          </div>
+        </div>
+        <span class="MuiTypography-root MuiTypography-caption css-gebecf">14:18</span>
+      </div>
+    </li>
+    <li class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-q7x9m4" id="message-2025-08-25T05:18:16.613Z">
+      <div class="MuiBox-root css-q149wm">
+        <div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-96prgn" style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);">
+          <div class="MuiTypography-root MuiTypography-body2 css-1hfuy9o">
+            <span class="" style="font-weight: 600; font-size: 13px; color: white;">404</span><span> : </span><span style="word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap;">사혼의조각</span>
+          </div>
+        </div>
+        <span class="MuiTypography-root MuiTypography-caption css-gebecf">14:18</span>
+      </div>
+    </li>
+    <li class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-1p0h4yl" id="message-2025-08-25T05:33:38.181Z">
+      <div class="MuiBox-root css-q149wm">
+        <div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-96prgn" style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);">
+          <div class="MuiTypography-root MuiTypography-body2 css-1hfuy9o">
+            <img alt="chat icon" src="/icons/color_wing.webp" style="width: 18px; height: 18px; margin-right: 4px; display: inline-block; vertical-align: middle;">
+            <span class="" style="font-weight: 600; font-size: 13px; background-image: linear-gradient(90deg, rgb(148, 0, 211), rgb(0, 255, 127)); background-clip: text; color: white; -webkit-text-fill-color: transparent;">막걸리</span><span> : </span><span style="word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap;">우리길드에도있드라</span>
+          </div>
+        </div>
+        <span class="MuiTypography-root MuiTypography-caption css-gebecf">14:33</span>
+      </div>
+    </li>
+    <li class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-1p0h4yl" id="message-2025-08-25T05:40:58.126Z">
+      <div class="MuiBox-root css-q149wm">
+        <div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-b7v6uu" style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);">
+          <div class="MuiTypography-root MuiTypography-body2 css-1hfuy9o">
+            <span class="" style="font-weight: 600; font-size: 13px; background-image: linear-gradient(90deg, rgb(255, 215, 0), rgb(255, 165, 0)); background-clip: text; color: white; -webkit-text-fill-color: transparent; filter: drop-shadow(rgba(255, 215, 0, 0.25) 0px 0px 3px) drop-shadow(rgba(255, 215, 0, 0.19) 0px 0px 6px); text-shadow: rgba(255, 215, 0, 0.314) 0px 0px 4px, rgba(255, 215, 0, 0.145) 0px 0px 8px;">도히님</span><span> : </span><span style="word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap;">[제국 길드원 모집중] 육성법 아이템시세 장비셋팅 새벽질문답변 다해드림 몸만오세요</span>
+          </div>
+        </div>
+        <span class="MuiTypography-root MuiTypography-caption css-gebecf">14:40</span>
+      </div>
+    </li>
+    <li class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-1p0h4yl" id="message-2025-08-25T05:52:09.938Z">
+      <div class="MuiBox-root css-q149wm">
+        <div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-96prgn" style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);">
+          <div class="MuiTypography-root MuiTypography-body2 css-1hfuy9o">
+            <span class="" style="font-weight: 600; font-size: 13px; color: rgb(255, 0, 255);">유화</span><span> : </span><span style="word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap;">몸만 요구하는 길드...!</span>
+          </div>
+        </div>
+        <span class="MuiTypography-root MuiTypography-caption css-gebecf">14:52</span>
+      </div>
+    </li>
+  </ul>
+  <div class="MuiBox-root css-1nan9tx">
+    <div class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1xe6hj6">
+      <div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-sizeSmall css-mevk92">
+        <input aria-invalid="false" id="«r4f»" placeholder="메시지를 입력하세요..." class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall css-1r71pim" type="text" value="">
+        <fieldset aria-hidden="true" class="MuiOutlinedInput-notchedOutline css-5v2ak0">
+          <legend class="css-w4cd9x"><span class="notranslate" aria-hidden="true">​</span></legend>
+        </fieldset>
+      </div>
+    </div>
+    <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1vwj13r" tabindex="0" type="button">
+      <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-vh810p" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"></path>
+      </svg>
+    </button>
+  </div>
+  <div class="MuiBox-root css-qh4oyi">
+    <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-hc2dwx" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"></path>
+    </svg>
+    <span class="MuiTypography-root MuiTypography-caption css-1gfxar9">닫기</span>
+  </div>
+</div>
+
+<!-- 
+=== 사용자 네비게이션 적용 후 형식 ===
+- 사용자명에 클릭 이벤트가 추가됨
+- 사용자명 클릭 시 프로필 페이지로 이동
+- 다양한 사용자명 스타일 지원 (일반, 그라데이션, 아이콘 포함)
+- 동적 콘텐츠 감지로 새 메시지에도 자동 적용
+-->
+<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-9secm0" style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);">
+  <div class="MuiBox-root css-7sgcx1">
+    <div class="MuiBox-root css-e1ns02">
+      <p class="MuiTypography-root MuiTypography-body2 css-4d87p5">접속중인 유저 수 : 99명</p>
+      <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-nei2k3" tabindex="0" type="button">
+        <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-vh810p" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="MuiBox-root css-70qvj9">
+      <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1mh14pi" tabindex="0" type="button">
+        <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-vh810p" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path>
+        </svg>
+      </button>
+      <div class="MuiTabs-root css-z1qmet">
+        <div class="MuiTabs-scroller MuiTabs-fixed css-2xu61f" style="overflow: hidden; margin-bottom: 0px;">
+          <div role="tablist" class="MuiTabs-list MuiTabs-flexContainer css-17do188">
+            <button class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary MuiTab-fullWidth Mui-selected css-5hxhd2" tabindex="0" type="button" role="tab" aria-selected="true">
+              <div class="MuiBox-root css-171onha">일반</div>
+            </button>
+            <button class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary MuiTab-fullWidth css-5hxhd2" tabindex="-1" type="button" role="tab" aria-selected="false">
+              <div class="MuiBox-root css-171onha">거래<div class="MuiBox-root css-18q6bj9"></div></div>
+            </button>
+            <button class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary MuiTab-fullWidth css-5hxhd2" tabindex="-1" type="button" role="tab" aria-selected="false">
+              <div class="MuiBox-root css-171onha">길드</div>
+            </button>
+          </div>
+          <span class="MuiTabs-indicator css-zgfzot" style="left: 0px; width: 127.2px;"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul class="MuiList-root MuiList-padding css-126tnii">
+    <li class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-1p0h4yl" id="message-2025-08-25T05:18:08.129Z">
+      <div class="MuiBox-root css-q149wm">
+        <div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-96prgn" style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);">
+          <div class="MuiTypography-root MuiTypography-body2 css-1hfuy9o">
+            <span class="username-clickable" style="font-weight: 600; font-size: 13px; color: white; cursor: pointer; text-decoration: underline;" data-username="404">404</span><span> : </span><span style="word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap;">ㄷㄷ</span>
+          </div>
+        </div>
+        <span class="MuiTypography-root MuiTypography-caption css-gebecf">14:18</span>
+      </div>
+    </li>
+    <li class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-q7x9m4" id="message-2025-08-25T05:18:16.613Z">
+      <div class="MuiBox-root css-q149wm">
+        <div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-96prgn" style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);">
+          <div class="MuiTypography-root MuiTypography-body2 css-1hfuy9o">
+            <span class="username-clickable" style="font-weight: 600; font-size: 13px; color: white; cursor: pointer; text-decoration: underline;" data-username="404">404</span><span> : </span><span style="word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap;">사혼의조각</span>
+          </div>
+        </div>
+        <span class="MuiTypography-root MuiTypography-caption css-gebecf">14:18</span>
+      </div>
+    </li>
+    <li class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-1p0h4yl" id="message-2025-08-25T05:33:38.181Z">
+      <div class="MuiBox-root css-q149wm">
+        <div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-96prgn" style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);">
+          <div class="MuiTypography-root MuiTypography-body2 css-1hfuy9o">
+            <img alt="chat icon" src="/icons/color_wing.webp" style="width: 18px; height: 18px; margin-right: 4px; display: inline-block; vertical-align: middle;">
+            <span class="username-clickable" style="font-weight: 600; font-size: 13px; background-image: linear-gradient(90deg, rgb(148, 0, 211), rgb(0, 255, 127)); background-clip: text; color: white; -webkit-text-fill-color: transparent; cursor: pointer; text-decoration: underline;" data-username="막걸리">막걸리</span><span> : </span><span style="word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap;">우리길드에도있드라</span>
+          </div>
+        </div>
+        <span class="MuiTypography-root MuiTypography-caption css-gebecf">14:33</span>
+      </div>
+    </li>
+    <li class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-1p0h4yl" id="message-2025-08-25T05:40:58.126Z">
+      <div class="MuiBox-root css-q149wm">
+        <div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-b7v6uu" style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);">
+          <div class="MuiTypography-root MuiTypography-body2 css-1hfuy9o">
+            <span class="username-clickable" style="font-weight: 600; font-size: 13px; background-image: linear-gradient(90deg, rgb(255, 215, 0), rgb(255, 165, 0)); background-clip: text; color: white; -webkit-text-fill-color: transparent; filter: drop-shadow(rgba(255, 215, 0, 0.25) 0px 0px 3px) drop-shadow(rgba(255, 215, 0, 0.19) 0px 0px 6px); text-shadow: rgba(255, 215, 0, 0.314) 0px 0px 4px, rgba(255, 215, 0, 0.145) 0px 0px 8px; cursor: pointer; text-decoration: underline;" data-username="도히님">도히님</span><span> : </span><span style="word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap;">[제국 길드원 모집중] 육성법 아이템시세 장비셋팅 새벽질문답변 다해드림 몸만오세요</span>
+          </div>
+        </div>
+        <span class="MuiTypography-root MuiTypography-caption css-gebecf">14:40</span>
+      </div>
+    </li>
+    <li class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-1p0h4yl" id="message-2025-08-25T05:52:09.938Z">
+      <div class="MuiBox-root css-q149wm">
+        <div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-96prgn" style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);">
+          <div class="MuiTypography-root MuiTypography-body2 css-1hfuy9o">
+            <span class="username-clickable" style="font-weight: 600; font-size: 13px; color: rgb(255, 0, 255); cursor: pointer; text-decoration: underline;" data-username="유화">유화</span><span> : </span><span style="word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap;">몸만 요구하는 길드...!</span>
+          </div>
+        </div>
+        <span class="MuiTypography-root MuiTypography-caption css-gebecf">14:52</span>
+      </div>
+    </li>
+  </ul>
+  <div class="MuiBox-root css-1nan9tx">
+    <div class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1xe6hj6">
+      <div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-sizeSmall css-mevk92">
+        <input aria-invalid="false" id="«r4f»" placeholder="메시지를 입력하세요..." class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall css-1r71pim" type="text" value="">
+        <fieldset aria-hidden="true" class="MuiOutlinedInput-notchedOutline css-5v2ak0">
+          <legend class="css-w4cd9x"><span class="notranslate" aria-hidden="true">​</span></legend>
+        </fieldset>
+      </div>
+    </div>
+    <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1vwj13r" tabindex="0" type="button">
+      <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-vh810p" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"></path>
+      </svg>
+    </button>
+  </div>
+  <div class="MuiBox-root css-qh4oyi">
+    <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-hc2dwx" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"></path>
+    </svg>
+    <span class="MuiTypography-root MuiTypography-caption css-1gfxar9">닫기</span>
+  </div>
+</div>
