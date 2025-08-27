@@ -309,10 +309,14 @@ class WarLogCollector {
       const existingLogs = this.loadAllWarLogs();
       const allLogs = [...existingLogs, ...newLogs];
       
-      // 최신 로그가 위에 오도록 정렬
-      allLogs.sort((a, b) => new Date(b.collectedAt) - new Date(a.collectedAt));
+      // 실제 전투 발생 시각(timestamp) 기준으로 최신 로그가 위에 오도록 정렬
+      allLogs.sort((a, b) => {
+        const timeA = this.parseWarLogTime(a.timestamp);
+        const timeB = this.parseWarLogTime(b.timestamp);
+        return timeB.getTime() - timeA.getTime();
+      });
       
-      // 최대 1000개까지만 저장
+      // 최대 1000개까지만 저장 (가장 오래된 전투 로그부터 삭제)
       const limitedLogs = allLogs.slice(0, 1000);
       
       localStorage.setItem(this.storageKey, JSON.stringify(limitedLogs));
@@ -343,7 +347,7 @@ class WarLogCollector {
   loadWarLogsByDateRange(startDate, endDate) {
     const allLogs = this.loadAllWarLogs();
     return allLogs.filter(log => {
-      const logDate = new Date(log.collectedAt);
+      const logDate = this.parseWarLogTime(log.timestamp);
       return logDate >= startDate && logDate <= endDate;
     });
   }

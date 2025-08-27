@@ -40,6 +40,7 @@ export const EQUIPMENT_RECOMMEND_SCRIPT_URL = 'https://script.google.com/macros/
 // lanis.me 하위 URL 경로
 export const LANIS_ME_PATHS = {
   USERS: '/users',
+  GUILDS: '/guild',
   BOARD_VIEW: '/board/view',
   FISHING: '/fishing'
 };

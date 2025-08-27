@@ -6,7 +6,7 @@ import { FishingCalculatorModal } from './modal/calculator/fishing-calculator-mo
 import { EquipmentSettingSimModal } from './modal/calculator/equipment-setting-sim-modal.js';
 import { EquipmentEnchantSimModal } from './modal/calculator/equipment-enchant-sim-modal.js';
 import ItemGuideModal from './modal/item-guide/item-guide-modal.js';
-import UserSearchModal from './modal/settings/user-search-modal.js';
+import UserSearchModal from './modal/item-guide/user-search-modal.js';
 import ProgramInfoModal from './modal/settings/program-info-modal.js';
 import AbilityInfoModal from './modal/settings/ability-info-modal.js';
 import EnchantInfoModal from './modal/settings/enchant-info-modal.js';
