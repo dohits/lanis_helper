@@ -142,7 +142,7 @@ export class JobSelector {
       this.jobAbilitySelector.setSelectedJob(selectedJob);
     }
 
-    console.log(`선택된 직업: ${selectedJob.name}`);
+    
   }
 
   // 정보 박스 업데이트

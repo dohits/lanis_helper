@@ -39,7 +39,8 @@
             "id": "expectedValue",
             "icon": "📊",
             "text": "기댓값 계산기",
-            "title": "기댓값 계산기"
+            "title": "기댓값 계산기",
+            "btnType": "purpleGradient"
           },
           {
             "id": "fishingCalculator",
@@ -57,7 +58,8 @@
             "id": "equipmentEnchantSim",
             "icon": "🔮",
             "text": "장비 감정 시뮬",
-            "title": "장비 감정 시뮬레이션"
+            "title": "장비 감정 시뮬레이션",
+            "btnType": "purpleGradient"
           }
         ]
       }

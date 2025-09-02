@@ -18,7 +18,7 @@ class GuildInfoCollector {
    * 초기화 메서드
    */
   init() {
-    console.log('길드 정보 수집기 초기화 완료');
+
     this.setupObserver();
     this.setupEventListeners();
   }
@@ -75,7 +75,7 @@ class GuildInfoCollector {
       });
 
       if (shouldCollect && this.isGuildPage()) {
-        console.log('DOM 변경 감지됨 - 길드 정보 수집 시작');
+  
         this.collectNewGuildInfo();
       }
     });
@@ -98,7 +98,7 @@ class GuildInfoCollector {
       if (window.location.href !== currentUrl) {
         currentUrl = window.location.href;
         if (this.isGuildPage()) {
-          console.log('URL 변경 감지됨 - 길드 페이지:', currentUrl);
+    
           setTimeout(() => {
             this.collectNewGuildInfo();
           }, 2000); // 2초 후 수집 (DOM 로딩 대기)
@@ -124,24 +124,23 @@ class GuildInfoCollector {
       const guildName = this.getCurrentGuildName();
       
       if (!guildName) {
-        console.log('길드 이름을 추출할 수 없습니다.');
         return;
       }
 
       // 기존 데이터 확인
       const existingInfo = this.loadGuildInfo(guildName);
       if (existingInfo && existingInfo.url === currentUrl) {
-        console.log('이미 수집된 길드 정보입니다:', guildName);
+
         return;
       }
 
-      console.log('새로운 길드 정보 수집 시작:', guildName);
+
       const guildInfo = this.collectGuildInfo();
       
       if (guildInfo) {
         this.saveGuildInfo(guildInfo);
         this.lastCollectedUrl = currentUrl;
-        console.log('길드 정보 수집 완료:', guildName);
+
       }
     } catch (error) {
       console.error('새로운 길드 정보 수집 중 오류:', error);
@@ -246,13 +245,12 @@ class GuildInfoCollector {
 
     const guildName = this.getCurrentGuildName();
     if (!guildName) {
-      console.log('길드 이름을 추출할 수 없습니다.');
       return null;
     }
 
     const basicInfo = this.collectGuildBasicInfo();
     if (!basicInfo) {
-      console.log('길드 기본 정보를 수집할 수 없습니다.');
+
       return null;
     }
 
@@ -284,7 +282,7 @@ class GuildInfoCollector {
       // 브라우저 저장소에 저장
       localStorage.setItem(this.storageKey, JSON.stringify(storageData));
       
-      console.log(`길드 정보 저장 완료: ${guildName}`);
+
       return true;
     } catch (error) {
       console.error('길드 정보 저장 실패:', error);
@@ -321,7 +319,7 @@ class GuildInfoCollector {
       const storageData = this.loadAllGuildInfo();
       delete storageData[guildName];
       localStorage.setItem(this.storageKey, JSON.stringify(storageData));
-      console.log(`길드 정보 삭제 완료: ${guildName}`);
+
       return true;
     } catch (error) {
       console.error('길드 정보 삭제 실패:', error);
@@ -335,7 +333,7 @@ class GuildInfoCollector {
   clearAllGuildInfo() {
     try {
       localStorage.removeItem(this.storageKey);
-      console.log('모든 길드 정보 삭제 완료');
+
       return true;
     } catch (error) {
       console.error('길드 정보 전체 삭제 실패:', error);
@@ -347,15 +345,11 @@ class GuildInfoCollector {
    * 현재 페이지에서 길드 정보 수집 및 저장
    */
   collectAndSave() {
-    console.log('길드 정보 수집 및 저장 시작');
     const guildInfo = this.collectGuildInfo();
     if (guildInfo) {
-      console.log('수집된 길드 정보:', guildInfo);
       const result = this.saveGuildInfo(guildInfo);
-      console.log('길드 정보 저장 결과:', result);
       return result;
     } else {
-      console.warn('길드 정보 수집 실패');
       return false;
     }
   }
@@ -364,16 +358,11 @@ class GuildInfoCollector {
    * 페이지 로드 시 자동 수집
    */
   autoCollect() {
-    console.log('길드 정보 자동 수집 시작');
     if (this.isGuildPage()) {
-      console.log('길드 페이지 감지됨');
       // 페이지 로드 완료 후 수집
       setTimeout(() => {
-        console.log('길드 정보 수집 실행');
         this.collectNewGuildInfo();
       }, 2000); // 2초 후 수집 (DOM 로딩 대기)
-    } else {
-      console.log('현재 페이지가 길드 페이지가 아닙니다:', window.location.href);
     }
   }
 

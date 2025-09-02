@@ -104,7 +104,7 @@ class UsernameClickHandler {
         // 채널이 변경되면 색상 캐시 초기화
         this.usernameColorMap.clear();
         this.currentChannel = newChannel;
-        console.log(`채널 변경 감지: ${this.currentChannel} → ${newChannel}`);
+
       }
       
       // 기존 클릭 가능한 요소들 모두 제거 (깨끗한 상태로 시작)

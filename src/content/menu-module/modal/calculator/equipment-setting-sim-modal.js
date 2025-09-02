@@ -824,7 +824,7 @@ export class EquipmentSettingSimModal extends BaseModal {
         
         // 성공 메시지 표시
         this.showNotification('✅ 셋팅이 성공적으로 저장되었습니다!', 'success');
-        console.log('셋팅 저장 성공:', saveResult.data);
+
       } else {
         // 실패 메시지 표시
         this.showNotification(`❌ 저장 실패: ${saveResult.error}`, 'error');

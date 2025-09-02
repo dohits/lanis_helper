@@ -45,9 +45,10 @@ class AttackDefenseCalculator {
    */
 
   // 날짜 추출: "2025. 8. 6. 오후 9:59:59" → "2025-08-06" 형태로 변환
-  extractDateFromTimestamp(timestamp, collectedAt) {
+  extractDateFromTimestamp(timestamp) {
     try {
       if (typeof timestamp === 'string') {
+        // 한국 시간 형식: "2025. 8. 6. 오후 9:59:59"
         const match = timestamp.match(/(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})/);
         if (match) {
           const year = match[1];
@@ -55,19 +56,21 @@ class AttackDefenseCalculator {
           const day = match[3].padStart(2, '0');
           return `${year}-${month}-${day}`;
         }
+        
+        // ISO 형식: "2025-08-06T15:30:00.000Z"
+        if (timestamp.includes('-') && timestamp.includes('T')) {
+          return timestamp.split('T')[0];
+        }
       }
+      
       // fallback: 일반 Date 파싱 시도
       const d = new Date(timestamp);
       if (!isNaN(d.getTime())) {
         return d.toISOString().split('T')[0];
       }
-      // 최종 fallback: 수집 시각으로 대체
-      if (collectedAt) {
-        const c = new Date(collectedAt);
-        if (!isNaN(c.getTime())) return c.toISOString().split('T')[0];
-      }
+      
       return null;
-    } catch (_) {
+    } catch (error) {
       return null;
     }
   }
@@ -105,8 +108,7 @@ class AttackDefenseCalculator {
         isAttack,
         isFortress,
         isConquest,
-        timestamp: log.timestamp,
-        collectedAt: log.collectedAt
+        timestamp: log.timestamp
       };
     }
 
@@ -140,8 +142,7 @@ class AttackDefenseCalculator {
         isVictory,
         isFortress,
         isConquest,
-        timestamp: log.timestamp,
-        collectedAt: log.collectedAt
+        timestamp: log.timestamp
       };
     }
 
@@ -166,8 +167,7 @@ class AttackDefenseCalculator {
         isVictory,
         isFortress,
         isConquest,
-        timestamp: log.timestamp,
-        collectedAt: log.collectedAt
+        timestamp: log.timestamp
       };
     }
 
@@ -205,8 +205,7 @@ class AttackDefenseCalculator {
         isVictory,
         isFortress,
         isConquest,
-        timestamp: log.timestamp,
-        collectedAt: log.collectedAt
+        timestamp: log.timestamp
       };
     } catch (_) {
       return null;
@@ -218,12 +217,14 @@ class AttackDefenseCalculator {
    */
   calculateDailyUsage(date, warLogs, guildMembers) {
     try {
-      if (!Array.isArray(warLogs) || !Array.isArray(guildMembers)) return { attackUsage: {}, defenseUsage: {} };
+      if (!Array.isArray(warLogs) || !Array.isArray(guildMembers)) {
+        return { attackUsage: {}, defenseUsage: {} };
+      }
 
       const attackUsage = {};
       const defenseUsage = {};
 
-      const dailyLogs = warLogs.filter(log => this.extractDateFromTimestamp(log.timestamp, log.collectedAt) === date);
+      const dailyLogs = warLogs.filter(log => this.extractDateFromTimestamp(log.timestamp) === date);
 
       dailyLogs.forEach(raw => {
         const log = this.normalizeLog(raw);
@@ -247,7 +248,7 @@ class AttackDefenseCalculator {
       });
 
       return { attackUsage, defenseUsage };
-    } catch (_) {
+    } catch (error) {
       return { attackUsage: {}, defenseUsage: {} };
     }
   }

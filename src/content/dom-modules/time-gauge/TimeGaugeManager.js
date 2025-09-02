@@ -15,7 +15,7 @@ class TimeGaugeManager {
   async init() {
     // lanis.me 도메인에서만 작동
     if (!window.location.hostname.includes(DOMAINS.LANIS_ME)) {
-      console.log('lanis.me 도메인이 아니므로 시간 게이지바를 초기화하지 않습니다.');
+
       return;
     }
 
@@ -33,7 +33,7 @@ class TimeGaugeManager {
       this.startUpdateTimer();
       this.startFishingButtonObserver();
       this.isInitialized = true;
-      console.log('시간 게이지바 초기화 완료');
+  
     } catch (error) {
       console.error('시간 게이지바 초기화 중 오류:', error);
     }
@@ -317,7 +317,7 @@ class TimeGaugeManager {
         button.addEventListener('click', () => {
           this.onFishingCollect();
         });
-        console.log('기존 통발 수거하기 버튼 감지 및 리스너 추가');
+  
       }
     });
   }
@@ -340,7 +340,7 @@ class TimeGaugeManager {
 
         // 1분 이상 차이가 나면 새로운 시간으로 업데이트
         if (timeDiffMinutes > 1) {
-          console.log(`통발 설치 시간 불일치 감지: 저장된 시간과 ${timeDiffMinutes.toFixed(1)}분 차이`);
+  
           this.fishingStartTime = calculatedStartTime.toISOString();
           this.saveFishingStartTime();
           this.updateTimeGauge();
@@ -364,7 +364,7 @@ class TimeGaugeManager {
       // 스토리지에 저장
       await this.saveFishingStartTime();
       
-      console.log('통발 낚시 시작 시간 기록:', this.fishingStartTime);
+      
       
       // 게이지바 즉시 업데이트
       this.updateTimeGauge();
@@ -375,7 +375,7 @@ class TimeGaugeManager {
 
   async onFishingCollect() {
     try {
-      console.log('통발 수거 완료 - 타이머 초기화');
+      
       
       // 통발 설치 시간 초기화
       await this.resetFishingTime();
@@ -407,7 +407,7 @@ class TimeGaugeManager {
 
       if (result.fishingStartTime) {
         this.fishingStartTime = result.fishingStartTime;
-        console.log('통발 낚시 시작 시간 로드:', this.fishingStartTime);
+
       }
     } catch (error) {
       console.error('통발 설치 시작 시간 로드 중 오류:', error);
@@ -427,7 +427,7 @@ class TimeGaugeManager {
         });
       });
 
-      console.log('통발 낚시 시작 시간 저장 완료');
+      
     } catch (error) {
       console.error('통발 설치 시작 시간 저장 중 오류:', error);
     }
@@ -446,7 +446,7 @@ class TimeGaugeManager {
         });
       }
       
-      console.log('통발 낚시 시간 초기화 완료');
+      
     } catch (error) {
       console.error('통발 설치 시간 초기화 중 오류:', error);
     }

@@ -46,7 +46,7 @@ export class AbilitySelector extends BaseAbilitySelector {
           return !isItemOnly;
         });
 
-        console.log(`로드된 어빌리티: ${this.data.length}개`);
+  
       } else {
         console.error('어빌리티 데이터 로드 실패:', result?.error);
       }

@@ -704,7 +704,7 @@ class GuildInfoTab {
       
       // 해당 유저와 관련된 오늘 로그 필터링
       const userLogs = processedWarLogs.filter(log => {
-        const logDate = this.calculator.extractDateFromTimestamp(log.timestamp, log.collectedAt);
+        const logDate = this.calculator.extractDateFromTimestamp(log.timestamp);
         if (logDate !== today) return false;
         
         // 공격자 또는 수비자로 참여한 로그

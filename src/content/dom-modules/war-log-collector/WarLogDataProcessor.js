@@ -53,7 +53,7 @@ class WarLogDataProcessor {
     }
 
     const guildInfo = this.loadGuildInfo();
-    console.log('로드된 길드 정보:', guildInfo);
+
 
     const processedLogs = warLogs.map(log => {
       // 플레이어 길드 찾기
@@ -72,7 +72,7 @@ class WarLogDataProcessor {
       };
     });
 
-    console.log('처리된 전쟁로그 데이터:', processedLogs);
+
     return processedLogs;
   }
 
@@ -339,7 +339,7 @@ class WarLogDataProcessor {
    * 전체 분석 실행
    */
   analyzeWarLogs(warLogs) {
-    console.log('전쟁로그 분석 시작');
+
     
     const processedLogs = this.processWarLogData(warLogs);
     
@@ -351,7 +351,7 @@ class WarLogDataProcessor {
       timeStats: this.analyzeWarLogByTime(processedLogs)
     };
 
-    console.log('전쟁로그 분석 완료:', analysis);
+
     return analysis;
   }
 }

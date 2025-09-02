@@ -136,7 +136,7 @@ export class ElementSelector {
       this.onElementSelect(selectedElement);
     }
 
-    console.log(`선택된 속성: ${selectedElement.name}`);
+    
   }
 
   // 정보 박스 업데이트

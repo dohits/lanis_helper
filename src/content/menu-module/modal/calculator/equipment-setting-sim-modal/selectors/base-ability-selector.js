@@ -219,7 +219,7 @@ export class BaseAbilitySelector {
       this.onAbilitySelect([ability]);
     }
 
-    console.log(`선택된 어빌리티: ${ability['어빌리티명']}`);
+    
 
     // 모달 닫기
     this.closeModal(modal);

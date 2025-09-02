@@ -55,7 +55,7 @@ export class EquipmentSettingLoadAPI extends GoogleSheetAPI {
     try {
       // 디버깅: 실제 헤더 출력
       if (rowIndex === 1) {
-        console.log('[EquipmentSettingLoadAPI] 실제 헤더:', headers);
+    
       }
 
       // 빈 행 체크 (모든 셀이 비어있는 경우)
@@ -94,7 +94,7 @@ export class EquipmentSettingLoadAPI extends GoogleSheetAPI {
 
       // 디버깅: 헤더 인덱스 출력
       if (rowIndex === 1) {
-        console.log('[EquipmentSettingLoadAPI] 헤더 인덱스:', headerIndices);
+    
       }
 
       // 필수 필드 검증 (닉네임이나 장비 세트 이름 중 하나라도 있으면 OK)

@@ -61,7 +61,7 @@ export class EquipmentEnchantSimModal extends BaseModal {
 
     // 탭 매니저에 콘텐츠 영역 설정 및 초기 등록
     this.tabManager.setContentArea(this.contentArea);
-    this.tabManager.registerTabHandler('tab1', () => this.showEnchantSimulationTab());
+    this.tabManager.registerTabHandler('tab1', () => this.showEquipmentDrawTab());
     this.tabManager.registerTabHandler('tab2', () => this.showEnchantRankingTab());
 
     // 초기 탭 설정
@@ -80,7 +80,7 @@ export class EquipmentEnchantSimModal extends BaseModal {
 
     switch (tabId) {
       case 'tab1':
-        this.showEnchantSimulationTab();
+        this.showEquipmentDrawTab();
         break;
       case 'tab2':
         this.showEnchantRankingTab();
@@ -90,8 +90,8 @@ export class EquipmentEnchantSimModal extends BaseModal {
     }
   }
 
-  // 감정시뮬 탭 표시
-  showEnchantSimulationTab() {
+  // 장비뽑기 탭 표시
+  showEquipmentDrawTab() {
     this.tabContent.showEnchantSimulationTab(this.contentArea);
   }
 

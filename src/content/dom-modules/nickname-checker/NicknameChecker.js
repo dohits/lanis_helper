@@ -61,7 +61,7 @@ export class NicknameChecker {
         if (nickname && nickname.length > 0) {
           this.saveNickname(nickname);
           this.stopObserving();
-          console.log('[NicknameChecker] 닉네임 감지 및 저장 완료:', nickname);
+  
         }
       }
     } catch (error) {
@@ -77,7 +77,7 @@ export class NicknameChecker {
     // 헤더(header) 태그 내에서만 닉네임 찾기
     const header = document.querySelector('header');
     if (!header) {
-      console.log('[NicknameChecker] 헤더를 찾을 수 없습니다.');
+      
       return null;
     }
 
@@ -96,13 +96,13 @@ export class NicknameChecker {
         
         // 닉네임 패턴 확인 (한글 + 님, 영문 등)
         if (this.isValidNickname(text)) {
-          console.log('[NicknameChecker] 헤더에서 닉네임 발견:', text);
+
           return element;
         }
       }
     }
 
-    console.log('[NicknameChecker] 헤더에서 유효한 닉네임을 찾을 수 없습니다.');
+    
     return null;
   }
 
