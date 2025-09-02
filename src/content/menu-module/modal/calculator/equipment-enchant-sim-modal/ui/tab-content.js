@@ -1291,7 +1291,7 @@ class TabContent {
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
               <div>
               <p style="margin: 0; font-size: 16px; font-weight: 600; color: #ffffff;">${equipment.name}</p>
-                <div style="margin-top: 4px;">
+                <div style="margin-top: 4px; text-align: left;">
                 <span style="color: ${finalGradeColors[appraisedStats.final.grade]}; font-size: 14px; font-weight: 600; font-style: italic;">[${appraisedStats.final.grade}] (${appraisedStats.final.score}점)</span>
                 </div>
               </div>
