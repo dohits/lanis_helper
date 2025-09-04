@@ -21,7 +21,8 @@ class TabManager {
 
     const tabs = [
       { id: 'tab1', text: '장비뽑기', active: true },
-      { id: 'tab2', text: '감정순위', active: false }
+      { id: 'tab2', text: '감정순위', active: false },
+      { id: 'tab3', text: '점수표', active: false }
     ];
 
     tabs.forEach(tab => {
@@ -59,7 +60,7 @@ class TabManager {
   }
 
   switchTab(tabId) {
-    const buttons = document.querySelectorAll('#tab1, #tab2');
+    const buttons = document.querySelectorAll('#tab1, #tab2, #tab3');
     buttons.forEach(btn => {
       btn.style.background = 'white';
       btn.style.color = '#007bff';

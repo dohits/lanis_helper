@@ -54,20 +54,9 @@ class RangeInfoAdder {
           
           const percentSpan = this.createElement('span', 'power-percent-info', 
             ` (${percentage.toFixed(1)}%)`, {
-              style: `color: ${ITEM_COLORS.common.percent}; font-size: 0.9em; font-weight: normal; font-style: italic;`
+              style: `color: ${color}; font-size: 0.9em; font-weight: normal; font-style: italic;`
             }
           );
-          
-          // 점수 표기 (등급과 같은 색상)
-          let scoreSpan = null;
-          if (!isNarrow) {
-            scoreSpan = this.createElement('span', 'power-score-info', 
-              ` (${score}점)`, {
-                style: `color: ${color}; font-size: 0.9em; font-weight: bold;`,
-                'data-grade': grade
-              }
-            );
-          }
           
           // (범위 좁음) 안내
           let narrowSpan = null;
@@ -85,7 +74,6 @@ class RangeInfoAdder {
           let detailRow = document.createElement('div');
           detailRow.className = 'stat-detail-row';
           detailRow.appendChild(percentSpan);
-          if (scoreSpan) detailRow.appendChild(scoreSpan);
           if (narrowSpan) detailRow.appendChild(narrowSpan);
           valueElement.appendChild(detailRow);
           valueElement.classList.add('power-range-processed');
@@ -119,20 +107,9 @@ class RangeInfoAdder {
           
           const percentSpan = this.createElement('span', 'weight-percent-info', 
             ` (${percentage.toFixed(1)}%)`, {
-              style: `color: ${ITEM_COLORS.common.percent}; font-size: 0.9em; font-weight: normal; font-style: italic;`
+              style: `color: ${color}; font-size: 0.9em; font-weight: normal; font-style: italic;`
             }
           );
-          
-          // 점수 표기 (등급과 같은 색상)
-          let scoreSpan = null;
-          if (!isNarrow) {
-            scoreSpan = this.createElement('span', 'weight-score-info', 
-              ` (${score}점)`, {
-                style: `color: ${color}; font-size: 0.9em; font-weight: bold;`,
-                'data-grade': grade
-              }
-            );
-          }
           
           // (범위 좁음) 안내
           let narrowSpan = null;
@@ -150,7 +127,6 @@ class RangeInfoAdder {
           let detailRow = document.createElement('div');
           detailRow.className = 'stat-detail-row';
           detailRow.appendChild(percentSpan);
-          if (scoreSpan) detailRow.appendChild(scoreSpan);
           if (narrowSpan) detailRow.appendChild(narrowSpan);
           valueElement.appendChild(detailRow);
           valueElement.classList.add('weight-range-processed');
@@ -207,8 +183,12 @@ class RangeInfoAdder {
     const powerNarrow = Math.abs(powerMax - powerMin) <= 9;
     const weightNarrow = Math.abs(weightMax - weightMin) <= 9;
     
-    // addFinalTag는 항상 실행
-    this.finalTagAdder.addFinalTag(container, powerGradeVal, weightGradeVal, powerScore, weightScore, powerNarrow, weightNarrow);
+    // addFinalTag는 항상 실행 (새로운 파라미터 추가)
+    const currentPower = statPower ? parseInt(this.gradeCalculator.getFirstNumberText(statPower)) : null;
+    const currentWeight = statWeight ? parseInt(this.gradeCalculator.getFirstNumberText(statWeight)) : null;
+    
+    this.finalTagAdder.addFinalTag(container, powerGradeVal, weightGradeVal, powerScore, weightScore, powerNarrow, weightNarrow, 
+                                   powerMin, powerMax, weightMin, weightMax, currentPower, currentWeight);
   }
 
   // DOM 요소 생성 유틸리티

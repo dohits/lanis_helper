@@ -18,8 +18,45 @@ class FinalTagAdder {
     };
   }
 
-  // 종결/준종결/완전무결 태그 추가 함수 (점수 기반, 범위좁음 예외, 무결 등급 체크, 점수 항상 표기)
-  addFinalTag(container, powerGrade, weightGrade, powerScore, weightScore, powerNarrow, weightNarrow) {
+  // 장비 타입 감지 함수
+  detectEquipmentType(container) {
+    const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv');
+    if (!itemNameElement) return 'unknown';
+    
+    const itemName = itemNameElement.textContent.trim().toLowerCase();
+    
+    // 무기 키워드들
+    const weaponKeywords = [
+      '창', '도끼', '검', '나이프', '지팡이', '너클', '활'
+    ];
+    
+    // 방어구 키워드
+    const armorKeyword = '방어구';
+    
+    // 장신구 키워드
+    const accessoryKeyword = '장신구';
+    
+    // 장신구 체크
+    if (itemName.includes(accessoryKeyword)) {
+      return 'accessory';
+    }
+    
+    // 방어구 체크
+    if (itemName.includes(armorKeyword)) {
+      return 'armor';
+    }
+    
+    // 무기 체크
+    if (weaponKeywords.some(keyword => itemName.includes(keyword))) {
+      return 'weapon';
+    }
+    
+    // 기본값은 무기/방어구로 처리
+    return 'weapon_armor';
+  }
+
+  // 종결/준종결/완전무결 태그 추가 함수 (새로운 계산 방식: 최소값 = 최소위력-최대무게*2, 최대값 = 최대위력-최소무게*2)
+  addFinalTag(container, powerGrade, weightGrade, powerScore, weightScore, powerNarrow, weightNarrow, powerMin, powerMax, weightMin, weightMax, currentPower, currentWeight) {
     const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2');
     if (!itemNameElement) {
       return;
@@ -32,6 +69,9 @@ class FinalTagAdder {
     let tagText = '';
     let tagColor = '';
     let tagScore;
+    let tagPercentage;
+    let tagMinValue;
+    let tagMaxValue;
     
     // '누락' 등급이 하나라도 있으면 (누락)만 표기, 태그/점수/합산 없음
     if (powerGrade === '누락' || weightGrade === '누락') {
@@ -39,56 +79,138 @@ class FinalTagAdder {
       tagColor = this.gradeColors['누락'];
       tagScore = '누락';
     } else {
-      // 점수 계산 (score가 null이면 0으로 대체)
-      const safePowerScore = powerScore == null ? 0 : powerScore;
-      const safeWeightScore = weightScore == null ? 0 : weightScore;
-      
-      if (powerNarrow && weightNarrow) {
-        tagScore = Math.max(safePowerScore, safeWeightScore);
-      } else if (powerNarrow) {
-        tagScore = safeWeightScore;
-      } else if (weightNarrow) {
-        tagScore = safePowerScore;
+      // 장비 타입에 따른 계산 방식
+      if (powerMin !== null && powerMax !== null && weightMin !== null && weightMax !== null && 
+          currentPower !== null && currentWeight !== null) {
+        
+        const equipmentType = this.detectEquipmentType(container);
+        let currentTagValue;
+        
+        if (equipmentType === 'accessory') {
+          // 장신구: 위력*5.5 - 무게*2
+          tagMinValue = powerMin * 5.5 - weightMax * 2;
+          tagMaxValue = powerMax * 5.5 - weightMin * 2;
+          currentTagValue = currentPower * 5.5 - currentWeight * 2;
+        } else {
+          // 무기/방어구: 위력 - 무게*2
+          tagMinValue = powerMin - weightMax * 2;
+          tagMaxValue = powerMax - weightMin * 2;
+          currentTagValue = currentPower - currentWeight * 2;
+        }
+        
+        // 퍼센트 계산
+        if (tagMinValue === tagMaxValue) {
+          tagPercentage = 100.0;
+        } else {
+          tagPercentage = ((currentTagValue - tagMinValue) / (tagMaxValue - tagMinValue)) * 100;
+          tagPercentage = Math.max(0, Math.min(100, Math.round((tagPercentage + Number.EPSILON) * 10) / 10));
+        }
+        
+        // 태그 점수는 실제 위력 - 실제 무게 × 2
+        tagScore = currentTagValue;
+        
+        // 새로운 등급 기준: 90% 이상 준종결, 95% 이상 종결, 100% 완전무결
+        if (tagPercentage >= 100) {
+          tagText = '[완전무결]';
+          tagColor = this.gradeColors['무결'];
+        } else if (tagPercentage >= 95) {
+          tagText = '[종결]';
+          tagColor = this.gradeColors['최상'];
+        } else if (tagPercentage >= 90) {
+          tagText = '[준종결]';
+          tagColor = this.gradeColors['상'];
+        }
       } else {
-        tagScore = safePowerScore + safeWeightScore;
-      }
-      
-      // 태그 조건
-      if (!powerNarrow && !weightNarrow) {
-        if (tagScore === 16) {
-          tagText = '[완전무결]'; tagColor = this.gradeColors['무결'];
-        } else if (tagScore >= 12 && tagScore <= 15) {
-          tagText = '[종결]'; tagColor = this.gradeColors['최상'];
-        } else if (tagScore === 11) {
-          tagText = '[준종결]'; tagColor = this.gradeColors['상'];
-        }
-      } else if (powerNarrow && !weightNarrow) {
-        if (tagScore === 8 && weightGrade === '무결') {
-          tagText = '[완전무결]'; tagColor = this.gradeColors['무결'];
-        } else if (tagScore >= 6 && tagScore <= 7) {
-          tagText = '[종결]'; tagColor = this.gradeColors['최상'];
-        } else if (tagScore === 5) {
-          tagText = '[준종결]'; tagColor = this.gradeColors['상'];
-        }
-      } else if (!powerNarrow && weightNarrow) {
-        if (tagScore === 8 && powerGrade === '무결') {
-          tagText = '[완전무결]'; tagColor = this.gradeColors['무결'];
-        } else if (tagScore >= 6 && tagScore <= 7) {
-          tagText = '[종결]'; tagColor = this.gradeColors['최상'];
-        } else if (tagScore === 5) {
-          tagText = '[준종결]'; tagColor = this.gradeColors['상'];
+        // 기존 방식으로 폴백 (데이터가 부족한 경우)
+        // 하지만 currentPower와 currentWeight가 있으면 새로운 방식으로 계산
+        if (currentPower !== null && currentWeight !== null) {
+          const equipmentType = this.detectEquipmentType(container);
+          
+          if (equipmentType === 'accessory') {
+            // 장신구: 위력*5.5 - 무게*2
+            tagScore = currentPower * 5.5 - currentWeight * 2;
+          } else {
+            // 무기/방어구: 위력 - 무게*2
+            tagScore = currentPower - currentWeight * 2;
+          }
+          // 폴백 시에는 태그를 표시하지 않고 점수만 표시
+        } else {
+          const safePowerScore = powerScore == null ? 0 : powerScore;
+          const safeWeightScore = weightScore == null ? 0 : weightScore;
+          
+          if (powerNarrow && weightNarrow) {
+            tagScore = Math.max(safePowerScore, safeWeightScore);
+          } else if (powerNarrow) {
+            tagScore = safeWeightScore;
+          } else if (weightNarrow) {
+            tagScore = safePowerScore;
+          } else {
+            tagScore = safePowerScore + safeWeightScore;
+          }
+          
+          // 기존 태그 조건 (폴백용)
+          if (!powerNarrow && !weightNarrow) {
+            if (tagScore === 16) {
+              tagText = '[완전무결]'; tagColor = this.gradeColors['무결'];
+            } else if (tagScore >= 12 && tagScore <= 15) {
+              tagText = '[종결]'; tagColor = this.gradeColors['최상'];
+            } else if (tagScore === 11) {
+              tagText = '[준종결]'; tagColor = this.gradeColors['상'];
+            }
+          } else if (powerNarrow && !weightNarrow) {
+            if (tagScore === 8 && weightGrade === '무결') {
+              tagText = '[완전무결]'; tagColor = this.gradeColors['무결'];
+            } else if (tagScore >= 6 && tagScore <= 7) {
+              tagText = '[종결]'; tagColor = this.gradeColors['최상'];
+            } else if (tagScore === 5) {
+              tagText = '[준종결]'; tagColor = this.gradeColors['상'];
+            }
+          } else if (!powerNarrow && weightNarrow) {
+            if (tagScore === 8 && powerGrade === '무결') {
+              tagText = '[완전무결]'; tagColor = this.gradeColors['무결'];
+            } else if (tagScore >= 6 && tagScore <= 7) {
+              tagText = '[종결]'; tagColor = this.gradeColors['최상'];
+            } else if (tagScore === 5) {
+              tagText = '[준종결]'; tagColor = this.gradeColors['상'];
+            }
+          }
         }
       }
     }
     
-    // 태그/점수 표기 (태그가 없더라도 점수는 항상 표기, 단 누락은 (누락)만)
+    // 새로운 표시 형식: "[태그] 점수 (최소값~최대값) (퍼센트)" - 태그에만 색상 적용
     const tagSpan = document.createElement('span');
     if (tagScore === '누락') {
       tagSpan.textContent = ' (누락)';
       tagSpan.style.color = tagColor;
     } else {
-      tagSpan.textContent = tagText ? ` ${tagText} (${tagScore}점)` : ` (${tagScore}점)`;
-      tagSpan.style.color = tagText ? tagColor : ITEM_COLORS.common.finalScore;
+      // 태그 부분만 색상 적용하고 나머지는 기본 색상
+      if (tagText) {
+        const tagPart = document.createElement('span');
+        tagPart.textContent = ` ${tagText}`;
+        tagPart.style.color = tagColor;
+        tagSpan.appendChild(tagPart);
+      }
+      
+      // 점수와 범위는 기본 색상
+      const defaultPart = document.createElement('span');
+      let defaultText = ` ${tagScore}`;
+      
+      if (tagMinValue !== null && tagMaxValue !== null) {
+        defaultText += ` (${tagMinValue}~${tagMaxValue})`;
+      }
+      
+      defaultPart.textContent = defaultText;
+      defaultPart.style.color = ITEM_COLORS.common.finalScore;
+      tagSpan.appendChild(defaultPart);
+      
+      // 퍼센트는 태그와 같은 색상
+      if (tagPercentage !== null) {
+        const percentPart = document.createElement('span');
+        percentPart.textContent = ` (${tagPercentage.toFixed(1)}%)`;
+        percentPart.style.color = tagColor;
+        tagSpan.appendChild(percentPart);
+      }
     }
     tagSpan.style.fontSize = '0.8rem';
     tagSpan.style.fontWeight = 'bold';

@@ -56,6 +56,7 @@ export class EquipmentEnchantSimModal extends BaseModal {
       flex: 1;
       min-height: 300px;
       overflow-y: auto;
+      align-content: center;
     `;
     container.appendChild(this.contentArea);
 
@@ -63,6 +64,7 @@ export class EquipmentEnchantSimModal extends BaseModal {
     this.tabManager.setContentArea(this.contentArea);
     this.tabManager.registerTabHandler('tab1', () => this.showEquipmentDrawTab());
     this.tabManager.registerTabHandler('tab2', () => this.showEnchantRankingTab());
+    this.tabManager.registerTabHandler('tab3', () => this.showScoreTableTab());
 
     // 초기 탭 설정
     this.currentTab = 'tab1';
@@ -85,6 +87,9 @@ export class EquipmentEnchantSimModal extends BaseModal {
       case 'tab2':
         this.showEnchantRankingTab();
         break;
+      case 'tab3':
+        this.showScoreTableTab();
+        break;
       default:
         this.showUnknownTab();
     }
@@ -98,6 +103,11 @@ export class EquipmentEnchantSimModal extends BaseModal {
   // 감정순위 탭 표시
   showEnchantRankingTab() {
     this.tabContent.showEnchantRankingTab(this.contentArea);
+  }
+
+  // 점수표 탭 표시
+  showScoreTableTab() {
+    this.tabContent.showScoreTableTab(this.contentArea);
   }
 
   // 알 수 없는 탭 표시

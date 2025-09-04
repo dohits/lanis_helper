@@ -13,6 +13,146 @@ class TabContent {
     this.enchantInfoRegistrationAPI = new EnchantInfoRegistrationAPI();
   }
 
+  // 장비 타입 감지 함수 (FinalTagAdder와 동일한 로직)
+  detectEquipmentType(itemName) {
+    if (!itemName) return 'unknown';
+    
+    const name = itemName.toLowerCase();
+    
+    // 무기 키워드들
+    const weaponKeywords = [
+      '창', '도끼', '검', '나이프', '지팡이', '너클', '활'
+    ];
+    
+    // 방어구 키워드
+    const armorKeyword = '방어구';
+    
+    // 장신구 키워드
+    const accessoryKeyword = '장신구';
+    
+    // 장신구 체크
+    if (name.includes(accessoryKeyword)) {
+      return 'accessory';
+    }
+    
+    // 방어구 체크
+    if (name.includes(armorKeyword)) {
+      return 'armor';
+    }
+    
+    // 무기 체크
+    if (weaponKeywords.some(keyword => name.includes(keyword))) {
+      return 'weapon';
+    }
+    
+    // 기본값은 무기/방어구로 처리
+    return 'weapon_armor';
+  }
+
+  // 최종 태그 포맷팅 함수 (DOM 모듈과 동일한 형식)
+  formatFinalTag(finalStats) {
+    if (!finalStats) return '';
+    
+    let displayText = '';
+    
+    // 태그가 있는 경우 (완전무결, 종결, 준종결)
+    if (finalStats.grade === '완전무결' || finalStats.grade === '종결' || finalStats.grade === '준종결') {
+      displayText += `[${finalStats.grade}]`;
+    }
+    
+    // 점수와 범위는 기본 색상
+    displayText += ` ${finalStats.score}`;
+    
+    if (finalStats.tagMinValue !== null && finalStats.tagMaxValue !== null) {
+      displayText += ` (${finalStats.tagMinValue}~${finalStats.tagMaxValue})`;
+    }
+    
+    // 퍼센트는 별도로 처리 (색상 적용을 위해)
+    if (finalStats.tagPercentage !== null) {
+      displayText += ` (${finalStats.tagPercentage.toFixed(1)}%)`;
+    }
+    
+    return displayText;
+  }
+
+  // 색상이 적용된 최종 태그 포맷팅 함수
+  formatFinalTagWithColor(finalStats, finalGradeColors) {
+    if (!finalStats) return '';
+    
+    const tagColor = finalGradeColors[finalStats.grade] || '#CCCCCC';
+    let html = '';
+    
+    // 태그가 있는 경우 (완전무결, 종결, 준종결)
+    if (finalStats.grade === '완전무결' || finalStats.grade === '종결' || finalStats.grade === '준종결') {
+      html += `<span style="color: ${tagColor}; font-size: 14px; font-weight: 600; font-style: italic;">[${finalStats.grade}]</span>`;
+    }
+    
+    // 점수와 범위는 기본 색상
+    let defaultText = ` ${finalStats.score}`;
+    if (finalStats.tagMinValue !== null && finalStats.tagMaxValue !== null) {
+      defaultText += ` (${finalStats.tagMinValue}~${finalStats.tagMaxValue})`;
+    }
+    html += `<span style="color: #CCCCCC; font-size: 14px; font-weight: 600; font-style: italic;">${defaultText}</span>`;
+    
+    // 퍼센트는 태그와 같은 색상
+    if (finalStats.tagPercentage !== null) {
+      html += `<span style="color: ${tagColor}; font-size: 14px; font-weight: 600; font-style: italic;"> (${finalStats.tagPercentage.toFixed(1)}%)</span>`;
+    }
+    
+    return html;
+  }
+
+  // 토글 버튼 상태 업데이트
+  updateToggleButton(button, isVisible) {
+    if (isVisible) {
+      button.style.background = '#3b82f6';
+      button.style.color = '#ffffff';
+      button.style.borderColor = '#3b82f6';
+    } else {
+      button.style.background = '#ffffff';
+      button.style.color = '#6b7280';
+      button.style.borderColor = '#d1d5db';
+    }
+  }
+
+  // 테이블 컬럼 가시성 업데이트
+  updateTableColumnVisibility() {
+    const tables = document.querySelectorAll('#score-table-content table');
+    tables.forEach(table => {
+      const headers = table.querySelectorAll('thead th');
+      const rows = table.querySelectorAll('tbody tr');
+      
+      headers.forEach((header, index) => {
+        const columnKey = this.getColumnKeyByIndex(index);
+        if (columnKey === 'name') {
+          // 장비명 컬럼은 항상 표시
+          header.style.display = '';
+        } else if (columnKey && this.columnVisibility[columnKey] !== undefined) {
+          header.style.display = this.columnVisibility[columnKey] ? '' : 'none';
+        }
+      });
+      
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        cells.forEach((cell, index) => {
+          const columnKey = this.getColumnKeyByIndex(index);
+          if (columnKey === 'name') {
+            // 장비명 컬럼은 항상 표시
+            cell.style.display = '';
+          } else if (columnKey && this.columnVisibility[columnKey] !== undefined) {
+            cell.style.display = this.columnVisibility[columnKey] ? '' : 'none';
+          }
+        });
+      });
+    });
+  }
+
+  // 인덱스로 컬럼 키 가져오기
+  getColumnKeyByIndex(index) {
+    const columnKeys = ['name', 'ability', 'powerRange', 'weightRange', 'score', 'attributes'];
+    return columnKeys[index];
+  }
+
   showEnchantSimulationTab(contentArea) {
     // 감정시뮬 탭 내용 - 장비 뽑기 기능
     const content = document.createElement('div');
@@ -66,178 +206,6 @@ class TabContent {
     content.appendChild(drawButton);
     contentArea.appendChild(content);
   }
-
-  // 랜덤 장비 뽑기 기능 (준비 중 - 주석처리)
-  /*
-  async drawRandomEquipment() {
-    // resultArea는 매개변수로 전달받음
-    if (!resultArea) return;
-
-    // 로딩 표시
-    resultArea.innerHTML = `
-      <div style="text-align: center; line-height: 1.6;">
-        <div style="font-size: 32px; margin-bottom: 12px;">🎲</div>
-        <div>장비를 뽑는 중...</div>
-      </div>
-    `;
-
-    try {
-      // 레어 아이템 데이터 로드
-      const result = await new Promise((resolve) => {
-        chrome.storage.local.get(['rareItems'], resolve);
-      });
-
-      if (!result.rareItems || result.rareItems.length === 0) {
-        // 데이터가 없는 경우 수집 필요 모달 표시
-        this.showCollectionNeededModal();
-        resultArea.innerHTML = `
-          <div style="text-align: center; line-height: 1.6;">
-            <div style="font-size: 32px; margin-bottom: 12px;">📦</div>
-            <div style="color: #ef4444;">아이템 데이터를 먼저 수집해주세요!</div>
-          </div>
-        `;
-        return;
-      }
-
-      // 랜덤 장비 선택 (모든 확률 동일)
-      const randomIndex = Math.floor(Math.random() * result.rareItems.length);
-      const selectedItem = result.rareItems[randomIndex];
-
-      // 결과 표시
-      this.displaySelectedEquipment(selectedItem, resultArea);
-
-    } catch (error) {
-      console.error('장비 뽑기 오류:', error);
-      resultArea.innerHTML = `
-        <div style="text-align: center; line-height: 1.6;">
-          <div style="font-size: 32px; margin-bottom: 12px;">❌</div>
-          <div style="color: #ef4444;">장비 뽑기 중 오류가 발생했습니다.</div>
-        </div>
-      `;
-    }
-  }
-
-  // 선택된 장비 표시 (준비 중 - 주석처리)
-  displaySelectedEquipment(item, resultArea) {
-    const gradeColors = {
-      '흰색': '#9ca3af',
-      '파랑': '#3b82f6', 
-      '노랑': '#f59e0b',
-      '보라': '#8b5cf6',
-      '빨강': '#ef4444'
-    };
-
-    const gradeColor = gradeColors[item.grade] || '#6b7280';
-
-    resultArea.innerHTML = `
-      <div style="text-align: center; width: 100%;">
-        <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
-        <div style="font-size: 20px; font-weight: 700; color: ${gradeColor}; margin-bottom: 8px;">
-          ${item.name}
-        </div>
-        <div style="display: inline-block; padding: 4px 12px; background: ${gradeColor}; color: white; border-radius: 16px; font-size: 12px; font-weight: 600; margin-bottom: 16px;">
-          ${item.grade} 등급
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 16px; text-align: left;">
-          ${item.type ? `<div><strong>종류:</strong> ${item.type}</div>` : ''}
-          ${item.power ? `<div><strong>위력:</strong> ${item.power}</div>` : ''}
-          ${item.weight ? `<div><strong>무게:</strong> ${item.weight}</div>` : ''}
-          ${item.ability ? `<div><strong>어빌리티:</strong> ${item.ability}</div>` : ''}
-        </div>
-        ${item.description ? `<div style="margin-top: 16px; padding: 12px; background: #f3f4f6; border-radius: 8px; font-size: 14px; color: #4b5563;">${item.description}</div>` : ''}
-      </div>
-    `;
-  }
-
-  // 수집 필요 모달 표시 (준비 중 - 주석처리)
-  showCollectionNeededModal() {
-    // 기존 모달이 있으면 제거
-    const existingModal = document.querySelector('.collection-needed-modal');
-    if (existingModal) {
-      existingModal.remove();
-    }
-
-    // 모달 생성
-    const modal = document.createElement('div');
-    modal.className = 'collection-needed-modal';
-    modal.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 10030;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    `;
-
-    const modalContent = document.createElement('div');
-    modalContent.style.cssText = `
-      background: white;
-      border-radius: 16px;
-      padding: 32px;
-      max-width: 500px;
-      width: 90%;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    `;
-
-    modalContent.innerHTML = `
-      <div style="font-size: 64px; margin-bottom: 16px;">📦</div>
-      <h3 style="margin: 0 0 16px 0; font-size: 20px; color: #374151;">아이템 데이터 수집 필요</h3>
-      <p style="margin: 0 0 24px 0; color: #6b7280; line-height: 1.6;">
-        장비 뽑기를 사용하려면 먼저 라니스 위키에서 레어 아이템 데이터를 수집해야 합니다.
-      </p>
-      <div style="display: flex; gap: 12px; justify-content: center;">
-        <button id="close-collection-modal" style="
-          padding: 12px 24px;
-          background: #6b7280;
-          color: white;
-          border: none;
-          border-radius: 8px;
-          font-size: 14px;
-          cursor: pointer;
-          transition: background 0.3s ease;
-        ">닫기</button>
-        <button id="go-to-collection" style="
-          padding: 12px 24px;
-          background: #3b82f6;
-          color: white;
-          border: none;
-          border-radius: 8px;
-          font-size: 14px;
-          cursor: pointer;
-          transition: background 0.3s ease;
-        ">아이템 수집하기</button>
-      </div>
-    `;
-
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-
-    // 이벤트 리스너
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.remove();
-      }
-    });
-
-    document.getElementById('close-collection-modal').addEventListener('click', () => {
-      modal.remove();
-    });
-
-    document.getElementById('go-to-collection').addEventListener('click', () => {
-      modal.remove();
-      // 설정 메뉴의 아이템 수집 모달 열기
-      if (window.menuManager && window.menuManager.itemCollectionModal) {
-        window.menuManager.itemCollectionModal.open();
-      }
-    });
-  }
-  */
 
   /**
    * 장비 뽑기 처리
@@ -996,50 +964,80 @@ class TabContent {
 
 
 
-    // 종결 점수 계산 (기존 FinalTagAdder 로직 활용)
-    const powerScore = stats.power?.score || 0;
-    const weightScore = stats.weight?.score || 0;
-    const powerGrade = stats.power?.grade || null;
-    const weightGrade = stats.weight?.grade || null;
-    
-    // 범위가 좁은지 확인 (9 이하)
-    const powerNarrow = Math.abs(stats.power?.max - stats.power?.min) <= 9;
-    const weightNarrow = Math.abs(stats.weight?.max - stats.weight?.min) <= 9;
-    
-    // 임시 컨테이너 생성하여 기존 로직 활용
-    const tempContainer = document.createElement('div');
-    this.finalTagAdder.addFinalTag(tempContainer, powerGrade, weightGrade, powerScore, weightScore, powerNarrow, weightNarrow);
-    
-    // 결과에서 태그와 점수 추출
-    const finalTagSpan = tempContainer.querySelector('.final-tag');
-    let finalGrade = '최하급';
+    // 새로운 장비 태그 계산 로직 (DOM 모듈과 동일)
+    const equipmentType = this.detectEquipmentType(wikiItemInfo.name);
     let totalScore;
+    let finalGrade = '최하급';
+    let tagMinValue = null;
+    let tagMaxValue = null;
+    let tagPercentage = null;
     
-    if (finalTagSpan) {
-      const tagText = finalTagSpan.textContent;
-      // 점수 추출
-      const scoreMatch = tagText.match(/\((\d+)점\)/);
-      if (scoreMatch) {
-        totalScore = parseInt(scoreMatch[1]);
-      } else {
-        totalScore = powerScore + weightScore;
-      }
+    if (stats.power?.value !== null && stats.weight?.value !== null && 
+        stats.power?.min !== null && stats.power?.max !== null && 
+        stats.weight?.min !== null && stats.weight?.max !== null) {
       
-      // 등급 추출
-      if (tagText.includes('완전무결')) {
-        finalGrade = '완전무결';
-      } else if (tagText.includes('종결')) {
-        finalGrade = '종결';
-      } else if (tagText.includes('준종결')) {
-        finalGrade = '준종결';
+      if (equipmentType === 'accessory') {
+        // 장신구: 위력*5.5 - 무게*2
+        totalScore = stats.power.value * 5.5 - stats.weight.value * 2;
+        
+        // 범위 계산
+        tagMinValue = stats.power.min * 5.5 - stats.weight.max * 2;
+        tagMaxValue = stats.power.max * 5.5 - stats.weight.min * 2;
+        
+        // 퍼센트 계산
+        if (tagMinValue === tagMaxValue) {
+          tagPercentage = 100.0;
+        } else {
+          tagPercentage = ((totalScore - tagMinValue) / (tagMaxValue - tagMinValue)) * 100;
+          tagPercentage = Math.max(0, Math.min(100, Math.round((tagPercentage + Number.EPSILON) * 10) / 10));
+        }
+        
+        // 등급 결정
+        if (tagPercentage >= 100) {
+          finalGrade = '완전무결';
+        } else if (tagPercentage >= 95) {
+          finalGrade = '종결';
+        } else if (tagPercentage >= 90) {
+          finalGrade = '준종결';
+        }
+      } else {
+        // 무기/방어구: 위력 - 무게*2
+        totalScore = stats.power.value - stats.weight.value * 2;
+        
+        // 범위 계산
+        tagMinValue = stats.power.min - stats.weight.max * 2;
+        tagMaxValue = stats.power.max - stats.weight.min * 2;
+        
+        // 퍼센트 계산
+        if (tagMinValue === tagMaxValue) {
+          tagPercentage = 100.0;
+        } else {
+          tagPercentage = ((totalScore - tagMinValue) / (tagMaxValue - tagMinValue)) * 100;
+          tagPercentage = Math.max(0, Math.min(100, Math.round((tagPercentage + Number.EPSILON) * 10) / 10));
+        }
+        
+        // 등급 결정
+        if (tagPercentage >= 100) {
+          finalGrade = '완전무결';
+        } else if (tagPercentage >= 95) {
+          finalGrade = '종결';
+        } else if (tagPercentage >= 90) {
+          finalGrade = '준종결';
+        }
       }
     } else {
+      // 데이터가 부족한 경우 폴백
+      const powerScore = stats.power?.score || 0;
+      const weightScore = stats.weight?.score || 0;
       totalScore = powerScore + weightScore;
     }
     
     stats.final = {
       score: totalScore,
-      grade: finalGrade
+      grade: finalGrade,
+      tagMinValue: tagMinValue,
+      tagMaxValue: tagMaxValue,
+      tagPercentage: tagPercentage
     };
 
     return stats;
@@ -1290,9 +1288,9 @@ class TabContent {
         <div style="background: #000000; border-radius: 8px; box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); padding: 16px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
               <div>
-              <p style="margin: 0; font-size: 16px; font-weight: 600; color: #ffffff;">${equipment.name}</p>
+              <p style="margin: 0; font-size: 16px; font-weight: 600; color: #ffffff; text-align: left;">${equipment.name}</p>
                 <div style="margin-top: 4px; text-align: left;">
-                <span style="color: ${finalGradeColors[appraisedStats.final.grade]}; font-size: 14px; font-weight: 600; font-style: italic;">[${appraisedStats.final.grade}] (${appraisedStats.final.score}점)</span>
+                ${this.formatFinalTagWithColor(appraisedStats.final, finalGradeColors)}
                 </div>
               </div>
               <div style="display: flex; align-items: center; gap: 8px;">
@@ -1305,7 +1303,7 @@ class TabContent {
               <div style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; font-weight: 400; font-size: 1rem; line-height: 1.5; color: rgba(255, 255, 255, 0.9); white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); box-sizing: inherit; display: flex; -webkit-box-pack: justify; justify-content: space-between; align-items: center; word-break: break-all !important; overflow-wrap: anywhere !important; max-height: 70vh !important; overflow-y: auto !important;">
                 <p style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); box-sizing: inherit; margin: 0px; font-weight: 400; line-height: 1.43; text-align: left; color: white; font-size: 0.75rem; word-break: break-all !important; overflow-wrap: anywhere !important;">위력</p>
                 <p style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); box-sizing: inherit; margin: 0px; font-weight: 400; line-height: 1.43; color: white; font-size: 0.75rem; text-align: right !important; word-break: break-all !important; overflow-wrap: anywhere !important;">
-                  ${appraisedStats.power.value}<span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); text-align: right !important; box-sizing: inherit; margin: 0px 0px 0px 4px; font-weight: 400; line-height: 1.5; color: rgba(255, 255, 255, 0.5); font-size: 0.65rem; word-break: break-all !important; overflow-wrap: anywhere !important;">(${appraisedStats.power.min} - ${appraisedStats.power.max})</span><span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); line-height: 1.43; text-align: right !important; box-sizing: inherit; font-size: 0.9em !important; font-weight: bold !important; margin-left: 4px !important; word-break: break-all !important; overflow-wrap: anywhere !important; color: ${appraisedStats.power.color};" data-grade="${appraisedStats.power.grade}"> [${appraisedStats.power.grade}]</span><span class="stat-detail-row" style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); font-weight: 400; text-align: right !important; box-sizing: inherit; display: flex; justify-content: flex-end; align-items: center; width: 100%; font-size: 0.8rem; color: rgb(102, 102, 102); line-height: 1.2; margin: 0px; padding: 0px; gap: 4px; word-break: break-all !important; overflow-wrap: anywhere !important;"><span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); text-align: right !important; line-height: 1.2; box-sizing: inherit; word-break: break-all !important; overflow-wrap: anywhere !important; color: #666666; font-size: 0.9em; font-weight: normal; font-style: italic;"> (${appraisedStats.power.percent}%)</span><span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); text-align: right !important; line-height: 1.2; box-sizing: inherit; font-size: 0.9em !important; font-weight: bold !important; margin-left: 4px !important; word-break: break-all !important; overflow-wrap: anywhere !important; color: ${appraisedStats.power.color};" data-grade="${appraisedStats.power.grade}"> (${appraisedStats.power.score}점)</span></span>
+                  ${appraisedStats.power.value}<span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); text-align: right !important; box-sizing: inherit; margin: 0px 0px 0px 4px; font-weight: 400; line-height: 1.5; color: rgba(255, 255, 255, 0.5); font-size: 0.65rem; word-break: break-all !important; overflow-wrap: anywhere !important;">(${appraisedStats.power.min} - ${appraisedStats.power.max})</span><span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); line-height: 1.43; text-align: right !important; box-sizing: inherit; font-size: 0.9em !important; font-weight: bold !important; margin-left: 4px !important; word-break: break-all !important; overflow-wrap: anywhere !important; color: ${appraisedStats.power.color};" data-grade="${appraisedStats.power.grade}"> [${appraisedStats.power.grade}]</span><span class="stat-detail-row" style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); font-weight: 400; text-align: right !important; box-sizing: inherit; display: inline-block; font-size: 0.8rem; color: rgb(102, 102, 102); line-height: 1.2; margin: 0px; padding: 0px; word-break: break-all !important; overflow-wrap: anywhere !important;"><span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); text-align: right !important; line-height: 1.2; box-sizing: inherit; word-break: break-all !important; overflow-wrap: anywhere !important; color: ${appraisedStats.power.color}; font-size: 0.9em; font-weight: normal; font-style: italic;"> (${appraisedStats.power.percent}%)</span></span>
                   </p>
                 </div>
               ` : ''}
@@ -1314,7 +1312,7 @@ class TabContent {
               <div style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; font-weight: 400; font-size: 1rem; line-height: 1.5; color: rgba(255, 255, 255, 0.9); white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); box-sizing: inherit; display: flex; -webkit-box-pack: justify; justify-content: space-between; align-items: center; word-break: break-all !important; overflow-wrap: anywhere !important; max-height: 70vh !important; overflow-y: auto !important;">
                 <p style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); box-sizing: inherit; margin: 0px; font-weight: 400; line-height: 1.43; text-align: left; color: white; font-size: 0.75rem; word-break: break-all !important; overflow-wrap: anywhere !important;">무게</p>
                 <p style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); box-sizing: inherit; margin: 0px; font-weight: 400; line-height: 1.43; color: white; font-size: 0.75rem; text-align: right !important; word-break: break-all !important; overflow-wrap: anywhere !important;">
-                  ${appraisedStats.weight.value}<span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); text-align: right !important; box-sizing: inherit; margin: 0px 0px 0px 4px; font-weight: 400; line-height: 1.5; color: rgba(255, 255, 255, 0.5); font-size: 0.65rem; word-break: break-all !important; overflow-wrap: anywhere !important;">(${appraisedStats.weight.min} - ${appraisedStats.weight.max})</span><span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); line-height: 1.43; text-align: right !important; box-sizing: inherit; font-size: 0.9em !important; font-weight: bold !important; margin-left: 4px !important; word-break: break-all !important; overflow-wrap: anywhere !important; color: ${appraisedStats.weight.color};" data-grade="${appraisedStats.weight.grade}"> [${appraisedStats.weight.grade}]</span><span class="stat-detail-row" style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); font-weight: 400; text-align: right !important; box-sizing: inherit; display: flex; justify-content: flex-end; align-items: center; width: 100%; font-size: 0.8rem; color: rgb(102, 102, 102); line-height: 1.2; margin: 0px; padding: 0px; gap: 4px; word-break: break-all !important; overflow-wrap: anywhere !important;"><span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); text-align: right !important; line-height: 1.2; box-sizing: inherit; word-break: break-all !important; overflow-wrap: anywhere !important; color: #666666; font-size: 0.9em; font-weight: normal; font-style: italic;"> (${appraisedStats.weight.percent}%)</span><span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); text-align: right !important; line-height: 1.2; box-sizing: inherit; font-size: 0.9em !important; font-weight: bold !important; margin-left: 4px !important; word-break: break-all !important; overflow-wrap: anywhere !important; color: ${appraisedStats.weight.color};" data-grade="${appraisedStats.weight.grade}"> (${appraisedStats.weight.score}점)</span></span>
+                  ${appraisedStats.weight.value}<span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); text-align: right !important; box-sizing: inherit; margin: 0px 0px 0px 4px; font-weight: 400; line-height: 1.5; color: rgba(255, 255, 255, 0.5); font-size: 0.65rem; word-break: break-all !important; overflow-wrap: anywhere !important;">(${appraisedStats.weight.min} - ${appraisedStats.weight.max})</span><span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); line-height: 1.43; text-align: right !important; box-sizing: inherit; font-size: 0.9em !important; font-weight: bold !important; margin-left: 4px !important; word-break: break-all !important; overflow-wrap: anywhere !important; color: ${appraisedStats.weight.color};" data-grade="${appraisedStats.weight.grade}"> [${appraisedStats.weight.grade}]</span><span class="stat-detail-row" style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); font-weight: 400; text-align: right !important; box-sizing: inherit; display: inline-block; font-size: 0.8rem; color: rgb(102, 102, 102); line-height: 1.2; margin: 0px; padding: 0px; word-break: break-all !important; overflow-wrap: anywhere !important;"><span style="text-size-adjust: 100%; -webkit-font-smoothing: antialiased; white-space: pre-line; --Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); text-align: right !important; line-height: 1.2; box-sizing: inherit; word-break: break-all !important; overflow-wrap: anywhere !important; color: ${appraisedStats.weight.color}; font-size: 0.9em; font-weight: normal; font-style: italic;"> (${appraisedStats.weight.percent}%)</span></span>
                   </p>
                 </div>
               ` : ''}
@@ -1358,6 +1356,389 @@ class TabContent {
 
     // 감정정보 등록 버튼 이벤트 리스너 추가
     this.addEnchantInfoRegistrationListener(resultArea, equipment, appraisedStats);
+  }
+
+  /**
+   * 점수표 탭 표시
+   */
+  showScoreTableTab(contentArea) {
+    // 컬럼 표시 상태 초기화
+    this.columnVisibility = {
+      name: true,
+      ability: true,
+      powerRange: true,
+      weightRange: true,
+      score: true,
+      attributes: true
+    };
+    const content = document.createElement('div');
+    content.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 16px;
+    `;
+
+    // 제목
+    const title = document.createElement('h3');
+    title.textContent = '장비별 점수표';
+    title.style.cssText = `
+      margin: 0 0 16px 0;
+      text-align: center;
+      color: #374151;
+      font-size: 18px;
+      font-weight: 600;
+    `;
+    content.appendChild(title);
+
+    // 설명
+    const description = document.createElement('p');
+    description.innerHTML = '각 장비별로 계산된 점수입니다.<br>• 무기/방어구: (위력범위 최대값) - (무게범위 최솟값 × 2)<br>• 장신구: (위력범위 최대값 × 5.5) - (무게범위 최솟값 × 2)<br>각 정보는 위키에 올바른 템플릿으로 등록되어야 올바르게 표현됩니다.';
+    description.style.cssText = `
+      margin: 0 0 16px 0;
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.5;
+    `;
+    content.appendChild(description);
+
+    // 컬럼 토글 버튼 영역
+    const columnToggleArea = document.createElement('div');
+    columnToggleArea.id = 'column-toggle-area';
+    columnToggleArea.style.cssText = `
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: #f9fafb;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    `;
+    
+    const toggleLabel = document.createElement('span');
+    toggleLabel.textContent = '컬럼 표시:';
+    toggleLabel.style.cssText = `
+      font-weight: 600;
+      color: #374151;
+      margin-right: 8px;
+    `;
+    columnToggleArea.appendChild(toggleLabel);
+    
+    // 컬럼 토글 버튼들 (장비명 제외)
+    const columns = [
+      { key: 'ability', label: '어빌리티' },
+      { key: 'powerRange', label: '위력범위' },
+      { key: 'weightRange', label: '무게범위' },
+      { key: 'score', label: '점수' },
+      { key: 'attributes', label: '장비속성' }
+    ];
+    
+    columns.forEach(column => {
+      const button = document.createElement('button');
+      button.textContent = column.label;
+      button.dataset.column = column.key;
+      button.style.cssText = `
+        padding: 6px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        background: #ffffff;
+        color: #374151;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+      `;
+      
+      // 초기 상태 설정
+      this.updateToggleButton(button, true);
+      
+      button.addEventListener('click', () => {
+        this.columnVisibility[column.key] = !this.columnVisibility[column.key];
+        this.updateToggleButton(button, this.columnVisibility[column.key]);
+        this.updateTableColumnVisibility();
+      });
+      
+      columnToggleArea.appendChild(button);
+    });
+    
+    content.appendChild(columnToggleArea);
+
+    // 로딩 표시
+    const loadingArea = document.createElement('div');
+    loadingArea.id = 'score-table-loading';
+    loadingArea.style.cssText = `
+      text-align: center;
+      color: #6b7280;
+      padding: 20px;
+    `;
+    loadingArea.innerHTML = `
+      <div style="font-size: 32px; margin-bottom: 12px;">⏳</div>
+      <div>장비 데이터를 불러오는 중...</div>
+    `;
+    content.appendChild(loadingArea);
+
+    // 점수표 영역
+    const scoreTableArea = document.createElement('div');
+    scoreTableArea.id = 'score-table-content';
+    scoreTableArea.style.cssText = `
+      display: none;
+    `;
+    content.appendChild(scoreTableArea);
+
+    contentArea.appendChild(content);
+
+    // 장비 데이터 로드 및 점수표 생성
+    this.loadEquipmentDataAndCreateScoreTable(loadingArea, scoreTableArea);
+  }
+
+  /**
+   * 장비 데이터 로드 및 점수표 생성
+   */
+  async loadEquipmentDataAndCreateScoreTable(loadingArea, scoreTableArea) {
+    try {
+      // Chrome 스토리지에서 레어 아이템 데이터 로드
+      const result = await new Promise((resolve) => {
+        chrome.storage.local.get(['rareItems'], resolve);
+      });
+
+      if (!result.rareItems || result.rareItems.length === 0) {
+        loadingArea.innerHTML = `
+          <div style="font-size: 32px; margin-bottom: 12px;">📦</div>
+          <div style="color: #ef4444;">아이템 데이터가 없습니다.</div>
+          <div style="margin-top: 8px; color: #6b7280; font-size: 12px;">
+            먼저 아이템 수집을 진행해주세요.
+          </div>
+        `;
+        return;
+      }
+
+      // 점수표 생성
+      const scoreTable = this.createScoreTable(result.rareItems);
+      
+      // 로딩 영역 숨기고 점수표 표시
+      loadingArea.style.display = 'none';
+      scoreTableArea.style.display = 'block';
+      scoreTableArea.appendChild(scoreTable);
+
+    } catch (error) {
+      console.error('점수표 생성 오류:', error);
+      loadingArea.innerHTML = `
+        <div style="font-size: 32px; margin-bottom: 12px;">❌</div>
+        <div style="color: #ef4444;">점수표 생성 중 오류가 발생했습니다.</div>
+        <div style="margin-top: 8px; color: #6b7280; font-size: 12px;">
+          ${error.message}
+        </div>
+      `;
+    }
+  }
+
+  /**
+   * 점수표 생성
+   */
+  createScoreTable(rareItems) {
+    // 유효한 데이터만 필터링 (위력과 무게 정보가 있는 아이템)
+    const validItems = rareItems.filter(item => 
+      item.power_min !== null && item.power_max !== null && 
+      item.weight_min !== null && item.weight_max !== null
+    );
+
+    if (validItems.length === 0) {
+      const noDataMessage = document.createElement('div');
+      noDataMessage.style.cssText = `
+        text-align: center;
+        color: #6b7280;
+        padding: 20px;
+      `;
+      noDataMessage.innerHTML = `
+        <div style="font-size: 32px; margin-bottom: 12px;">📊</div>
+        <div>유효한 장비 데이터가 없습니다.</div>
+      `;
+      return noDataMessage;
+    }
+
+    // 점수 계산 및 정렬 (새로운 로직: 장비 타입별 계산)
+    const scoredItems = validItems.map(item => {
+      // 아이템 데이터에 equipmentType이나 type 필드가 있으면 사용, 없으면 이름으로 감지
+      let equipmentType;
+      if (item.equipmentType) {
+        equipmentType = item.equipmentType.toLowerCase();
+      } else if (item.type) {
+        equipmentType = item.type.toLowerCase();
+      } else {
+        equipmentType = this.detectEquipmentType(item.name);
+      }
+      
+      let score;
+      
+      if (equipmentType === 'accessory' || equipmentType === '장신구') {
+        // 장신구: 위력*5.5 - 무게*2 (최적값: 최대위력*5.5 - 최소무게*2)
+        score = item.power_max * 5.5 - (item.weight_min * 2);
+      } else {
+        // 무기/방어구: 위력 - 무게*2 (최적값: 최대위력 - 최소무게*2)
+        score = item.power_max - (item.weight_min * 2);
+      }
+      
+      return {
+        ...item,
+        score: score,
+        equipmentType: equipmentType
+      };
+    }).sort((a, b) => b.score - a.score); // 점수 내림차순 정렬
+
+    // 장비 타입별로 그룹화
+    const groupedItems = this.groupItemsByType(scoredItems);
+
+    // 점수표 컨테이너
+    const tableContainer = document.createElement('div');
+    tableContainer.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      max-width: 100%;
+      overflow: hidden;
+    `;
+
+    // 각 장비 타입별로 테이블 생성
+    Object.entries(groupedItems).forEach(([type, items]) => {
+      const typeTable = this.createTypeScoreTable(type, items);
+      tableContainer.appendChild(typeTable);
+    });
+
+    return tableContainer;
+  }
+
+  /**
+   * 장비 타입별로 그룹화
+   */
+  groupItemsByType(items) {
+    const grouped = {};
+    
+    items.forEach(item => {
+      let type = '기타';
+      
+      if (item.type) {
+        if (item.type.includes('무기')) {
+          type = '무기';
+        } else if (item.type.includes('방어구')) {
+          type = '방어구';
+        } else if (item.type.includes('장신구')) {
+          type = '장신구';
+        } else {
+          type = item.type;
+        }
+      }
+      
+      if (!grouped[type]) {
+        grouped[type] = [];
+      }
+      grouped[type].push(item);
+    });
+
+    return grouped;
+  }
+
+  /**
+   * 타입별 점수표 생성
+   */
+  createTypeScoreTable(type, items) {
+    const typeContainer = document.createElement('div');
+    typeContainer.style.cssText = `
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 100%;
+    `;
+
+    // 타입 헤더
+    const typeHeader = document.createElement('div');
+    typeHeader.style.cssText = `
+      background: #f9fafb;
+      padding: 12px 16px;
+      border-bottom: 1px solid #e5e7eb;
+      font-weight: 600;
+      color: #374151;
+      font-size: 16px;
+    `;
+    typeHeader.textContent = `${type} (${items.length}개)`;
+    typeContainer.appendChild(typeHeader);
+
+    // 테이블
+    const table = document.createElement('table');
+    table.style.cssText = `
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8px;
+    `;
+
+    // 테이블 헤더
+    const thead = document.createElement('thead');
+    thead.innerHTML = `
+      <tr>
+        <th style="padding: 6px 8px; text-align: left; background: #f3f4f6; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151; font-size: 8px;">장비명</th>
+        <th style="padding: 6px 8px; text-align: center; background: #f3f4f6; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151; font-size: 8px;">어빌리티</th>
+        <th style="padding: 6px 8px; text-align: center; background: #f3f4f6; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151; font-size: 8px;">위력범위</th>
+        <th style="padding: 6px 8px; text-align: center; background: #f3f4f6; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151; font-size: 8px;">무게범위</th>
+        <th style="padding: 6px 8px; text-align: center; background: #f3f4f6; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151; font-size: 8px;">점수</th>
+        <th style="padding: 6px 8px; text-align: center; background: #f3f4f6; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151; font-size: 8px;">장비 속성</th>
+      </tr>
+    `;
+    table.appendChild(thead);
+
+    // 테이블 바디
+    const tbody = document.createElement('tbody');
+    items.forEach((item, index) => {
+      const row = document.createElement('tr');
+      row.style.cssText = `
+        background: ${index % 2 === 0 ? '#ffffff' : '#f9fafb'};
+        border-bottom: 1px solid #e5e7eb;
+      `;
+      
+      // 어빌리티 정보 처리
+      let abilityText = '';
+      let abilityStyle = 'color: #6b7280;';
+      
+      if (item.abilities && Array.isArray(item.abilities) && item.abilities.length > 0) {
+        // 어빌리티가 있는 경우, 이름만 추출하여 파란글씨로 표시
+        const abilityNames = item.abilities.map(ability => {
+          const colonIndex = ability.indexOf(':');
+          return colonIndex > 0 ? ability.substring(0, colonIndex).trim() : ability;
+        });
+        abilityText = abilityNames.join(', ');
+        abilityStyle = 'color: #3b82f6; font-weight: 500;';
+      }
+      
+      // 장비명 처리 - 무기 타입일 때는 "무기명(무기타입)" 형식으로 표시
+      let displayName = item.name;
+      if (type === '무기' && item.type) {
+        // 무기 타입에서 "무기" 부분을 제거하고 괄호 안에 표시
+        const weaponType = item.type.replace('무기', '').trim();
+        if (weaponType) {
+          displayName = `${item.name} (${weaponType})`;
+        }
+      }
+      
+      // 장비 속성 정보 처리
+      let attributesText = '';
+      if (item.attributes && Array.isArray(item.attributes) && item.attributes.length > 0) {
+        attributesText = item.attributes.join(', ');
+      }
+      
+      row.innerHTML = `
+        <td style="padding: 6px 8px; text-align: left; color: #374151; font-weight: 500; font-size: 8px;">${displayName}</td>
+        <td style="padding: 6px 8px; text-align: center; ${abilityStyle} font-size: 8px;">${abilityText}</td>
+        <td style="padding: 6px 8px; text-align: center; color: #6b7280; font-size: 8px;">${item.power_min} ~ ${item.power_max}</td>
+        <td style="padding: 6px 8px; text-align: center; color: #6b7280; font-size: 8px;">${item.weight_min} ~ ${item.weight_max}</td>
+        <td style="padding: 6px 8px; text-align: center; color: #059669; font-weight: 600; font-size: 10px;">${item.score}</td>
+        <td style="padding: 6px 8px; text-align: center; color: #8b5cf6; font-weight: 500; font-size: 8px;">${attributesText}</td>
+      `;
+      
+      tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+
+    typeContainer.appendChild(table);
+    return typeContainer;
   }
 }
 
