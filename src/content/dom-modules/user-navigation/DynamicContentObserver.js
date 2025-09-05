@@ -18,9 +18,10 @@ class DynamicContentObserver {
       this.observer.disconnect();
     }
     
-    // MutationObserver로 DOM 변경 감지 (사용자명 클릭 기능)
+    // MutationObserver로 DOM 변경 감지 (사용자명 클릭 기능) - 동시 채팅 처리 개선
     this.observer = new MutationObserver((mutations) => {
       let shouldProcess = false;
+      let hasNewMessages = false;
       
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList') {
@@ -30,11 +31,13 @@ class DynamicContentObserver {
               // 새로운 메시지 아이템인지 확인
               if (node.matches && node.matches('li.MuiListItem-root')) {
                 shouldProcess = true;
+                hasNewMessages = true;
               } else if (node.querySelectorAll) {
                 // 새로 추가된 요소 내의 메시지 아이템들 확인
                 const messageItems = node.querySelectorAll('li.MuiListItem-root');
                 if (messageItems.length > 0) {
                   shouldProcess = true;
+                  hasNewMessages = true;
                 }
               }
             }
@@ -69,7 +72,12 @@ class DynamicContentObserver {
       
       // 변경사항이 감지되면 처리
       if (shouldProcess) {
-        this.debounceProcessing();
+        // 새 메시지가 있으면 더 빠르게 처리
+        if (hasNewMessages) {
+          this.processWithDelay();
+        } else {
+          this.debounceProcessing();
+        }
       }
     });
 
@@ -111,33 +119,33 @@ class DynamicContentObserver {
     });
   }
 
-  // 디바운싱을 통한 성능 최적화
+  // 디바운싱을 통한 성능 최적화 (동시 채팅 처리 개선)
   debounceProcessing() {
     const now = Date.now();
     const timeSinceLastProcess = now - this.lastProcessTime;
     
-    // 이전 처리로부터 100ms 이상 지났으면 즉시 처리 (더 빠르게)
-    if (timeSinceLastProcess > 100) {
+    // 이전 처리로부터 50ms 이상 지났으면 즉시 처리 (더 빠르게)
+    if (timeSinceLastProcess > 50) {
       this.processWithDelay();
     } else {
-      // 100ms 이내면 디바운싱 (더 빠르게)
+      // 50ms 이내면 디바운싱 (더 빠르게)
       if (this.processingTimeout) {
         clearTimeout(this.processingTimeout);
       }
       this.processingTimeout = setTimeout(() => {
         this.processWithDelay();
-      }, 100);
+      }, 50);
     }
   }
 
-  // 지연 처리를 통한 DOM 완전 렌더링 보장
+  // 지연 처리를 통한 DOM 완전 렌더링 보장 (동시 채팅 처리 개선)
   processWithDelay() {
     this.lastProcessTime = Date.now();
     setTimeout(() => {
       if (this.manager && this.manager.processUserNames) {
         this.manager.processUserNames();
       }
-    }, 50); // DOM이 완전히 렌더링될 시간 확보 (더 빠르게)
+    }, 10); // DOM이 완전히 렌더링될 시간 확보 (최대한 빠르게)
   }
 
   destroy() {

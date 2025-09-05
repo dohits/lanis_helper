@@ -4,7 +4,7 @@ import { API_ENDPOINTS, LANIS_ME_PATHS } from '../../../shared/constants.js';
 class UsernameClickHandler {
   constructor() {
     // 상태 관리 제거 - 단순하게 DOM 직접 처리
-    this.usernameColorMap = new Map(); // 사용자명별 색상 캐시
+    // 색상 캐시 사용하지 않음 - 실시간 DOM 추출
     this.currentChannel = this.getCurrentChannel(); // 현재 채널 추적
   }
 
@@ -23,55 +23,14 @@ class UsernameClickHandler {
     }
   }
 
-  // 사용자명 + 채널을 키로 사용하는 함수
-  getUsernameKey(username) {
-    const channel = this.getCurrentChannel();
-    return `${username}@${channel}`;
-  }
+  // getUsernameKey 메서드 제거 - 색상 캐시 사용하지 않으므로 불필요
 
   init() {
     // 초기화 시 필요한 작업이 있다면 여기에 추가
   }
 
-  // 사용자명에서 색상을 추출하는 함수
-  extractColorFromUsername(usernameSpan, username) {
-    try {
-      // 사용자명 + 채널을 키로 사용
-      const usernameKey = this.getUsernameKey(username);
-      
-      // 1. 캐시된 색상이 있으면 사용
-      if (this.usernameColorMap.has(usernameKey)) {
-        return this.usernameColorMap.get(usernameKey);
-      }
-      
-      let extractedColor = 'currentColor';
-      
-      // 2. 그라데이션 색상 추출 (우선순위 1)
-      if (usernameSpan.style.backgroundImage && usernameSpan.style.backgroundImage.includes('linear-gradient')) {
-        // 그라데이션에서 첫 번째 색상 추출
-        const gradientMatch = usernameSpan.style.backgroundImage.match(/rgb\([^)]+\)/g);
-        if (gradientMatch && gradientMatch.length > 0) {
-          extractedColor = gradientMatch[0]; // 첫 번째 색상 사용
-        } else {
-          // hex 색상이 있는 경우
-          const hexMatch = usernameSpan.style.backgroundImage.match(/#[0-9a-fA-F]{6}/);
-          if (hexMatch) {
-            extractedColor = hexMatch[0];
-          }
-        }
-      } else if (usernameSpan.style.color) {
-        // 3. 일반 색상 추출 (우선순위 2)
-        extractedColor = usernameSpan.style.color;
-      }
-      
-      // 4. 추출된 색상을 캐시에 저장 (사용자명 + 채널 키 사용)
-      this.usernameColorMap.set(usernameKey, extractedColor);
-      
-      return extractedColor;
-    } catch (error) {
-      return 'currentColor';
-    }
-  }
+  // extractColorFromUsername 메서드 제거 - currentColor 사용으로 불필요
+  // isValidColor 메서드 제거 - currentColor 사용으로 불필요
 
   async process() {
     try {
@@ -101,52 +60,92 @@ class UsernameClickHandler {
       // 채널 변경 감지
       const newChannel = this.getCurrentChannel();
       if (this.currentChannel !== newChannel) {
-        // 채널이 변경되면 색상 캐시 초기화
-        this.usernameColorMap.clear();
+        // 채널 변경 감지 (색상 캐시 사용하지 않으므로 초기화 불필요)
         this.currentChannel = newChannel;
-
       }
       
-      // 기존 클릭 가능한 요소들 모두 제거 (깨끗한 상태로 시작)
-      this.removeExistingClickableElements();
-      
-      // 모든 사용자명 span 요소들을 찾아서 처리
-      const usernameSpans = document.querySelectorAll('span[style*="font-weight: 600"]');
-      
-      usernameSpans.forEach(usernameSpan => {
-        // 이미 클릭 가능한 상태인지 확인
-        if (usernameSpan.classList.contains('username-clickable')) return;
-        
-        // 사용자명 추출 (텍스트 그대로 사용)
-        const username = usernameSpan.textContent.trim();
-        
-        // 사용자명이 있고 아직 클릭 이벤트가 없는 경우
-        if (username && !usernameSpan.classList.contains('username-clickable')) {
-          usernameSpan.classList.add('username-clickable');
-          
-          // 클릭 스타일 추가 (!important 사용하여 강제 적용)
-          usernameSpan.style.setProperty('cursor', 'pointer', 'important');
-          
-          // 모든 사용자명에 대해 색상을 추출하여 text-decoration-color 적용
-          const extractedColor = this.extractColorFromUsername(usernameSpan, username);
-          
-          usernameSpan.style.setProperty('text-decoration', 'underline', 'important');
-          usernameSpan.style.setProperty('text-decoration-color', extractedColor, 'important');
-          usernameSpan.style.setProperty('text-decoration-thickness', '1px', 'important');
-          usernameSpan.style.setProperty('text-underline-offset', '2px', 'important');
-          
-          // 클릭 이벤트 추가 (현재 창에서 이동)
-          usernameSpan.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const profileUrl = `${API_ENDPOINTS.LANIS_ME}${LANIS_ME_PATHS.USERS}/${encodeURIComponent(username)}`;
-            window.location.href = profileUrl; // 현재 창에서 이동
-          });
-        }
-      });
+      // DOM 변경시 모든 사용자명 span을 완전히 재렌더링 (근본적 해결)
+      this.processAllUserNames();
 
     } catch (error) {
       console.error('사용자명 처리 중 오류:', error);
+    }
+  }
+
+  // 모든 사용자명 span을 완전히 재렌더링하는 메서드 (근본적 해결)
+  processAllUserNames() {
+    try {
+      // 1. 기존 클릭 가능한 요소들 모두 제거
+      this.removeExistingClickableElements();
+      
+      // 2. 모든 사용자명 span 요소들을 찾아서 처리
+      const usernameSpans = document.querySelectorAll('span[style*="font-weight: 600"]');
+      
+      usernameSpans.forEach(usernameSpan => {
+        // 사용자명 추출 (textContent 기준)
+        const username = usernameSpan.textContent.trim();
+        
+        // 사용자명이 있는 경우에만 처리
+        if (username) {
+          // 각 span을 개별적으로 처리 (data-username 속성 사용하지 않음)
+          this.makeUsernameClickable(usernameSpan);
+        }
+      });
+    } catch (error) {
+      console.error('모든 사용자명 처리 중 오류:', error);
+    }
+  }
+
+  // 사용자명을 클릭 가능하게 만드는 메서드 (currentColor 사용)
+  makeUsernameClickable(usernameSpan) {
+    try {
+      usernameSpan.classList.add('username-clickable');
+      
+      // 클릭 스타일 추가 (!important 사용하여 강제 적용)
+      usernameSpan.style.setProperty('cursor', 'pointer', 'important');
+      
+      // 그라데이션 또는 일반 색상에 따라 동적으로 밑줄 색상 적용
+      let decorationColor = 'currentColor';
+      
+      // 그라데이션이 있는 경우 첫 번째 색상 추출
+      if (usernameSpan.style.backgroundImage && 
+          usernameSpan.style.backgroundImage.includes('linear-gradient')) {
+        // 그라데이션에서 첫 번째 색상 추출
+        const gradientMatch = usernameSpan.style.backgroundImage.match(/rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)/);
+        if (gradientMatch) {
+          decorationColor = gradientMatch[0].replace(/\s/g, ''); // 공백 제거
+        } else {
+          // hex 색상이 있는 경우
+          const hexMatch = usernameSpan.style.backgroundImage.match(/#[0-9a-fA-F]{6}/);
+          if (hexMatch) {
+            decorationColor = hexMatch[0];
+          }
+        }
+      }
+      
+      usernameSpan.style.setProperty('text-decoration', 'underline', 'important');
+      usernameSpan.style.setProperty('text-decoration-color', decorationColor, 'important');
+      usernameSpan.style.setProperty('text-decoration-thickness', '1px', 'important');
+      usernameSpan.style.setProperty('text-underline-offset', '2px', 'important');
+      
+      // 클릭 이벤트 핸들러 생성 (클릭 순간에 textContent 직접 파싱)
+      const clickHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // 클릭 순간에 textContent 직접 읽기 (가장 확실한 방법)
+        const targetUsername = e.target.textContent.trim();
+        const profileUrl = `${API_ENDPOINTS.LANIS_ME}${LANIS_ME_PATHS.USERS}/${encodeURIComponent(targetUsername)}`;
+        window.location.href = profileUrl; // 현재 창에서 이동
+      };
+      
+      // 이벤트 리스너 추가
+      usernameSpan.addEventListener('click', clickHandler);
+      
+      // 이벤트 리스너 제거를 위한 참조 저장
+      usernameSpan._clickHandler = clickHandler;
+    } catch (error) {
+      console.error('사용자명 클릭 가능 설정 중 오류:', error);
     }
   }
 
@@ -155,10 +154,18 @@ class UsernameClickHandler {
     try {
       const clickableElements = document.querySelectorAll('.username-clickable');
       clickableElements.forEach(element => {
-        // 클릭 이벤트 리스너 제거 (이벤트 리스너는 자동으로 정리됨)
+        // 이벤트 리스너 제거
+        if (element._clickHandler) {
+          element.removeEventListener('click', element._clickHandler);
+          delete element._clickHandler;
+        }
+        
+        // 클래스 제거
         element.classList.remove('username-clickable');
         
-        // 스타일만 제거 (DOM 구조는 유지)
+        // data-username 속성 사용하지 않으므로 제거할 필요 없음
+        
+        // 스타일 제거 (DOM 구조는 유지)
         element.style.removeProperty('cursor');
         element.style.removeProperty('text-decoration');
         element.style.removeProperty('text-decoration-color');
@@ -176,10 +183,18 @@ class UsernameClickHandler {
       // 클릭 가능한 요소들 제거
       const clickableElements = document.querySelectorAll('.username-clickable');
       clickableElements.forEach(element => {
-        // 클릭 이벤트 리스너 제거 (이벤트 리스너는 자동으로 정리됨)
+        // 이벤트 리스너 제거
+        if (element._clickHandler) {
+          element.removeEventListener('click', element._clickHandler);
+          delete element._clickHandler;
+        }
+        
+        // 클래스 제거
         element.classList.remove('username-clickable');
         
-        // 스타일만 제거 (DOM 구조는 유지)
+        // data-username 속성 사용하지 않으므로 제거할 필요 없음
+        
+        // 스타일 제거 (DOM 구조는 유지)
         element.style.removeProperty('cursor');
         element.style.removeProperty('text-decoration');
         element.style.removeProperty('text-decoration-color');
@@ -189,7 +204,7 @@ class UsernameClickHandler {
       });
       
       // 색상 캐시 초기화
-      this.usernameColorMap.clear();
+      // 색상 캐시 사용하지 않으므로 초기화 불필요
       
     } catch (error) {
       console.error('사용자명 링크 제거 중 오류:', error);
