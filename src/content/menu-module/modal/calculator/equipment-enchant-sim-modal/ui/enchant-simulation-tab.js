@@ -726,7 +726,8 @@ export class EnchantSimulationTab {
         </div>
         <div style="font-size: 14px; color: #1f2937; margin: 4px 0;">
           <span style="color: #dc2626; font-weight: bold; font-style: italic; font-size: 16px;">${oneInN}</span>개 당 하나꼴<br>
-          등장 확률 <span style="color: #dc2626; font-size: 16px;">${probability.toFixed(7)}%</span>
+          등장 확률 <span style="color: #dc2626; font-size: 16px;">${probability.toFixed(7)}%</span><br>
+          나올 수 있는 총 경우의 수 <span style="color: #dc2626; font-size: 16px;">${totalCombinations}</span>개
         </div>
       </div>
     `;
