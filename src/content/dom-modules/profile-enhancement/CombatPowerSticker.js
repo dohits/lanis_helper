@@ -22,8 +22,8 @@ class CombatPowerSticker {
       const existingStickers = document.querySelectorAll(`.${this.stickerClass}`);
       existingStickers.forEach(sticker => sticker.remove());
       
-      // 직업/레벨 스티커 컨테이너 찾기
-      const jobLevelContainers = document.querySelectorAll('.MuiBox-root.css-auxkcs');
+      // 직업/레벨 스티커 컨테이너 찾기 (여러 CSS 클래스 지원)
+      const jobLevelContainers = document.querySelectorAll('.MuiBox-root.css-1ep0pmc, .MuiBox-root.css-auxkcs');
       
       jobLevelContainers.forEach(container => {
         // 직업과 레벨 요소 확인

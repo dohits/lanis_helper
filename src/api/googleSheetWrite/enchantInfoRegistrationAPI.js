@@ -23,8 +23,15 @@ class EnchantInfoRegistrationAPI extends GoogleSheetWriteAPI {
    */
   async registerEnchantInfo(enchantInfo) {
     try {
-      // 점수 계산: 위력 - (무게 * 2)
-      const score = enchantInfo.power - (enchantInfo.weight * 2);
+      // 점수 계산: 장비 타입별 계산
+      let score;
+      if (enchantInfo.equipmentType === '장신구') {
+        // 장신구: 위력 * 5.5 - 무게 * 2
+        score = enchantInfo.power * 5.5 - enchantInfo.weight * 2;
+      } else {
+        // 무기/방어구: 위력 - 무게 * 2
+        score = enchantInfo.power - enchantInfo.weight * 2;
+      }
       
       // 기존 데이터와 점수 비교
       const existingData = await this.getExistingEnchantInfo(enchantInfo.equipmentName);
@@ -195,8 +202,15 @@ class EnchantInfoRegistrationAPI extends GoogleSheetWriteAPI {
    */
   async updateEnchantInfo(enchantInfo) {
     try {
-      // 점수 계산: 위력 - (무게 * 2)
-      const score = enchantInfo.power - (enchantInfo.weight * 2);
+      // 점수 계산: 장비 타입별 계산
+      let score;
+      if (enchantInfo.equipmentType === '장신구') {
+        // 장신구: 위력 * 5.5 - 무게 * 2
+        score = enchantInfo.power * 5.5 - enchantInfo.weight * 2;
+      } else {
+        // 무기/방어구: 위력 - 무게 * 2
+        score = enchantInfo.power - enchantInfo.weight * 2;
+      }
       
       // 업데이트할 데이터
       const updateData = {
