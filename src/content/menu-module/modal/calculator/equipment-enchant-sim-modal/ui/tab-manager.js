@@ -20,7 +20,7 @@ class TabManager {
     `;
 
     const tabs = [
-      { id: 'tab1', text: '장비뽑기', active: true },
+      { id: 'tab1', text: '시뮬레이터', active: true },
       { id: 'tab2', text: '감정순위', active: false },
       { id: 'tab3', text: '점수표', active: false }
     ];
