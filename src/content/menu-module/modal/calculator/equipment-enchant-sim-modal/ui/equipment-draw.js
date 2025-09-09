@@ -16,13 +16,35 @@ import {
 export class EquipmentDraw {
   constructor() {
     this.onAppraiseCallback = null;
+    this.registrationData = null; // 등록된 사람 데이터 캐시
   }
 
   setOnAppraiseCallback(callback) {
     this.onAppraiseCallback = callback;
   }
 
-  showEquipmentDrawTab(contentArea) {
+  // 등록된 사람 데이터 로드
+  async loadRegistrationData() {
+    try {
+      if (!this.registrationData) {
+        this.registrationData = await enchantInfoRegistrationAPI.getEquipmentRanking();
+      }
+    } catch (error) {
+      console.error('등록된 사람 데이터 로드 실패:', error);
+      this.registrationData = [];
+    }
+  }
+
+  // 특정 장비의 등록된 사람 정보 찾기
+  findRegistrationInfo(equipmentName) {
+    if (!this.registrationData) return null;
+    
+    return this.registrationData.find(item => 
+      item.equipmentName === equipmentName && item.hasEnchantInfo
+    );
+  }
+
+  async showEquipmentDrawTab(contentArea) {
     // 장비 뽑기 탭 내용
     const content = document.createElement('div');
     content.style.cssText = `
@@ -30,6 +52,9 @@ export class EquipmentDraw {
       flex-direction: column;
       gap: 16px;
     `;
+
+    // 등록된 사람 데이터 미리 로드
+    await this.loadRegistrationData();
 
     // 초기 메시지 영역
     const messageArea = document.createElement('div');
@@ -123,11 +148,21 @@ export class EquipmentDraw {
   }
 
   displayEquipmentResult(equipment, messageArea, wikiItemInfo = null) {
+    // 등록된 사람 정보 찾기
+    const registrationInfo = this.findRegistrationInfo(equipment.name);
+    
     // 위키 정보가 있으면 상세 정보 표시
     if (wikiItemInfo) {
       messageArea.innerHTML = `
         <div style="width: 100%; max-width: 400px; margin: 0 auto;">
-          <div style="background: #000000; border-radius: 8px; box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); padding: 16px;">
+          <div style="background: #000000; border-radius: 8px; box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); padding: 16px; position: relative;">
+            ${registrationInfo ? `
+              <div style="position: absolute; top: 8px; right: 8px; display: flex; align-items: center; gap: 4px; background: rgba(255, 255, 255, 0.1); padding: 4px 8px; border-radius: 12px; backdrop-filter: blur(4px);">
+                <span style="font-size: 12px;">👑</span>
+                <span style="font-size: 11px; color: #ffffff; font-weight: 500;">${registrationInfo.nickname}</span>
+                <span style="font-size: 10px; color: #ffd700; font-weight: 600;">${registrationInfo.score}</span>
+              </div>
+            ` : ''}
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
               <div>
                 <p style="margin: 0; font-size: 16px; font-weight: 600; color: #ffffff;">${equipment.name}</p>
@@ -198,7 +233,14 @@ export class EquipmentDraw {
       // 위키 정보가 없으면 기본 정보만 표시
       messageArea.innerHTML = `
         <div style="width: 100%; max-width: 400px; margin: 0 auto;">
-          <div style="background: #000000; border-radius: 8px; box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); padding: 16px;">
+          <div style="background: #000000; border-radius: 8px; box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); padding: 16px; position: relative;">
+            ${registrationInfo ? `
+              <div style="position: absolute; top: 8px; right: 8px; display: flex; align-items: center; gap: 4px; background: rgba(255, 255, 255, 0.1); padding: 4px 8px; border-radius: 12px; backdrop-filter: blur(4px);">
+                <span style="font-size: 12px;">👑</span>
+                <span style="font-size: 11px; color: #ffffff; font-weight: 500;">${registrationInfo.nickname}</span>
+                <span style="font-size: 10px; color: #ffd700; font-weight: 600;">${registrationInfo.score}</span>
+              </div>
+            ` : ''}
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
               <div>
                 <p style="margin: 0; font-size: 16px; font-weight: 600; color: #ffffff;">${equipment.name}</p>
@@ -226,9 +268,19 @@ export class EquipmentDraw {
   }
 
   displayAppraisedResult(equipment, resultArea, wikiItemInfo, appraisedStats) {
+    // 등록된 사람 정보 찾기
+    const registrationInfo = this.findRegistrationInfo(equipment.name);
+    
     resultArea.innerHTML = `
       <div style="width: 100%; max-width: 400px; margin: 0 auto;">
-        <div style="background: #000000; border-radius: 8px; box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); padding: 16px;">
+        <div style="background: #000000; border-radius: 8px; box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); padding: 16px; position: relative;">
+          ${registrationInfo ? `
+            <div style="position: absolute; top: 8px; right: 8px; display: flex; align-items: center; gap: 4px; background: rgba(255, 255, 255, 0.1); padding: 4px 8px; border-radius: 12px; backdrop-filter: blur(4px);">
+              <span style="font-size: 12px;">👑</span>
+              <span style="font-size: 11px; color: #ffffff; font-weight: 500;">${registrationInfo.nickname}</span>
+              <span style="font-size: 10px; color: #ffd700; font-weight: 600;">${registrationInfo.score}</span>
+            </div>
+          ` : ''}
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
               <div>
               <p style="margin: 0; font-size: 16px; font-weight: 600; color: #ffffff; text-align: left;">${equipment.name}</p>
