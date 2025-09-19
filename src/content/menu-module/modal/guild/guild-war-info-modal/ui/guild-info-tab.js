@@ -671,8 +671,8 @@ class GuildInfoTab {
       
       if (result.success) {
         return {
-          attackRights: result.remainingAttacks[memberName] || this.calculator.DAILY_ATTACK_LIMIT,
-          defenseRights: result.remainingDefenses[memberName] || this.calculator.DAILY_DEFENSE_LIMIT
+          attackRights: result.remainingAttacks[memberName] !== undefined ? result.remainingAttacks[memberName] : this.calculator.DAILY_ATTACK_LIMIT,
+          defenseRights: result.remainingDefenses[memberName] !== undefined ? result.remainingDefenses[memberName] : this.calculator.DAILY_DEFENSE_LIMIT
         };
       } else {
         return {
