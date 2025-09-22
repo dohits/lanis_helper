@@ -22,12 +22,12 @@ class DynamicContentObserver {
         if (mutation.type === 'childList') {
           mutation.addedNodes.forEach((node) => {
             if (node.nodeType === Node.ELEMENT_NODE) {
-              // 사용자 프로필 DOM 감지
-              if (node.matches && node.matches('.MuiBox-root.css-zwlyuw')) {
+              // 사용자 프로필 DOM 감지 (새로운 CSS 클래스 지원)
+              if (node.matches && (node.matches('.MuiBox-root.css-zwlyuw') || node.matches('.MuiPaper-root.css-kapcme'))) {
                 this.manager.processProfileEnhancement(); // 프로필 강화 기능만 처리
               } else if (node.querySelectorAll) {
-                // 새로 추가된 요소 내의 프로필 컨테이너들 확인
-                const profileContainers = node.querySelectorAll('.MuiBox-root.css-zwlyuw');
+                // 새로 추가된 요소 내의 프로필 컨테이너들 확인 (새로운 구조 지원)
+                const profileContainers = node.querySelectorAll('.MuiBox-root.css-zwlyuw, .MuiPaper-root.css-kapcme, .MuiPaper-root.css-18omu6v');
                 if (profileContainers.length > 0) {
                   // 프로필이 감지되면 프로필 강화 기능만 처리
                   this.manager.processProfileEnhancement();

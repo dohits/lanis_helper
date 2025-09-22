@@ -22,13 +22,13 @@ class CombatPowerSticker {
       const existingStickers = document.querySelectorAll(`.${this.stickerClass}`);
       existingStickers.forEach(sticker => sticker.remove());
       
-      // 직업/레벨 스티커 컨테이너 찾기 (여러 CSS 클래스 지원)
-      const jobLevelContainers = document.querySelectorAll('.MuiBox-root.css-1ep0pmc, .MuiBox-root.css-auxkcs');
+      // 직업/레벨 스티커 컨테이너 찾기 (새로운 CSS 클래스 지원)
+      const jobLevelContainers = document.querySelectorAll('.MuiBox-root.css-1ep0pmc, .MuiBox-root.css-auxkcs, .MuiBox-root.css-1q60s4v, .MuiBox-root.css-1uojo6s');
       
       jobLevelContainers.forEach(container => {
-        // 직업과 레벨 요소 확인
-        const jobElement = container.querySelector('.MuiBox-root.css-new8hh p');
-        const levelElement = container.querySelector('.MuiBox-root.css-10cne0w p');
+        // 직업과 레벨 요소 확인 (새로운 구조 지원)
+        const jobElement = container.querySelector('.MuiBox-root.css-new8hh p, .MuiBox-root.css-1q60s4v p');
+        const levelElement = container.querySelector('.MuiBox-root.css-10cne0w p, .MuiBox-root.css-1uojo6s p');
         
         if (jobElement && levelElement) {
           // 전투력 계산
@@ -119,8 +119,8 @@ class CombatPowerSticker {
         }
       });
       
-      // HP/MP 값 찾기 - 더 정확한 선택자 사용
-      const hpMpContainers = document.querySelectorAll('.MuiBox-root.css-ti5bpj, .MuiBox-root.css-0');
+      // HP/MP 값 찾기 - 새로운 CSS 클래스 지원
+      const hpMpContainers = document.querySelectorAll('.MuiBox-root.css-ti5bpj, .MuiBox-root.css-0, .MuiBox-root.css-1s43vpi');
       
       hpMpContainers.forEach(container => {
         const hpMpElements = container.querySelectorAll('p.MuiTypography-root.MuiTypography-body1');

@@ -20,7 +20,7 @@ class FinalTagAdder {
 
   // 장비 타입 감지 함수
   detectEquipmentType(container) {
-    const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv');
+    const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv, p.MuiTypography-root.MuiTypography-body2.css-1fxvmzd');
     if (!itemNameElement) return 'unknown';
     
     const itemName = itemNameElement.textContent.trim().toLowerCase();
@@ -57,7 +57,7 @@ class FinalTagAdder {
 
   // 종결/준종결/완전무결 태그 추가 함수 (새로운 계산 방식: 최소값 = 최소위력-최대무게*2, 최대값 = 최대위력-최소무게*2)
   addFinalTag(container, powerGrade, weightGrade, powerScore, weightScore, powerNarrow, weightNarrow, powerMin, powerMax, weightMin, weightMax, currentPower, currentWeight) {
-    const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2');
+    const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2, p.MuiTypography-root.MuiTypography-body2.css-17kzaz4');
     if (!itemNameElement) {
       return;
     }

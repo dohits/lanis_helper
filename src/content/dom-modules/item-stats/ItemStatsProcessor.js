@@ -18,7 +18,7 @@ class ItemStatsProcessor {
   // 아이템 스탯 처리 메인 로직 (DOM 기반 계산)
   processItemStats() {
     try {
-      // 더 유연한 선택자 사용
+      // 새로운 UI 구조에 맞는 선택자 사용
       const itemContainers = document.querySelectorAll('.MuiBox-root.css-38zrbw, .MuiBox-root[class*="css-"], .MuiPopover-root .MuiBox-root');
       let foundContainers = 0;
       let processedItems = 0;
@@ -26,8 +26,8 @@ class ItemStatsProcessor {
       itemContainers.forEach(container => {
         if (container.classList.contains('item-stats-processed')) return;
         
-        // 더 유연한 아이템명 선택자
-        const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2, p[class*="MuiTypography"], .MuiTypography-root');
+        // 새로운 UI 구조의 아이템명 선택자 지원
+        const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2, p.MuiTypography-root.MuiTypography-body2.css-17kzaz4, p[class*="MuiTypography"], .MuiTypography-root');
         if (!itemNameElement) return;
         
         const text = itemNameElement.textContent.trim();

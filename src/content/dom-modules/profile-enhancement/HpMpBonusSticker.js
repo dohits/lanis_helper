@@ -85,8 +85,8 @@ class HpMpBonusSticker {
       let hp = 0;
       let mp = 0;
       
-      // HP/MP 값 찾기 - 더 정확한 선택자 사용
-      const hpMpContainers = document.querySelectorAll('.MuiBox-root.css-ti5bpj, .MuiBox-root.css-0');
+      // HP/MP 값 찾기 - 새로운 CSS 클래스 지원
+      const hpMpContainers = document.querySelectorAll('.MuiBox-root.css-ti5bpj, .MuiBox-root.css-0, .MuiBox-root.css-1s43vpi');
       
       hpMpContainers.forEach(container => {
         const hpMpElements = container.querySelectorAll('p.MuiTypography-root.MuiTypography-body1');

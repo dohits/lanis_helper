@@ -1,4 +1,4 @@
-# Lanis Helper 개발자 문서 (v1.8.1)
+# Lanis Helper 개발자 문서 (v1.8.5)
 
 이 폴더는 Lanis Helper Chrome Extension의 개발자용 문서들을 포함합니다.
 
@@ -35,7 +35,31 @@
 - **빌드 결과**: [../dist/](../dist/)
 - **정적 리소스**: [../public/](../public/)
 
-## 🆕 최신 업데이트 (v1.8.1)
+## 🆕 최신 업데이트 (v1.8.5)
+
+### UI 업데이트에 따른 프로필 강화 및 아이템 스탯 기능 개선
+- **새로운 DOM 구조 지원**: 업데이트된 UI의 새로운 CSS 클래스들 지원
+  - `.css-zwlyuw`, `.css-kapcme`, `.css-ypcdaa` 등 새로운 컨테이너 클래스
+  - `.css-1q60s4v`, `.css-1uojo6s` 등 직업/레벨 정보 클래스
+  - `.css-1s43vpi` 등 HP/MP 정보 클래스
+- **프로필 강화 모듈 업데이트**: 
+  - `CombatPowerSticker.js`: 새로운 직업/레벨 컨테이너 구조 지원
+  - `HpMpBonusSticker.js`: 새로운 HP/MP 컨테이너 구조 지원
+  - `DynamicContentObserver.js`: 새로운 프로필 DOM 감지 로직
+- **예시 HTML 업데이트**: 
+  - `user-status-example.html`에 새로운 UI 구조 반영
+  - `item-popover-example.html`에 새로운 팝오버 구조 반영
+  - 일반 프로필 보기 형식 업데이트
+  - 자신 프로필 보기 형식 업데이트 (부스터 팩 정보 포함)
+  - 새로운 그리드 레이아웃 및 CSS 클래스 적용
+- **아이템 스탯 모듈 업데이트**:
+  - `ItemStatsProcessor.js`: 새로운 아이템명 선택자 지원
+  - `DynamicContentObserver.js`: 새로운 팝오버 구조 감지 로직
+  - `RangeInfoAdder.js`: 새로운 스탯 텍스트 선택자 지원
+  - `FinalTagAdder.js`: 새로운 아이템명 및 장비 타입 감지
+- **하위 호환성 유지**: 기존 CSS 클래스들도 계속 지원하여 안정성 확보
+
+## 🆕 이전 업데이트 (v1.8.1)
 
 ### 사용자명 클릭 시 색상별 밑줄 표시 기능 개선
 - **통합 색상 추출 시스템**: 모든 사용자명에서 색상을 추출하여 `text-decoration-color`에 적용

@@ -23,11 +23,13 @@ class DynamicContentObserver {
         if (mutation.type === 'childList') {
           mutation.addedNodes.forEach((node) => {
             if (node.nodeType === Node.ELEMENT_NODE) {
-              // 새로운 DOM 구조에 맞춰 더 유연한 선택자 사용
+              // 새로운 UI 구조에 맞춰 더 유연한 선택자 사용
               if (node.querySelector && (
                 node.querySelector('p.MuiTypography-body2') ||
                 node.querySelector('.MuiPopover-paper') ||
-                node.querySelector('.MuiBox-root.css-38zrbw')
+                node.querySelector('.MuiBox-root.css-38zrbw') ||
+                node.querySelector('.MuiBox-root.css-1oeshfb') ||
+                node.querySelector('.MuiBox-root.css-1821gv5')
               )) {
                 shouldProcessItems = true;
               }
