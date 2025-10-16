@@ -124,7 +124,7 @@ export const COMBINE_ITEM_CONFIGS = {
   forest_essence: {
     name: '[조합]숲의 정수',
     materials: [
-      { name: '켄타우로스의 활', key: 'centaurBow' },
+      { name: '다크엘프의 화살', key: 'darkElfArrow' },
       { name: '프리스트의 성서', key: 'priestBible' },
       { name: '잔다르크의 투구', key: 'joanHelmet' },
       { name: '히드라의 피', key: 'hydraBlood' },
