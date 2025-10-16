@@ -111,22 +111,26 @@ export class ExpectedValueModal extends BaseModal {
     defaultOption.textContent = '케이스를 선택하세요';
     this.itemSelect.appendChild(defaultOption);
 
-    // 원본과 동일한 아이템 목록
-    const items = [
-      { value: 'vitality_potion', text: '[조합] 활력의 포션' },
-      { value: 'seal_key', text: '[조합] 봉인의 열쇠' },
-      { value: 'blue_crystal', text: '[조합] 푸른 결정' },
-      { value: 'red_crystal', text: '[조합] 붉은 결정' },
-      { value: 'high_grade_leather', text: '[조합] 고급 가죽끈' },
-      { value: 'leather_strap', text: '[조합] 가죽끈' },
-      { value: 'old_leather_strap', text: '[조합] 낡은 가죽끈' },
-      { value: 'iron_hammer', text: '[조합] 쇠망치' },
-      { value: 'white_equipment', text: '[분해] 흰색 등급 장비' },
-      { value: 'blue_equipment', text: '[분해] 파랑 등급 장비' },
-      { value: 'yellow_equipment', text: '[분해] 노랑 등급 장비' },
-      { value: 'purple_equipment', text: '[분해] 보라 등급 장비' },
-      { value: 'red_equipment', text: '[분해] 빨강 등급 장비' }
-    ];
+    // 동적으로 아이템 목록 생성
+    const items = [];
+    
+    // 조합 아이템 추가
+    Object.keys(this.itemConfigs).forEach(itemId => {
+      const config = this.itemConfigs[itemId];
+      items.push({
+        value: itemId,
+        text: `[조합] ${config.name}`
+      });
+    });
+    
+    // 분해 아이템 추가
+    Object.keys(this.dismantleConfigs).forEach(itemId => {
+      const config = this.dismantleConfigs[itemId];
+      items.push({
+        value: itemId,
+        text: `[분해] ${config.name}`
+      });
+    });
 
     items.forEach(item => {
       const option = document.createElement('option');
