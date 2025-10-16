@@ -120,6 +120,22 @@ export const COMBINE_ITEM_CONFIGS = {
     },
     type: 'multi',
     calculationType: 'multi_material'
+  },
+  forest_essence: {
+    name: '[조합]숲의 정수',
+    materials: [
+      { name: '켄타우로스의 활', key: 'centaurBow' },
+      { name: '프리스트의 성서', key: 'priestBible' },
+      { name: '잔다르크의 투구', key: 'joanHelmet' },
+      { name: '히드라의 피', key: 'hydraBlood' },
+      { name: '피닉스의 깃털', key: 'phoenixFeather' },
+      { name: '드리아드의 뼈', key: 'dryadBone' }
+    ],
+    successRates: {
+      6: 1.00  // 모든 재료 1개씩 = 100%
+    },
+    type: 'multi',
+    calculationType: 'multi_material'
   }
 };
 
@@ -319,6 +335,17 @@ export const CALCULATION_RULES = {
     baseCost: 300000,
     materialCostFormula: (materialCosts, count) => {
       return calculateOptimalDistribution(materialCosts, count, COMBINE_ITEM_CONFIGS.iron_hammer.materials);
+    },
+    combinationFormula: (materials, count) => {
+      return `재료 ${count}개 조합`;
+    }
+  },
+  
+  forest_essence: {
+    type: 'multi_material',
+    baseCost: 300000,
+    materialCostFormula: (materialCosts, count) => {
+      return calculateOptimalDistribution(materialCosts, count, COMBINE_ITEM_CONFIGS.forest_essence.materials);
     },
     combinationFormula: (materials, count) => {
       return `재료 ${count}개 조합`;
