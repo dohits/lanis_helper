@@ -522,6 +522,16 @@ export class ExpectedValueModal extends BaseModal {
     return null;
   }
 
+  // 선택된 소스에서 가격 타입 가져오기
+  getPriceType(selectedSource) {
+    if (selectedSource === this.avgPriceToggle) {
+      return 'average';
+    } else if (selectedSource === this.recentPriceToggle) {
+      return 'recent';
+    }
+    return 'recent'; // 기본값
+  }
+
   // 로딩 상태 표시
   showLoadingState() {
     this.calculateBtn.disabled = true;
@@ -594,21 +604,24 @@ export class ExpectedValueModal extends BaseModal {
       if (config && config.type === 'single') {
         // 단일 재료 아이템
         const material = config.materials[0];
-        const price = await this.priceFetcher.getItemPrice(material.name, selectedSource);
+        const priceType = this.getPriceType(selectedSource);
+        const price = await this.priceFetcher.getItemPrice(material.name, priceType);
         return { [material.key]: price };
       } else if (config && config.type !== 'single') {
         // 다중 재료 아이템
         const materialCosts = {};
+        const priceType = this.getPriceType(selectedSource);
         for (const material of config.materials) {
-          const price = await this.priceFetcher.getItemPrice(material.name, selectedSource);
+          const price = await this.priceFetcher.getItemPrice(material.name, priceType);
           materialCosts[material.key] = price;
         }
         return materialCosts;
       } else if (dismantleConfig) {
         // 분해 아이템의 경우
         const materialCosts = {};
+        const priceType = this.getPriceType(selectedSource);
         for (const [rewardKey, reward] of Object.entries(dismantleConfig.rewards)) {
-          const price = await this.priceFetcher.getItemPrice(reward.name, selectedSource);
+          const price = await this.priceFetcher.getItemPrice(reward.name, priceType);
           materialCosts[rewardKey] = price;
         }
         return materialCosts;
