@@ -351,11 +351,6 @@
 
 /* 종결/준종결 태그 색상은 JavaScript의 item-colors.js에서 관리됩니다 */
 
-/* 사용자 프로필 링크 스타일 - 언더라인과 커서만 적용 */
-.username-clickable {
-  text-decoration: underline !important;
-  cursor: pointer !important;
-} 
 
 .sub-menu-popup {
   min-width: 180px;

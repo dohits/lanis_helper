@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // 이벤트 리스너 추가
-  document.getElementById('profileLink').addEventListener('change', saveSettings);
   document.getElementById('showItemStats').addEventListener('change', saveSettings);
   
 
@@ -18,17 +17,14 @@ document.addEventListener('DOMContentLoaded', function() {
 // 설정 로드
 async function loadSettings() {
   const items = await utils.SettingsManager.getSettings({
-    profileLink: true,
     showItemStats: true
   });
-  document.getElementById('profileLink').checked = items.profileLink;
   document.getElementById('showItemStats').checked = items.showItemStats;
 }
 
 // 설정 저장
 function saveSettings() {
   const settings = {
-    profileLink: document.getElementById('profileLink').checked,
     showItemStats: document.getElementById('showItemStats').checked
   };
   

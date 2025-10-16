@@ -1,6 +1,6 @@
 // 기댓값 계산기 import
 import ExpectedValueCalculator from '../calculator/expected-value-calculator.js';
-import PriceFetcher from '../calculator/price-fetcher.js';
+import OfficialPriceFetcher from '../calculator/official-price-fetcher.js';
 import { ExpectedValueModal } from './modal/calculator/expected-value-modal.js';
 import { FishingCalculatorModal } from './modal/calculator/fishing-calculator-modal.js';
 import { EquipmentSettingSimModal } from './modal/calculator/equipment-setting-sim-modal.js';
@@ -10,7 +10,6 @@ import UserSearchModal from './modal/item-guide/user-search-modal.js';
 import ProgramInfoModal from './modal/settings/program-info-modal.js';
 import AbilityInfoModal from './modal/settings/ability-info-modal.js';
 import EnchantInfoModal from './modal/settings/enchant-info-modal.js';
-import ItemPriceModal from './modal/item-guide/item-price-modal.js';
 import ItemCollectionModal from './modal/settings/item-collection-modal.js';
 import { GuildWarInfoModal } from './modal/guild/guild-war-info-modal.js';
 import MainMenuRenderer from './renderers/MainMenuRenderer.js';
@@ -24,7 +23,7 @@ class MenuManager {
   constructor() {
     this.stateManager = new MenuStateManager();
     this.calculator = new ExpectedValueCalculator();
-    this.priceFetcher = new PriceFetcher();
+    this.priceFetcher = new OfficialPriceFetcher();
     this.expectedValueModal = new ExpectedValueModal();
     this.fishingCalculatorModal = new FishingCalculatorModal();
     this.equipmentSettingSimModal = new EquipmentSettingSimModal();
@@ -34,7 +33,6 @@ class MenuManager {
     this.programInfoModal = new ProgramInfoModal();
     this.abilityInfoModal = new AbilityInfoModal();
     this.enchantInfoModal = new EnchantInfoModal();
-    this.itemPriceModal = new ItemPriceModal();
     this.itemCollectionModal = new ItemCollectionModal();
     this.guildWarInfoModal = new GuildWarInfoModal();
     this.mainMenuRenderer = new MainMenuRenderer();

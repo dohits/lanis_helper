@@ -1,5 +1,5 @@
 import { FISHING_LEVEL_REWARDS, FISHING_LEVEL_PROBABILITIES, FISH_PER_ATTEMPT } from './fishing-level-data.js';
-import PriceFetcher from '../price-fetcher.js';
+import OfficialPriceFetcher from '../official-price-fetcher.js';
 import ExpectedValueCalculator from '../expected-value-calculator.js';
 import { FishingLevelCalculator } from './fishing-level-calculator.js';
 
@@ -12,7 +12,7 @@ export class FishingRewardCalculator {
     this.rewards = FISHING_LEVEL_REWARDS;
     this.probabilities = FISHING_LEVEL_PROBABILITIES;
     this.fishPerAttempt = FISH_PER_ATTEMPT;
-    this.priceFetcher = new PriceFetcher();
+    this.priceFetcher = new OfficialPriceFetcher();
     this.expectedValueCalculator = new ExpectedValueCalculator();
   }
 

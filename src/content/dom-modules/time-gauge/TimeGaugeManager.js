@@ -81,10 +81,12 @@ class TimeGaugeManager {
     document.body.appendChild(this.gaugeElement);
 
     // 초기 업데이트
-    this.updateTimeGauge();
+    this.updateTimeGauge().catch(error => {
+      console.error('초기 게이지 업데이트 중 오류:', error);
+    });
   }
 
-  updateTimeGauge() {
+  async updateTimeGauge() {
     if (!this.progressElement || !this.timeTextElement) return;
 
     try {
@@ -99,10 +101,13 @@ class TimeGaugeManager {
         return;
       }
 
-      // 통발 설치 시작 시간부터 1시간 계산
+      // 컴포트팩 설정에 따른 통발게이지 최대치 설정
+      const fishingDurationMs = await this.getFishingDuration();
+      
+      // 통발 설치 시작 시간부터 설정된 시간 계산
       const startTime = new Date(this.fishingStartTime);
-      const endTime = new Date(startTime.getTime() + TIME_CONSTANTS.FISHING_DURATION_MS);
-      const totalFishingMs = TIME_CONSTANTS.FISHING_DURATION_MS;
+      const endTime = new Date(startTime.getTime() + fishingDurationMs);
+      const totalFishingMs = fishingDurationMs;
       
       const elapsedMs = now.getTime() - startTime.getTime();
       const progress = Math.min((elapsedMs / totalFishingMs) * 100, 100);
@@ -218,7 +223,9 @@ class TimeGaugeManager {
 
     // 1초마다 업데이트
     this.updateInterval = setInterval(() => {
-      this.updateTimeGauge();
+      this.updateTimeGauge().catch(error => {
+        console.error('게이지 업데이트 중 오류:', error);
+      });
     }, TIME_CONSTANTS.UPDATE_INTERVAL_MS);
 
     // 윈도우 리사이즈 이벤트 리스너 추가
@@ -297,11 +304,11 @@ class TimeGaugeManager {
   }
 
   checkFishingInstallationTime() {
-    // 통발 설치 상태 감지
+    // 통발 설치 상태 감지 - 더 일반적인 선택자 사용
     const fishingStatus = document.querySelector('p[class*="css-gxqi3q"]');
     if (fishingStatus && fishingStatus.textContent.includes('🎣 통발 설치됨')) {
-      // 설치 시간 정보 찾기
-      const timeInfo = document.querySelector('p[class*="css-yniyhy"]');
+      // 설치 시간 정보 찾기 - 실제 DOM 구조에 맞게 수정
+      const timeInfo = document.querySelector('p[class*="css-4vr6hg"]');
       if (timeInfo && timeInfo.textContent.includes('설치 시간:')) {
         this.parseAndUpdateFishingTime(timeInfo.textContent);
       }
@@ -343,13 +350,17 @@ class TimeGaugeManager {
   
           this.fishingStartTime = calculatedStartTime.toISOString();
           this.saveFishingStartTime();
-          this.updateTimeGauge();
+          this.updateTimeGauge().catch(error => {
+            console.error('게이지 업데이트 중 오류:', error);
+          });
         }
       } else {
         // 저장된 시간이 없으면 새로 저장
         this.fishingStartTime = calculatedStartTime.toISOString();
         this.saveFishingStartTime();
-        this.updateTimeGauge();
+        this.updateTimeGauge().catch(error => {
+          console.error('게이지 업데이트 중 오류:', error);
+        });
       }
     } catch (error) {
       console.error('통발 설치 시간 파싱 중 오류:', error);
@@ -367,7 +378,9 @@ class TimeGaugeManager {
       
       
       // 게이지바 즉시 업데이트
-      this.updateTimeGauge();
+      this.updateTimeGauge().catch(error => {
+        console.error('게이지 업데이트 중 오류:', error);
+      });
     } catch (error) {
       console.error('통발 설치 시작 시간 저장 중 오류:', error);
     }
@@ -386,7 +399,9 @@ class TimeGaugeManager {
       }
       
       // 게이지바 즉시 업데이트
-      this.updateTimeGauge();
+      this.updateTimeGauge().catch(error => {
+        console.error('게이지 업데이트 중 오류:', error);
+      });
     } catch (error) {
       console.error('통발 수거 처리 중 오류:', error);
     }
@@ -449,6 +464,31 @@ class TimeGaugeManager {
       
     } catch (error) {
       console.error('통발 설치 시간 초기화 중 오류:', error);
+    }
+  }
+
+  /**
+   * 컴포트팩 설정에 따른 통발게이지 최대치 가져오기
+   * @returns {Promise<number>} 통발게이지 최대치 (밀리초)
+   */
+  async getFishingDuration() {
+    try {
+      if (window.utils && window.utils.SettingsManager) {
+        const settings = await window.utils.SettingsManager.getSettings({
+          useComfortPack: false
+        });
+        
+        // 컴포트팩 사용 시 2시간, 미사용 시 1시간
+        return settings.useComfortPack ? 
+          (2 * 60 * 60 * 1000) : // 2시간
+          TIME_CONSTANTS.FISHING_DURATION_MS; // 1시간
+      }
+      
+      // 기본값: 1시간
+      return TIME_CONSTANTS.FISHING_DURATION_MS;
+    } catch (error) {
+      console.warn('컴포트팩 설정 확인 실패, 기본값 사용:', error);
+      return TIME_CONSTANTS.FISHING_DURATION_MS;
     }
   }
 

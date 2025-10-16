@@ -8,8 +8,8 @@ class MenuStateManager {
     
     // 기본 설정 상수
     this.DEFAULT_SETTINGS = {
-      profileLink: true,
-      showItemStats: true
+      showItemStats: true,
+      useComfortPack: false
     };
     
     this.DEFAULT_MENU_CONFIG = {

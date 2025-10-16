@@ -1,7 +1,7 @@
 import BaseModal from '../base/base-modal.js';
 import { COMBINE_ITEM_CONFIGS, DISMANTLE_ITEM_CONFIGS, isCombineItem, isDismantleItem } from '../../../calculator/item-configs.js';
 import ExpectedValueCalculator from '../../../calculator/expected-value-calculator.js';
-import PriceFetcher from '../../../calculator/price-fetcher.js';
+import OfficialPriceFetcher from '../../../calculator/official-price-fetcher.js';
 
 /**
  * 기댓값 계산기 모달
@@ -22,7 +22,7 @@ export class ExpectedValueModal extends BaseModal {
 
     // 계산기 및 가격 조회기 초기화
     this.calculator = new ExpectedValueCalculator();
-    this.priceFetcher = new PriceFetcher();
+    this.priceFetcher = new OfficialPriceFetcher();
     
     // 아이템별 설정 정보
     this.itemConfigs = COMBINE_ITEM_CONFIGS;
@@ -590,13 +590,13 @@ export class ExpectedValueModal extends BaseModal {
       if (config && config.type === 'single') {
         // 단일 재료 아이템
         const material = config.materials[0];
-        const price = await this.priceFetcher.fetchItemPriceFromGoogleSheet(material.name, selectedSource);
+        const price = await this.priceFetcher.getItemPrice(material.name, selectedSource);
         return { [material.key]: price };
       } else if (config && config.type !== 'single') {
         // 다중 재료 아이템
         const materialCosts = {};
         for (const material of config.materials) {
-          const price = await this.priceFetcher.fetchItemPriceFromGoogleSheet(material.name, selectedSource);
+          const price = await this.priceFetcher.getItemPrice(material.name, selectedSource);
           materialCosts[material.key] = price;
         }
         return materialCosts;
@@ -604,7 +604,7 @@ export class ExpectedValueModal extends BaseModal {
         // 분해 아이템의 경우
         const materialCosts = {};
         for (const [rewardKey, reward] of Object.entries(dismantleConfig.rewards)) {
-          const price = await this.priceFetcher.fetchItemPriceFromGoogleSheet(reward.name, selectedSource);
+          const price = await this.priceFetcher.getItemPrice(reward.name, selectedSource);
           materialCosts[rewardKey] = price;
         }
         return materialCosts;

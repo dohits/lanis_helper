@@ -18,7 +18,6 @@ class MenuActionHandler {
       programInfo: menuManager.programInfoModal,
       abilityInfo: menuManager.abilityInfoModal,
       enchantInfo: menuManager.enchantInfoModal,
-      itemPrice: menuManager.itemPriceModal,
       itemCollection: menuManager.itemCollectionModal,
       guildWarInfo: menuManager.guildWarInfoModal
     };
@@ -43,9 +42,6 @@ class MenuActionHandler {
       case 'equipmentEnchantSim':
         this.openEquipmentEnchantSimModal();
         break;
-      case 'itemPrice':
-        this.modals.itemPrice.open();
-        break;
       case 'openGuide':
         this.modals.itemGuide.open();
         break;
@@ -61,8 +57,8 @@ class MenuActionHandler {
       case 'itemCollection':
         this.modals.itemCollection.open();
         break;
-      case 'profileLink':
       case 'showItemStats':
+      case 'useComfortPack':
         await this.toggleSetting(item.id);
         this.updateToggleButton(button, item);
         break;
@@ -99,16 +95,6 @@ class MenuActionHandler {
   executeSettingAction(settingId) {
     const settings = this.stateManager.getSettings();
     switch (settingId) {
-      case 'profileLink':
-        if (settings[settingId]) {
-          // ON 상태: 기능 활성화
-          window.userProfileManager.processUserNames();
-          window.userProfileManager.processDynamicContent();
-        } else {
-          // OFF 상태: 기능 비활성화
-          window.userProfileManager.removeUserNames();
-        }
-        break;
       case 'showItemStats':
         if (settings[settingId]) {
           // ON 상태: 기능 활성화

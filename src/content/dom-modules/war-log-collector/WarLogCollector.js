@@ -33,13 +33,124 @@ class WarLogCollector {
    * 초기화 메서드
    */
   init() {
+    if (this.isHistoryPage()) {
+      this.setupAutoCollection();
+    }
+  }
+
+  /**
+   * 자동 수집 설정
+   */
+  setupAutoCollection() {
+    // API 요청 완료 감지
+    this.waitForAPICompletion();
+    
+    // DOM 변경 감지 설정
+    this.setupDOMObserver();
+  }
+
+  /**
+   * API 요청 완료 대기 및 자동 수집
+   */
+  waitForAPICompletion() {
+    const checkAPICompletion = () => {
+      // API 요청이 완료되었는지 확인 (테이블에 데이터가 로드되었는지)
+      const tableRows = document.querySelectorAll('tbody tr.MuiTableRow-root');
+      if (tableRows.length > 0) {
+        console.log('[WarLogCollector] API 요청 완료 감지, 자동 수집 시작');
+        this.performAutoCollection();
+      } else {
+        // 1초 후 다시 확인
+        setTimeout(checkAPICompletion, 1000);
+      }
+    };
+
+    // 초기 확인
+    setTimeout(checkAPICompletion, 500);
+  }
+
+  /**
+   * DOM 변경 감지 설정
+   */
+  setupDOMObserver() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+
+    this.observer = new MutationObserver((mutations) => {
+      let shouldCollect = false;
+      
+      mutations.forEach((mutation) => {
+        // 테이블 행이 추가되었는지 확인
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              // 새로운 테이블 행이 추가되었는지 확인
+              if (node.classList && node.classList.contains('MuiTableRow-root')) {
+                shouldCollect = true;
+              }
+              // 자식 노드에서 테이블 행 찾기
+              const tableRows = node.querySelectorAll && node.querySelectorAll('.MuiTableRow-root');
+              if (tableRows && tableRows.length > 0) {
+                shouldCollect = true;
+              }
+            }
+          });
+        }
+      });
+
+      if (shouldCollect) {
+        console.log('[WarLogCollector] DOM 변경 감지, 추가 수집 시작');
+        this.performAutoCollection();
+      }
+    });
+
+    // 테이블 컨테이너 감시
+    const tableContainer = document.querySelector('.MuiTableContainer-root');
+    if (tableContainer) {
+      this.observer.observe(tableContainer, {
+        childList: true,
+        subtree: true
+      });
+    }
+  }
+
+  /**
+   * 자동 수집 수행
+   */
+  performAutoCollection() {
+    if (this.isCollecting) {
+      return;
+    }
+
+    this.isCollecting = true;
+
+    try {
+      const existingLogs = this.loadAllWarLogs();
+      const existingContentSet = new Set(existingLogs.map(log => `${log.timestamp}_${log.player}_${log.target}`));
+      
+      const allLogs = this.collectWarLogs();
+      const newLogs = allLogs.filter(log => {
+        const contentKey = `${log.timestamp}_${log.player}_${log.target}`;
+        return !existingContentSet.has(contentKey);
+      });
+
+      if (newLogs.length > 0) {
+        this.saveWarLogs(newLogs);
+        console.log(`[WarLogCollector] 자동 수집 완료: ${newLogs.length}개 새로운 로그`);
+      }
+    } catch (error) {
+      console.error('[WarLogCollector] 자동 수집 중 오류:', error);
+    } finally {
+      this.isCollecting = false;
+    }
   }
 
   /**
    * 현재 페이지가 전쟁 로그 페이지인지 확인
    */
   isHistoryPage() {
-    return window.location.href.includes('lanis.me/history');
+    return window.location.href.includes('lanis.me/war');
   }
 
   /**
@@ -103,30 +214,34 @@ class WarLogCollector {
   }
 
   /**
-   * 전쟁 로그 수집
+   * 전쟁 로그 수집 (새로운 DOM 구조)
    */
   collectWarLogs() {
     try {
-      // 로그 컨테이너 찾기
-      const logContainer = document.querySelector('.MuiStack-root.css-ca9cid');
-      if (!logContainer) {
+      // 테이블 컨테이너 찾기
+      const tableContainer = document.querySelector('.MuiTableContainer-root');
+      if (!tableContainer) {
+        console.warn('[WarLogCollector] 테이블 컨테이너를 찾을 수 없습니다.');
         return [];
       }
 
-      // 실제 로그 항목들 찾기
-      const logItems = logContainer.querySelectorAll('.MuiBox-root.css-0');
+      // 테이블 행들 찾기
+      const tableRows = tableContainer.querySelectorAll('tbody tr.MuiTableRow-root');
+      if (tableRows.length === 0) {
+        console.warn('[WarLogCollector] 테이블 행을 찾을 수 없습니다.');
+        return [];
+      }
 
       const logs = [];
-      let validLogCount = 0;
       
-      logItems.forEach((item, index) => {
-        const log = this.parseLogItem(item, index);
+      tableRows.forEach((row, index) => {
+        const log = this.parseTableRow(row, index);
         if (log) {
           logs.push(log);
-          validLogCount++;
         }
       });
 
+      console.log(`[WarLogCollector] ${logs.length}개의 전쟁 로그를 수집했습니다.`);
       return logs;
     } catch (error) {
       console.error('[WarLogCollector] 전쟁 로그 수집 실패:', error);
@@ -135,144 +250,88 @@ class WarLogCollector {
   }
 
   /**
-   * 개별 로그 항목 파싱
+   * 테이블 행 파싱 (새로운 DOM 구조)
    */
-  parseLogItem(item, index) {
+  parseTableRow(row, index) {
     try {
-      // 로그 타입 (칩) - 더 정확한 선택자
-      const typeElement = item.querySelector('.MuiChip-label, .MuiChip-root .MuiChip-label');
-      const type = typeElement ? typeElement.textContent.trim() : '';
-
-      // 로그 시간 - 더 정확한 선택자
-      const timeElement = item.querySelector('p.MuiTypography-body2, .MuiTypography-body2');
-      const timestamp = timeElement ? timeElement.textContent.trim() : '';
-
-      // 로그 내용 - 더 정확한 선택자
-      const contentElement = item.querySelector('p.MuiTypography-body1, .MuiTypography-body1');
-      const description = contentElement ? contentElement.textContent.trim() : '';
-
-      if (!type || !timestamp || !description) {
+      const cells = row.querySelectorAll('td');
+      if (cells.length < 6) {
+        console.warn(`[WarLogCollector] 행 ${index}: 셀 개수가 부족합니다 (${cells.length}개)`);
         return null;
       }
 
-      // 성공/실패 판단
-      const chipElement = item.querySelector('.MuiChip-root');
-      const isSuccess = chipElement ? chipElement.classList.contains('MuiChip-colorSuccess') : false;
-      const result = isSuccess ? 'success' : 'defeat';
+      // 각 셀에서 데이터 추출
+      const timeCell = cells[0];
+      const resultCell = cells[1];
+      const villageCell = cells[2];
+      const attackerCell = cells[3];
+      const guildCell = cells[4];
+      const targetCell = cells[5];
 
-      // 내용에서 세부 정보 파싱
-      const parsed = this.parseWarLogDescription(description, type);
-      if (!parsed) {
+      // 시간 추출
+      const timeElement = timeCell.querySelector('span[aria-label]');
+      const timestamp = timeElement ? timeElement.getAttribute('aria-label') : timeCell.textContent.trim();
+
+      // 결과 추출 (칩에서)
+      const resultChip = resultCell.querySelector('.MuiChip-label');
+      const result = resultChip ? resultChip.textContent.trim() : resultCell.textContent.trim();
+
+      // 마을 추출 (칩에서)
+      const villageChip = villageCell.querySelector('.MuiChip-label');
+      const village = villageChip ? villageChip.textContent.trim() : villageCell.textContent.trim();
+
+      // 공격자 추출
+      const attacker = attackerCell.textContent.trim();
+
+      // 길드 추출
+      const guild = guildCell.textContent.trim();
+
+      // 대상 추출
+      const target = targetCell.textContent.trim();
+
+      if (!timestamp || !result || !attacker || !guild) {
+        console.warn(`[WarLogCollector] 행 ${index}: 필수 데이터가 누락되었습니다.`);
         return null;
       }
+
+      // 결과 타입 판단
+      const isSuccess = result.includes('승리');
+      const resultType = isSuccess ? 'success' : 'defeat';
+
+      // 로그 타입 판단
+      let logType = '공격';
+      if (result.includes('요새 강화')) {
+        logType = '요새 강화';
+      } else if (result.includes('요새 계략')) {
+        logType = '요새 계략';
+      }
+
+      // 설명 생성
+      const description = `${guild} 길드 ${attacker}은/는 ${village} 마을의 ${target}을/를 ${result}했다.`;
 
       const warLog = {
         id: `war_log_${Date.now()}_${index}`,
         timestamp: timestamp,
-        type: type,
-        result: result,
-        player: parsed.player,
-        village: parsed.village,
-        target: parsed.target,
-        action: parsed.action,
+        type: logType,
+        result: resultType,
+        player: attacker,
+        village: village,
+        target: target,
+        action: result,
         description: description,
+        playerguild: guild,
+        targetguild: null,
         collectedAt: new Date().toISOString()
       };
 
       return warLog;
     } catch (error) {
-      console.error(`[WarLogCollector] 로그 항목 ${index} 파싱 실패:`, error);
+      console.error(`[WarLogCollector] 행 ${index} 파싱 실패:`, error);
       return null;
     }
   }
 
-  /**
-   * 전쟁로그 설명 텍스트를 파싱하는 함수 (war-log-example.js 기반)
-   */
-  parseWarLogDescription(description, type) {
-    // 공격 (승리/패배) 패턴 - 조사 고려
-    if (type.includes('공격')) {
-      // 패턴 1: "길드명 길드 플레이어명은/는 마을명 마을의 대상플레이어을/를 공격하여 결과했다!"
-      const attackMatch1 = description.match(/^(.+?) 길드 (.+?)(?:은|는) (.+?) 마을의 (.+?)(?:을|를) 공격하여 (.+?)했다!?\.?$/);
-      if (attackMatch1) {
-        const [, guild, player, villageName, targetPlayer, result] = attackMatch1;
-        return {
-          player,
-          village: villageName,
-          target: targetPlayer,
-          action: `공격 (${result})`
-        };
-      }
-      
-      // 패턴 2: "길드명 길드 플레이어명은/는 마을명 요새을/를 공격하여 결과했다."
-      const attackMatch2 = description.match(/^(.+?) 길드 (.+?)(?:은|는) (.+?) 요새(?:을|를) 공격하여 (.+?)했다\.$/);
-      if (attackMatch2) {
-        const [, guild, player, villageName, result] = attackMatch2;
-        return {
-          player,
-          village: villageName,
-          target: '요새',
-          action: `공격 (${result})`
-        };
-      }
-      
-      // 패턴 3: "길드명 길드 플레이어명은/는 마을명 마을의 대상플레이어을/를 공격하여 결과했다."
-      const attackMatch3 = description.match(/^(.+?) 길드 (.+?)(?:은|는) (.+?) 마을의 (.+?)(?:을|를) 공격하여 (.+?)했다\.$/);
-      if (attackMatch3) {
-        const [, guild, player, villageName, targetPlayer, result] = attackMatch3;
-        return {
-          player,
-          village: villageName,
-          target: targetPlayer,
-          action: `공격 (${result})`
-        };
-      }
-    }
-    
-    // 요새 개발 패턴 - 조사 고려
-    if (type.includes('요새 개발')) {
-      const developmentMatch = description.match(/^(.+?) 길드 (.+?)(?:은|는) (.+?) 요새 (.+?)(?:을|를) (\d+) (.+?)시켰다\.$/);
-      if (developmentMatch) {
-        const [, guild, player, villageName, stat, amount, action] = developmentMatch;
-        return {
-          player,
-          village: villageName,
-          target: '요새',
-          action: `${stat} ${amount} ${action}`
-        };
-      }
-    }
-    
-    // 요새 파괴 패턴 - 조사 고려
-    if (type.includes('요새 파괴')) {
-      const destructionMatch = description.match(/^(.+?) 길드 (.+?)(?:은|는) (.+?) 요새 (.+?)(?:을|를) (\d+) (.+?)시켰다\.$/);
-      if (destructionMatch) {
-        const [, guild, player, villageName, stat, amount, action] = destructionMatch;
-        return {
-          player,
-          village: villageName,
-          target: '요새',
-          action: `${stat} ${amount} ${action}`
-        };
-      }
-    }
-    
-    // 마을 점령 패턴 - 조사 고려
-    if (type.includes('마을 점령')) {
-      const occupationMatch = description.match(/^(.+?) 길드 (.+?)(?:은|는) (.+?) 마을(?:을|를) 점령했다!$/);
-      if (occupationMatch) {
-        const [, guild, player, villageName] = occupationMatch;
-        return {
-          player,
-          village: villageName,
-          target: '마을',
-          action: '점령'
-        };
-      }
-    }
-    
-    return null;
-  }
+
 
   /**
    * 시간 문자열을 Date 객체로 변환하는 헬퍼 함수
@@ -525,7 +584,11 @@ class WarLogCollector {
    * 정리 메서드
    */
   destroy() {
-    // 수동 수집 모드에서는 특별히 할 일이 없음
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
+    }
+    this.isCollecting = false;
   }
 }
 

@@ -47,7 +47,6 @@ function loadSettingsAndExecute() {
     }
 
     utils.SettingsManager.getSettings({
-      profileLink: true,
       feature2: false,
       feature3: false,
       showItemStats: true,
@@ -57,18 +56,6 @@ function loadSettingsAndExecute() {
         const settings = items;
         
 
-        
-        // 프로필 링크 처리
-        utils.safeExecute(() => {
-          if (managers.userProfileManager) {
-            if (settings.profileLink) {
-              managers.userProfileManager.processUserNames();
-              managers.userProfileManager.processDynamicContent();
-            } else {
-              managers.userProfileManager.removeUserNames();
-            }
-          }
-        }, '프로필 링크 처리 중 오류');
 
         // 아이템 등급 표기 처리 (아이템 스카우터)
         utils.safeExecuteAsync(async () => {
@@ -310,16 +297,9 @@ setInterval(() => {
           
           // 설정 로드 및 기능 실행
           const settings = await utils.SettingsManager.getSettings({
-            profileLink: true,
             showItemStats: true,
             showTimeGauge: true
           });
-          
-          // 프로필 링크 처리 (설정에 따라)
-          if (settings.profileLink && managers.userProfileManager) {
-            await managers.userProfileManager.processUserNames();
-            managers.userProfileManager.processDynamicContent();
-          }
           
           // 아이템 스카우터 처리 (설정에 따라)
           if (settings.showItemStats && managers.itemStatsManager) {

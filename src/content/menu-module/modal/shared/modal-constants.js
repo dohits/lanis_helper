@@ -50,16 +50,6 @@ export const MODAL_CONFIGS = {
     width: '90vw',
     height: 'auto'
   },
-  itemPrice: {
-    id: 'itemPriceModal',
-    title: '아이템 시세 조회',
-    className: 'item-price-modal',
-    contentClassName: 'item-price-content',
-    maxWidth: '1200px',
-    maxHeight: '90vh',
-    width: '90vw',
-    height: 'auto'
-  },
   guildWarInfo: {
     id: 'guild-war-info-modal',
     title: '길드전 정보',

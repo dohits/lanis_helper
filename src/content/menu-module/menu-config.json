@@ -82,13 +82,6 @@
         "title": "아이템 도감",
         "items": [
           {
-            "id": "itemPrice",
-            "icon": "💹",
-            "text": "아이템 시세 조회",
-            "title": "구글 시트 기반 아이템 시세 그래프",
-            "btnType": "purpleGradient"
-          },
-          {
             "id": "userSearch",
             "icon": "🔍",
             "text": "사용자 검색",
@@ -128,17 +121,17 @@
                 "btnType": "purpleGradient"
               },
               {
-                "id": "profileLink",
-                "icon": "👤",
-                "text": "프로필 링크",
-                "title": "사용자 프로필 링크 표시",
-                "btnType": "toggle"
-              },
-              {
                 "id": "showItemStats",
                 "icon": "📊",
                 "text": "아이템 스카우터",
                 "title": "아이템 감정 정보 표시",
+                "btnType": "toggle"
+              },
+              {
+                "id": "useComfortPack",
+                "icon": "⏰",
+                "text": "컴포트팩 사용",
+                "title": "통발게이지 최대치 설정 (ON: 2시간, OFF: 1시간)",
                 "btnType": "toggle"
               },
               {

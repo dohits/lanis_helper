@@ -21,7 +21,7 @@ class SubMenuRenderer {
     const button = document.createElement('button');
     
     // 토글 버튼인지 확인
-    const isToggleButton = item.id === 'profileLink' || item.id === 'showItemStats';
+    const isToggleButton = item.id === 'showItemStats' || item.id === 'useComfortPack';
     if (isToggleButton) {
       options.isEnabled = this.settings[item.id];
     }
@@ -57,8 +57,8 @@ class SubMenuRenderer {
     try {
       if (window.utils && window.utils.SettingsManager) {
         const latestSettings = await window.utils.SettingsManager.getSettings({
-          profileLink: true,
-          showItemStats: true
+          showItemStats: true,
+          useComfortPack: false
         });
         this.settings = latestSettings;
       }
@@ -68,8 +68,8 @@ class SubMenuRenderer {
         console.warn('확장 프로그램 컨텍스트가 무효화되었습니다. 기본 설정을 사용합니다.');
         // 기본 설정 사용
         this.settings = {
-          profileLink: true,
-          showItemStats: true
+          showItemStats: true,
+          useComfortPack: false
         };
       } else {
         console.warn('최신 설정 로드 실패:', error);
