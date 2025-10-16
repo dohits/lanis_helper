@@ -136,6 +136,22 @@ export const COMBINE_ITEM_CONFIGS = {
     },
     type: 'multi',
     calculationType: 'multi_material'
+  },
+  tower_essence: {
+    name: '[조합]탑의 정수',
+    materials: [
+      { name: '황제의 두루마리', key: 'emperorScroll' },
+      { name: '백호의 가죽', key: 'whiteTigerLeather' },
+      { name: '네크로맨서의 책', key: 'necromancerBook' },
+      { name: '주작의 깃털', key: 'vermilionBirdFeather' },
+      { name: '켄타우로스의 활', key: 'centaurBow' },
+      { name: '선인의 술병', key: 'sageWineBottle' }
+    ],
+    successRates: {
+      6: 1.00  // 모든 재료 1개씩 = 100%
+    },
+    type: 'multi',
+    calculationType: 'multi_material'
   }
 };
 
@@ -346,6 +362,17 @@ export const CALCULATION_RULES = {
     baseCost: 300000,
     materialCostFormula: (materialCosts, count) => {
       return calculateOptimalDistribution(materialCosts, count, COMBINE_ITEM_CONFIGS.forest_essence.materials);
+    },
+    combinationFormula: (materials, count) => {
+      return `재료 ${count}개 조합`;
+    }
+  },
+  
+  tower_essence: {
+    type: 'multi_material',
+    baseCost: 300000,
+    materialCostFormula: (materialCosts, count) => {
+      return calculateOptimalDistribution(materialCosts, count, COMBINE_ITEM_CONFIGS.tower_essence.materials);
     },
     combinationFormula: (materials, count) => {
       return `재료 ${count}개 조합`;
