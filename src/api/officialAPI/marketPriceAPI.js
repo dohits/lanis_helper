@@ -216,15 +216,15 @@ class MarketPriceAPI {
           const latestEntry = marketPrice.priceHistory[marketPrice.priceHistory.length - 1];
           return latestEntry.average || 0;
         }
-        // priceHistory가 없으면 sevenDays.average 사용
-        return marketPrice.sevenDays?.average || 0;
+        // priceHistory가 없으면 thirtyDays.average 사용
+        return marketPrice.thirtyDays?.average || 0;
       } else if (priceType === 'average') {
-        // 평균가: sevenDays.average 사용
-        return marketPrice.sevenDays?.average || 0;
+        // 평균가: thirtyDays.average 사용
+        return marketPrice.thirtyDays?.average || 0;
       }
 
-      // 기본값: sevenDays.average
-      return marketPrice.sevenDays?.average || 0;
+      // 기본값: thirtyDays.average
+      return marketPrice.thirtyDays?.average || 0;
 
     } catch (error) {
       console.error(`${itemName} 가격 가져오기 실패:`, error);
@@ -292,9 +292,9 @@ class MarketPriceAPI {
       
       return {
         prices: prices,
-        averagePrice: marketPrice.sevenDays?.average || 0, // 평균가: sevenDays.average
+        averagePrice: marketPrice.thirtyDays?.average || 0, // 평균가: thirtyDays.average
         recentPrice: recentPrice, // 최근가: priceHistory 마지막 날짜의 average
-        totalTrades: marketPrice.sevenDays?.count || 0
+        totalTrades: marketPrice.thirtyDays?.count || 0
       };
 
     } catch (error) {

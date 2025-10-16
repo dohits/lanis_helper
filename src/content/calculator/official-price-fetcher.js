@@ -54,11 +54,11 @@ class OfficialPriceFetcher {
       }
 
       return {
-        average: marketPrice.sevenDays?.average || 0, // 평균가: sevenDays.average
+        average: marketPrice.thirtyDays?.average || 0, // 평균가: thirtyDays.average
         recent: recentPrice, // 최근가: priceHistory 마지막 날짜의 average
-        min: marketPrice.sevenDays?.min || 0,
-        max: marketPrice.sevenDays?.max || 0,
-        count: marketPrice.sevenDays?.count || 0
+        min: marketPrice.thirtyDays?.min || 0,
+        max: marketPrice.thirtyDays?.max || 0,
+        count: marketPrice.thirtyDays?.count || 0
       };
 
     } catch (error) {
