@@ -122,9 +122,9 @@ export const COMBINE_ITEM_CONFIGS = {
     calculationType: 'multi_material'
   },
   forest_essence: {
-    name: '[조합]숲의 정수',
+    name: '숲의 정수',
     materials: [
-      { name: '다크엘프의 화살', key: 'darkElfArrow' },
+      { name: '다크 엘프의 화살', key: 'darkElfArrow' },
       { name: '프리스트의 성서', key: 'priestBible' },
       { name: '잔다르크의 투구', key: 'joanHelmet' },
       { name: '히드라의 피', key: 'hydraBlood' },
@@ -138,11 +138,11 @@ export const COMBINE_ITEM_CONFIGS = {
     calculationType: 'multi_material'
   },
   tower_essence: {
-    name: '[조합]탑의 정수',
+    name: '탑의 정수',
     materials: [
       { name: '황제의 두루마리', key: 'emperorScroll' },
       { name: '백호의 가죽', key: 'whiteTigerLeather' },
-      { name: '네크로맨서의 책', key: 'necromancerBook' },
+      { name: '네크로멘서의 책', key: 'necromancerBook' },
       { name: '주작의 깃털', key: 'vermilionBirdFeather' },
       { name: '켄타우로스의 활', key: 'centaurBow' },
       { name: '선인의 술병', key: 'sageWineBottle' }
