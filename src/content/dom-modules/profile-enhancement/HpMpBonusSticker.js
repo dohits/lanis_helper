@@ -18,33 +18,52 @@ class HpMpBonusSticker {
 
   addHpMpBonusStickers() {
     try {
-      // 기존 스티커 제거
-      const existingStickers = document.querySelectorAll(`.${this.stickerClass}`);
+      // 기존 스티커 제거 (이미 추가된 스티커는 제외)
+      const existingStickers = document.querySelectorAll(`.${this.stickerClass}:not([data-enhanced="true"])`);
       existingStickers.forEach(sticker => sticker.remove());
       
-      // 기본 정보 섹션 찾기 - 더 구체적인 선택자 사용
+      // 기본 정보 섹션 찾기 (다크모드/화이트모드 모두 지원)
       const infoSections = document.querySelectorAll('.MuiPaper-root');
-      let addedToFirst = false; // 첫 번째 섹션에만 추가하기 위한 플래그
       
       infoSections.forEach(section => {
-        // "기본 정보" 제목이 있는 섹션 찾기
+        // "기본 정보" 제목이 있는 섹션 찾기 (자신 프로필만)
         const titleElement = section.querySelector('h6.MuiTypography-root');
-        if (titleElement && titleElement.textContent.includes('기본 정보') && !addedToFirst) {
+        if (titleElement && titleElement.textContent.includes('기본 정보')) {
+          // 이미 스티커가 있는지 확인
+          const existingSticker = titleElement.querySelector(`.${this.stickerClass}`);
+          if (existingSticker) {
+            return; // 이미 스티커가 있으면 건너뛰기
+          }
+          
+          // 자신 프로필인지 확인 (골드, 은행, 숙련도 등이 있는지 확인)
+          const hasOwnProfile = section.textContent.includes('골드:') || 
+                                section.textContent.includes('은행:') || 
+                                section.textContent.includes('숙련도:');
+          
+          if (!hasOwnProfile) {
+            return; // 일반 프로필이면 스티커 추가하지 않음
+          }
+          
           // HP/MP 보너스 계산
-          const hpMpBonus = this.calculateHpMpBonus();
+          const hpMpBonus = this.calculateHpMpBonus(section);
+          
+          if (hpMpBonus === 0) {
+            return; // HP/MP 보너스가 0이면 스티커 추가하지 않음
+          }
           
           // HP/MP 보너스 스티커 컨테이너 생성
           const hpMpBonusStickerContainer = document.createElement('div');
           hpMpBonusStickerContainer.className = `MuiBox-root ${this.stickerClass}`;
+          hpMpBonusStickerContainer.setAttribute('data-enhanced', 'true');
           hpMpBonusStickerContainer.style.cssText = `
             display: inline-flex;
             align-items: center;
             justify-content: center;
             margin-left: auto;
             padding: 2px 6px;
-            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            background: linear-gradient(135deg, rgb(33, 150, 243) 0%, rgb(25, 118, 210) 100%);
             border-radius: 12px;
-            border: 1px solid #0D47A1;
+            border: 1px solid rgb(13, 71, 161);
             width: auto;
             min-width: fit-content;
           `;
@@ -56,22 +75,22 @@ class HpMpBonusSticker {
             color: white;
             font-size: 11px;
             font-weight: bold;
-            margin: 0;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            margin: 0px;
+            text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px;
           `;
-          hpMpBonusStickerText.textContent = `HP/MP 점수 ${hpMpBonus}`;
+          hpMpBonusStickerText.textContent = `HP/MP 점수 ${hpMpBonus.toLocaleString()}`;
           
           hpMpBonusStickerContainer.appendChild(hpMpBonusStickerText);
           
-          // 제목 컨테이너를 flex로 만들어서 양 끝 정렬
-          titleElement.style.display = 'flex';
-          titleElement.style.justifyContent = 'space-between';
-          titleElement.style.alignItems = 'center';
-          titleElement.style.width = '100%';
+          // 제목 컨테이너를 flex로 만들어서 양 끝 정렬 (이미 스타일이 있으면 유지)
+          if (!titleElement.style.display || titleElement.style.display !== 'flex') {
+            titleElement.style.display = 'flex';
+            titleElement.style.justifyContent = 'space-between';
+            titleElement.style.alignItems = 'center';
+            titleElement.style.width = '100%';
+          }
           
           titleElement.appendChild(hpMpBonusStickerContainer);
-          
-          addedToFirst = true; // 첫 번째 섹션에 추가했음을 표시
         }
       });
       
@@ -80,13 +99,16 @@ class HpMpBonusSticker {
     }
   }
 
-  calculateHpMpBonus() {
+  calculateHpMpBonus(section) {
     try {
       let hp = 0;
       let mp = 0;
       
-      // HP/MP 값 찾기 - 새로운 CSS 클래스 지원
-      const hpMpContainers = document.querySelectorAll('.MuiBox-root.css-ti5bpj, .MuiBox-root.css-0, .MuiBox-root.css-1s43vpi');
+      // 전달받은 섹션에서 HP/MP 찾기, 없으면 전체 문서에서 찾기
+      const searchRoot = section ? section.closest('.MuiBox-root.css-zwlyuw') || section : document;
+      
+      // HP/MP 값 찾기 - 새로운 CSS 클래스 지원 (다크모드/화이트모드 모두)
+      const hpMpContainers = searchRoot.querySelectorAll('.MuiBox-root.css-ti5bpj, .MuiBox-root.css-0');
       
       hpMpContainers.forEach(container => {
         const hpMpElements = container.querySelectorAll('p.MuiTypography-root.MuiTypography-body1');

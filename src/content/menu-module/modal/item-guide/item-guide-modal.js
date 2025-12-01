@@ -587,7 +587,16 @@ class ItemGuideModal extends BaseModal {
     items.forEach((item) => {
       const itemName = escapeHtml(item.name || '알 수 없는 아이템');
       const type = escapeHtml(item.type || '');
-      const typeDisplay = type ? ` (${type})` : '';
+      
+      // 타입 표시: 무기인 경우 weapon_type 표시, 그 외는 type 표시
+      let typeDisplay = '';
+      if (type === '무기') {
+        const weaponType = escapeHtml(item.weapon_type || '미확인');
+        typeDisplay = weaponType ? ` (${weaponType})` : '';
+      } else if (type) {
+        typeDisplay = ` (${type})`;
+      }
+      
       const powerRange = (item.power_min !== null && item.power_min !== undefined && item.power_max !== null && item.power_max !== undefined) ? `${item.power_min}-${item.power_max}` : 'N/A';
       const weightRange = (item.weight_min !== null && item.weight_min !== undefined && item.weight_max !== null && item.weight_max !== undefined) ? `${item.weight_min}-${item.weight_max}` : 'N/A';
       const abilities = item.abilities && item.abilities.length > 0 ? 
@@ -596,19 +605,12 @@ class ItemGuideModal extends BaseModal {
         item.attributes.map(attr => escapeHtml(attr)).join(', ') : 'N/A';
       
       // 카테고리 분류
-      let mainCategory = '';
+      let mainCategory = type || '';
       let subCategory = '';
-      if (type) {
-        const categories = type.split('/');
-        if (categories.length >= 2) {
-          mainCategory = categories[0];
-          subCategory = categories[1];
-        } else {
-          mainCategory = categories[0];
-          if (mainCategory === '무기') {
-            subCategory = '미확인';
-          }
-        }
+      
+      // 무기인 경우 weapon_type을 서브 카테고리로 사용
+      if (mainCategory === '무기') {
+        subCategory = item.weapon_type || '미확인';
       }
       
       // 카테고리별 아이콘 설정

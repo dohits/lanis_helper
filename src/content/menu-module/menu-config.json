@@ -114,13 +114,6 @@
             "title": "설정",
             "items": [
               {
-                "id": "itemCollection",
-                "icon": "📦",
-                "text": "아이템 수집",
-                "title": "레어 아이템 데이터 수집 및 관리",
-                "btnType": "purpleGradient"
-              },
-              {
                 "id": "showItemStats",
                 "icon": "📊",
                 "text": "아이템 스카우터",

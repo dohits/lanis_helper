@@ -89,13 +89,13 @@ export class BaseItemSelector {
     
     // 무기인 경우 타입 정보 추가
     let displayName = item.name || '알 수 없는 아이템';
-    if (this.categoryId === 'weapon' && item.type) {
-      const categories = item.type.split('/');
-      if (categories.length >= 2) {
-        displayName = `${item.name} (${categories[1]})`;
-      } else if (categories.length === 1 && categories[0] === '무기') {
-        displayName = `${item.name} (미확인)`;
-      }
+    if (this.categoryId === 'weapon' && item.type === '무기') {
+      // 무기인 경우 weapon_type 표시
+      const weaponType = item.weapon_type || '미확인';
+      displayName = `${item.name} (${weaponType})`;
+    } else if (this.categoryId !== 'weapon' && item.type) {
+      // 방어구/장신구인 경우 type 표시
+      displayName = `${item.name} (${item.type})`;
     }
     
     name.textContent = displayName;

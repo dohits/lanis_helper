@@ -4,49 +4,63 @@
 
 주요 구조:
 - .MuiPaper-root.MuiPopover-paper: 팝오버 컨테이너
-- .item-stats-processed: 아이템 감정 정보가 추가된 컨테이너
-- .item-stats-wrapper: 감정 정보를 감싸는 래퍼
-- .item-grade-tag-row: 태그/점수 표기 줄
-- .power-range-processed/.weight-range-processed: 위력/무게 감정 정보가 추가된 요소
-- .stat-detail-row: 퍼센트/점수 표기 줄
+- .item-stats-processed: 아이템 감정 정보가 추가된 컨테이너 (최상위 MuiBox-root에 이미 포함될 수 있음)
+- .item-stats-wrapper: 감정 정보를 감싸는 래퍼 (스카우터 적용 후에만 존재)
+- .item-grade-tag-row: 태그/점수 표기 줄 (스카우터 적용 후)
+- .power-range-processed/.weight-range-processed: 위력/무게 감정 정보가 추가된 요소 (스카우터 적용 후)
+- .stat-detail-row: 퍼센트/점수 표기 줄 (스카우터 적용 후)
+- 공유 버튼: 아이템 타입 옆에 위치 (MuiIconButton)
+- 경고 메시지: 내구도 정보 아래에 표시될 수 있음 (css-5qjdq7, css-tch4n8)
 
 === 최신 아이템 팝오버 구조 (업데이트된 UI) ===
 아이템 스카우터 적용전 원본 형식:
+- item-stats-processed 클래스가 최상위 MuiBox-root에 이미 포함됨
+- item-stats-wrapper가 없음
+- 아이템 타입 옆에 공유 버튼이 있음
+- 경고 메시지가 내구도 정보 아래에 표시될 수 있음
 -->
-<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper css-10xhpf" tabindex="-1" style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); --Paper-overlay: linear-gradient(rgba(255, 255, 255, 0.119), rgba(255, 255, 255, 0.119)); opacity: 1; transform: none; top: 627px; transition: opacity 291ms cubic-bezier(0.4, 0, 0.2, 1), transform 194ms cubic-bezier(0.4, 0, 0.2, 1); left: 37px; transform-origin: 0px 0px;">
-  <div class="MuiBox-root css-38zrbw">
+<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper css-wapm8x" tabindex="-1" style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); --Paper-overlay: linear-gradient(rgba(255, 255, 255, 0.119), rgba(255, 255, 255, 0.119)); opacity: 1; transform: none; top: 776px; transition: opacity 304ms cubic-bezier(0.4, 0, 0.2, 1), transform 202ms cubic-bezier(0.4, 0, 0.2, 1); left: 7px; transform-origin: 21.8px 0px;">
+  <div class="MuiBox-root css-38zrbw item-stats-processed">
     <div class="MuiBox-root css-1oeshfb">
       <div class="MuiBox-root css-0">
-        <p class="MuiTypography-root MuiTypography-body2 css-17kzaz4">빙하의 너클<span class="MuiTypography-root MuiTypography-body1 css-1fjwrsq">(귀속)</span></p>
+        <p class="MuiTypography-root MuiTypography-body2 css-19uxm9b">고통의 나이프<span class="MuiTypography-root MuiTypography-body1 css-1fjwrsq">(귀속)</span></p>
       </div>
       <div class="MuiBox-root css-171onha">
-        <p class="MuiTypography-root MuiTypography-body2 css-1fxvmzd">너클</p>
+        <p class="MuiTypography-root MuiTypography-body2 css-zlxfnt">나이프</p>
+        <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-120pu8j" tabindex="0" type="button">
+          <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-vh810p" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92"></path>
+          </svg>
+        </button>
       </div>
     </div>
-    <div class="MuiBox-root css-1821gv5">
+    <div class="MuiBox-root css-1821gv5 item-stats-processed">
       <div class="MuiBox-root css-gg4vpm">
-        <p class="MuiTypography-root MuiTypography-body2 css-1fxvmzd">위력</p>
-        <p class="MuiTypography-root MuiTypography-body2 css-1fxvmzd">422<span class="MuiTypography-root MuiTypography-body1 css-905qu0">(276 - 472)</span></p>
+        <p class="MuiTypography-root MuiTypography-body2 css-zlxfnt">위력</p>
+        <p class="MuiTypography-root MuiTypography-body2 css-zlxfnt">367<span class="MuiTypography-root MuiTypography-body1 css-905qu0">(221 - 378)</span></p>
       </div>
       <div class="MuiBox-root css-gg4vpm">
-        <p class="MuiTypography-root MuiTypography-body2 css-1fxvmzd">무게</p>
-        <p class="MuiTypography-root MuiTypography-body2 css-1fxvmzd">65<span class="MuiTypography-root MuiTypography-body1 css-905qu0">(41 - 66)</span></p>
+        <p class="MuiTypography-root MuiTypography-body2 css-zlxfnt">무게</p>
+        <p class="MuiTypography-root MuiTypography-body2 css-zlxfnt">31<span class="MuiTypography-root MuiTypography-body1 css-905qu0">(28 - 45)</span></p>
       </div>
       <div class="MuiBox-root css-gg4vpm">
-        <p class="MuiTypography-root MuiTypography-body2 css-1fxvmzd">속성</p>
-        <p class="MuiTypography-root MuiTypography-body2 css-1fxvmzd">물</p>
+        <p class="MuiTypography-root MuiTypography-body2 css-zlxfnt">속성</p>
+        <p class="MuiTypography-root MuiTypography-body2 css-zlxfnt">불</p>
       </div>
       <div class="MuiBox-root css-gg4vpm">
-        <p class="MuiTypography-root MuiTypography-body2 css-1fxvmzd">내구도</p>
-        <p class="MuiTypography-root MuiTypography-body2 css-1fxvmzd">4110/9000</p>
+        <p class="MuiTypography-root MuiTypography-body2 css-zlxfnt">내구도</p>
+        <p class="MuiTypography-root MuiTypography-body2 css-zlxfnt">3025/4000</p>
       </div>
       <div class="MuiBox-root css-gg4vpm">
         <p class="MuiTypography-root MuiTypography-body2 css-1049ci5">귀속 해제 가능</p>
         <p class="MuiTypography-root MuiTypography-body2 css-1049ci5">5/5회 남음</p>
       </div>
+      <div class="MuiBox-root css-5qjdq7">
+        <p class="MuiTypography-root MuiTypography-body2 css-tch4n8">⚠ 최대 내구도가 낮은 아이템입니다.</p>
+      </div>
       <div class="MuiBox-root css-e0tmsk"></div>
       <div class="MuiBox-root css-gg4vpm">
-        <p class="MuiTypography-root MuiTypography-body2 css-1fxvmzd">냉기 돌풍: 매 공격마다 10% 확률로 상대방을 빙결 상태로 만든다.</p>
+        <p class="MuiTypography-root MuiTypography-body2 css-zlxfnt">상처 지지기: 매 공격마다 10% 확률로 상대방을 화상 상태로 만든다.</p>
       </div>
     </div>
   </div>
@@ -54,10 +68,11 @@
 
 <!-- 
 === 아이템 스카우터 적용 후 형식 (업데이트된 UI) ===
-- item-stats-processed 클래스가 추가됨
-- item-stats-wrapper로 감싸짐
+- item-stats-wrapper로 감싸짐 (스카우터 적용 후에만 추가됨)
 - 위력/무게에 등급, 퍼센트, 점수 정보가 추가됨 (범위는 사이트에서 이미 표시됨)
 - 종결 태그가 아이템명 아래에 표시됨 (data-tag 속성 포함)
+- power-range-processed, weight-range-processed 클래스가 추가됨
+- stat-detail-row로 퍼센트/점수 정보가 표시됨
 - 공유 버튼과 귀속 해제 정보가 포함됨
 - 실제 스카우터 적용 후 구조로 업데이트
 -->

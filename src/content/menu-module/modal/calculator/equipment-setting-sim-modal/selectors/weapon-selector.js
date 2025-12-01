@@ -258,26 +258,8 @@ export class WeaponSelector extends BaseItemSelector {
     }
     
     const weapons = this.data.filter(item => {
-      if (!item.type) {
-        return false;
-      }
-      
-      // item-guide와 동일한 파싱 로직 사용
-      const categories = item.type.split('/');
-      let mainCategory = '';
-      let subCategory = '';
-      
-      if (categories.length >= 2) {
-        mainCategory = categories[0];
-        subCategory = categories[1];
-      } else {
-        mainCategory = categories[0];
-        if (mainCategory === '무기') {
-          subCategory = '미확인';
-        }
-      }
-      
-      return mainCategory === '무기';
+      // type이 '무기'인 경우만 필터링
+      return item.type === '무기';
     });
     
     return weapons;
@@ -291,18 +273,9 @@ export class WeaponSelector extends BaseItemSelector {
     let filteredWeapons = weapons;
     if (this.selectedTypeFilter && this.selectedTypeFilter !== '전체') {
       filteredWeapons = weapons.filter(weapon => {
-        if (!weapon.type) return false;
-        
-        const categories = weapon.type.split('/');
-        let subCategory = '';
-        
-        if (categories.length >= 2) {
-          subCategory = categories[1];
-        } else if (categories.length === 1 && categories[0] === '무기') {
-          subCategory = '미확인';
-        }
-        
-        return subCategory === this.selectedTypeFilter;
+        // weapon_type을 사용하여 필터링
+        const weaponType = weapon.weapon_type || '미확인';
+        return weaponType === this.selectedTypeFilter;
       });
     }
     

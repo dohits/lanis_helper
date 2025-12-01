@@ -18,32 +18,43 @@ class StatSumSticker {
 
   addStatSumStickers() {
     try {
-      // 기존 스티커 제거
-      const existingStickers = document.querySelectorAll(`.${this.stickerClass}`);
+      // 기존 스티커 제거 (이미 추가된 스티커는 제외)
+      const existingStickers = document.querySelectorAll(`.${this.stickerClass}:not([data-enhanced="true"])`);
       existingStickers.forEach(sticker => sticker.remove());
       
-      // 기본 스탯 섹션 찾기
+      // 기본 스탯 섹션 찾기 (다크모드/화이트모드 모두 지원)
       const statSections = document.querySelectorAll('.MuiPaper-root');
       
       statSections.forEach(section => {
         // "기본 스탯" 제목이 있는 섹션 찾기
         const titleElement = section.querySelector('h6.MuiTypography-root');
         if (titleElement && titleElement.textContent.includes('기본 스탯')) {
+          // 이미 스티커가 있는지 확인
+          const existingSticker = titleElement.querySelector(`.${this.stickerClass}`);
+          if (existingSticker) {
+            return; // 이미 스티커가 있으면 건너뛰기
+          }
+          
           // 스탯합계 계산
-          const statSum = this.calculateStatSum();
+          const statSum = this.calculateStatSum(section);
+          
+          if (statSum === 0) {
+            return; // 스탯 합계가 0이면 스티커 추가하지 않음
+          }
           
           // 스탯합계 스티커 컨테이너 생성
           const statSumStickerContainer = document.createElement('div');
           statSumStickerContainer.className = `MuiBox-root ${this.stickerClass}`;
+          statSumStickerContainer.setAttribute('data-enhanced', 'true');
           statSumStickerContainer.style.cssText = `
             display: inline-flex;
             align-items: center;
             justify-content: center;
             margin-left: auto;
             padding: 2px 6px;
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            background: linear-gradient(135deg, rgb(76, 175, 80) 0%, rgb(69, 160, 73) 100%);
             border-radius: 12px;
-            border: 1px solid #2E7D32;
+            border: 1px solid rgb(46, 125, 50);
             width: auto;
             min-width: fit-content;
           `;
@@ -55,18 +66,20 @@ class StatSumSticker {
             color: white;
             font-size: 11px;
             font-weight: bold;
-            margin: 0;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            margin: 0px;
+            text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px;
           `;
-          statSumStickerText.textContent = `스탯 점수 ${statSum}`;
+          statSumStickerText.textContent = `스탯 점수 ${statSum.toLocaleString()}`;
           
           statSumStickerContainer.appendChild(statSumStickerText);
           
-          // 제목 컨테이너를 flex로 만들어서 양 끝 정렬
-          titleElement.style.display = 'flex';
-          titleElement.style.justifyContent = 'space-between';
-          titleElement.style.alignItems = 'center';
-          titleElement.style.width = '100%';
+          // 제목 컨테이너를 flex로 만들어서 양 끝 정렬 (이미 스타일이 있으면 유지)
+          if (!titleElement.style.display || titleElement.style.display !== 'flex') {
+            titleElement.style.display = 'flex';
+            titleElement.style.justifyContent = 'space-between';
+            titleElement.style.alignItems = 'center';
+            titleElement.style.width = '100%';
+          }
           
           titleElement.appendChild(statSumStickerContainer);
         }
@@ -77,19 +90,19 @@ class StatSumSticker {
     }
   }
 
-  calculateStatSum() {
+  calculateStatSum(section) {
     try {
       let totalStat = 0;
       
-      // 기본 스탯 섹션 찾기
-      const statSections = document.querySelectorAll('.MuiPaper-root');
+      // 전달받은 섹션에서 스탯 계산, 없으면 전체 문서에서 찾기
+      const targetSections = section ? [section] : document.querySelectorAll('.MuiPaper-root');
       
-      statSections.forEach(section => {
+      targetSections.forEach(targetSection => {
         // "기본 스탯" 제목이 있는 섹션 찾기
-        const titleElement = section.querySelector('h6.MuiTypography-root');
+        const titleElement = targetSection.querySelector('h6.MuiTypography-root');
         if (titleElement && titleElement.textContent.includes('기본 스탯')) {
           // 스탯 요소들 찾기
-          const statElements = section.querySelectorAll('p.MuiTypography-root.MuiTypography-body1');
+          const statElements = targetSection.querySelectorAll('p.MuiTypography-root.MuiTypography-body1');
           
           statElements.forEach(statElement => {
             const statText = statElement.textContent.trim();

@@ -24,10 +24,13 @@ class ItemStatsProcessor {
       let processedItems = 0;
       
       itemContainers.forEach(container => {
-        if (container.classList.contains('item-stats-processed')) return;
+        // 스카우터 적용 전 구조에서도 item-stats-processed 클래스가 있을 수 있으므로,
+        // 우리가 추가한 요소들(power-range-processed, weight-range-processed, final-tag)이 있는지 확인
+        const hasOurElements = container.querySelector('.power-range-processed, .weight-range-processed, .final-tag');
+        if (hasOurElements) return; // 이미 스카우터가 적용된 경우
         
         // 새로운 UI 구조의 아이템명 선택자 지원
-        const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2, p.MuiTypography-root.MuiTypography-body2.css-17kzaz4, p[class*="MuiTypography"], .MuiTypography-root');
+        const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2, p.MuiTypography-root.MuiTypography-body2.css-17kzaz4, p.MuiTypography-root.MuiTypography-body2.css-19uxm9b, p.MuiTypography-root.MuiTypography-body2.css-xly6qk, p[class*="MuiTypography"], .MuiTypography-root');
         if (!itemNameElement) return;
         
         const text = itemNameElement.textContent.trim();
@@ -77,7 +80,7 @@ class ItemStatsProcessor {
     
     statContainers.forEach((statContainer) => {
       // 더 유연한 p 요소 선택자
-      const pElements = statContainer.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv, p[class*="MuiTypography"], p');
+      const pElements = statContainer.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv, p.MuiTypography-root.MuiTypography-body2.css-1fxvmzd, p.MuiTypography-root.MuiTypography-body2.css-zlxfnt, p.MuiTypography-root.MuiTypography-body2.css-nhjr0n, p[class*="MuiTypography"], p');
       if (pElements.length >= 2) {
         const labelElement = pElements[0];
         const valueElement = pElements[1];

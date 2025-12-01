@@ -20,7 +20,7 @@ class FinalTagAdder {
 
   // 장비 타입 감지 함수
   detectEquipmentType(container) {
-    const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv, p.MuiTypography-root.MuiTypography-body2.css-1fxvmzd');
+    const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv, p.MuiTypography-root.MuiTypography-body2.css-1fxvmzd, p.MuiTypography-root.MuiTypography-body2.css-zlxfnt, p.MuiTypography-root.MuiTypography-body2.css-nhjr0n');
     if (!itemNameElement) return 'unknown';
     
     const itemName = itemNameElement.textContent.trim().toLowerCase();
@@ -57,7 +57,7 @@ class FinalTagAdder {
 
   // 종결/준종결/완전무결 태그 추가 함수 (새로운 계산 방식: 최소값 = 최소위력-최대무게*2, 최대값 = 최대위력-최소무게*2)
   addFinalTag(container, powerGrade, weightGrade, powerScore, weightScore, powerNarrow, weightNarrow, powerMin, powerMax, weightMin, weightMax, currentPower, currentWeight) {
-    const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2, p.MuiTypography-root.MuiTypography-body2.css-17kzaz4');
+    const itemNameElement = container.querySelector('p.MuiTypography-root.MuiTypography-body2.css-1qmxyy2, p.MuiTypography-root.MuiTypography-body2.css-17kzaz4, p.MuiTypography-root.MuiTypography-body2.css-19uxm9b, p.MuiTypography-root.MuiTypography-body2.css-xly6qk');
     if (!itemNameElement) {
       return;
     }
@@ -247,9 +247,11 @@ class FinalTagAdder {
     
     tagRow.appendChild(tagSpan);
     
-    // popover 내부 wrapper로 감싸고 marginTop 적용 (실험용)
+    // popover 내부 wrapper로 감싸기 (스카우터 적용 후에만 생성)
+    // wrapper가 이미 있으면 사용하고, 없으면 생성 (스카우터 적용 후 구조)
     let wrapper = container.querySelector('.item-stats-wrapper');
     if (!wrapper) {
+      // 스카우터 적용 후 구조: wrapper 생성
       wrapper = document.createElement('div');
       wrapper.className = 'item-stats-wrapper';
       // 기존 컨텐츠를 wrapper로 이동

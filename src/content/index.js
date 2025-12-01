@@ -198,24 +198,6 @@ window.lanisHelper = {
         managers.itemStatsManager.removeItemStats();
       }
     }, '아이템 통계 제거 중 오류');
-  },
-
-  // 레어 아이템 수집
-  collectRareItems: async () => {
-    try {
-      if (!managers.searchEngine) {
-        console.warn('검색 엔진이 초기화되지 않았습니다.');
-        return { success: false, message: '검색 엔진이 초기화되지 않았습니다.' };
-      }
-      
-      // SearchEngine의 collectRareItems 메서드 직접 호출
-      const result = await managers.searchEngine.collectRareItems();
-      
-      return result;
-    } catch (error) {
-      console.error('레어 아이템 수집 중 오류:', error);
-      return { success: false, message: `수집 오류: ${error.message}` };
-    }
   }
 };
 
@@ -239,31 +221,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       // alert 메시지 표시
       alert(request.message || '알림');
       sendResponse({ success: true });
-    } else if (request.action === 'startCrawling') {
-      // 레어 아이템 수집 시작
-      window.lanisHelper.collectRareItems().then(result => {
-        
-        if (result && result.success) {
-          sendResponse({
-            success: true,
-            message: result.message || '레어 아이템 수집 완료',
-            count: result.count || 0,
-            data: result.data || []
-          });
-        } else {
-          sendResponse({
-            success: false,
-            message: result?.message || '수집된 아이템이 없습니다.'
-          });
-        }
-      }).catch(error => {
-        console.error('레어 아이템 수집 오류:', error);
-        sendResponse({
-          success: false,
-          message: `수집 오류: ${error.message}`
-        });
-      });
-      return true; // 비동기 응답을 위해 true 반환
     }
   } catch (error) {
     console.error('메시지 처리 중 오류:', error);

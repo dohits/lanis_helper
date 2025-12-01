@@ -28,7 +28,7 @@ class RangeInfoAdder {
     let weightSummary = null;
 
     statContainers.forEach((statContainer) => {
-      const pElements = statContainer.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv, p.MuiTypography-root.MuiTypography-body2.css-1fxvmzd');
+      const pElements = statContainer.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv, p.MuiTypography-root.MuiTypography-body2.css-1fxvmzd, p.MuiTypography-root.MuiTypography-body2.css-zlxfnt, p.MuiTypography-root.MuiTypography-body2.css-nhjr0n');
       if (pElements.length === 2) {
         const labelElement = pElements[0];
         const valueElement = pElements[1];
@@ -149,11 +149,12 @@ class RangeInfoAdder {
     // label이 '위력', '무게'인 statContainer를 반드시 찾아 점수 계산
     let statPower = null, statWeight = null;
     statContainers.forEach(sc => {
-      const labelEl = sc.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv, p.MuiTypography-root.MuiTypography-body2.css-1fxvmzd')[0];
+      const labelEl = sc.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv, p.MuiTypography-root.MuiTypography-body2.css-1fxvmzd, p.MuiTypography-root.MuiTypography-body2.css-zlxfnt, p.MuiTypography-root.MuiTypography-body2.css-nhjr0n')[0];
       if (!labelEl) return;
       const label = labelEl.textContent.trim();
-      if (label === '위력') statPower = sc.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv, p.MuiTypography-root.MuiTypography-body2.css-1fxvmzd')[1];
-      if (label === '무게') statWeight = sc.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv, p.MuiTypography-root.MuiTypography-body2.css-1fxvmzd')[1];
+      const valueElements = sc.querySelectorAll('p.MuiTypography-root.MuiTypography-body2.css-1xgulgv, p.MuiTypography-root.MuiTypography-body2.css-1fxvmzd, p.MuiTypography-root.MuiTypography-body2.css-zlxfnt, p.MuiTypography-root.MuiTypography-body2.css-nhjr0n');
+      if (label === '위력') statPower = valueElements[1];
+      if (label === '무게') statWeight = valueElements[1];
     });
 
     let powerInfo = {score: 0, grade: ''};

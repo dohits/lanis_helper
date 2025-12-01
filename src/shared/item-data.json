@@ -1,0 +1,4783 @@
+[
+  {
+    "name": "광신의 창",
+    "type": "무기",
+    "power_min": 288,
+    "power_max": 494,
+    "weight_min": 52,
+    "weight_max": 85,
+    "weapon_type": "창",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "망치의 울려침",
+    "type": "무기",
+    "power_min": 298,
+    "power_max": 508,
+    "weight_min": 64,
+    "weight_max": 104,
+    "weapon_type": "창",
+    "abilities": [
+      "테크 파워 플러스: 스킬의 위력을 15% 상승시킨다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "망각의 관통자",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 458,
+    "weight_min": 54,
+    "weight_max": 88,
+    "weapon_type": "창",
+    "abilities": [
+      "침묵: 매 공격마다 10% 확률로 상대의 기술/마법 발동을 1턴 간 봉인한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "네크로맨서",
+    "type": "무기",
+    "power_min": 298,
+    "power_max": 510,
+    "weight_min": 63,
+    "weight_max": 101,
+    "weapon_type": "검",
+    "abilities": [
+      "초맹독격: 매 공격마다 30% 확률로 상대를 독에 걸리게 한다. (턴당 HP 최대치의 9% 데미지)"
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "악마의 낫",
+    "type": "무기",
+    "power_min": 266,
+    "power_max": 456,
+    "weight_min": 47,
+    "weight_max": 75,
+    "weapon_type": "검",
+    "abilities": [
+      "맹독격: 매 공격마다 20% 확률로 상대를 독에 걸리게 한다. (턴당 HP 최대치의 6% 데미지)"
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "봉인의 검",
+    "type": "무기",
+    "power_min": 265,
+    "power_max": 453,
+    "weight_min": 38,
+    "weight_max": 61,
+    "weapon_type": "검",
+    "abilities": [
+      "봉인: 매 공격마다 2% 확률로 상대의 어빌리티를 1개 봉인한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "악마의 칼",
+    "type": "무기",
+    "power_min": 251,
+    "power_max": 429,
+    "weight_min": 56,
+    "weight_max": 92,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "비샤몬검",
+    "type": "무기",
+    "power_min": 281,
+    "power_max": 482,
+    "weight_min": 56,
+    "weight_max": 91,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "뱀파이어의 송곳니",
+    "type": "무기",
+    "power_min": 252,
+    "power_max": 432,
+    "weight_min": 47,
+    "weight_max": 75,
+    "weapon_type": "너클",
+    "abilities": [
+      "라이프 드레인: 매 공격마다 15% 확률로 데미지의 10%만큼 적의 체력을 흡수한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "어둠의 손아귀",
+    "type": "무기",
+    "power_min": 321,
+    "power_max": 515,
+    "weight_min": 36,
+    "weight_max": 58,
+    "weapon_type": "너클",
+    "abilities": [
+      "저주: 행운이 50 하락한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "망자의 주먹",
+    "type": "무기",
+    "power_min": 302,
+    "power_max": 482,
+    "weight_min": 47,
+    "weight_max": 75,
+    "weapon_type": "너클",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "분쇄",
+    "type": "무기",
+    "power_min": 249,
+    "power_max": 428,
+    "weight_min": 65,
+    "weight_max": 86,
+    "weapon_type": "도끼",
+    "abilities": [
+      "관통: 적의 방어력을 10% 무시한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "참수 도끼",
+    "type": "무기",
+    "power_min": 269,
+    "power_max": 462,
+    "weight_min": 44,
+    "weight_max": 67,
+    "weapon_type": "도끼",
+    "abilities": [
+      "테크 엠블럼: 스킬의 위력을 30% 상승시킨다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "파멸의 도끼",
+    "type": "무기",
+    "power_min": 285,
+    "power_max": 488,
+    "weight_min": 36,
+    "weight_max": 58,
+    "weapon_type": "도끼",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "저주받은 장궁",
+    "type": "무기",
+    "power_min": 233,
+    "power_max": 421,
+    "weight_min": 37,
+    "weight_max": 58,
+    "weapon_type": "활",
+    "abilities": [
+      "침묵: 매 공격마다 10% 확률로 상대의 기술/마법 발동을 1턴 간 봉인한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "죽음의 활",
+    "type": "무기",
+    "power_min": 236,
+    "power_max": 331,
+    "weight_min": 25,
+    "weight_max": 61,
+    "weapon_type": "활",
+    "abilities": [
+      "eveels: 매 공격마다 5% 확률로 상대방을 마비시킨다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "심연의 사냥꾼",
+    "type": "무기",
+    "power_min": 276,
+    "power_max": 471,
+    "weight_min": 29,
+    "weight_max": 51,
+    "weapon_type": "활",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "카모플라쥬",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 450,
+    "weight_min": 30,
+    "weight_max": 48,
+    "weapon_type": "나이프",
+    "abilities": [
+      "봉인: 매 공격마다 2% 확률로 상대의 어빌리티를 1개 봉인한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "이매망량",
+    "type": "무기",
+    "power_min": 224,
+    "power_max": 384,
+    "weight_min": 40,
+    "weight_max": 65,
+    "weapon_type": "나이프",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "암살자의 칼",
+    "type": "무기",
+    "power_min": 242,
+    "power_max": 415,
+    "weight_min": 32,
+    "weight_max": 52,
+    "weapon_type": "나이프",
+    "abilities": [
+      "선제 공격: 선수를 취할 확률이 25% 올라간다. 단 상대가 같은 계열의 어빌리티를 착용한 경우 무효가 된다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "데스 사이드",
+    "type": "무기",
+    "power_min": 308,
+    "power_max": 528,
+    "weight_min": 48,
+    "weight_max": 78,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "저주: 행운이 50 하락한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "악마의 지팡이",
+    "type": "무기",
+    "power_min": 179,
+    "power_max": 306,
+    "weight_min": 24,
+    "weight_max": 39,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "매직 라이트 맥스: MP의 소비를 20% 억제한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "어둠의 인도자",
+    "type": "무기",
+    "power_min": 258,
+    "power_max": 441,
+    "weight_min": 25,
+    "weight_max": 41,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "sleeve: 매 공격마다 10% 확률로 상대방을 마비시킨다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "신의 철퇴",
+    "type": "무기",
+    "power_min": 249,
+    "power_max": 426,
+    "weight_min": 41,
+    "weight_max": 67,
+    "weapon_type": "창",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "대천사의 창",
+    "type": "무기",
+    "power_min": 238,
+    "power_max": 408,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "창",
+    "abilities": [
+      "재생 LV2: 매 턴마다 HP 최대치의 일부를 회복한다. (회복력에 비례, 최대 4%)"
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "심판의 창",
+    "type": "무기",
+    "power_min": 288,
+    "power_max": 458,
+    "weight_min": 34,
+    "weight_max": 62,
+    "weapon_type": "창",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "불멸의 검",
+    "type": "무기",
+    "power_min": 168,
+    "power_max": 288,
+    "weight_min": -13,
+    "weight_max": -8,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "세이브 더 퀸",
+    "type": "무기",
+    "power_min": 265,
+    "power_max": 453,
+    "weight_min": 49,
+    "weight_max": 80,
+    "weapon_type": "검",
+    "abilities": [
+      "테크 포스: 스킬의 위력을 20% 상승시킨다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "라디언스 소드",
+    "type": "무기",
+    "power_min": 315,
+    "power_max": 503,
+    "weight_min": 39,
+    "weight_max": 70,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "반고의 도끼",
+    "type": "무기",
+    "power_min": 240,
+    "power_max": 410,
+    "weight_min": 47,
+    "weight_max": 75,
+    "weapon_type": "도끼",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "빛의 도끼",
+    "type": "무기",
+    "power_min": 246,
+    "power_max": 422,
+    "weight_min": 42,
+    "weight_max": 68,
+    "weapon_type": "도끼",
+    "abilities": [
+      "퍼펙트 블로킹: 적의 공격을 15% 확률로 무효화한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성역의 파괴자",
+    "type": "무기",
+    "power_min": 306,
+    "power_max": 502,
+    "weight_min": 32,
+    "weight_max": 58,
+    "weapon_type": "도끼",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "광휘의 주먹",
+    "type": "무기",
+    "power_min": 227,
+    "power_max": 388,
+    "weight_min": 32,
+    "weight_max": 52,
+    "weapon_type": "너클",
+    "abilities": [
+      "재생 LV2: 매 턴마다 HP 최대치의 일부를 회복한다. (회복력에 비례, 최대 4%)"
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "천사의 철갑",
+    "type": "무기",
+    "power_min": 280,
+    "power_max": 463,
+    "weight_min": 24,
+    "weight_max": 45,
+    "weapon_type": "너클",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성광의 건틀릿",
+    "type": "무기",
+    "power_min": 232,
+    "power_max": 398,
+    "weight_min": 36,
+    "weight_max": 58,
+    "weapon_type": "너클",
+    "abilities": [
+      "매직 프로텍트: 마법 스킬에 의한 데미지를 20% 경감한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "오리하르콘",
+    "type": "무기",
+    "power_min": 202,
+    "power_max": 345,
+    "weight_min": 33,
+    "weight_max": 54,
+    "weapon_type": "활",
+    "abilities": [
+      "혼신의 일격: 치명타 데미지가 30% 올라간다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "천사의 활",
+    "type": "무기",
+    "power_min": 224,
+    "power_max": 384,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "활",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "징벌의 탄환",
+    "type": "무기",
+    "power_min": 232,
+    "power_max": 398,
+    "weight_min": 38,
+    "weight_max": 61,
+    "weapon_type": "활",
+    "abilities": [
+      "저격: 치명타 확률이 15% 상승한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "월드 헤븐",
+    "type": "무기",
+    "power_min": 287,
+    "power_max": 493,
+    "weight_min": 55,
+    "weight_max": 88,
+    "weapon_type": "나이프",
+    "abilities": [
+      "분노의 일격: 치명타 데미지가 15% 올라간다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "다이아몬드 샤드",
+    "type": "무기",
+    "power_min": 271,
+    "power_max": 463,
+    "weight_min": 22,
+    "weight_max": 38,
+    "weapon_type": "나이프",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성스러운 칼날",
+    "type": "무기",
+    "power_min": 237,
+    "power_max": 405,
+    "weight_min": 32,
+    "weight_max": 52,
+    "weapon_type": "나이프",
+    "abilities": [
+      "블록: 적의 공격을 5% 확률로 무효화한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "세라프의 지팡이",
+    "type": "무기",
+    "power_min": 230,
+    "power_max": 393,
+    "weight_min": 33,
+    "weight_max": 54,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "매직컬 댄싱: 매 공격마다 15% 확률로 데미지의 3%만큼 적의 MP를 흡수한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "대현자의 지팡이",
+    "type": "무기",
+    "power_min": 231,
+    "power_max": 396,
+    "weight_min": 30,
+    "weight_max": 49,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "매직 라이트 맥스: MP의 소비를 20% 억제한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "마나",
+    "type": "무기",
+    "power_min": 280,
+    "power_max": 480,
+    "weight_min": 52,
+    "weight_max": 85,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "일격 필살: 치명타 데미지가 50% 올라간다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "하데스의 창",
+    "type": "무기",
+    "power_min": 266,
+    "power_max": 456,
+    "weight_min": 57,
+    "weight_max": 93,
+    "weapon_type": "창",
+    "abilities": [
+      "노 컨디션: 스킬 사용 시 상대는 절대 회피할 수 없다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "인페르노 랜스",
+    "type": "무기",
+    "power_min": 316,
+    "power_max": 506,
+    "weight_min": 47,
+    "weight_max": 83,
+    "weapon_type": "창",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "불카노스의 창",
+    "type": "무기",
+    "power_min": 270,
+    "power_max": 462,
+    "weight_min": 53,
+    "weight_max": 86,
+    "weapon_type": "창",
+    "abilities": [
+      "추가 데미지: 매 공격마다 10% 확률로 5~10%의 추가 데미지를 준다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "베어울프",
+    "type": "무기",
+    "power_min": 242,
+    "power_max": 414,
+    "weight_min": 39,
+    "weight_max": 62,
+    "weapon_type": "검",
+    "abilities": [
+      "급소 공격: 적을 0.5% 확률로 일격에 넘어뜨린다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "오웬의 검",
+    "type": "무기",
+    "power_min": 292,
+    "power_max": 500,
+    "weight_min": 49,
+    "weight_max": 80,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "사라만다의 검",
+    "type": "무기",
+    "power_min": 270,
+    "power_max": 462,
+    "weight_min": 49,
+    "weight_max": 80,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "아수라의 검",
+    "type": "무기",
+    "power_min": 280,
+    "power_max": 478,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "검",
+    "abilities": [
+      "급소 공격: 적을 0.5% 확률로 일격에 넘어뜨린다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "흑염의 검",
+    "type": "무기",
+    "power_min": 221,
+    "power_max": 378,
+    "weight_min": 38,
+    "weight_max": 61,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "블러드렉",
+    "type": "무기",
+    "power_min": 274,
+    "power_max": 470,
+    "weight_min": 47,
+    "weight_max": 75,
+    "weapon_type": "도끼",
+    "abilities": [
+      "헤이스트: 전투시의 공격 회수가 50% 확률로 1회 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "작열의 파편",
+    "type": "무기",
+    "power_min": 294,
+    "power_max": 504,
+    "weight_min": 60,
+    "weight_max": 97,
+    "weapon_type": "도끼",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "용암 파쇄기",
+    "type": "무기",
+    "power_min": 304,
+    "power_max": 520,
+    "weight_min": 56,
+    "weight_max": 88,
+    "weapon_type": "도끼",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "블러디 클로",
+    "type": "무기",
+    "power_min": 225,
+    "power_max": 386,
+    "weight_min": 31,
+    "weight_max": 49,
+    "weapon_type": "너클",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "화염의 주먹",
+    "type": "무기",
+    "power_min": 237,
+    "power_max": 405,
+    "weight_min": 34,
+    "weight_max": 55,
+    "weapon_type": "너클",
+    "abilities": [
+      "하이 샤프니스: 물리 공격력을 20% 상승시킨다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "플레어 너클",
+    "type": "무기",
+    "power_min": 267,
+    "power_max": 455,
+    "weight_min": 31,
+    "weight_max": 49,
+    "weapon_type": "너클",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "염라 이수씨개",
+    "type": "무기",
+    "power_min": 233,
+    "power_max": 399,
+    "weight_min": 26,
+    "weight_max": 42,
+    "weapon_type": "나이프",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "고통의 나이프",
+    "type": "무기",
+    "power_min": 221,
+    "power_max": 378,
+    "weight_min": 28,
+    "weight_max": 45,
+    "weapon_type": "나이프",
+    "abilities": [
+      "상처 지지기: 매 공격마다 10% 확률로 상대방에게 화상을 입힌다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "열정의 날",
+    "type": "무기",
+    "power_min": 262,
+    "power_max": 449,
+    "weight_min": 22,
+    "weight_max": 35,
+    "weapon_type": "나이프",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "잔 다르크",
+    "type": "무기",
+    "power_min": 259,
+    "power_max": 445,
+    "weight_min": 38,
+    "weight_max": 61,
+    "weapon_type": "활",
+    "abilities": [
+      "즉사: 적을 1% 확률로 일격에 넘어뜨린다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "플레임 보우",
+    "type": "무기",
+    "power_min": 208,
+    "power_max": 356,
+    "weight_min": 37,
+    "weight_max": 60,
+    "weapon_type": "활",
+    "abilities": [
+      "추가 데미지: 매 공격마다 10% 확률로 5~10%의 추가 데미지를 준다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "플레임탄",
+    "type": "무기",
+    "power_min": 249,
+    "power_max": 426,
+    "weight_min": 43,
+    "weight_max": 69,
+    "weapon_type": "활",
+    "abilities": [
+      "추가 데미지: 매 공격마다 10% 확률로 5~10%의 추가 데미지를 준다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "화마의 슬픔",
+    "type": "무기",
+    "power_min": 267,
+    "power_max": 458,
+    "weight_min": 44,
+    "weight_max": 71,
+    "weapon_type": "지팡이",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "헬하운드",
+    "type": "무기",
+    "power_min": 252,
+    "power_max": 432,
+    "weight_min": 40,
+    "weight_max": 65,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "매직 파워: 마법 공격력을 25% 상승시킨다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "멜팅 팟",
+    "type": "무기",
+    "power_min": 249,
+    "power_max": 426,
+    "weight_min": 45,
+    "weight_max": 73,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "마나 재생 LV1: 매 턴마다 MP 최대치의 일부를 회복한다. (최대 2%)"
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "트라이던트",
+    "type": "무기",
+    "power_min": 247,
+    "power_max": 425,
+    "weight_min": 46,
+    "weight_max": 74,
+    "weapon_type": "창",
+    "abilities": [
+      "추가 데미지: 매 공격마다 10% 확률로 5~10%의 추가 데미지를 준다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "코스모스 스피어",
+    "type": "무기",
+    "power_min": 306,
+    "power_max": 489,
+    "weight_min": 37,
+    "weight_max": 66,
+    "weapon_type": "창",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "유성의 창",
+    "type": "무기",
+    "power_min": 264,
+    "power_max": 452,
+    "weight_min": 48,
+    "weight_max": 77,
+    "weapon_type": "창",
+    "abilities": [
+      "천운: 행운이 50 상승한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "글라디우스",
+    "type": "무기",
+    "power_min": 233,
+    "power_max": 399,
+    "weight_min": 57,
+    "weight_max": 93,
+    "weapon_type": "검",
+    "abilities": [
+      "퍼펙트 블로킹: 적의 공격을 15% 확률로 무효화한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "혜성검",
+    "type": "무기",
+    "power_min": 267,
+    "power_max": 458,
+    "weight_min": 32,
+    "weight_max": 53,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "호위짐승의 검",
+    "type": "무기",
+    "power_min": 291,
+    "power_max": 499,
+    "weight_min": 61,
+    "weight_max": 99,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "꿈의 성검",
+    "type": "무기",
+    "power_min": 256,
+    "power_max": 439,
+    "weight_min": 47,
+    "weight_max": 75,
+    "weapon_type": "검",
+    "abilities": [
+      "저격: 치명타 확률이 15% 상승한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "사자의 검",
+    "type": "무기",
+    "power_min": 253,
+    "power_max": 434,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "검",
+    "abilities": [
+      "시간 압축: 적의 공격 회수를 50% 확률로 1회 감소시킨다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "거신의 도끼",
+    "type": "무기",
+    "power_min": 256,
+    "power_max": 438,
+    "weight_min": 59,
+    "weight_max": 95,
+    "weapon_type": "도끼",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "디펜더",
+    "type": "무기",
+    "power_min": 249,
+    "power_max": 427,
+    "weight_min": 46,
+    "weight_max": 74,
+    "weapon_type": "도끼",
+    "abilities": [
+      "퍼펙트 블로킹: 적의 공격을 15% 확률로 무효화한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "성진의 심판자",
+    "type": "무기",
+    "power_min": 284,
+    "power_max": 477,
+    "weight_min": 36,
+    "weight_max": 64,
+    "weapon_type": "도끼",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "네오 버서크",
+    "type": "무기",
+    "power_min": 256,
+    "power_max": 438,
+    "weight_min": 41,
+    "weight_max": 67,
+    "weapon_type": "너클",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "혜성권",
+    "type": "무기",
+    "power_min": 245,
+    "power_max": 421,
+    "weight_min": 30,
+    "weight_max": 48,
+    "weapon_type": "너클",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "대지의 건틀릿",
+    "type": "무기",
+    "power_min": 231,
+    "power_max": 395,
+    "weight_min": 34,
+    "weight_max": 55,
+    "weapon_type": "너클",
+    "abilities": [
+      "카운터: 적이 공격했을 때, 15%확률로 반격한다. 반격 데미지는 50%의 방어를 관통한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "사지타리아",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 440,
+    "weight_min": 65,
+    "weight_max": 86,
+    "weapon_type": "활",
+    "abilities": [
+      "데스 어택: 적을 1.5% 확률로 일격에 넘어뜨린다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "새턴 링",
+    "type": "무기",
+    "power_min": 266,
+    "power_max": 456,
+    "weight_min": 48,
+    "weight_max": 78,
+    "weapon_type": "활",
+    "abilities": [
+      "저격: 치명타 확률이 15% 상승한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "새턴 비오지",
+    "type": "무기",
+    "power_min": 286,
+    "power_max": 498,
+    "weight_min": 39,
+    "weight_max": 63,
+    "weapon_type": "활",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "월하 미인",
+    "type": "무기",
+    "power_min": 231,
+    "power_max": 397,
+    "weight_min": 26,
+    "weight_max": 42,
+    "weapon_type": "나이프",
+    "abilities": [
+      "크로스 카운터: 적이 공격했을 때, 30%확률로 반격한다. 반격 데미지는 50%의 방어를 관통한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "브리온 대거",
+    "type": "무기",
+    "power_min": 261,
+    "power_max": 447,
+    "weight_min": 19,
+    "weight_max": 31,
+    "weapon_type": "나이프",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "성운의 칼날",
+    "type": "무기",
+    "power_min": 225,
+    "power_max": 385,
+    "weight_min": 28,
+    "weight_max": 46,
+    "weapon_type": "나이프",
+    "abilities": [
+      "타임 스톱: 적의 공격 회수를 25% 확률로 1회 감소시킨다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "이레이저",
+    "type": "무기",
+    "power_min": 294,
+    "power_max": 504,
+    "weight_min": 64,
+    "weight_max": 104,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "봉인: 매 공격마다 2% 확률로 상대의 어빌리티를 1개 봉인한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "포텐셜 포스",
+    "type": "무기",
+    "power_min": 315,
+    "power_max": 540,
+    "weight_min": 60,
+    "weight_max": 97,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "매직 파워 플러스: 마법 공격력을 50% 상승시킨다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "에테르 로드",
+    "type": "무기",
+    "power_min": 324,
+    "power_max": 554,
+    "weight_min": 54,
+    "weight_max": 88,
+    "weapon_type": "지팡이",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "천둥소리의 창",
+    "type": "무기",
+    "power_min": 233,
+    "power_max": 399,
+    "weight_min": 48,
+    "weight_max": 79,
+    "weapon_type": "창",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "섬광의 돌격자",
+    "type": "무기",
+    "power_min": 246,
+    "power_max": 422,
+    "weight_min": 46,
+    "weight_max": 74,
+    "weapon_type": "창",
+    "abilities": [
+      "광격: 치명타 확률이 20% 상승한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "위드래곤 랜스",
+    "type": "무기",
+    "power_min": 276,
+    "power_max": 472,
+    "weight_min": 40,
+    "weight_max": 71,
+    "weapon_type": "창",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "라그나로크",
+    "type": "무기",
+    "power_min": 280,
+    "power_max": 480,
+    "weight_min": 57,
+    "weight_max": 93,
+    "weapon_type": "검",
+    "abilities": [
+      "sleeve: 매 공격마다 10% 확률로 상대방을 마비시킨다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "칠색의 검",
+    "type": "무기",
+    "power_min": 225,
+    "power_max": 386,
+    "weight_min": 48,
+    "weight_max": 79,
+    "weapon_type": "검",
+    "abilities": [
+      "광격: 치명타 확률이 20% 상승한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "정령의 검",
+    "type": "무기",
+    "power_min": 284,
+    "power_max": 487,
+    "weight_min": 53,
+    "weight_max": 86,
+    "weapon_type": "검",
+    "abilities": [
+      "광격: 치명타 확률이 20% 상승한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "심판의 망치",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 450,
+    "weight_min": 57,
+    "weight_max": 85,
+    "weapon_type": "도끼",
+    "abilities": [
+      "하이 샤프니스: 물리 공격력을 20% 상승시킨다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "의뢰히르 해머",
+    "type": "무기",
+    "power_min": 292,
+    "power_max": 500,
+    "weight_min": 47,
+    "weight_max": 75,
+    "weapon_type": "도끼",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "니히르의 폴암",
+    "type": "무기",
+    "power_min": 242,
+    "power_max": 415,
+    "weight_min": 48,
+    "weight_max": 77,
+    "weapon_type": "도끼",
+    "abilities": [
+      "침묵: 매 공격마다 10% 확률로 상대의 기술/마법 발동을 1턴 간 봉인한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "소울 엣지",
+    "type": "무기",
+    "power_min": 309,
+    "power_max": 530,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "너클",
+    "abilities": [
+      "저주: 행운이 50 하락한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "아레딘의 검",
+    "type": "무기",
+    "power_min": 306,
+    "power_max": 524,
+    "weight_min": 79,
+    "weight_max": 127,
+    "weapon_type": "너클",
+    "abilities": [
+      "일격 필살: 치명타 데미지가 50% 올라간다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "아폴론의 하프",
+    "type": "무기",
+    "power_min": 212,
+    "power_max": 363,
+    "weight_min": 3,
+    "weight_max": 4,
+    "weapon_type": "너클",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "제우스의 뇌격",
+    "type": "무기",
+    "power_min": 285,
+    "power_max": 505,
+    "weight_min": 48,
+    "weight_max": 78,
+    "weapon_type": "활",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "썬더스트럭 슈터",
+    "type": "무기",
+    "power_min": 278,
+    "power_max": 382,
+    "weight_min": 25,
+    "weight_max": 43,
+    "weapon_type": "활",
+    "abilities": [
+      "혼신의 일격: 치명타 데미지가 30% 올라간다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "썬더 볼트",
+    "type": "무기",
+    "power_min": 289,
+    "power_max": 469,
+    "weight_min": 30,
+    "weight_max": 53,
+    "weapon_type": "활",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "바제랄드",
+    "type": "무기",
+    "power_min": 223,
+    "power_max": 381,
+    "weight_min": 34,
+    "weight_max": 55,
+    "weapon_type": "나이프",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "광전사의 나이프",
+    "type": "무기",
+    "power_min": 231,
+    "power_max": 395,
+    "weight_min": 28,
+    "weight_max": 46,
+    "weapon_type": "나이프",
+    "abilities": [
+      "광격: 치명타 확률이 20% 상승한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "리오니드 대거",
+    "type": "무기",
+    "power_min": 261,
+    "power_max": 445,
+    "weight_min": 26,
+    "weight_max": 42,
+    "weapon_type": "나이프",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "청천벽력",
+    "type": "무기",
+    "power_min": 266,
+    "power_max": 456,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "지팡이",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "네메시스",
+    "type": "무기",
+    "power_min": 302,
+    "power_max": 518,
+    "weight_min": 61,
+    "weight_max": 99,
+    "weapon_type": "지팡이",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "제우스의 호통",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 450,
+    "weight_min": 47,
+    "weight_max": 75,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "침묵: 매 공격마다 10% 확률로 상대의 기술/마법 발동을 1턴 간 봉인한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "진공창",
+    "type": "무기",
+    "power_min": 399,
+    "power_max": 510,
+    "weight_min": 57,
+    "weight_max": 77,
+    "weapon_type": "창",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "폭풍의 창",
+    "type": "무기",
+    "power_min": 291,
+    "power_max": 487,
+    "weight_min": 55,
+    "weight_max": 83,
+    "weapon_type": "창",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "바람이 깃든 창",
+    "type": "무기",
+    "power_min": 260,
+    "power_max": 445,
+    "weight_min": 48,
+    "weight_max": 78,
+    "weapon_type": "창",
+    "abilities": [
+      "헤이스트: 전투시의 공격 회수가 50% 확률로 1회 증가한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "구사나기검",
+    "type": "무기",
+    "power_min": 294,
+    "power_max": 504,
+    "weight_min": 52,
+    "weight_max": 84,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "질풍의 칼",
+    "type": "무기",
+    "power_min": 218,
+    "power_max": 374,
+    "weight_min": 29,
+    "weight_max": 47,
+    "weapon_type": "검",
+    "abilities": [
+      "선제 공격: 선수를 취할 확률이 25% 올라간다. 단 상대가 같은 계열의 어빌리티를 착용한 경우 무효가 된다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "요자쿠라",
+    "type": "무기",
+    "power_min": 214,
+    "power_max": 367,
+    "weight_min": 29,
+    "weight_max": 47,
+    "weapon_type": "검",
+    "abilities": [
+      "즉사: 적을 1% 확률로 일격에 넘어뜨린다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "풍마수리검",
+    "type": "무기",
+    "power_min": 186,
+    "power_max": 318,
+    "weight_min": 12,
+    "weight_max": 19,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "풍천검",
+    "type": "무기",
+    "power_min": 221,
+    "power_max": 378,
+    "weight_min": 23,
+    "weight_max": 36,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "츠루기",
+    "type": "무기",
+    "power_min": 210,
+    "power_max": 358,
+    "weight_min": 40,
+    "weight_max": 65,
+    "weapon_type": "검",
+    "abilities": [
+      "즉사: 적을 1% 확률로 일격에 넘어뜨린다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "아스가르드",
+    "type": "무기",
+    "power_min": 259,
+    "power_max": 447,
+    "weight_min": 48,
+    "weight_max": 70,
+    "weapon_type": "도끼",
+    "abilities": [
+      "테크 포스: 스킬의 위력을 20% 상승시킨다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "허리케인 액스",
+    "type": "무기",
+    "power_min": 299,
+    "power_max": 499,
+    "weight_min": 52,
+    "weight_max": 88,
+    "weapon_type": "도끼",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "태풍의 눈",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 457,
+    "weight_min": 38,
+    "weight_max": 60,
+    "weapon_type": "도끼",
+    "abilities": [
+      "노 컨디션: 스킬 사용 시 상대는 절대 회피할 수 없다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "이자요이",
+    "type": "무기",
+    "power_min": 245,
+    "power_max": 421,
+    "weight_min": 49,
+    "weight_max": 80,
+    "weapon_type": "너클",
+    "abilities": [
+      "데스 어택: 적을 1.5% 확률로 일격에 넘어뜨린다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "허리케인 너클",
+    "type": "무기",
+    "power_min": 276,
+    "power_max": 471,
+    "weight_min": 39,
+    "weight_max": 70,
+    "weapon_type": "너클",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "돌풍의 권갑",
+    "type": "무기",
+    "power_min": 248,
+    "power_max": 425,
+    "weight_min": 40,
+    "weight_max": 65,
+    "weapon_type": "너클",
+    "abilities": [
+      "선제 공격: 선수를 취할 확률이 25% 올라간다. 단 상대가 같은 계열의 어빌리티를 착용한 경우 무효가 된다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "추풍낙엽",
+    "type": "무기",
+    "power_min": 310,
+    "power_max": 520,
+    "weight_min": 56,
+    "weight_max": 89,
+    "weapon_type": "활",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "요이치의 활",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 450,
+    "weight_min": 56,
+    "weight_max": 92,
+    "weapon_type": "활",
+    "abilities": [
+      "신의 일격: 적을 2% 확률로 일격에 넘어뜨린다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "스토름 루너",
+    "type": "무기",
+    "power_min": 256,
+    "power_max": 446,
+    "weight_min": 36,
+    "weight_max": 62,
+    "weapon_type": "활",
+    "abilities": [
+      "하이 샤프니스: 물리 공격력을 20% 상승시킨다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "추격자의 단검",
+    "type": "무기",
+    "power_min": 203,
+    "power_max": 346,
+    "weight_min": 25,
+    "weight_max": 41,
+    "weapon_type": "나이프",
+    "abilities": [
+      "타임 스톱: 적의 공격 회수를 25% 확률로 1회 감소시킨다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "제피로스 엣지",
+    "type": "무기",
+    "power_min": 243,
+    "power_max": 396,
+    "weight_min": 15,
+    "weight_max": 31,
+    "weapon_type": "나이프",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "질풍의 칼날",
+    "type": "무기",
+    "power_min": 238,
+    "power_max": 408,
+    "weight_min": 24,
+    "weight_max": 39,
+    "weapon_type": "나이프",
+    "abilities": [
+      "즉사: 적을 1% 확률로 일격에 넘어뜨린다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "헤르메스의 숨결",
+    "type": "무기",
+    "power_min": 291,
+    "power_max": 487,
+    "weight_min": 48,
+    "weight_max": 76,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "매직 라이트: MP의 소비를 10% 억제한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "흐레스벨그",
+    "type": "무기",
+    "power_min": 287,
+    "power_max": 492,
+    "weight_min": 41,
+    "weight_max": 67,
+    "weapon_type": "지팡이",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "에어로스 로드",
+    "type": "무기",
+    "power_min": 267,
+    "power_max": 461,
+    "weight_min": 38,
+    "weight_max": 66,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "마나 재생 LV1: 매 턴마다 MP 최대치의 일부를 회복한다. (최대 2%)"
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "여신의 창",
+    "type": "무기",
+    "power_min": 203,
+    "power_max": 348,
+    "weight_min": 27,
+    "weight_max": 43,
+    "weapon_type": "창",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "영원의 창",
+    "type": "무기",
+    "power_min": 280,
+    "power_max": 481,
+    "weight_min": 48,
+    "weight_max": 79,
+    "weapon_type": "창",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "이시스의 창",
+    "type": "무기",
+    "power_min": 256,
+    "power_max": 438,
+    "weight_min": 38,
+    "weight_max": 61,
+    "weapon_type": "창",
+    "abilities": [
+      "매직 라이트 맥스: MP의 소비를 20% 억제한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "회복의 검",
+    "type": "무기",
+    "power_min": 238,
+    "power_max": 408,
+    "weight_min": 36,
+    "weight_max": 59,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "엘프의 검",
+    "type": "무기",
+    "power_min": 186,
+    "power_max": 318,
+    "weight_min": 28,
+    "weight_max": 46,
+    "weapon_type": "검",
+    "abilities": [
+      "라이프 드레인: 매 공격마다 15% 확률로 데미지의 10%만큼 적의 체력을 흡수한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "인어의 보검",
+    "type": "무기",
+    "power_min": 233,
+    "power_max": 399,
+    "weight_min": 32,
+    "weight_max": 53,
+    "weapon_type": "검",
+    "abilities": [
+      "마법검LV2: 지력의 15%를 무기 공격력에 부가한다"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "혹한기",
+    "type": "무기",
+    "power_min": 321,
+    "power_max": 515,
+    "weight_min": 56,
+    "weight_max": 89,
+    "weapon_type": "도끼",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "웨일 해머",
+    "type": "무기",
+    "power_min": 221,
+    "power_max": 379,
+    "weight_min": 33,
+    "weight_max": 54,
+    "weapon_type": "도끼",
+    "abilities": [
+      "테크 파워 플러스: 스킬의 위력을 15% 상승시킨다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "빙하임 폴암",
+    "type": "무기",
+    "power_min": 256,
+    "power_max": 435,
+    "weight_min": 23,
+    "weight_max": 44,
+    "weapon_type": "도끼",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "마키디엘의 너클",
+    "type": "무기",
+    "power_min": 245,
+    "power_max": 420,
+    "weight_min": 33,
+    "weight_max": 54,
+    "weapon_type": "너클",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "아쿠아 네일",
+    "type": "무기",
+    "power_min": 232,
+    "power_max": 398,
+    "weight_min": 32,
+    "weight_max": 53,
+    "weapon_type": "너클",
+    "abilities": [
+      "재생 LV2: 매 턴마다 HP 최대치의 일부를 회복한다. (회복력에 비례, 최대 4%)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "트리튼 너클",
+    "type": "무기",
+    "power_min": 269,
+    "power_max": 459,
+    "weight_min": 63,
+    "weight_max": 89,
+    "weapon_type": "너클",
+    "abilities": [
+      "eveels: 매 공격마다 5% 확률로 상대방을 마비시킨다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "미스틱 보우",
+    "type": "무기",
+    "power_min": 228,
+    "power_max": 340,
+    "weight_min": 21,
+    "weight_max": 39,
+    "weapon_type": "활",
+    "abilities": [
+      "혼신의 일격: 치명타 데미지가 30% 올라간다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "아켈로오스의 활",
+    "type": "무기",
+    "power_min": 233,
+    "power_max": 399,
+    "weight_min": 26,
+    "weight_max": 42,
+    "weapon_type": "활",
+    "abilities": [
+      "데스 어택: 적을 1.5% 확률로 일격에 넘어뜨린다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "수룡의 쇠뇌",
+    "type": "무기",
+    "power_min": 276,
+    "power_max": 477,
+    "weight_min": 19,
+    "weight_max": 31,
+    "weapon_type": "활",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "얼음송곳",
+    "type": "무기",
+    "power_min": 252,
+    "power_max": 432,
+    "weight_min": 33,
+    "weight_max": 54,
+    "weapon_type": "나이프",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "월렛 슬러터",
+    "type": "무기",
+    "power_min": 301,
+    "power_max": 516,
+    "weight_min": 42,
+    "weight_max": 68,
+    "weapon_type": "나이프",
+    "abilities": [
+      "황금 발굴: 전투 시 아이템을 얻을 확률이 15% 상승한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "돌리 대거",
+    "type": "무기",
+    "power_min": 227,
+    "power_max": 388,
+    "weight_min": 64,
+    "weight_max": 86,
+    "weapon_type": "나이프",
+    "abilities": [
+      "크로스 카운터: 적이 공격했을 때, 30%확률로 반격한다. 반격 데미지는 50%의 방어를 관통한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "포스의 지팡이",
+    "type": "무기",
+    "power_min": 221,
+    "power_max": 379,
+    "weight_min": 33,
+    "weight_max": 54,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "매직 엠블럼: 마법 공격력을 100% 상승시킨다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "냉혹의 지팡이",
+    "type": "무기",
+    "power_min": 245,
+    "power_max": 420,
+    "weight_min": 45,
+    "weight_max": 73,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "매직 라이트 맥스: MP의 소비를 20% 억제한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "아이스 브랜드",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 451,
+    "weight_min": 45,
+    "weight_max": 76,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "추가 데미지: 매 공격마다 10% 확률로 5~10%의 추가 데미지를 준다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "시련의 지팡이",
+    "type": "무기",
+    "power_min": 253,
+    "power_max": 434,
+    "weight_min": 41,
+    "weight_max": 67,
+    "weapon_type": "지팡이",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "귀족의 검",
+    "type": "무기",
+    "power_min": 249,
+    "power_max": 426,
+    "weight_min": 40,
+    "weight_max": 65,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "무"
+    ]
+  },
+  {
+    "name": "금강봉",
+    "type": "무기",
+    "power_min": 242,
+    "power_max": 414,
+    "weight_min": 56,
+    "weight_max": 91,
+    "weapon_type": "검",
+    "abilities": [
+      "즉사: 적을 1% 확률로 일격에 넘어뜨린다."
+    ],
+    "attributes": [
+      "무"
+    ]
+  },
+  {
+    "name": "시무라검",
+    "type": "무기",
+    "power_min": 233,
+    "power_max": 399,
+    "weight_min": 44,
+    "weight_max": 71,
+    "weapon_type": "검",
+    "abilities": [],
+    "attributes": [
+      "무"
+    ]
+  },
+  {
+    "name": "비단 두부",
+    "type": "무기",
+    "power_min": 179,
+    "power_max": 306,
+    "weight_min": 320,
+    "weight_max": 520,
+    "weapon_type": "검",
+    "abilities": [
+      "각 공격: 적을 7% 확률로 일격에 넘어뜨린다."
+    ],
+    "attributes": [
+      "무"
+    ]
+  },
+  {
+    "name": "황금 곡괭이",
+    "type": "무기",
+    "power_min": 210,
+    "power_max": 360,
+    "weight_min": 40,
+    "weight_max": 66,
+    "weapon_type": "도끼",
+    "abilities": [
+      "황금 발굴: 전투 시 아이템을 얻을 확률이 15% 상승한다."
+    ],
+    "attributes": [
+      "무"
+    ]
+  },
+  {
+    "name": "암무의 철갑",
+    "type": "무기",
+    "power_min": 272,
+    "power_max": 465,
+    "weight_min": 58,
+    "weight_max": 82,
+    "weapon_type": "너클",
+    "abilities": [
+      "어둠 안개: 매 공격마다 10% 확률로 상대방을 암흑 상태로 만든다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "카게무샤의 활",
+    "type": "무기",
+    "power_min": 285,
+    "power_max": 488,
+    "weight_min": 56,
+    "weight_max": 84,
+    "weapon_type": "활",
+    "abilities": [
+      "페이드: 회피치가 10% 증가한다 [무기 보너스] 활, 나이프 장착 시 5% 증가."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "니르바나의 칼",
+    "type": "무기",
+    "power_min": 260,
+    "power_max": 445,
+    "weight_min": 34,
+    "weight_max": 48,
+    "weapon_type": "나이프",
+    "abilities": [
+      "어둠 안개: 매 공격마다 10% 확률로 상대방을 암흑 상태로 만든다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "광휘의 창",
+    "type": "무기",
+    "power_min": 291,
+    "power_max": 498,
+    "weight_min": 46,
+    "weight_max": 75,
+    "weapon_type": "창",
+    "abilities": [
+      "정확한 한 발: 적중치가 10% 증가한다. [무기 보너스] 활 장착 시 10% 증가"
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "솔라리스 블레이드",
+    "type": "무기",
+    "power_min": 289,
+    "power_max": 495,
+    "weight_min": 52,
+    "weight_max": 85,
+    "weapon_type": "검",
+    "abilities": [
+      "광휘: 암흑에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "세라핌의 주먹",
+    "type": "무기",
+    "power_min": 268,
+    "power_max": 458,
+    "weight_min": 36,
+    "weight_max": 58,
+    "weapon_type": "너클",
+    "abilities": [
+      "정확한 한 발: 적중치가 10% 증가한다. [무기 보너스] 활 장착 시 10% 증가"
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "아르테미스의 활",
+    "type": "무기",
+    "power_min": 277,
+    "power_max": 475,
+    "weight_min": 30,
+    "weight_max": 48,
+    "weapon_type": "활",
+    "abilities": [
+      "치명적인 명중: 적중치가 20% 증가한다. [무기 보너스] 활 장착 시 10% 증가"
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "불카누스의 검",
+    "type": "무기",
+    "power_min": 283,
+    "power_max": 485,
+    "weight_min": 46,
+    "weight_max": 75,
+    "weapon_type": "검",
+    "abilities": [
+      "상처 지지기: 매 공격마다 10% 확률로 상대방에게 화상을 입힌다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "이프리트의 주먹",
+    "type": "무기",
+    "power_min": 273,
+    "power_max": 468,
+    "weight_min": 48,
+    "weight_max": 77,
+    "weapon_type": "너클",
+    "abilities": [
+      "상처 지지기: 매 공격마다 10% 확률로 상대방에게 화상을 입힌다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "화염의 장궁",
+    "type": "무기",
+    "power_min": 266,
+    "power_max": 455,
+    "weight_min": 32,
+    "weight_max": 52,
+    "weapon_type": "활",
+    "abilities": [
+      "치명적인 명중: 적중치가 20% 증가한다. [무기 보너스] 활 장착 시 10% 증가"
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "성운의 너클",
+    "type": "무기",
+    "power_min": 270,
+    "power_max": 462,
+    "weight_min": 37,
+    "weight_max": 60,
+    "weapon_type": "너클",
+    "abilities": [
+      "섀도우 스탭: 회피치가 15% 증가한다 [무기 보너스] 활, 나이프 장착 시 5% 증가."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "오리온의 장궁",
+    "type": "무기",
+    "power_min": 298,
+    "power_max": 510,
+    "weight_min": 54,
+    "weight_max": 75,
+    "weapon_type": "활",
+    "abilities": [
+      "정확한 한 발: 적중치가 10% 증가한다. [무기 보너스] 활 장착 시 10% 증가"
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "볼트세이버",
+    "type": "무기",
+    "power_min": 243,
+    "power_max": 445,
+    "weight_min": 46,
+    "weight_max": 75,
+    "weapon_type": "검",
+    "abilities": [
+      "상처 지지기: 매 공격마다 10% 확률로 상대방에게 화상을 입힌다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "우레의 건틀릿",
+    "type": "무기",
+    "power_min": 264,
+    "power_max": 457,
+    "weight_min": 43,
+    "weight_max": 68,
+    "weapon_type": "너클",
+    "abilities": [
+      "치명적인 명중: 적중치가 20% 증가한다. [무기 보너스] 활 장착 시 10% 증가"
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "라이텐스태프",
+    "type": "무기",
+    "power_min": 272,
+    "power_max": 465,
+    "weight_min": 33,
+    "weight_max": 58,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "정확한 한 발: 적중치가 10% 증가한다. [무기 보너스] 활 장착 시 10% 증가"
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "보레아스의 너클",
+    "type": "무기",
+    "power_min": 266,
+    "power_max": 455,
+    "weight_min": 42,
+    "weight_max": 68,
+    "weapon_type": "너클",
+    "abilities": [
+      "섀도우 스탭: 회피치가 15% 증가한다 [무기 보너스] 활, 나이프 장착 시 5% 증가."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "실프의 나이프",
+    "type": "무기",
+    "power_min": 240,
+    "power_max": 412,
+    "weight_min": 20,
+    "weight_max": 32,
+    "weapon_type": "나이프",
+    "abilities": [
+      "페이드: 회피치가 10% 증가한다 [무기 보너스] 활, 나이프 장착 시 5% 증가."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "트리톤의 삼지창",
+    "type": "무기",
+    "power_min": 304,
+    "power_max": 520,
+    "weight_min": 54,
+    "weight_max": 88,
+    "weapon_type": "창",
+    "abilities": [
+      "냉기 돌풍: 매 공격마다 10% 확률로 상대방을 빙결 상태로 만든다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "프로스트 블레이드",
+    "type": "무기",
+    "power_min": 286,
+    "power_max": 490,
+    "weight_min": 48,
+    "weight_max": 78,
+    "weapon_type": "검",
+    "abilities": [
+      "냉기 돌풍: 매 공격마다 10% 확률로 상대방을 빙결 상태로 만든다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "빙하의 너클",
+    "type": "무기",
+    "power_min": 276,
+    "power_max": 472,
+    "weight_min": 41,
+    "weight_max": 66,
+    "weapon_type": "너클",
+    "abilities": [
+      "냉기 돌풍: 매 공격마다 10% 확률로 상대방을 빙결 상태로 만든다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "깊은 절망",
+    "type": "방어구",
+    "power_min": 298,
+    "power_max": 510,
+    "weight_min": 55,
+    "weight_max": 88,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "마계의 갑옷",
+    "type": "방어구",
+    "power_min": 232,
+    "power_max": 398,
+    "weight_min": 50,
+    "weight_max": 81,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "암야행인의 갑옷",
+    "type": "방어구",
+    "power_min": 310,
+    "power_max": 531,
+    "weight_min": 54,
+    "weight_max": 87,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "암흑의 망토",
+    "type": "방어구",
+    "power_min": 224,
+    "power_max": 384,
+    "weight_min": 12,
+    "weight_max": 19,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "창혈의 갑옷",
+    "type": "방어구",
+    "power_min": 255,
+    "power_max": 436,
+    "weight_min": 46,
+    "weight_max": 74,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "황천의 갑옷",
+    "type": "방어구",
+    "power_min": 231,
+    "power_max": 397,
+    "weight_min": 46,
+    "weight_max": 74,
+    "weapon_type": "방어구",
+    "abilities": [
+      "퍼펙트 블로킹: 적의 공격을 15% 확률로 무효화한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "대천사의 날개",
+    "type": "방어구",
+    "power_min": 253,
+    "power_max": 434,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "마나의 성 갑옷",
+    "type": "방어구",
+    "power_min": 284,
+    "power_max": 486,
+    "weight_min": 46,
+    "weight_max": 74,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성스러운 망토",
+    "type": "방어구",
+    "power_min": 203,
+    "power_max": 348,
+    "weight_min": 36,
+    "weight_max": 59,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "신비의 드레스",
+    "type": "방어구",
+    "power_min": 202,
+    "power_max": 345,
+    "weight_min": 17,
+    "weight_max": 28,
+    "weapon_type": "방어구",
+    "abilities": [
+      "매직 프로텍트: 마법 스킬에 의한 데미지를 20% 경감한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "신의 옷(기모노)",
+    "type": "방어구",
+    "power_min": 227,
+    "power_max": 388,
+    "weight_min": 20,
+    "weight_max": 33,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "천사의 갑옷",
+    "type": "방어구",
+    "power_min": 249,
+    "power_max": 426,
+    "weight_min": 36,
+    "weight_max": 58,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "침묵의 장미",
+    "type": "방어구",
+    "power_min": 326,
+    "power_max": 558,
+    "weight_min": 56,
+    "weight_max": 91,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "겐지의 갑옷",
+    "type": "방어구",
+    "power_min": 263,
+    "power_max": 450,
+    "weight_min": 49,
+    "weight_max": 80,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "레드발키리",
+    "type": "방어구",
+    "power_min": 302,
+    "power_max": 518,
+    "weight_min": 51,
+    "weight_max": 82,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "헤이케의 갑옷",
+    "type": "방어구",
+    "power_min": 231,
+    "power_max": 394,
+    "weight_min": 16,
+    "weight_max": 27,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "화신의 방패",
+    "type": "방어구",
+    "power_min": 186,
+    "power_max": 318,
+    "weight_min": 44,
+    "weight_max": 71,
+    "weapon_type": "방어구",
+    "abilities": [
+      "퍼펙트 블로킹: 적의 공격을 15% 확률로 무효화한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "화염짐승의 옷",
+    "type": "방어구",
+    "power_min": 228,
+    "power_max": 390,
+    "weight_min": 47,
+    "weight_max": 75,
+    "weapon_type": "방어구",
+    "abilities": [
+      "매직 프로텍트: 마법 스킬에 의한 데미지를 20% 경감한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "후로우웬의 갑옷",
+    "type": "방어구",
+    "power_min": 259,
+    "power_max": 444,
+    "weight_min": 38,
+    "weight_max": 61,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "달의 깃옷",
+    "type": "방어구",
+    "power_min": 217,
+    "power_max": 373,
+    "weight_min": 5,
+    "weight_max": 8,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "달의 여신",
+    "type": "방어구",
+    "power_min": 306,
+    "power_max": 524,
+    "weight_min": 52,
+    "weight_max": 84,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "북두칠성",
+    "type": "방어구",
+    "power_min": 243,
+    "power_max": 416,
+    "weight_min": 24,
+    "weight_max": 40,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "사신수의 방패",
+    "type": "방어구",
+    "power_min": 238,
+    "power_max": 408,
+    "weight_min": 40,
+    "weight_max": 65,
+    "weapon_type": "방어구",
+    "abilities": [
+      "블록: 적의 공격을 5% 확률로 무효화한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "현무의 갑개",
+    "type": "방어구",
+    "power_min": 249,
+    "power_max": 427,
+    "weight_min": 53,
+    "weight_max": 86,
+    "weapon_type": "방어구",
+    "abilities": [
+      "엑스 프로텍션: 물리 스킬에 의한 데미지를 20% 경감한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "흑요석의 갑옷",
+    "type": "방어구",
+    "power_min": 238,
+    "power_max": 408,
+    "weight_min": 52,
+    "weight_max": 85,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "천둥신의 갑옷",
+    "type": "방어구",
+    "power_min": 245,
+    "power_max": 420,
+    "weight_min": 60,
+    "weight_max": 97,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "이지스의 방패",
+    "type": "방어구",
+    "power_min": 288,
+    "power_max": 494,
+    "weight_min": 52,
+    "weight_max": 84,
+    "weapon_type": "방어구",
+    "abilities": [
+      "퍼펙트 블로킹: 적의 공격을 15% 확률로 무효화한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "정령의 망토",
+    "type": "방어구",
+    "power_min": 230,
+    "power_max": 393,
+    "weight_min": 8,
+    "weight_max": 14,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "천둥소리의 방패",
+    "type": "방어구",
+    "power_min": 253,
+    "power_max": 434,
+    "weight_min": 38,
+    "weight_max": 61,
+    "weapon_type": "방어구",
+    "abilities": [
+      "블록: 적의 공격을 5% 확률로 무효화한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "천상의 갑옷",
+    "type": "방어구",
+    "power_min": 279,
+    "power_max": 477,
+    "weight_min": 59,
+    "weight_max": 95,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "칠색의 방패",
+    "type": "방어구",
+    "power_min": 223,
+    "power_max": 381,
+    "weight_min": 44,
+    "weight_max": 71,
+    "weapon_type": "방어구",
+    "abilities": [
+      "퍼펙트 블로킹: 적의 공격을 15% 확률로 무효화한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "바하무트의 갑옷",
+    "type": "방어구",
+    "power_min": 305,
+    "power_max": 522,
+    "weight_min": 48,
+    "weight_max": 79,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "비룡의 망토",
+    "type": "방어구",
+    "power_min": 210,
+    "power_max": 360,
+    "weight_min": 4,
+    "weight_max": 7,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "용신의 갑옷",
+    "type": "방어구",
+    "power_min": 279,
+    "power_max": 477,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "질풍의 갑옷",
+    "type": "방어구",
+    "power_min": 189,
+    "power_max": 324,
+    "weight_min": 22,
+    "weight_max": 35,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "풍신의 옷(기모노)",
+    "type": "방어구",
+    "power_min": 165,
+    "power_max": 282,
+    "weight_min": 0,
+    "weight_max": 1,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "풍진의 방패",
+    "type": "방어구",
+    "power_min": 233,
+    "power_max": 399,
+    "weight_min": 20,
+    "weight_max": 33,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "무녀의 의복",
+    "type": "방어구",
+    "power_min": 285,
+    "power_max": 488,
+    "weight_min": 43,
+    "weight_max": 69,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "물여신의 드레스",
+    "type": "방어구",
+    "power_min": 226,
+    "power_max": 387,
+    "weight_min": 36,
+    "weight_max": 59,
+    "weapon_type": "방어구",
+    "abilities": [
+      "재생 LV4: 매 턴마다 HP 최대치의 일부를 회복한다. (회복력에 비례, 최대 9%)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "물의 깃옷",
+    "type": "방어구",
+    "power_min": 210,
+    "power_max": 360,
+    "weight_min": 38,
+    "weight_max": 61,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "아트리뷰트 플레이트",
+    "type": "방어구",
+    "power_min": 291,
+    "power_max": 498,
+    "weight_min": 52,
+    "weight_max": 84,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "얼음신의 갑옷",
+    "type": "방어구",
+    "power_min": 249,
+    "power_max": 426,
+    "weight_min": 41,
+    "weight_max": 67,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "펭귄의 나무 갑옷",
+    "type": "방어구",
+    "power_min": 210,
+    "power_max": 358,
+    "weight_min": -1,
+    "weight_max": 0,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "제의복",
+    "type": "방어구",
+    "power_min": 210,
+    "power_max": 360,
+    "weight_min": 2,
+    "weight_max": 3,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "무"
+    ]
+  },
+  {
+    "name": "초합금의 갑옷",
+    "type": "방어구",
+    "power_min": 301,
+    "power_max": 516,
+    "weight_min": 78,
+    "weight_max": 126,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "무"
+    ]
+  },
+  {
+    "name": "불사조의 날개",
+    "type": "방어구",
+    "power_min": 206,
+    "power_max": 360,
+    "weight_min": 21,
+    "weight_max": 35,
+    "weapon_type": "방어구",
+    "abilities": [
+      "블로킹: 적의 공격을 10% 확률로 무효화한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "화염 요새",
+    "type": "방어구",
+    "power_min": 240,
+    "power_max": 410,
+    "weight_min": 55,
+    "weight_max": 90,
+    "weapon_type": "방어구",
+    "abilities": [
+      "맥스 프로텍션: 물리 스킬에 의한 데미지를 30% 경감한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "업화의 장막",
+    "type": "방어구",
+    "power_min": 270,
+    "power_max": 465,
+    "weight_min": 15,
+    "weight_max": 25,
+    "weapon_type": "방어구",
+    "abilities": [
+      "저주: 행운이 50 하락한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "해신의 성역",
+    "type": "방어구",
+    "power_min": 215,
+    "power_max": 370,
+    "weight_min": 17,
+    "weight_max": 30,
+    "weapon_type": "방어구",
+    "abilities": [
+      "타임 스톱: 적의 공격 횟수를 25% 확률로 1 감소시킨다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "빙결의 요새",
+    "type": "방어구",
+    "power_min": 230,
+    "power_max": 395,
+    "weight_min": 46,
+    "weight_max": 75,
+    "weapon_type": "방어구",
+    "abilities": [
+      "매직 디스펠: 마법 스킬에 의한 데미지를 30% 경감한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "심해의 갑주",
+    "type": "방어구",
+    "power_min": 255,
+    "power_max": 455,
+    "weight_min": 28,
+    "weight_max": 51,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "대지의 수호",
+    "type": "방어구",
+    "power_min": 225,
+    "power_max": 385,
+    "weight_min": 37,
+    "weight_max": 60,
+    "weapon_type": "방어구",
+    "abilities": [
+      "맥스 프로텍션: 물리 스킬에 의한 데미지를 30% 경감한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "성궁의 방패",
+    "type": "방어구",
+    "power_min": 235,
+    "power_max": 405,
+    "weight_min": 43,
+    "weight_max": 70,
+    "weapon_type": "방어구",
+    "abilities": [
+      "퍼펙트 블로킹: 적의 공격을 15% 확률로 무효화한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "은하의 장막",
+    "type": "방어구",
+    "power_min": 219,
+    "power_max": 378,
+    "weight_min": 14,
+    "weight_max": 22,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "폭풍의 요새",
+    "type": "방어구",
+    "power_min": 220,
+    "power_max": 375,
+    "weight_min": 25,
+    "weight_max": 40,
+    "weapon_type": "방어구",
+    "abilities": [
+      "매직 디스펠: 마법 스킬에 의한 데미지를 30% 경감한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "천공의 수호자",
+    "type": "방어구",
+    "power_min": 228,
+    "power_max": 390,
+    "weight_min": 22,
+    "weight_max": 35,
+    "weapon_type": "방어구",
+    "abilities": [
+      "퍼펙트 블로킹: 적의 공격을 15% 확률로 무효화한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "태풍의 갑주",
+    "type": "방어구",
+    "power_min": 273,
+    "power_max": 474,
+    "weight_min": 55,
+    "weight_max": 83,
+    "weapon_type": "방어구",
+    "abilities": [
+      "타임 스톱: 적의 공격 횟수를 25% 확률로 1 감소시킨다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "성역의 수호자",
+    "type": "방어구",
+    "power_min": 235,
+    "power_max": 400,
+    "weight_min": 34,
+    "weight_max": 55,
+    "weapon_type": "방어구",
+    "abilities": [
+      "맥스 프로텍션: 물리 스킬에 의한 데미지를 30% 경감한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "천상의 방벽",
+    "type": "방어구",
+    "power_min": 215,
+    "power_max": 365,
+    "weight_min": 26,
+    "weight_max": 42,
+    "weapon_type": "방어구",
+    "abilities": [
+      "시간 압축: 적의 공격 횟수를 50% 확률로 1 감소시킨다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "심연의 수호자",
+    "type": "방어구",
+    "power_min": 262,
+    "power_max": 445,
+    "weight_min": 50,
+    "weight_max": 80,
+    "weapon_type": "방어구",
+    "abilities": [
+      "매직 디스펠: 마법 스킬에 의한 데미지를 30% 경감한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "암흑의 요새",
+    "type": "방어구",
+    "power_min": 245,
+    "power_max": 425,
+    "weight_min": 40,
+    "weight_max": 65,
+    "weapon_type": "방어구",
+    "abilities": [
+      "재생 LV3: 매 턴마다 HP 최대치의 일부를 회복한다. (회복력에 비례, 최대 6%)"
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "칠흑의 갑주",
+    "type": "방어구",
+    "power_min": 203,
+    "power_max": 341,
+    "weight_min": 3,
+    "weight_max": 8,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "뇌전의 요새",
+    "type": "방어구",
+    "power_min": 230,
+    "power_max": 395,
+    "weight_min": 31,
+    "weight_max": 54,
+    "weapon_type": "방어구",
+    "abilities": [
+      "맥스 프로텍션: 물리 스킬에 의한 데미지를 30% 경감한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "전광의 수호자",
+    "type": "방어구",
+    "power_min": 215,
+    "power_max": 370,
+    "weight_min": 34,
+    "weight_max": 55,
+    "weapon_type": "방어구",
+    "abilities": [
+      "매직 아우라: 마법 스킬에 의한 데미지를 15% 경감한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "뇌명의 갑주",
+    "type": "방어구",
+    "power_min": 318,
+    "power_max": 541,
+    "weight_min": 52,
+    "weight_max": 85,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "나락의 수의",
+    "type": "방어구",
+    "power_min": 273,
+    "power_max": 468,
+    "weight_min": 48,
+    "weight_max": 65,
+    "weapon_type": "방어구",
+    "abilities": [
+      "광휘: 암흑에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "흑요의 갑주",
+    "type": "방어구",
+    "power_min": 281,
+    "power_max": 478,
+    "weight_min": 58,
+    "weight_max": 88,
+    "weapon_type": "방어구",
+    "abilities": [
+      "단절: 상태 이상에 걸릴 확률이 40% 감소한다 [무기 보너스] 도끼, 너클 장착 시 10% 증가."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "성기사의 맹세",
+    "type": "방어구",
+    "power_min": 304,
+    "power_max": 505,
+    "weight_min": 61,
+    "weight_max": 92,
+    "weapon_type": "방어구",
+    "abilities": [
+      "부동: 상태 이상에 걸릴 확률이 20% 감소한다 [무기 보너스] 도끼, 너클 장착 시 5% 증가."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "천공의 예복",
+    "type": "방어구",
+    "power_min": 258,
+    "power_max": 442,
+    "weight_min": 34,
+    "weight_max": 58,
+    "weapon_type": "방어구",
+    "abilities": [
+      "광휘: 암흑에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "화룡의 비늘",
+    "type": "방어구",
+    "power_min": 287,
+    "power_max": 492,
+    "weight_min": 37,
+    "weight_max": 66,
+    "weapon_type": "방어구",
+    "abilities": [
+      "방한: 빙결에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "불꽃의 예복",
+    "type": "방어구",
+    "power_min": 266,
+    "power_max": 456,
+    "weight_min": 45,
+    "weight_max": 72,
+    "weapon_type": "방어구",
+    "abilities": [
+      "단절: 상태 이상에 걸릴 확률이 40% 감소한다 [무기 보너스] 도끼, 너클 장착 시 10% 증가."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "별빛의 갑주",
+    "type": "방어구",
+    "power_min": 277,
+    "power_max": 474,
+    "weight_min": 46,
+    "weight_max": 75,
+    "weapon_type": "방어구",
+    "abilities": [
+      "부동: 상태 이상에 걸릴 확률이 20% 감소한다 [무기 보너스] 도끼, 너클 장착 시 5% 증가."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "유성의 망토",
+    "type": "방어구",
+    "power_min": 261,
+    "power_max": 438,
+    "weight_min": 22,
+    "weight_max": 35,
+    "weapon_type": "방어구",
+    "abilities": [
+      "절연: 마비에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "끊어진 결박",
+    "type": "방어구",
+    "power_min": 301,
+    "power_max": 507,
+    "weight_min": 49,
+    "weight_max": 79,
+    "weapon_type": "방어구",
+    "abilities": [
+      "절연: 마비에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "뇌신의 로브",
+    "type": "방어구",
+    "power_min": 271,
+    "power_max": 464,
+    "weight_min": 56,
+    "weight_max": 88,
+    "weapon_type": "방어구",
+    "abilities": [
+      "단절: 상태 이상에 걸릴 확률이 40% 감소한다 [무기 보너스] 도끼, 너클 장착 시 10% 증가."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "풍화된 철갑",
+    "type": "방어구",
+    "power_min": 279,
+    "power_max": 478,
+    "weight_min": 48,
+    "weight_max": 77,
+    "weapon_type": "방어구",
+    "abilities": [
+      "부동: 상태 이상에 걸릴 확률이 20% 감소한다 [무기 보너스] 도끼, 너클 장착 시 5% 증가."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "질풍의 깃옷",
+    "type": "방어구",
+    "power_min": 255,
+    "power_max": 436,
+    "weight_min": 19,
+    "weight_max": 31,
+    "weapon_type": "방어구",
+    "abilities": [
+      "방한: 빙결에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "빙룡의 갑주",
+    "type": "방어구",
+    "power_min": 290,
+    "power_max": 496,
+    "weight_min": 42,
+    "weight_max": 69,
+    "weapon_type": "방어구",
+    "abilities": [
+      "습기: 화상에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "해신의 로브",
+    "type": "방어구",
+    "power_min": 267,
+    "power_max": 458,
+    "weight_min": 46,
+    "weight_max": 75,
+    "weapon_type": "방어구",
+    "abilities": [
+      "단절: 상태 이상에 걸릴 확률이 40% 감소한다 [무기 보너스] 도끼, 너클 장착 시 10% 증가."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "반혼향",
+    "type": "장신구",
+    "power_min": 56,
+    "power_max": 96,
+    "weight_min": 12,
+    "weight_max": 19,
+    "weapon_type": "장신구",
+    "abilities": [
+      "재생 LV3: 매 턴마다 HP 최대치의 일부를 회복한다. (회복력에 비례, 최대 6%)"
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "선혈의 초",
+    "type": "장신구",
+    "power_min": 57,
+    "power_max": 98,
+    "weight_min": -9,
+    "weight_max": -5,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "악마의 꼬리",
+    "type": "장신구",
+    "power_min": 56,
+    "power_max": 96,
+    "weight_min": 10,
+    "weight_max": 16,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "인큐버스의 날개",
+    "type": "장신구",
+    "power_min": 35,
+    "power_max": 58,
+    "weight_min": -14,
+    "weight_max": -9,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "죽음의 신의 가호",
+    "type": "장신구",
+    "power_min": 70,
+    "power_max": 120,
+    "weight_min": 16,
+    "weight_max": 26,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "흡혈귀의 반지",
+    "type": "장신구",
+    "power_min": 48,
+    "power_max": 81,
+    "weight_min": 5,
+    "weight_max": 8,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "마법사의 반지",
+    "type": "장신구",
+    "power_min": 41,
+    "power_max": 69,
+    "weight_min": 9,
+    "weight_max": 15,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "발레리아의 심장",
+    "type": "장신구",
+    "power_min": 46,
+    "power_max": 79,
+    "weight_min": 4,
+    "weight_max": 7,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "빛의 보석",
+    "type": "장신구",
+    "power_min": 70,
+    "power_max": 120,
+    "weight_min": 9,
+    "weight_max": 15,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "빛의 부케",
+    "type": "장신구",
+    "power_min": 32,
+    "power_max": 54,
+    "weight_min": -12,
+    "weight_max": -7,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "천사의 고리",
+    "type": "장신구",
+    "power_min": 43,
+    "power_max": 74,
+    "weight_min": -1,
+    "weight_max": 0,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "행복의 반지",
+    "type": "장신구",
+    "power_min": 35,
+    "power_max": 60,
+    "weight_min": 4,
+    "weight_max": 6,
+    "weapon_type": "장신구",
+    "abilities": [
+      "행운: 전투 시 아이템을 얻을 확률이 20% 상승한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "화이트 엘리먼트",
+    "type": "장신구",
+    "power_min": 69,
+    "power_max": 117,
+    "weight_min": -1,
+    "weight_max": 0,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "겐지의 반지",
+    "type": "장신구",
+    "power_min": 59,
+    "power_max": 100,
+    "weight_min": 12,
+    "weight_max": 19,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "분노의 반지",
+    "type": "장신구",
+    "power_min": 48,
+    "power_max": 81,
+    "weight_min": 7,
+    "weight_max": 10,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "불길의 문장",
+    "type": "장신구",
+    "power_min": 73,
+    "power_max": 124,
+    "weight_min": 0,
+    "weight_max": 1,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "용암의 반지",
+    "type": "장신구",
+    "power_min": 46,
+    "power_max": 84,
+    "weight_min": 5,
+    "weight_max": 8,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "피닉스의 반지",
+    "type": "장신구",
+    "power_min": 49,
+    "power_max": 84,
+    "weight_min": 11,
+    "weight_max": 17,
+    "weapon_type": "장신구",
+    "abilities": [
+      "매직 라이트 맥스: MP의 소비를 20% 억제한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "화신의 팔찌",
+    "type": "장신구",
+    "power_min": 69,
+    "power_max": 117,
+    "weight_min": 8,
+    "weight_max": 14,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "골렘의 반지",
+    "type": "장신구",
+    "power_min": 63,
+    "power_max": 108,
+    "weight_min": 15,
+    "weight_max": 23,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "대리석의 반지",
+    "type": "장신구",
+    "power_min": 48,
+    "power_max": 81,
+    "weight_min": 4,
+    "weight_max": 7,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "대지의 소원",
+    "type": "장신구",
+    "power_min": 46,
+    "power_max": 79,
+    "weight_min": 7,
+    "weight_max": 10,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "별의 기적",
+    "type": "장신구",
+    "power_min": 85,
+    "power_max": 146,
+    "weight_min": 11,
+    "weight_max": 17,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "별의 조각",
+    "type": "장신구",
+    "power_min": 57,
+    "power_max": 98,
+    "weight_min": 11,
+    "weight_max": 17,
+    "weapon_type": "장신구",
+    "abilities": [
+      "매직 라이트 맥스: MP의 소비를 20% 억제한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "유성우",
+    "type": "장신구",
+    "power_min": 28,
+    "power_max": 48,
+    "weight_min": -2,
+    "weight_max": -1,
+    "weapon_type": "장신구",
+    "abilities": [
+      "천운: 행운이 50 상승한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "해황의 반지",
+    "type": "장신구",
+    "power_min": 81,
+    "power_max": 139,
+    "weight_min": 21,
+    "weight_max": 34,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "번개신의 가호",
+    "type": "장신구",
+    "power_min": 66,
+    "power_max": 112,
+    "weight_min": 13,
+    "weight_max": 21,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "산호 귀걸이",
+    "type": "장신구",
+    "power_min": 87,
+    "power_max": 148,
+    "weight_min": 28,
+    "weight_max": 45,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "오로라 링 플러스",
+    "type": "장신구",
+    "power_min": 75,
+    "power_max": 128,
+    "weight_min": 3,
+    "weight_max": 4,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "천도지즉반",
+    "type": "장신구",
+    "power_min": 49,
+    "power_max": 84,
+    "weight_min": 4,
+    "weight_max": 6,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "천둥소리의 귀걸이",
+    "type": "장신구",
+    "power_min": 56,
+    "power_max": 96,
+    "weight_min": 8,
+    "weight_max": 14,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "회심의 팔찌",
+    "type": "장신구",
+    "power_min": 49,
+    "power_max": 84,
+    "weight_min": 6,
+    "weight_max": 9,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "류진의 바람",
+    "type": "장신구",
+    "power_min": 36,
+    "power_max": 62,
+    "weight_min": 7,
+    "weight_max": 10,
+    "weapon_type": "장신구",
+    "abilities": [
+      "선제 공격 LV2: 선수를 취할 확률이 50% 올라간다. 단 상대가 같은 계열의 어빌리티를 착용한 경우 무효가 된다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "바람의 보석",
+    "type": "장신구",
+    "power_min": 35,
+    "power_max": 60,
+    "weight_min": -3,
+    "weight_max": -2,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "바람의 오카리나",
+    "type": "장신구",
+    "power_min": 35,
+    "power_max": 61,
+    "weight_min": 0,
+    "weight_max": 0,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "비취의 반지",
+    "type": "장신구",
+    "power_min": 73,
+    "power_max": 124,
+    "weight_min": 12,
+    "weight_max": 20,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "시간의 모래시계",
+    "type": "장신구",
+    "power_min": 47,
+    "power_max": 80,
+    "weight_min": -17,
+    "weight_max": -11,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "윙 슈즈",
+    "type": "장신구",
+    "power_min": 32,
+    "power_max": 54,
+    "weight_min": 4,
+    "weight_max": 6,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "고대의 물거울",
+    "type": "장신구",
+    "power_min": 77,
+    "power_max": 133,
+    "weight_min": 15,
+    "weight_max": 23,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "시리아의 눈물",
+    "type": "장신구",
+    "power_min": 54,
+    "power_max": 92,
+    "weight_min": 8,
+    "weight_max": 14,
+    "weapon_type": "장신구",
+    "abilities": [
+      "재생 LV4: 매 턴마다 HP 최대치의 일부를 회복한다. (회복력에 비례, 최대 9%)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "아이스 써클",
+    "type": "장신구",
+    "power_min": 56,
+    "power_max": 94,
+    "weight_min": 9,
+    "weight_max": 15,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "얼음의 목걸이",
+    "type": "장신구",
+    "power_min": 42,
+    "power_max": 70,
+    "weight_min": 2,
+    "weight_max": 3,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "천로의 날개",
+    "type": "장신구",
+    "power_min": 60,
+    "power_max": 103,
+    "weight_min": -6,
+    "weight_max": -3,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "팔척경곡옥",
+    "type": "장신구",
+    "power_min": 56,
+    "power_max": 96,
+    "weight_min": 2,
+    "weight_max": 3,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "소인의 모자",
+    "type": "장신구",
+    "power_min": 45,
+    "power_max": 76,
+    "weight_min": -6,
+    "weight_max": -3,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "무"
+    ]
+  },
+  {
+    "name": "수행승려의 염주",
+    "type": "장신구",
+    "power_min": 21,
+    "power_max": 36,
+    "weight_min": 12,
+    "weight_max": 19,
+    "weapon_type": "장신구",
+    "abilities": [
+      "학습: 취득 경험치가 10% 증가하고 숙련도가 1 증가한다."
+    ],
+    "attributes": [
+      "무"
+    ]
+  },
+  {
+    "name": "황금알",
+    "type": "장신구",
+    "power_min": 7,
+    "power_max": 12,
+    "weight_min": 16,
+    "weight_max": 26,
+    "weapon_type": "장신구",
+    "abilities": [
+      "성장: 획득 경험치가 10% 상승한다."
+    ],
+    "attributes": [
+      "무"
+    ]
+  },
+  {
+    "name": "화염의 징표",
+    "type": "장신구",
+    "power_min": 46,
+    "power_max": 78,
+    "weight_min": 15,
+    "weight_max": 21,
+    "weapon_type": "장신구",
+    "abilities": [
+      "테크 파워 플러스: 스킬의 위력을 15% 상승시킨다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "불꽃의 눈",
+    "type": "장신구",
+    "power_min": 31,
+    "power_max": 58,
+    "weight_min": 5,
+    "weight_max": 8,
+    "weapon_type": "장신구",
+    "abilities": [
+      "상처 지지기: 매 공격마다 10% 확률로 상대방에게 화상을 입힌다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "홍련의 목걸이",
+    "type": "장신구",
+    "power_min": 82,
+    "power_max": 147,
+    "weight_min": 27,
+    "weight_max": 42,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "심해의 진주",
+    "type": "장신구",
+    "power_min": 42,
+    "power_max": 72,
+    "weight_min": 13,
+    "weight_max": 18,
+    "weapon_type": "장신구",
+    "abilities": [
+      "마나 재생 LV1: 매 턴마다 MP 최대치의 일부를 회복한다. (회복력에 비례, 최대 2%)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "얼음 결정",
+    "type": "장신구",
+    "power_min": 32,
+    "power_max": 60,
+    "weight_min": 6,
+    "weight_max": 10,
+    "weapon_type": "장신구",
+    "abilities": [
+      "침묵: 매 공격마다 10% 확률로 상대의 기술/마법 발동을 1턴 간 봉인한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "해룡의 비늘",
+    "type": "장신구",
+    "power_min": 84,
+    "power_max": 149,
+    "weight_min": 23,
+    "weight_max": 37,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "대지의 징표",
+    "type": "장신구",
+    "power_min": 44,
+    "power_max": 75,
+    "weight_min": 16,
+    "weight_max": 22,
+    "weapon_type": "장신구",
+    "abilities": [
+      "관통: 적의 방어력을 10% 무시한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "운석의 파편",
+    "type": "장신구",
+    "power_min": 34,
+    "power_max": 62,
+    "weight_min": 8,
+    "weight_max": 13,
+    "weapon_type": "장신구",
+    "abilities": [
+      "테크 포스: 스킬의 위력을 20% 상승시킨다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "별똥별의 꼬리",
+    "type": "장신구",
+    "power_min": 69,
+    "power_max": 118,
+    "weight_min": 16,
+    "weight_max": 25,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "바람의 징표",
+    "type": "장신구",
+    "power_min": 34,
+    "power_max": 58,
+    "weight_min": 8,
+    "weight_max": 12,
+    "weapon_type": "장신구",
+    "abilities": [
+      "헤이스트: 전투시의 공격 회수가 50% 확률로 1회 증가한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "질풍의 깃털",
+    "type": "장신구",
+    "power_min": 35,
+    "power_max": 64,
+    "weight_min": -10,
+    "weight_max": -6,
+    "weapon_type": "장신구",
+    "abilities": [
+      "추가 데미지: 매 공격마다 10% 확률로 5~10%의 추가 데미지를 준다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "창공의 눈동자",
+    "type": "장신구",
+    "power_min": 89,
+    "power_max": 150,
+    "weight_min": 28,
+    "weight_max": 44,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "성스러운 징표",
+    "type": "장신구",
+    "power_min": 42,
+    "power_max": 71,
+    "weight_min": 12,
+    "weight_max": 16,
+    "weapon_type": "장신구",
+    "abilities": [
+      "테크 파워 플러스: 스킬의 위력을 15% 상승시킨다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "빛의 결정",
+    "type": "장신구",
+    "power_min": 38,
+    "power_max": 70,
+    "weight_min": 8,
+    "weight_max": 14,
+    "weapon_type": "장신구",
+    "abilities": [
+      "노 컨디션: 스킬 사용 시 상대는 절대 회피할 수 없다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "천사의 눈물",
+    "type": "장신구",
+    "power_min": 87,
+    "power_max": 149,
+    "weight_min": 26,
+    "weight_max": 39,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "어둠의 징표",
+    "type": "장신구",
+    "power_min": 43,
+    "power_max": 73,
+    "weight_min": 13,
+    "weight_max": 18,
+    "weapon_type": "장신구",
+    "abilities": [
+      "하이 샤프니스: 물리 공격력을 20% 상승시킨다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "심연의 눈",
+    "type": "장신구",
+    "power_min": 33,
+    "power_max": 61,
+    "weight_min": 5,
+    "weight_max": 9,
+    "weapon_type": "장신구",
+    "abilities": [
+      "매직컬 댄싱: 매 공격마다 15% 확률로 데미지의 3%만큼 적의 MP를 흡수한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "흑암의 보주",
+    "type": "장신구",
+    "power_min": 90,
+    "power_max": 151,
+    "weight_min": 30,
+    "weight_max": 46,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "뇌전의 징표",
+    "type": "장신구",
+    "power_min": 40,
+    "power_max": 69,
+    "weight_min": 11,
+    "weight_max": 17,
+    "weapon_type": "장신구",
+    "abilities": [
+      "매직 라이트 맥스: MP의 소비를 20% 억제한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "전격의 수정",
+    "type": "장신구",
+    "power_min": 37,
+    "power_max": 68,
+    "weight_min": 8,
+    "weight_max": 13,
+    "weapon_type": "장신구",
+    "abilities": [
+      "타임 스톱: 적의 공격 회수를 25% 확률로 1회 감소시킨다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "번개의 심장",
+    "type": "장신구",
+    "power_min": 88,
+    "power_max": 149,
+    "weight_min": 29,
+    "weight_max": 44,
+    "weapon_type": "장신구",
+    "abilities": [],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "프로스트바인드",
+    "type": "장신구",
+    "power_min": 38,
+    "power_max": 65,
+    "weight_min": 10,
+    "weight_max": 15,
+    "weapon_type": "장신구",
+    "abilities": [
+      "냉기 돌풍: 매 공격마다 10% 확률로 상대방을 빙결 상태로 만든다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "포세이돈의 은총",
+    "type": "장신구",
+    "power_min": 52,
+    "power_max": 88,
+    "weight_min": 10,
+    "weight_max": 16,
+    "weapon_type": "장신구",
+    "abilities": [
+      "습기: 화상에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "칠흑의 베일",
+    "type": "장신구",
+    "power_min": 42,
+    "power_max": 71,
+    "weight_min": 11,
+    "weight_max": 17,
+    "weapon_type": "장신구",
+    "abilities": [
+      "어둠 안개: 매 공격마다 10% 확률로 상대방을 암흑 상태로 만든다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "가이아의 축복",
+    "type": "장신구",
+    "power_min": 50,
+    "power_max": 85,
+    "weight_min": 14,
+    "weight_max": 22,
+    "weapon_type": "장신구",
+    "abilities": [
+      "절연: 마비에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "북극성의 인도",
+    "type": "장신구",
+    "power_min": 51,
+    "power_max": 87,
+    "weight_min": 13,
+    "weight_max": 20,
+    "weapon_type": "장신구",
+    "abilities": [
+      "광휘: 암흑에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "실프의 가호",
+    "type": "장신구",
+    "power_min": 43,
+    "power_max": 72,
+    "weight_min": 3,
+    "weight_max": 5,
+    "weapon_type": "장신구",
+    "abilities": [
+      "절연: 마비에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "안개바람의 부적",
+    "type": "장신구",
+    "power_min": 39,
+    "power_max": 68,
+    "weight_min": 5,
+    "weight_max": 7,
+    "weapon_type": "장신구",
+    "abilities": [
+      "습기: 화상에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "이프리트의 가호",
+    "type": "장신구",
+    "power_min": 54,
+    "power_max": 92,
+    "weight_min": 11,
+    "weight_max": 18,
+    "weapon_type": "장신구",
+    "abilities": [
+      "방한: 빙결에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "라이덴의 인장",
+    "type": "장신구",
+    "power_min": 53,
+    "power_max": 91,
+    "weight_min": 11,
+    "weight_max": 18,
+    "weapon_type": "장신구",
+    "abilities": [
+      "방한: 빙결에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "태양신의 눈",
+    "type": "장신구",
+    "power_min": 46,
+    "power_max": 79,
+    "weight_min": 8,
+    "weight_max": 13,
+    "weapon_type": "장신구",
+    "abilities": [
+      "광휘: 암흑에 걸릴 확률이 50% 감소한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  }
+]

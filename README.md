@@ -8,7 +8,7 @@ Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 
 - 크롬 웹스토어 (1.8.2) : [이동하기](https://chromewebstore.google.com/detail/lanis-helper/ciemdjbfifddfgbdlfimomejgpnfonjd?authuser=0&hl=ko)
 
-- 최신릴리즈 (1.8.5) : [다운받기](https://github.com/user-attachments/files/21487984/lanis_helper_1.7.0.zip)
+- 최신릴리즈 (1.8.7) : [다운받기](https://github.com/user-attachments/files/21487984/lanis_helper_1.7.0.zip)
 
 - 깃허브 저장소 : [이동하기](https://github.com/dohits/lanis_helper?tab=readme-ov-file)
 
@@ -94,7 +94,7 @@ Lanis 사용자 경험을 향상시키는 크롬 확장프로그램입니다.
 ## 🛠️ 개발 정보
 
 - **Manifest Version**: 3
-- **현재 버전**: 1.8.1 (사용자명 클릭 시 색상별 밑줄 표시 기능 개선)
+- **현재 버전**: 1.8.7 (프로필 강화 기능 개선 - 다크모드/화이트모드 지원)
 - **빌드 시스템**: Vite + ES6 모듈
 - **지원 브라우저**: Chrome, (모바일: Mises 브라우저)
 - **권한**: storage, tabs, scripting

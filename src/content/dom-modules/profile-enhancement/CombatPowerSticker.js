@@ -22,13 +22,29 @@ class CombatPowerSticker {
       const existingStickers = document.querySelectorAll(`.${this.stickerClass}`);
       existingStickers.forEach(sticker => sticker.remove());
       
-      // 직업/레벨 스티커 컨테이너 찾기 (새로운 CSS 클래스 지원)
-      const jobLevelContainers = document.querySelectorAll('.MuiBox-root.css-1ep0pmc, .MuiBox-root.css-auxkcs, .MuiBox-root.css-1q60s4v, .MuiBox-root.css-1uojo6s');
+      // 직업/레벨 스티커 컨테이너 찾기 (다크모드/화이트모드 모두 지원)
+      const jobLevelContainers = document.querySelectorAll(
+        '.MuiBox-root.css-1ep0pmc, ' +
+        '.MuiBox-root.css-auxkcs, ' +
+        '.MuiBox-root.css-1q60s4v, ' +
+        '.MuiBox-root.css-1uojo6s, ' +
+        '.MuiBox-root.css-zkvdw9, ' +
+        '.MuiBox-root.css-1pvbt06'
+      );
       
       jobLevelContainers.forEach(container => {
         // 직업과 레벨 요소 확인 (새로운 구조 지원)
-        const jobElement = container.querySelector('.MuiBox-root.css-new8hh p, .MuiBox-root.css-1q60s4v p');
-        const levelElement = container.querySelector('.MuiBox-root.css-10cne0w p, .MuiBox-root.css-1uojo6s p');
+        const jobElement = container.querySelector(
+          '.MuiBox-root.css-new8hh p, ' +
+          '.MuiBox-root.css-1q60s4v p, ' +
+          '.MuiBox-root.css-zkvdw9 p'
+        );
+        const levelElement = container.querySelector(
+          '.MuiBox-root.css-10cne0w p, ' +
+          '.MuiBox-root.css-1uojo6s p, ' +
+          '.MuiBox-root.css-1pvbt06 p, ' +
+          '.MuiBox-root.css-1afk1pn p'
+        );
         
         if (jobElement && levelElement) {
           // 전투력 계산

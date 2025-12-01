@@ -18,7 +18,6 @@ class MenuActionHandler {
       programInfo: menuManager.programInfoModal,
       abilityInfo: menuManager.abilityInfoModal,
       enchantInfo: menuManager.enchantInfoModal,
-      itemCollection: menuManager.itemCollectionModal,
       guildWarInfo: menuManager.guildWarInfoModal
     };
     this.expectedValueModal = menuManager.expectedValueModal;
@@ -53,9 +52,6 @@ class MenuActionHandler {
         break;
       case 'programInfo':
         this.modals.programInfo.open();
-        break;
-      case 'itemCollection':
-        this.modals.itemCollection.open();
         break;
       case 'showItemStats':
       case 'useComfortPack':

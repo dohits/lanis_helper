@@ -1,4 +1,4 @@
-# Lanis Helper 개발자 문서 (v1.8.5)
+# Lanis Helper 개발자 문서 (v1.8.7)
 
 이 폴더는 Lanis Helper Chrome Extension의 개발자용 문서들을 포함합니다.
 
@@ -35,7 +35,22 @@
 - **빌드 결과**: [../dist/](../dist/)
 - **정적 리소스**: [../public/](../public/)
 
-## 🆕 최신 업데이트 (v1.8.5)
+## 🆕 최신 업데이트 (v1.8.7)
+
+### 프로필 강화 기능 개선 - 다크모드/화이트모드 지원
+- **새로운 UI 구조 지원**: 업데이트된 프로필 UI의 다크모드/화이트모드 모두 지원
+  - 다크모드: `.css-1mg2w7`, `.css-1c63ei8` 등
+  - 화이트모드: `.css-1kukkbt`, `.css-1nwujgy` 등
+- **프로필 강화 모듈 업데이트**:
+  - `StatSumSticker.js`: 섹션별 스탯 계산, 중복 추가 방지, 숫자 포맷팅 개선
+  - `HpMpBonusSticker.js`: 자신 프로필 감지 개선, 섹션별 HP/MP 계산, 숫자 포맷팅 개선
+  - `CombatPowerSticker.js`: 다크모드/화이트모드 CSS 클래스 지원
+  - `DynamicContentObserver.js`: 새로운 CSS 클래스 감지 로직 추가
+- **예시 HTML 업데이트**: 
+  - `user-status-example.html`에 일반 프로필/자신 프로필의 다크모드/화이트모드 예시 추가
+  - 능력 지표 섹션, HP/MP 점수 스티커, 스탯 점수 스티커 구조 반영
+
+## 🆕 이전 업데이트 (v1.8.5)
 
 ### UI 업데이트에 따른 프로필 강화 및 아이템 스탯 기능 개선
 - **새로운 DOM 구조 지원**: 업데이트된 UI의 새로운 CSS 클래스들 지원

@@ -310,13 +310,13 @@ export class InfoBox {
         
         // 아이템 이름과 타입
         let displayName = weapon.name;
-        if (weapon.type) {
-          const categories = weapon.type.split('/');
-          if (categories.length >= 2) {
-            displayName = `${weapon.name} (${categories[1]})`;
-          } else if (categories.length === 1 && categories[0] === '무기') {
-            displayName = `${weapon.name} (미확인)`;
-          }
+        if (weapon.type === '무기') {
+          // 무기인 경우 weapon_type 표시
+          const weaponType = weapon.weapon_type || '미확인';
+          displayName = `${weapon.name} (${weaponType})`;
+        } else if (weapon.type) {
+          // 방어구/장신구인 경우 type 표시
+          displayName = `${weapon.name} (${weapon.type})`;
         }
         
         // 속성 정보

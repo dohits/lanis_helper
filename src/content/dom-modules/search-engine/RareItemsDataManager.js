@@ -1,36 +1,53 @@
 // 희귀 아이템 데이터 관리자
-import RareItemsAPI from '../../../api/wikiLoad/rareItemsAPI.js';
+import itemData from '../../../shared/item-data.json';
 
 class RareItemsDataManager {
   constructor() {
     this.rareItemsData = [];
-    this.rareItemsAPI = new RareItemsAPI();
   }
 
   async init() {
     await this.loadRareItemsData();
   }
 
-  // Chrome 스토리지에서 데이터 로드
+  // item-data.json 파일에서 데이터 가져오기
+  getItemDataFromFile() {
+    // 정적 import로 로드된 데이터 반환
+    return itemData || [];
+  }
+
+  // item-data.json에서 데이터 로드
   async loadRareItemsData() {
     try {
-      return new Promise((resolve) => {
-        chrome.storage.local.get(['rareItems'], (result) => {
+      // 먼저 Chrome 스토리지에서 확인 (캐시된 데이터가 있으면 사용)
+      return new Promise(async (resolve) => {
+        chrome.storage.local.get(['rareItems', 'lastDataUpdate'], async (result) => {
           if (result.rareItems && result.rareItems.length > 0) {
+            // 캐시된 데이터가 있으면 사용
             this.rareItemsData = result.rareItems;
           } else {
-            this.rareItemsData = [];
+            // 캐시가 없으면 item-data.json에서 직접 로드
+            const loadedItemData = this.getItemDataFromFile();
+            this.rareItemsData = loadedItemData || [];
+            
+            // Chrome 스토리지에 저장 (다음 로드 시 빠른 접근을 위해)
+            chrome.storage.local.set({
+              rareItems: this.rareItemsData,
+              lastDataUpdate: Date.now()
+            });
           }
           resolve();
         });
       });
     } catch (error) {
       console.error('희귀 아이템 데이터 로드 실패:', error);
-      this.rareItemsData = [];
+      // 오류 발생 시 item-data.json에서 직접 로드 시도
+      const loadedItemData = this.getItemDataFromFile();
+      this.rareItemsData = loadedItemData || [];
     }
   }
 
-  // 아이템 데이터 수집 (새로운 API 모듈 사용)
+  // 아이템 데이터 수집 (item-data.json에서 직접 로드)
   async collectRareItems() {
     try {
       // 기존 데이터 확인 (캐시 카운트용)
@@ -42,14 +59,15 @@ class RareItemsDataManager {
 
       const now = Date.now();
       
-      // 새로운 API 모듈을 사용하여 데이터 수집
-      const result = await this.rareItemsAPI.collectRareItems();
+      // item-data.json에서 직접 데이터 로드
+      const items = this.getItemDataFromFile();
       
-      if (result.success) {
+      if (items.length > 0) {
         // Chrome 스토리지에 저장 (수집 시간 포함)
         const saveData = {
-          rareItems: result.items,
+          rareItems: items,
           lastCrawlTime: now,
+          lastDataUpdate: now,
           crawlCount: (existingData.crawlCount || 0) + 1
         };
         
@@ -58,22 +76,25 @@ class RareItemsDataManager {
         });
         
         // 메모리에도 업데이트
-        this.rareItemsData = result.items;
+        this.rareItemsData = items;
         
         return { 
           success: true, 
-          count: result.count, 
-          message: result.message 
+          count: items.length, 
+          message: `레어 아이템 데이터 로드 완료 (${items.length}개 아이템)` 
         };
       } else {
-        return result; // API에서 반환된 오류 메시지 그대로 반환
+        return {
+          success: false,
+          message: '아이템 데이터가 없습니다.'
+        };
       }
       
     } catch (error) {
-      console.error('아이템 수집 전체 오류:', error);
+      console.error('아이템 데이터 로드 오류:', error);
       return { 
         success: false, 
-        message: `수집 실패: ${error.message}` 
+        message: `데이터 로드 실패: ${error.message}` 
       };
     }
   }

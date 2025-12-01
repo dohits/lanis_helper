@@ -10,7 +10,6 @@ import UserSearchModal from './modal/item-guide/user-search-modal.js';
 import ProgramInfoModal from './modal/settings/program-info-modal.js';
 import AbilityInfoModal from './modal/settings/ability-info-modal.js';
 import EnchantInfoModal from './modal/settings/enchant-info-modal.js';
-import ItemCollectionModal from './modal/settings/item-collection-modal.js';
 import { GuildWarInfoModal } from './modal/guild/guild-war-info-modal.js';
 import MainMenuRenderer from './renderers/MainMenuRenderer.js';
 import SubMenuRenderer from './renderers/SubMenuRenderer.js';
@@ -33,7 +32,6 @@ class MenuManager {
     this.programInfoModal = new ProgramInfoModal();
     this.abilityInfoModal = new AbilityInfoModal();
     this.enchantInfoModal = new EnchantInfoModal();
-    this.itemCollectionModal = new ItemCollectionModal();
     this.guildWarInfoModal = new GuildWarInfoModal();
     this.mainMenuRenderer = new MainMenuRenderer();
     this.subMenuRenderer = new SubMenuRenderer();
