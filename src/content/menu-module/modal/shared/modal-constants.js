@@ -85,5 +85,17 @@ export const MODAL_CONFIGS = {
     height: 'auto',
     closeOnOutsideClick: true,
     closeOnEsc: true
+  },
+  artifactEnchantSim: {
+    id: 'artifact-enchant-sim-modal',
+    title: '💎 유물 감정 시뮬레이션',
+    className: 'artifact-enchant-sim-modal',
+    contentClassName: 'artifact-enchant-sim-content',
+    maxWidth: '800px',
+    maxHeight: '90vh',
+    width: '90%',
+    height: 'auto',
+    closeOnOutsideClick: true,
+    closeOnEsc: true
   }
 }; 

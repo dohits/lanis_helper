@@ -5,6 +5,7 @@ import { ExpectedValueModal } from './modal/calculator/expected-value-modal.js';
 import { FishingCalculatorModal } from './modal/calculator/fishing-calculator-modal.js';
 import { EquipmentSettingSimModal } from './modal/calculator/equipment-setting-sim-modal.js';
 import { EquipmentEnchantSimModal } from './modal/calculator/equipment-enchant-sim-modal.js';
+import { ArtifactEnchantSimModal } from './modal/calculator/artifact-enchant-sim-modal.js';
 import ItemGuideModal from './modal/item-guide/item-guide-modal.js';
 import UserSearchModal from './modal/item-guide/user-search-modal.js';
 import ProgramInfoModal from './modal/settings/program-info-modal.js';
@@ -27,6 +28,7 @@ class MenuManager {
     this.fishingCalculatorModal = new FishingCalculatorModal();
     this.equipmentSettingSimModal = new EquipmentSettingSimModal();
     this.equipmentEnchantSimModal = new EquipmentEnchantSimModal();
+    this.artifactEnchantSimModal = new ArtifactEnchantSimModal();
     this.itemGuideModal = new ItemGuideModal();
     this.userSearchModal = new UserSearchModal();
     this.programInfoModal = new ProgramInfoModal();

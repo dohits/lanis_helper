@@ -60,6 +60,13 @@
             "text": "장비 감정 시뮬",
             "title": "장비 감정 시뮬레이션",
             "btnType": "purpleGradient"
+          },
+          {
+            "id": "artifactEnchantSim",
+            "icon": "💎",
+            "text": "유물 감정 시뮬",
+            "title": "유물 감정 시뮬레이션",
+            "btnType": "purpleGradient"
           }
         ]
       }
