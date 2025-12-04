@@ -105,6 +105,19 @@ class MenuActionHandler {
           window.itemStatsManager.removeItemStats();
         }
         break;
+      case 'useComfortPack':
+        // 통발 게이지바 관리
+        if (window.timeGaugeManager) {
+          const comfortPackSetting = settings[settingId];
+          if (comfortPackSetting === 'hidden') {
+            // hidden 상태: 게이지바 제거
+            window.timeGaugeManager.destroy();
+          } else {
+            // on 또는 off 상태: 게이지바 초기화
+            window.timeGaugeManager.init();
+          }
+        }
+        break;
     }
   }
 

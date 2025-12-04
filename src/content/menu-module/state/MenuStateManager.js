@@ -9,7 +9,7 @@ class MenuStateManager {
     // 기본 설정 상수
     this.DEFAULT_SETTINGS = {
       showItemStats: true,
-      useComfortPack: false
+      useComfortPack: 'off' // 'on': 컴포트팩 사용(2시간), 'off': 미사용(1시간), 'hidden': UI 숨김
     };
     
     this.DEFAULT_MENU_CONFIG = {
@@ -86,7 +86,18 @@ class MenuStateManager {
     try {
       const utils = this._getUtils();
       if (utils) {
-        this.settings = await utils.SettingsManager.getSettings(this.DEFAULT_SETTINGS);
+        const loadedSettings = await utils.SettingsManager.getSettings(this.DEFAULT_SETTINGS);
+        this.settings = loadedSettings;
+        
+        // useComfortPack 값 정규화 (기존 boolean 값 호환성 처리)
+        if (this.settings.useComfortPack === true) {
+          this.settings.useComfortPack = 'on';
+        } else if (this.settings.useComfortPack === false) {
+          this.settings.useComfortPack = 'off';
+        } else if (!['on', 'off', 'hidden'].includes(this.settings.useComfortPack)) {
+          // 유효하지 않은 값이면 기본값으로
+          this.settings.useComfortPack = 'off';
+        }
       } else {
         this.settings = { ...this.DEFAULT_SETTINGS };
       }
@@ -166,7 +177,26 @@ class MenuStateManager {
     }
 
     if (this.settings.hasOwnProperty(settingId)) {
-      this.settings[settingId] = !this.settings[settingId];
+      // useComfortPack은 3가지 상태를 순환: 'off' -> 'on' -> 'hidden' -> 'off'
+      if (settingId === 'useComfortPack') {
+        const currentValue = this.settings[settingId];
+        // 기존 boolean 값 호환성 처리
+        if (currentValue === true) {
+          this.settings[settingId] = 'hidden';
+        } else if (currentValue === false) {
+          this.settings[settingId] = 'on';
+        } else if (currentValue === 'on') {
+          this.settings[settingId] = 'hidden';
+        } else if (currentValue === 'hidden') {
+          this.settings[settingId] = 'off';
+        } else {
+          // 기본값이거나 알 수 없는 값이면 'off' -> 'on'으로
+          this.settings[settingId] = 'on';
+        }
+      } else {
+        // 다른 설정은 기존대로 boolean 토글
+        this.settings[settingId] = !this.settings[settingId];
+      }
       
       // 설정 저장
       try {

@@ -129,10 +129,11 @@ export const COMBINE_ITEM_CONFIGS = {
       { name: '잔다르크의 투구', key: 'joanHelmet' },
       { name: '히드라의 피', key: 'hydraBlood' },
       { name: '피닉스의 깃털', key: 'phoenixFeather' },
-      { name: '드리아드의 뼈', key: 'dryadBone' }
+      { name: '드리아드의 뼈', key: 'dryadBone' },
+      { name: '초록 구슬', key: 'greenBead' }
     ],
     successRates: {
-      6: 1.00  // 모든 재료 1개씩 = 100%
+      7: 1.00  // 모든 재료 1개씩 = 100%
     },
     type: 'multi',
     calculationType: 'multi_material'
@@ -145,10 +146,11 @@ export const COMBINE_ITEM_CONFIGS = {
       { name: '네크로멘서의 책', key: 'necromancerBook' },
       { name: '주작의 깃털', key: 'vermilionBirdFeather' },
       { name: '켄타우로스의 활', key: 'centaurBow' },
-      { name: '선인의 술병', key: 'sageWineBottle' }
+      { name: '선인의 술병', key: 'sageWineBottle' },
+      { name: '초록 구슬', key: 'greenBead' }
     ],
     successRates: {
-      6: 1.00  // 모든 재료 1개씩 = 100%
+      7: 1.00  // 모든 재료 1개씩 = 100%
     },
     type: 'multi',
     calculationType: 'multi_material'

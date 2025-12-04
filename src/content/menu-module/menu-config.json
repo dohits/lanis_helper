@@ -131,7 +131,7 @@
                 "id": "useComfortPack",
                 "icon": "⏰",
                 "text": "컴포트팩 사용",
-                "title": "통발게이지 최대치 설정 (ON: 2시간, OFF: 1시간)",
+                "title": "통발게이지 설정 (ON: 2시간, OFF: 1시간, 숨김: UI 비표시)",
                 "btnType": "toggle"
               },
               {

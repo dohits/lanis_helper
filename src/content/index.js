@@ -50,12 +50,20 @@ function loadSettingsAndExecute() {
       feature2: false,
       feature3: false,
       showItemStats: true,
-      showTimeGauge: true
+      showTimeGauge: true,
+      useComfortPack: 'off'
     }).then(function(items) {
       utils.safeExecute(() => {
         const settings = items;
         
-
+        // useComfortPack 값 정규화 (기존 boolean 값 호환성 처리)
+        if (settings.useComfortPack === true) {
+          settings.useComfortPack = 'on';
+        } else if (settings.useComfortPack === false) {
+          settings.useComfortPack = 'off';
+        } else if (!['on', 'off', 'hidden'].includes(settings.useComfortPack)) {
+          settings.useComfortPack = 'off';
+        }
 
         // 아이템 등급 표기 처리 (아이템 스카우터)
         utils.safeExecuteAsync(async () => {
@@ -72,7 +80,8 @@ function loadSettingsAndExecute() {
         // 시간 게이지바 처리
         utils.safeExecuteAsync(async () => {
           if (managers.timeGaugeManager) {
-            if (settings.showTimeGauge) {
+            // showTimeGauge가 false이거나 useComfortPack이 hidden이면 게이지바 제거
+            if (settings.showTimeGauge && settings.useComfortPack !== 'hidden') {
               await managers.timeGaugeManager.init();
             } else {
               managers.timeGaugeManager.destroy();

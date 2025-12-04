@@ -19,6 +19,14 @@ class TimeGaugeManager {
       return;
     }
 
+    // 컴포트팩 설정 확인 - hidden 상태면 게이지바 생성하지 않음
+    const comfortPackSetting = await this.getComfortPackSetting();
+    if (comfortPackSetting === 'hidden') {
+      // hidden 상태면 기존 게이지바 제거하고 초기화하지 않음
+      this.destroy();
+      return;
+    }
+
     if (this.isInitialized) {
       // 이미 초기화되어 있으면 위치만 업데이트
       this.updateGaugePosition();
@@ -90,6 +98,13 @@ class TimeGaugeManager {
     if (!this.progressElement || !this.timeTextElement) return;
 
     try {
+      // 컴포트팩 설정 확인 - hidden 상태면 게이지바 제거
+      const comfortPackSetting = await this.getComfortPackSetting();
+      if (comfortPackSetting === 'hidden') {
+        this.destroy();
+        return;
+      }
+
       const now = new Date();
       
       // 통발 설치 시작 시간이 없으면 회색 게이지 표시
@@ -468,24 +483,46 @@ class TimeGaugeManager {
   }
 
   /**
+   * 컴포트팩 설정 가져오기
+   * @returns {Promise<string>} 'on', 'off', 'hidden' 또는 boolean (호환성)
+   */
+  async getComfortPackSetting() {
+    try {
+      if (window.utils && window.utils.SettingsManager) {
+        const settings = await window.utils.SettingsManager.getSettings({
+          useComfortPack: 'off'
+        });
+        
+        // 기존 boolean 값 호환성 처리
+        if (settings.useComfortPack === true) {
+          return 'on';
+        } else if (settings.useComfortPack === false) {
+          return 'off';
+        } else if (['on', 'off', 'hidden'].includes(settings.useComfortPack)) {
+          return settings.useComfortPack;
+        }
+      }
+      
+      // 기본값: 'off'
+      return 'off';
+    } catch (error) {
+      console.warn('컴포트팩 설정 확인 실패, 기본값 사용:', error);
+      return 'off';
+    }
+  }
+
+  /**
    * 컴포트팩 설정에 따른 통발게이지 최대치 가져오기
    * @returns {Promise<number>} 통발게이지 최대치 (밀리초)
    */
   async getFishingDuration() {
     try {
-      if (window.utils && window.utils.SettingsManager) {
-        const settings = await window.utils.SettingsManager.getSettings({
-          useComfortPack: false
-        });
-        
-        // 컴포트팩 사용 시 2시간, 미사용 시 1시간
-        return settings.useComfortPack ? 
-          (2 * 60 * 60 * 1000) : // 2시간
-          TIME_CONSTANTS.FISHING_DURATION_MS; // 1시간
-      }
+      const comfortPackSetting = await this.getComfortPackSetting();
       
-      // 기본값: 1시간
-      return TIME_CONSTANTS.FISHING_DURATION_MS;
+      // 컴포트팩 사용 시 2시간, 미사용 시 1시간
+      return comfortPackSetting === 'on' ? 
+        (2 * 60 * 60 * 1000) : // 2시간
+        TIME_CONSTANTS.FISHING_DURATION_MS; // 1시간
     } catch (error) {
       console.warn('컴포트팩 설정 확인 실패, 기본값 사용:', error);
       return TIME_CONSTANTS.FISHING_DURATION_MS;

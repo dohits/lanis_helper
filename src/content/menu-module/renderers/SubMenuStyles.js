@@ -21,11 +21,17 @@ class SubMenuStyles {
       },
       ICONS: {
         TOGGLE_ON: '✅',
-        TOGGLE_OFF: '❌'
+        TOGGLE_OFF: '❌',
+        TOGGLE_HIDDEN: '🚫'
       },
       TEXT: {
         TOGGLE_ON: ' (켜짐)',
-        TOGGLE_OFF: ' (꺼짐)'
+        TOGGLE_OFF: ' (꺼짐)',
+        TOGGLE_HIDDEN: ' (숨김)'
+      },
+      GRAY: {
+        LIGHT: '#6b7280',
+        DARK: '#4b5563'
       },
       DIMENSIONS: {
         WIDTH: '160px',
@@ -88,10 +94,24 @@ class SubMenuStyles {
       boxShadow: `0 4px 20px ${shadowColor}, 0 2px 10px ${shadowColor.replace('0.3', '0.2')}, inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 0 0 1px ${shadowColor.replace('0.3', '0.2')}`
     });
 
-    this.createToggleStyle = (isEnabled) => {
-      const colors = isEnabled ? this.CONSTANTS.COLORS.GREEN : this.CONSTANTS.COLORS.RED;
-      const icon = isEnabled ? this.CONSTANTS.ICONS.TOGGLE_ON : this.CONSTANTS.ICONS.TOGGLE_OFF;
-      const textSuffix = isEnabled ? this.CONSTANTS.TEXT.TOGGLE_ON : this.CONSTANTS.TEXT.TOGGLE_OFF;
+    this.createToggleStyle = (state) => {
+      // state는 'on', 'off', 'hidden' 또는 boolean (호환성)
+      let colors, icon, textSuffix;
+      
+      if (state === 'on' || state === true) {
+        colors = this.CONSTANTS.COLORS.GREEN;
+        icon = this.CONSTANTS.ICONS.TOGGLE_ON;
+        textSuffix = this.CONSTANTS.TEXT.TOGGLE_ON;
+      } else if (state === 'hidden') {
+        colors = this.CONSTANTS.GRAY;
+        icon = this.CONSTANTS.ICONS.TOGGLE_HIDDEN;
+        textSuffix = this.CONSTANTS.TEXT.TOGGLE_HIDDEN;
+      } else {
+        // 'off' 또는 false
+        colors = this.CONSTANTS.COLORS.RED;
+        icon = this.CONSTANTS.ICONS.TOGGLE_OFF;
+        textSuffix = this.CONSTANTS.TEXT.TOGGLE_OFF;
+      }
       
       return {
         className: 'main-menu-item sub-menu-item toggle-button',
@@ -127,14 +147,14 @@ class SubMenuStyles {
   }
 
   // 스타일 가져오기 (타입 안전성 포함)
-  getStyle(styleType, isEnabled = true) {
+  getStyle(styleType, state = true) {
     if (!styleType || typeof styleType !== 'string') {
       console.warn('Invalid styleType provided:', styleType);
       return this.styles.default;
     }
 
     if (styleType === 'toggle') {
-      return this.createToggleStyle(isEnabled);
+      return this.createToggleStyle(state);
     }
 
     const style = this.styles[styleType];
@@ -167,13 +187,14 @@ class SubMenuStyles {
   }
 
   // 토글 버튼 로직 적용
-  applyToggleLogic(button, item, isEnabled) {
+  applyToggleLogic(button, item, state) {
     if (!button || !item) {
       console.error('Invalid parameters for applyToggleLogic');
       return;
     }
 
-    const style = this.getStyle('toggle', isEnabled);
+    // state는 'on', 'off', 'hidden' 또는 boolean (호환성)
+    const style = this.getStyle('toggle', state);
     this.applyBaseStyle(button, style);
     
     button.innerHTML = `${style.icon} ${item.text}`;
@@ -199,10 +220,10 @@ class SubMenuStyles {
     }
 
     const isToggleButton = item.btnType === 'toggle';
-    const isEnabled = isToggleButton ? options.isEnabled : true;
+    const toggleState = isToggleButton ? (options.toggleState !== undefined ? options.toggleState : options.isEnabled) : true;
     
     if (isToggleButton) {
-      this.applyToggleLogic(button, item, isEnabled);
+      this.applyToggleLogic(button, item, toggleState);
     } else {
       const buttonStyle = this.getStyle(item.btnType);
       this.applyBaseStyle(button, buttonStyle);
@@ -231,8 +252,8 @@ class SubMenuStyles {
   }
 
   // 토글 버튼 업데이트
-  updateToggleButton(button, item, isEnabled) {
-    this.applyToggleLogic(button, item, isEnabled);
+  updateToggleButton(button, item, state) {
+    this.applyToggleLogic(button, item, state);
   }
 }
 
