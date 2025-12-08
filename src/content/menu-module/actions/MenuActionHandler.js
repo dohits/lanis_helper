@@ -1,4 +1,5 @@
 import { ExpectedValueModal } from '../modal/calculator/expected-value-modal.js';
+import { SpecCalculatorModal } from '../modal/calculator/spec-calculator-modal.js';
 import { FishingCalculatorModal } from '../modal/calculator/fishing-calculator-modal.js';
 import { EquipmentSettingSimModal } from '../modal/calculator/equipment-setting-sim-modal.js';
 import { EquipmentEnchantSimModal } from '../modal/calculator/equipment-enchant-sim-modal.js';
@@ -22,6 +23,7 @@ class MenuActionHandler {
       guildWarInfo: menuManager.guildWarInfoModal
     };
     this.expectedValueModal = menuManager.expectedValueModal;
+    this.specCalculatorModal = menuManager.specCalculatorModal;
     this.fishingCalculatorModal = menuManager.fishingCalculatorModal;
     this.equipmentSettingSimModal = menuManager.equipmentSettingSimModal;
     this.equipmentEnchantSimModal = menuManager.equipmentEnchantSimModal;
@@ -33,6 +35,9 @@ class MenuActionHandler {
     switch (item.id) {
       case 'expectedValue':
         this.openExpectedValueModal();
+        break;
+      case 'specCalculator':
+        this.openSpecCalculatorModal();
         break;
       case 'fishingCalculator':
         this.openFishingCalculatorModal();
@@ -138,6 +143,12 @@ class MenuActionHandler {
   openExpectedValueModal() {
     // 직접 ExpectedValueModal 사용
     this.expectedValueModal.open();
+  }
+
+  // 스펙 계산기 모달 열기
+  openSpecCalculatorModal() {
+    // 직접 SpecCalculatorModal 사용
+    this.specCalculatorModal.open();
   }
 
   // 낚시 계산기 모달 열기

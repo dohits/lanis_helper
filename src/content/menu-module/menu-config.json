@@ -43,6 +43,12 @@
             "btnType": "purpleGradient"
           },
           {
+            "id": "specCalculator",
+            "icon": "⚡",
+            "text": "스펙 계산기",
+            "title": "스펙 계산기"
+          },
+          {
             "id": "fishingCalculator",
             "icon": "🎣",
             "text": "낚시 계산기",

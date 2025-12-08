@@ -2,6 +2,7 @@
 import ExpectedValueCalculator from '../calculator/expected-value-calculator.js';
 import OfficialPriceFetcher from '../calculator/official-price-fetcher.js';
 import { ExpectedValueModal } from './modal/calculator/expected-value-modal.js';
+import { SpecCalculatorModal } from './modal/calculator/spec-calculator-modal.js';
 import { FishingCalculatorModal } from './modal/calculator/fishing-calculator-modal.js';
 import { EquipmentSettingSimModal } from './modal/calculator/equipment-setting-sim-modal.js';
 import { EquipmentEnchantSimModal } from './modal/calculator/equipment-enchant-sim-modal.js';
@@ -25,6 +26,7 @@ class MenuManager {
     this.calculator = new ExpectedValueCalculator();
     this.priceFetcher = new OfficialPriceFetcher();
     this.expectedValueModal = new ExpectedValueModal();
+    this.specCalculatorModal = new SpecCalculatorModal();
     this.fishingCalculatorModal = new FishingCalculatorModal();
     this.equipmentSettingSimModal = new EquipmentSettingSimModal();
     this.equipmentEnchantSimModal = new EquipmentEnchantSimModal();
