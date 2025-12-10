@@ -3,6 +3,7 @@
  * 로컬스토리지를 사용하여 최대 5개의 설정을 저장/불러오기
  */
 const STORAGE_KEY = 'spec-calculator-presets';
+const LAST_INPUT_KEY = 'spec-calculator-last-input';
 const MAX_PRESETS = 5;
 
 export class StorageManager {
@@ -126,6 +127,32 @@ export class StorageManager {
   static getRemainingSlots() {
     const presets = this.getAllPresets();
     return Math.max(0, MAX_PRESETS - presets.length);
+  }
+
+  /**
+   * 마지막 입력값 저장
+   * @param {Object} data - 저장할 입력 데이터
+   */
+  static saveLastInput(data) {
+    try {
+      localStorage.setItem(LAST_INPUT_KEY, JSON.stringify(data));
+    } catch (error) {
+      console.error('마지막 입력값 저장 실패:', error);
+    }
+  }
+
+  /**
+   * 마지막 입력값 불러오기
+   * @returns {Object} 마지막 입력 데이터
+   */
+  static loadLastInput() {
+    try {
+      const data = localStorage.getItem(LAST_INPUT_KEY);
+      return data ? JSON.parse(data) : {};
+    } catch (error) {
+      console.error('마지막 입력값 불러오기 실패:', error);
+      return {};
+    }
   }
 }
 

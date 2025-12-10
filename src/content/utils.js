@@ -64,7 +64,6 @@ class SettingsManager {
       try {
         // 확장 프로그램 컨텍스트 유효성 검사
         if (!chrome || !chrome.runtime || !chrome.runtime.id) {
-          console.warn('확장 프로그램 컨텍스트가 유효하지 않습니다. 기본 설정을 반환합니다.');
           resolve(defaultSettings);
           return;
         }
@@ -89,7 +88,6 @@ class SettingsManager {
       try {
         // 확장 프로그램 컨텍스트 유효성 검사
         if (!chrome || !chrome.runtime || !chrome.runtime.id) {
-          console.warn('확장 프로그램 컨텍스트가 유효하지 않습니다. 설정 저장을 건너뜁니다.');
           resolve();
           return;
         }
@@ -112,7 +110,6 @@ class SettingsManager {
       try {
         // 확장 프로그램 컨텍스트 유효성 검사
         if (!chrome || !chrome.runtime || !chrome.runtime.id) {
-          console.warn('확장 프로그램 컨텍스트가 유효하지 않습니다. 설정 제거를 건너뜁니다.');
           resolve();
           return;
         }

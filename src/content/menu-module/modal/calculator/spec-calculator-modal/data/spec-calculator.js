@@ -7,8 +7,9 @@ import { calculateEquipmentAttributeBonus, calculateTownAttributeBonus } from '.
 export class SpecCalculator {
   /**
    * 공격력 계산
-   * 공격력 = { [ (무기 위력 × (1 + 무기 위력 해방옵션%)) × 장비 속성 보정 ] + [ (힘 × (1 + 힘 해방옵션%)) ] } × 마을 속성 보정
-   * 관통 적용: 기본 공격력 + (상대 방어력 × 방어력 관통 해방 옵션% / 100)
+   * 공격력(표기값) = { [ (무기 위력 × (1 + 무기 위력 해방옵션%)) × 장비 속성 보정 ] + [ (힘 × (1 + 힘 해방옵션%)) ] } × 마을 속성 보정
+   * 최종값 = 표기값 × (1 + 공격력 어빌리티%)
+   * 관통은 별도 표시
    */
   calculateAttack(input) {
     const weaponPower = parseFloat(input.weaponPower) || 0;
@@ -50,7 +51,12 @@ export class SpecCalculator {
     
     const baseAttack = beforeTownBonus * townBonus;
     
-    // 해방 관통 보너스 계산
+    // 어빌리티 옵션
+    const attackAbility = parseFloat(input.attackAbility) || 0;
+    const abilityBonus = baseAttack * (attackAbility / 100);
+    const finalAttack = baseAttack + abilityBonus;
+
+    // 해방 관통 보너스 계산 (별도 표시)
     const enemyDefense = parseFloat(input.enemyDefense) || 0;
     const defensePenetration = parseFloat(input.defensePenetration) || 0;
     const penetrationBonus = enemyDefense * (defensePenetration / 100);
@@ -60,15 +66,17 @@ export class SpecCalculator {
       releaseBonus: releaseBonus, // 해방 위력 보너스
       equipmentAttributeBonus: equipmentAttributeBonus, // 장비 속성 보너스
       townAttributeBonus: townAttributeBonus, // 마을 속성 보너스
-      penetrationBonus: penetrationBonus, // 해방 관통 보너스
-      total: baseAttack + penetrationBonus
+      abilityBonus,
+      total: finalAttack, // 어빌리티 적용 최종값
+      penetrationBonus // 해방 관통 보너스 (별도 표시)
     };
   }
 
   /**
    * 마법공격력 계산
-   * 마법공격력 = { [ (무기 위력 × (1 + 무기 위력 해방옵션%)) × 장비 속성 보정 ] + [ (지능 × (1 + 지능 해방옵션%)) ] } × 마을 속성 보정
-   * 관통 적용: 기본 마법공격력 + (상대 마법방어력 × 마법방어력 관통 해방 옵션% / 100)
+   * 표기값 = { [ (무기 위력 × (1 + 무기 위력 해방옵션%)) × 장비 속성 보정 ] + [ (지능 × (1 + 지능 해방옵션%)) ] } × 마을 속성 보정
+   * 최종값 = 표기값 × (1 + 마법공격력 어빌리티%)
+   * 관통은 별도 표시
    */
   calculateMagicAttack(input) {
     const weaponPower = parseFloat(input.weaponPower) || 0;
@@ -110,7 +118,12 @@ export class SpecCalculator {
     
     const baseMagicAttack = beforeTownBonus * townBonus;
     
-    // 해방 관통 보너스 계산
+    // 어빌리티 옵션
+    const magicAttackAbility = parseFloat(input.magicAttackAbility) || 0;
+    const abilityBonus = baseMagicAttack * (magicAttackAbility / 100);
+    const finalMagicAttack = baseMagicAttack + abilityBonus;
+
+    // 해방 관통 보너스 계산 (별도 표시)
     const enemyMagicDefense = parseFloat(input.enemyMagicDefense) || 0;
     const magicDefensePenetration = parseFloat(input.magicDefensePenetration) || 0;
     const magicPenetrationBonus = enemyMagicDefense * (magicDefensePenetration / 100);
@@ -120,8 +133,9 @@ export class SpecCalculator {
       releaseBonus: releaseBonus, // 해방 위력 보너스
       equipmentAttributeBonus: equipmentAttributeBonus, // 장비 속성 보너스
       townAttributeBonus: townAttributeBonus, // 마을 속성 보너스
-      penetrationBonus: magicPenetrationBonus, // 해방 관통 보너스
-      total: baseMagicAttack + magicPenetrationBonus
+      abilityBonus,
+      total: finalMagicAttack, // 어빌리티 적용 최종값
+      penetrationBonus: magicPenetrationBonus // 해방 관통 보너스 (별도 표시)
     };
   }
 
@@ -178,7 +192,7 @@ export class SpecCalculator {
     const totalDefense = beforeTownBonus * townBonus;
     
     return {
-      base: beforeTownBonus, // 표기공 (마을 속성 보정 적용 전)
+      base: beforeTownBonus,
       total: totalDefense,
       releaseBonus: armorReleaseBonus + accessoryReleaseBonus, // 해방 위력 보너스 (방어구 + 장신구)
       equipmentAttributeBonus: armorEquipmentAttributeBonus + accessoryEquipmentAttributeBonus, // 장비 속성 보너스 (방어구 + 장신구)
@@ -225,7 +239,7 @@ export class SpecCalculator {
     const totalMagicDefense = beforeTownBonus * townBonus;
     
     return {
-      base: beforeTownBonus, // 표기공 (마을 속성 보정 적용 전)
+      base: beforeTownBonus,
       total: totalMagicDefense,
       releaseBonus: accessoryReleaseBonus, // 해방 위력 보너스
       equipmentAttributeBonus: accessoryEquipmentAttributeBonus, // 장비 속성 보너스
@@ -264,7 +278,10 @@ export class SpecCalculator {
     const luckPart = luck * (1 + luckRelease / 100) * 2;
     const speedPart = attackSpeed * 2;
     
-    return intelligencePart + luckPart + speedPart;
+    const base = intelligencePart + luckPart + speedPart;
+    const evasionAbility = parseFloat(input.evasionAbility) || 0;
+    const abilityBonus = base * (evasionAbility / 100);
+    return { base, abilityBonus, total: base + abilityBonus };
   }
 
   /**
@@ -284,7 +301,10 @@ export class SpecCalculator {
     const luckPart = luck * (1 + luckRelease / 100) * 1.6;
     const speedPart = attackSpeed * 1.6;
     
-    return spiritPart + luckPart + speedPart;
+    const base = spiritPart + luckPart + speedPart;
+    const accuracyAbility = parseFloat(input.accuracyAbility) || 0;
+    const abilityBonus = base * (accuracyAbility / 100);
+    return { base, abilityBonus, total: base + abilityBonus };
   }
 
   /**
@@ -295,7 +315,10 @@ export class SpecCalculator {
     const luck = parseFloat(input.luck) || 0;
     const luckRelease = parseFloat(input.luckRelease) || 0;
     
-    return (luck * (1 + luckRelease / 100) * 0.0535) + 0.45;
+    const base = (luck * (1 + luckRelease / 100) * 0.0535) + 0.45;
+    const critRateAbility = parseFloat(input.criticalRateAbility) || 0;
+    const abilityBonus = base * (critRateAbility / 100);
+    return { base, abilityBonus, total: base + abilityBonus };
   }
 
   /**
@@ -311,7 +334,10 @@ export class SpecCalculator {
     const strengthPart = 2.0 * (strength * (1 + strengthRelease / 100));
     const luckPart = 0.9 * (luck * (1 + luckRelease / 100));
     
-    return 103 + Math.ceil((strengthPart + luckPart) / 34);
+    const base = 103 + Math.ceil((strengthPart + luckPart) / 34);
+    const critDamageAbility = parseFloat(input.criticalDamageAbility) || 0;
+    const abilityBonus = base * (critDamageAbility / 100);
+    return { base, abilityBonus, total: base + abilityBonus };
   }
 
   /**
@@ -322,20 +348,26 @@ export class SpecCalculator {
     const magicAttackResult = this.calculateMagicAttack(input);
     const defenseResult = this.calculateDefense(input);
     const magicDefenseResult = this.calculateMagicDefense(input);
-    
+    const evasionResult = this.calculateEvasion(input);
+    const accuracyResult = this.calculateAccuracy(input);
+    const criticalRateResult = this.calculateCriticalRate(input);
+    const criticalDamageResult = this.calculateCriticalDamage(input);
+
     return {
       attack: attackResult.total,
       attackBase: attackResult.base,
       attackReleaseBonus: attackResult.releaseBonus,
       attackEquipmentAttributeBonus: attackResult.equipmentAttributeBonus,
       attackTownAttributeBonus: attackResult.townAttributeBonus,
-      attackPenetrationBonus: attackResult.penetrationBonus,
+      attackAbilityBonus: attackResult.abilityBonus,
+      attackPenetrationBonus: attackResult.penetrationBonus, // 별도 표시
       magicAttack: magicAttackResult.total,
       magicAttackBase: magicAttackResult.base,
       magicAttackReleaseBonus: magicAttackResult.releaseBonus,
       magicAttackEquipmentAttributeBonus: magicAttackResult.equipmentAttributeBonus,
       magicAttackTownAttributeBonus: magicAttackResult.townAttributeBonus,
-      magicAttackPenetrationBonus: magicAttackResult.penetrationBonus,
+      magicAttackAbilityBonus: magicAttackResult.abilityBonus,
+      magicAttackPenetrationBonus: magicAttackResult.penetrationBonus, // 별도 표시
       defense: defenseResult.total,
       defenseBase: defenseResult.base,
       defenseReleaseBonus: defenseResult.releaseBonus,
@@ -347,10 +379,18 @@ export class SpecCalculator {
       magicDefenseEquipmentAttributeBonus: magicDefenseResult.equipmentAttributeBonus,
       magicDefenseTownAttributeBonus: magicDefenseResult.townAttributeBonus,
       attackSpeed: this.calculateAttackSpeed(input),
-      evasion: this.calculateEvasion(input),
-      accuracy: this.calculateAccuracy(input),
-      criticalRate: this.calculateCriticalRate(input),
-      criticalDamage: this.calculateCriticalDamage(input),
+      evasion: evasionResult.total,
+      evasionBase: evasionResult.base,
+      evasionAbilityBonus: evasionResult.abilityBonus,
+      accuracy: accuracyResult.total,
+      accuracyBase: accuracyResult.base,
+      accuracyAbilityBonus: accuracyResult.abilityBonus,
+      criticalRate: criticalRateResult.total,
+      criticalRateBase: criticalRateResult.base,
+      criticalRateAbilityBonus: criticalRateResult.abilityBonus,
+      criticalDamage: criticalDamageResult.total,
+      criticalDamageBase: criticalDamageResult.base,
+      criticalDamageAbilityBonus: criticalDamageResult.abilityBonus,
       recovery: null // 공식 알 수 없음
     };
   }

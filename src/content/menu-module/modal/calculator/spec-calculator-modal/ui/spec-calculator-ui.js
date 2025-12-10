@@ -3,6 +3,76 @@ import { ELEMENT_NAMES } from '../data/attribute-calculator.js';
 import { StorageManager } from '../data/storage-manager.js';
 
 /**
+ * 각 결과 항목의 공식 설명
+ */
+const FORMULA_DESCRIPTIONS = {
+  '공격력': `표기값 = {
+  [ (무기 위력 × (1 + 무기 위력 해방옵션%)) × 장비 속성 보정 ]
+  +
+  [ (힘 × (1 + 힘 해방옵션%)) ]
+} × 마을 속성 보정
+최종값 = 표기값 × (1 + 공격력 어빌리티%)`,
+  '마법공격력': `표기값 = {
+  [ (무기 위력 × (1 + 무기 위력 해방옵션%)) × 장비 속성 보정 ]
+  +
+  [ (지능 × (1 + 지능 해방옵션%)) ]
+} × 마을 속성 보정
+최종값 = 표기값 × (1 + 마법공격력 어빌리티%)`,
+  '방어력 관통 보너스': `방어력 관통 보너스 =
+상대 방어력 × (방어력 관통 해방 옵션% / 100)
+※ 공격력에 합산되지 않고 별도 표시`,
+  '마법방어력 관통 보너스': `마법방어력 관통 보너스 =
+상대 마법방어력 × (마법방어력 관통 해방 옵션% / 100)
+※ 마법공격력에 합산되지 않고 별도 표시`,
+  '방어력': `방어력 = {
+  [ (방어구 위력 × (1 + 방어구 위력 해방옵션%)) × 장비 속성 보정 ]
+  +
+  [ (장신구 위력 × (1 + 장신구 위력 해방옵션%)) × 장비 속성 보정 ]
+  +
+  [ (생명 × (1 + 생명 해방옵션%)) ]
+} × 마을 속성 보정
+최종값 = 방어력 × (1 + 어빌리티%)`,
+  '마법방어력': `마법방어력 = {
+  [ (장신구 위력 × 4.5 × (1 + 장신구 위력 해방옵션%)) × 장비 속성 보정 ]
+  +
+  [ (정신 × (1 + 정신 해방옵션%)) ]
+} × 마을 속성 보정
+최종값 = 마법방어력 × (1 + 어빌리티%)`,
+  '공격속도': `공격속도 = 
+  (속도 × (1 + 속도 해방옵션%))
+  - 무기 무게
+  - 방어구 무게
+  - 장신구 무게`,
+  '회피치': `회피치 = 
+  [ 지능 × (1 + 지능 해방옵션%) × 3.5 ]
+  +
+  [ 행운 × (1 + 행운 해방옵션%) × 2 ]
+  +
+  [ 공격속도 × 2 ]
+최종값 = 표기값 × (1 + 회피치 어빌리티%)`,
+  '적중치': `적중치 = 
+  [ 정신 × (1 + 정신 해방옵션%) × 2.8 ]
+  +
+  [ 행운 × (1 + 행운 해방옵션%) × 1.6 ]
+  +
+  [ 공격속도 × 1.6 ]
+최종값 = 표기값 × (1 + 적중치 어빌리티%)`,
+  '치명타 확률': `치명타 확률 = 
+  [ 행운 × (1 + 행운 해방옵션%) × 0.0535 ]
+  + 0.45
+최종값 = 표기값 × (1 + 치명타 확률 어빌리티%)`,
+  '치명타 데미지': `치명타 데미지(%) = 
+  103
+  + CEIL(
+    ( 2.0 × [힘 × (1 + 힘 해방옵션%)]
+    + 0.9 × [행운 × (1 + 행운 해방옵션%)] )
+    / 34
+  )
+최종값 = 표기값 × (1 + 치명타 데미지 어빌리티%)`,
+  '회복력': '현재 알 수 없음.'
+};
+
+/**
  * 스펙 계산기 UI 컴포넌트
  * artifact-enchant-sim-modal 스타일을 참고하여 제작
  */
@@ -15,6 +85,10 @@ export class SpecCalculatorUI {
 
   show(contentArea) {
     contentArea.innerHTML = '';
+    
+    // 마지막 입력값 불러오기
+    const lastInput = StorageManager.loadLastInput();
+    this.inputData = { ...lastInput };
     
     const container = document.createElement('div');
     container.style.cssText = `
@@ -48,6 +122,7 @@ export class SpecCalculatorUI {
     card.appendChild(this.createStatSection());
     card.appendChild(this.createEnemyStatSection());
     card.appendChild(this.createReleaseOptionSection());
+    card.appendChild(this.createAbilityOptionSection());
     
     // 계산 버튼
     card.appendChild(this.createCalculateButton());
@@ -234,6 +309,39 @@ export class SpecCalculatorUI {
     return section;
   }
 
+  // 어빌리티 옵션 섹션
+  createAbilityOptionSection() {
+    const section = document.createElement('div');
+    section.style.cssText = `margin-bottom: 20px;`;
+
+    const title = document.createElement('div');
+    title.textContent = '💠 어빌리티 옵션 (%)';
+    title.style.cssText = `
+      color: #c084fc;
+      font-weight: 600;
+      margin-bottom: 12px;
+      font-size: 14px;
+    `;
+    section.appendChild(title);
+
+    const grid = document.createElement('div');
+    grid.style.cssText = `
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    `;
+
+    grid.appendChild(this.createInputGroup('공격력 어빌리티 %', 'attackAbility', 'number', '0'));
+    grid.appendChild(this.createInputGroup('마법공격력 어빌리티 %', 'magicAttackAbility', 'number', '0'));
+    grid.appendChild(this.createInputGroup('회피치 어빌리티 %', 'evasionAbility', 'number', '0'));
+    grid.appendChild(this.createInputGroup('적중치 어빌리티 %', 'accuracyAbility', 'number', '0'));
+    grid.appendChild(this.createInputGroup('치명타 확률 어빌리티 %', 'criticalRateAbility', 'number', '0'));
+    grid.appendChild(this.createInputGroup('치명타 데미지 어빌리티 %', 'criticalDamageAbility', 'number', '0'));
+
+    section.appendChild(grid);
+    return section;
+  }
+
   // 입력 그룹 생성
   createInputGroup(label, id, type = 'text', defaultValue = '') {
     const group = document.createElement('div');
@@ -249,10 +357,13 @@ export class SpecCalculatorUI {
     `;
     labelEl.setAttribute('for', id);
 
+    // 마지막 입력값이 있으면 사용, 없으면 기본값 사용
+    const savedValue = this.inputData[id] !== undefined ? this.inputData[id] : defaultValue;
+
     const input = document.createElement('input');
     input.type = type;
     input.id = id;
-    input.value = defaultValue;
+    input.value = savedValue;
     input.style.cssText = `
       width: 100%;
       padding: 8px 10px;
@@ -277,6 +388,8 @@ export class SpecCalculatorUI {
 
     input.addEventListener('input', () => {
       this.inputData[id] = input.value;
+      // 변경 시 자동 저장
+      StorageManager.saveLastInput(this.inputData);
     });
 
     group.appendChild(labelEl);
@@ -297,6 +410,9 @@ export class SpecCalculatorUI {
       margin-bottom: 6px;
       font-weight: 500;
     `;
+
+    // 마지막 입력값이 있으면 사용
+    const savedValue = this.inputData[id] !== undefined ? this.inputData[id] : '';
 
     const select = document.createElement('select');
     select.id = id;
@@ -325,8 +441,15 @@ export class SpecCalculatorUI {
       select.appendChild(option);
     });
 
+    // 저장된 값으로 초기화
+    if (savedValue) {
+      select.value = savedValue;
+    }
+
     select.addEventListener('change', () => {
       this.inputData[id] = select.value;
+      // 변경 시 자동 저장
+      StorageManager.saveLastInput(this.inputData);
     });
 
     group.appendChild(labelEl);
@@ -725,7 +848,11 @@ export class SpecCalculatorUI {
         e.stopPropagation();
         if (confirm(`"${preset.name}" 설정을 삭제하시겠습니까?`)) {
           StorageManager.deletePreset(preset.id);
-          this.showLoadModal(); // 모달 새로고침
+          // 기존 모달 제거 후 새 모달 표시
+          if (modal && modal.parentNode) {
+            document.body.removeChild(modal);
+          }
+          this.showLoadModal();
         }
       });
 
@@ -786,6 +913,8 @@ export class SpecCalculatorUI {
 
     // inputData 업데이트
     this.inputData = { ...data };
+    // 마지막 입력값으로 저장
+    StorageManager.saveLastInput(this.inputData);
   }
 
   // 결과 미리보기 표시
@@ -847,34 +976,34 @@ export class SpecCalculatorUI {
       margin-bottom: 16px;
     `;
 
-    // 실 공격력 (해방 위력 보너스, 장비 속성 보너스, 마을 속성 보너스, 해방 관통 보너스 포함)
+    // 공격력 (관통 보너스 제외)
     const attackItem = this.createResultItemWithPenetration(
-      '실 공격력',
+      '공격력',
       result.attackBase,
       result.attackReleaseBonus,
       result.attackEquipmentAttributeBonus,
       result.attackTownAttributeBonus,
-      result.attackPenetrationBonus,
+      result.attackAbilityBonus,
       result.attack
     );
     resultGrid.appendChild(attackItem);
 
-    // 실 마법공격력 (해방 위력 보너스, 장비 속성 보너스, 마을 속성 보너스, 해방 관통 보너스 포함)
+    // 마법공격력 (관통 보너스 제외)
     const magicAttackItem = this.createResultItemWithPenetration(
-      '실 마법공격력',
+      '마법공격력',
       result.magicAttackBase,
       result.magicAttackReleaseBonus,
       result.magicAttackEquipmentAttributeBonus,
       result.magicAttackTownAttributeBonus,
-      result.magicAttackPenetrationBonus,
+      result.magicAttackAbilityBonus,
       result.magicAttack
     );
     resultGrid.appendChild(magicAttackItem);
 
-    // 방어력 (해방 위력 보너스, 장비 속성 보너스, 마을 속성 보너스 포함, 표기공 없음)
+    // 방어력 (해방 위력 보너스, 장비 속성 보너스, 마을 속성 보너스 포함)
     const defenseItem = this.createResultItemWithPenetration(
       '방어력',
-      null, // 표기공 없음
+      result.defenseBase,
       result.defenseReleaseBonus,
       result.defenseEquipmentAttributeBonus,
       result.defenseTownAttributeBonus,
@@ -883,10 +1012,10 @@ export class SpecCalculatorUI {
     );
     resultGrid.appendChild(defenseItem);
 
-    // 마법방어력 (해방 위력 보너스, 장비 속성 보너스, 마을 속성 보너스 포함, 표기공 없음)
+    // 마법방어력 (해방 위력 보너스, 장비 속성 보너스, 마을 속성 보너스 포함)
     const magicDefenseItem = this.createResultItemWithPenetration(
       '마법방어력',
-      null, // 표기공 없음
+      result.magicDefenseBase,
       result.magicDefenseReleaseBonus,
       result.magicDefenseEquipmentAttributeBonus,
       result.magicDefenseTownAttributeBonus,
@@ -895,50 +1024,90 @@ export class SpecCalculatorUI {
     );
     resultGrid.appendChild(magicDefenseItem);
 
-    const results = [
-      { label: '공격속도', value: result.attackSpeed, format: 'number' },
-      { label: '회피치', value: result.evasion, format: 'number' },
-      { label: '적중치', value: result.accuracy, format: 'number' },
-      { label: '치명타 확률', value: result.criticalRate, format: 'percent' },
-      { label: '치명타 데미지', value: result.criticalDamage, format: 'percent' },
-      { label: '회복력', value: result.recovery, format: 'text' }
-    ];
+    // 관통 보너스 (별도 표시)
+    if (result.attackPenetrationBonus && result.attackPenetrationBonus > 0) {
+      const attackPenetrationItem = this.createPenetrationBonusItem(
+        '방어력 관통 보너스',
+        result.attackPenetrationBonus
+      );
+      resultGrid.appendChild(attackPenetrationItem);
+    }
 
-    results.forEach(({ label, value, format }) => {
-      const item = document.createElement('div');
-      item.style.cssText = `
-        background: rgba(51, 65, 85, 0.8);
-        border: 1px solid rgba(168, 85, 247, 0.3);
-        border-radius: 6px;
-        padding: 10px;
-      `;
+    if (result.magicAttackPenetrationBonus && result.magicAttackPenetrationBonus > 0) {
+      const magicAttackPenetrationItem = this.createPenetrationBonusItem(
+        '마법방어력 관통 보너스',
+        result.magicAttackPenetrationBonus
+      );
+      resultGrid.appendChild(magicAttackPenetrationItem);
+    }
 
-      const labelEl = document.createElement('div');
-      labelEl.textContent = label;
-      labelEl.style.cssText = `
-        color: #94a3b8;
-        font-size: 11px;
-        margin-bottom: 4px;
-      `;
+    // 공격속도 (어빌리티 적용 없음)
+    const attackSpeedItem = document.createElement('div');
+    attackSpeedItem.style.cssText = `
+      background: rgba(51, 65, 85, 0.8);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 6px;
+      padding: 10px;
+    `;
+    const asLabel = document.createElement('div');
+    asLabel.textContent = '공격속도';
+    asLabel.style.cssText = `color: #94a3b8;font-size:11px;margin-bottom:4px;`;
+    const asValue = document.createElement('div');
+    asValue.textContent = result.attackSpeed !== null ? Math.round(result.attackSpeed).toLocaleString() : '-';
+    asValue.style.cssText = `color:#cbd5e1;font-size:16px;font-weight:600;`;
+    attackSpeedItem.appendChild(asLabel);
+    attackSpeedItem.appendChild(asValue);
+    resultGrid.appendChild(attackSpeedItem);
 
-      const valueEl = document.createElement('div');
-      if (format === 'percent') {
-        valueEl.textContent = value !== null ? `${value.toFixed(2)}%` : '-';
-      } else if (format === 'number') {
-        valueEl.textContent = value !== null ? Math.round(value).toLocaleString() : '-';
-      } else {
-        valueEl.textContent = value !== null ? value : '공식 알 수 없음';
-      }
-      valueEl.style.cssText = `
-        color: #cbd5e1;
-        font-size: 16px;
-        font-weight: 600;
-      `;
+    const evasionItem = this.createResultItemWithAbility(
+      '회피치',
+      result.evasionBase,
+      result.evasionAbilityBonus,
+      result.evasion
+    );
+    resultGrid.appendChild(evasionItem);
 
-      item.appendChild(labelEl);
-      item.appendChild(valueEl);
-      resultGrid.appendChild(item);
-    });
+    const accuracyItem = this.createResultItemWithAbility(
+      '적중치',
+      result.accuracyBase,
+      result.accuracyAbilityBonus,
+      result.accuracy
+    );
+    resultGrid.appendChild(accuracyItem);
+
+    const critRateItem = this.createResultItemWithAbility(
+      '치명타 확률',
+      result.criticalRateBase,
+      result.criticalRateAbilityBonus,
+      result.criticalRate
+    );
+    resultGrid.appendChild(critRateItem);
+
+    const critDmgItem = this.createResultItemWithAbility(
+      '치명타 데미지',
+      result.criticalDamageBase,
+      result.criticalDamageAbilityBonus,
+      result.criticalDamage
+    );
+    resultGrid.appendChild(critDmgItem);
+
+    // 회복력(공식 없음)
+    const recoveryItem = document.createElement('div');
+    recoveryItem.style.cssText = `
+      background: rgba(51, 65, 85, 0.8);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 6px;
+      padding: 10px;
+    `;
+    const recoveryLabel = document.createElement('div');
+    recoveryLabel.textContent = '회복력';
+    recoveryLabel.style.cssText = `color:#94a3b8;font-size:11px;margin-bottom:4px;`;
+    const recoveryValue = document.createElement('div');
+    recoveryValue.textContent = result.recovery !== null ? result.recovery : '공식 알 수 없음';
+    recoveryValue.style.cssText = `color:#cbd5e1;font-size:16px;font-weight:600;`;
+    recoveryItem.appendChild(recoveryLabel);
+    recoveryItem.appendChild(recoveryValue);
+    resultGrid.appendChild(recoveryItem);
 
     const closeButton = document.createElement('button');
     closeButton.textContent = '닫기';
@@ -1039,6 +1208,9 @@ export class SpecCalculatorUI {
       }
     });
 
+    // 마지막 입력값 저장
+    StorageManager.saveLastInput(this.inputData);
+
     // 계산 실행
     this.result = this.calculator.calculateAll(this.inputData);
     
@@ -1070,34 +1242,34 @@ export class SpecCalculatorUI {
       gap: 12px;
     `;
 
-    // 실 공격력 (해방 위력 보너스, 장비 속성 보너스, 마을 속성 보너스, 해방 관통 보너스 포함)
+    // 공격력 (관통 보너스 제외)
     const attackItem = this.createResultItemWithPenetration(
-      '실 공격력',
+      '공격력',
       this.result.attackBase,
       this.result.attackReleaseBonus,
       this.result.attackEquipmentAttributeBonus,
       this.result.attackTownAttributeBonus,
-      this.result.attackPenetrationBonus,
+      this.result.attackAbilityBonus,
       this.result.attack
     );
     grid.appendChild(attackItem);
 
-    // 실 마법공격력 (해방 위력 보너스, 장비 속성 보너스, 마을 속성 보너스, 해방 관통 보너스 포함)
+    // 마법공격력 (관통 보너스 제외)
     const magicAttackItem = this.createResultItemWithPenetration(
-      '실 마법공격력',
+      '마법공격력',
       this.result.magicAttackBase,
       this.result.magicAttackReleaseBonus,
       this.result.magicAttackEquipmentAttributeBonus,
       this.result.magicAttackTownAttributeBonus,
-      this.result.magicAttackPenetrationBonus,
+      this.result.magicAttackAbilityBonus,
       this.result.magicAttack
     );
     grid.appendChild(magicAttackItem);
 
-    // 방어력 (해방 위력 보너스, 장비 속성 보너스, 마을 속성 보너스 포함, 표기공 없음)
+    // 방어력 (해방 위력 보너스, 장비 속성 보너스, 마을 속성 보너스 포함)
     const defenseItem = this.createResultItemWithPenetration(
       '방어력',
-      null, // 표기공 없음
+      this.result.defenseBase,
       this.result.defenseReleaseBonus,
       this.result.defenseEquipmentAttributeBonus,
       this.result.defenseTownAttributeBonus,
@@ -1106,10 +1278,10 @@ export class SpecCalculatorUI {
     );
     grid.appendChild(defenseItem);
 
-    // 마법방어력 (해방 위력 보너스, 장비 속성 보너스, 마을 속성 보너스 포함, 표기공 없음)
+    // 마법방어력 (해방 위력 보너스, 장비 속성 보너스, 마을 속성 보너스 포함)
     const magicDefenseItem = this.createResultItemWithPenetration(
       '마법방어력',
-      null, // 표기공 없음
+      this.result.magicDefenseBase,
       this.result.magicDefenseReleaseBonus,
       this.result.magicDefenseEquipmentAttributeBonus,
       this.result.magicDefenseTownAttributeBonus,
@@ -1118,56 +1290,218 @@ export class SpecCalculatorUI {
     );
     grid.appendChild(magicDefenseItem);
 
-    const results = [
-      { label: '공격속도', value: this.result.attackSpeed, format: 'number' },
-      { label: '회피치', value: this.result.evasion, format: 'number' },
-      { label: '적중치', value: this.result.accuracy, format: 'number' },
-      { label: '치명타 확률', value: this.result.criticalRate, format: 'percent' },
-      { label: '치명타 데미지', value: this.result.criticalDamage, format: 'percent' },
-      { label: '회복력', value: this.result.recovery, format: 'text' }
-    ];
+    // 관통 보너스 (별도 표시)
+    if (this.result.attackPenetrationBonus && this.result.attackPenetrationBonus > 0) {
+      const attackPenetrationItem = this.createPenetrationBonusItem(
+        '방어력 관통 보너스',
+        this.result.attackPenetrationBonus
+      );
+      grid.appendChild(attackPenetrationItem);
+    }
 
-    results.forEach(({ label, value, format }) => {
-      const item = document.createElement('div');
-      item.style.cssText = `
-        background: rgba(30, 41, 59, 0.6);
-        border-radius: 6px;
-        padding: 10px;
-        border: 1px solid rgba(168, 85, 247, 0.2);
-      `;
+    if (this.result.magicAttackPenetrationBonus && this.result.magicAttackPenetrationBonus > 0) {
+      const magicAttackPenetrationItem = this.createPenetrationBonusItem(
+        '마법방어력 관통 보너스',
+        this.result.magicAttackPenetrationBonus
+      );
+      grid.appendChild(magicAttackPenetrationItem);
+    }
 
-      const labelEl = document.createElement('div');
-      labelEl.textContent = label;
-      labelEl.style.cssText = `
-        color: #94a3b8;
-        font-size: 11px;
-        margin-bottom: 4px;
-      `;
+    // 공격속도 (어빌리티 적용 없음)
+    const attackSpeedItem = document.createElement('div');
+    attackSpeedItem.style.cssText = `
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 6px;
+      padding: 10px;
+      border: 1px solid rgba(168, 85, 247, 0.2);
+    `;
+    const asLabel = document.createElement('div');
+    asLabel.textContent = '공격속도';
+    asLabel.style.cssText = `color: #94a3b8;font-size:11px;margin-bottom:4px;`;
+    const asValue = document.createElement('div');
+    asValue.textContent = this.result.attackSpeed !== null ? Math.round(this.result.attackSpeed).toLocaleString() : '-';
+    asValue.style.cssText = `color:#cbd5e1;font-size:16px;font-weight:600;`;
+    attackSpeedItem.appendChild(asLabel);
+    attackSpeedItem.appendChild(asValue);
+    grid.appendChild(attackSpeedItem);
 
-      const valueEl = document.createElement('div');
-      if (format === 'percent') {
-        valueEl.textContent = value !== null ? `${value.toFixed(2)}%` : '-';
-      } else if (format === 'number') {
-        valueEl.textContent = value !== null ? Math.round(value).toLocaleString() : '-';
-      } else {
-        valueEl.textContent = value !== null ? value : '공식 알 수 없음';
-      }
-      valueEl.style.cssText = `
-        color: #cbd5e1;
-        font-size: 16px;
-        font-weight: 600;
-      `;
+    const evasionItem = this.createResultItemWithAbility(
+      '회피치',
+      this.result.evasionBase,
+      this.result.evasionAbilityBonus,
+      this.result.evasion
+    );
+    grid.appendChild(evasionItem);
 
-      item.appendChild(labelEl);
-      item.appendChild(valueEl);
-      grid.appendChild(item);
-    });
+    const accuracyItem = this.createResultItemWithAbility(
+      '적중치',
+      this.result.accuracyBase,
+      this.result.accuracyAbilityBonus,
+      this.result.accuracy
+    );
+    grid.appendChild(accuracyItem);
+
+    const critRateItem = this.createResultItemWithAbility(
+      '치명타 확률',
+      this.result.criticalRateBase,
+      this.result.criticalRateAbilityBonus,
+      this.result.criticalRate
+    );
+    grid.appendChild(critRateItem);
+
+    const critDmgItem = this.createResultItemWithAbility(
+      '치명타 데미지',
+      this.result.criticalDamageBase,
+      this.result.criticalDamageAbilityBonus,
+      this.result.criticalDamage
+    );
+    grid.appendChild(critDmgItem);
+
+    // 회복력(공식 없음)
+    const recoveryItem = document.createElement('div');
+    recoveryItem.style.cssText = `
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 6px;
+      padding: 10px;
+      border: 1px solid rgba(168, 85, 247, 0.2);
+    `;
+    const recoveryLabel = document.createElement('div');
+    recoveryLabel.textContent = '회복력';
+    recoveryLabel.style.cssText = `color:#94a3b8;font-size:11px;margin-bottom:4px;`;
+    const recoveryValue = document.createElement('div');
+    recoveryValue.textContent = this.result.recovery !== null ? this.result.recovery : '공식 알 수 없음';
+    recoveryValue.style.cssText = `color:#cbd5e1;font-size:16px;font-weight:600;`;
+    recoveryItem.appendChild(recoveryLabel);
+    recoveryItem.appendChild(recoveryValue);
+    grid.appendChild(recoveryItem);
 
     resultArea.appendChild(grid);
   }
 
-  // 관통 정보가 포함된 결과 아이템 생성
-  createResultItemWithPenetration(label, baseValue, releaseBonus, equipmentAttributeBonus, townAttributeBonus, penetrationBonus, totalValue) {
+  // 툴팁 생성 및 표시
+  createTooltip(triggerElement, text) {
+    let tooltip = null;
+    let isTooltipVisible = false;
+
+    const showTooltip = (event) => {
+      if (isTooltipVisible) {
+        hideTooltip();
+        return;
+      }
+      
+      event.stopPropagation();
+      
+      tooltip = document.createElement('div');
+      tooltip.style.cssText = `
+        position: fixed;
+        background: rgba(15, 23, 42, 0.98);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(168, 85, 247, 0.5);
+        border-radius: 8px;
+        padding: 12px;
+        color: #cbd5e1;
+        font-size: 12px;
+        line-height: 1.6;
+        white-space: pre-line;
+        z-index: 10050;
+        max-width: 400px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        pointer-events: none;
+        font-family: 'Courier New', monospace;
+        display: block;
+        visibility: hidden;
+      `;
+      tooltip.textContent = text;
+      
+      document.body.appendChild(tooltip);
+      
+      // 초기 위치 설정 (위쪽)
+      const rect = triggerElement.getBoundingClientRect();
+      const tooltipRect = tooltip.getBoundingClientRect();
+      let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+      let top = rect.top - tooltipRect.height - 10;
+      
+      // 화면 밖으로 나가지 않도록 조정
+      if (left < 10) {
+        left = 10;
+      }
+      if (left + tooltipRect.width > window.innerWidth - 10) {
+        left = window.innerWidth - tooltipRect.width - 10;
+      }
+      if (top < 10) {
+        // 위쪽 공간이 부족하면 아래쪽에 표시
+        top = rect.bottom + 10;
+      }
+      
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = top + 'px';
+      tooltip.style.visibility = 'visible';
+      
+      isTooltipVisible = true;
+      
+      // 문서 클릭 이벤트로 툴팁 닫기
+      const handleDocumentClick = (e) => {
+        if (isTooltipVisible && tooltip && !tooltip.contains(e.target) && !triggerElement.contains(e.target)) {
+          hideTooltip();
+          document.removeEventListener('click', handleDocumentClick);
+        }
+      };
+      
+      setTimeout(() => {
+        document.addEventListener('click', handleDocumentClick);
+      }, 0);
+    };
+
+    const hideTooltip = () => {
+      if (tooltip && tooltip.parentNode) {
+        document.body.removeChild(tooltip);
+      }
+      tooltip = null;
+      isTooltipVisible = false;
+    };
+
+    triggerElement.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (isTooltipVisible) {
+        hideTooltip();
+      } else {
+        showTooltip(e);
+      }
+    });
+  }
+
+  // 물음표 아이콘 생성
+  createHelpIcon(label) {
+    const icon = document.createElement('span');
+    icon.textContent = '❓';
+    icon.style.cssText = `
+      display: inline-block;
+      margin-left: 4px;
+      cursor: help;
+      font-size: 11px;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+      vertical-align: middle;
+    `;
+    
+    icon.addEventListener('mouseenter', () => {
+      icon.style.opacity = '1';
+    });
+    
+    icon.addEventListener('mouseleave', () => {
+      icon.style.opacity = '0.7';
+    });
+
+    const formula = FORMULA_DESCRIPTIONS[label];
+    if (formula) {
+      this.createTooltip(icon, formula);
+    }
+
+    return icon;
+  }
+
+  // 표기값/최종값/어빌리티 보너스 표시 (관통 보너스는 별도 표시)
+  createResultItemWithPenetration(label, baseValue, releaseBonus, equipmentAttributeBonus, townAttributeBonus, abilityBonus, totalValue) {
     const item = document.createElement('div');
     item.style.cssText = `
       background: rgba(30, 41, 59, 0.6);
@@ -1176,13 +1510,23 @@ export class SpecCalculatorUI {
       border: 1px solid rgba(168, 85, 247, 0.2);
     `;
 
+    const labelContainer = document.createElement('div');
+    labelContainer.style.cssText = `
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+    `;
+
     const labelEl = document.createElement('div');
     labelEl.textContent = label;
     labelEl.style.cssText = `
       color: #94a3b8;
       font-size: 11px;
-      margin-bottom: 4px;
     `;
+
+    const helpIcon = this.createHelpIcon(label);
+    labelContainer.appendChild(labelEl);
+    labelContainer.appendChild(helpIcon);
 
     const totalValueEl = document.createElement('div');
     totalValueEl.textContent = totalValue !== null ? Math.round(totalValue).toLocaleString() : '-';
@@ -1193,7 +1537,7 @@ export class SpecCalculatorUI {
       margin-bottom: 4px;
     `;
 
-    item.appendChild(labelEl);
+    item.appendChild(labelContainer);
     item.appendChild(totalValueEl);
 
     const detailInfo = document.createElement('div');
@@ -1204,10 +1548,10 @@ export class SpecCalculatorUI {
       margin-top: 4px;
     `;
 
-    // 표기공 표시 (baseValue가 있는 경우만)
+    // 표기값
     if (baseValue !== null && baseValue !== undefined) {
       const baseInfo = document.createElement('div');
-      baseInfo.textContent = `표기공: ${Math.round(baseValue).toLocaleString()}`;
+      baseInfo.textContent = `표기값: ${Math.round(baseValue).toLocaleString()}`;
       baseInfo.style.cssText = `
         color: #94a3b8;
         font-size: 10px;
@@ -1248,15 +1592,132 @@ export class SpecCalculatorUI {
       detailInfo.appendChild(townBonusInfo);
     }
 
-    // 해방 관통 보너스가 있는 경우 표시
-    if (penetrationBonus && penetrationBonus > 0) {
-      const penetrationInfo = document.createElement('div');
-      penetrationInfo.textContent = `해방 관통 보너스: +${Math.round(penetrationBonus).toLocaleString()}`;
-      penetrationInfo.style.cssText = `
-        color: #60a5fa;
+    // 어빌리티 보너스
+    if (abilityBonus && abilityBonus > 0) {
+      const abilityInfo = document.createElement('div');
+      abilityInfo.textContent = `어빌리티 보너스: +${Math.round(abilityBonus).toLocaleString()}`;
+      abilityInfo.style.cssText = `
+        color: #38bdf8;
         font-size: 10px;
       `;
-      detailInfo.appendChild(penetrationInfo);
+      detailInfo.appendChild(abilityInfo);
+    }
+
+    if (detailInfo.children.length > 0) {
+      item.appendChild(detailInfo);
+    }
+
+    return item;
+  }
+
+  // 관통 보너스 결과 아이템 생성
+  createPenetrationBonusItem(label, value) {
+    const item = document.createElement('div');
+    item.style.cssText = `
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 6px;
+      padding: 10px;
+      border: 1px solid rgba(168, 85, 247, 0.2);
+    `;
+
+    const labelContainer = document.createElement('div');
+    labelContainer.style.cssText = `
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+    `;
+
+    const labelEl = document.createElement('div');
+    labelEl.textContent = label;
+    labelEl.style.cssText = `
+      color: #94a3b8;
+      font-size: 11px;
+    `;
+
+    const helpIcon = this.createHelpIcon(label);
+    labelContainer.appendChild(labelEl);
+    labelContainer.appendChild(helpIcon);
+
+    const valueEl = document.createElement('div');
+    valueEl.textContent = value !== null && value > 0 ? `+${Math.round(value).toLocaleString()}` : '-';
+    valueEl.style.cssText = `
+      color: #60a5fa;
+      font-size: 16px;
+      font-weight: 600;
+    `;
+
+    item.appendChild(labelContainer);
+    item.appendChild(valueEl);
+
+    return item;
+  }
+
+  // 표기값/어빌리티/최종값 표시용
+  createResultItemWithAbility(label, baseValue, abilityBonus, totalValue) {
+    const item = document.createElement('div');
+    item.style.cssText = `
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 6px;
+      padding: 10px;
+      border: 1px solid rgba(168, 85, 247, 0.2);
+    `;
+
+    const labelContainer = document.createElement('div');
+    labelContainer.style.cssText = `
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+    `;
+
+    const labelEl = document.createElement('div');
+    labelEl.textContent = label;
+    labelEl.style.cssText = `
+      color: #94a3b8;
+      font-size: 11px;
+    `;
+
+    const helpIcon = this.createHelpIcon(label);
+    labelContainer.appendChild(labelEl);
+    labelContainer.appendChild(helpIcon);
+
+    const totalValueEl = document.createElement('div');
+    totalValueEl.textContent = totalValue !== null ? Math.round(totalValue).toLocaleString() : '-';
+    totalValueEl.style.cssText = `
+      color: #cbd5e1;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    `;
+
+    item.appendChild(labelContainer);
+    item.appendChild(totalValueEl);
+
+    const detailInfo = document.createElement('div');
+    detailInfo.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 4px;
+    `;
+
+    if (baseValue !== null && baseValue !== undefined) {
+      const baseInfo = document.createElement('div');
+      baseInfo.textContent = `표기값: ${Math.round(baseValue).toLocaleString()}`;
+      baseInfo.style.cssText = `
+        color: #94a3b8;
+        font-size: 10px;
+      `;
+      detailInfo.appendChild(baseInfo);
+    }
+
+    if (abilityBonus && abilityBonus > 0) {
+      const abilityInfo = document.createElement('div');
+      abilityInfo.textContent = `어빌리티 보너스: +${Math.round(abilityBonus).toLocaleString()}`;
+      abilityInfo.style.cssText = `
+        color: #38bdf8;
+        font-size: 10px;
+      `;
+      detailInfo.appendChild(abilityInfo);
     }
 
     if (detailInfo.children.length > 0) {

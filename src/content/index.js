@@ -23,7 +23,6 @@ function loadStyles() {
   try {
     // 확장 프로그램 컨텍스트 유효성 검사
     if (!chrome || !chrome.runtime || !chrome.runtime.id) {
-      console.warn('Chrome 확장 프로그램 컨텍스트가 유효하지 않습니다. CSS 로드를 건너뜁니다.');
       return;
     }
 
@@ -42,7 +41,6 @@ function loadSettingsAndExecute() {
   try {
     // 확장 프로그램 컨텍스트 유효성 검사
     if (!utils.isValidExtensionContext()) {
-      console.warn('Chrome 확장 프로그램 컨텍스트가 유효하지 않습니다. 설정 로드를 건너뜁니다.');
       return;
     }
 
@@ -102,7 +100,6 @@ async function initializeExtension() {
   try {
     // 확장 프로그램 컨텍스트 유효성 검사
     if (!utils.isValidExtensionContext()) {
-      console.warn('Chrome 확장 프로그램 컨텍스트가 유효하지 않습니다. 초기화를 건너뜁니다.');
       return;
     }
 
@@ -297,7 +294,6 @@ function startInitialization() {
   try {
     // 확장 프로그램 컨텍스트 유효성 검사
     if (!utils.isValidExtensionContext()) {
-      console.warn('Chrome 확장 프로그램 컨텍스트가 유효하지 않습니다. 초기화를 건너뜁니다.');
       return;
     }
 
