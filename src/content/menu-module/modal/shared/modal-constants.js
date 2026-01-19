@@ -97,5 +97,17 @@ export const MODAL_CONFIGS = {
     height: 'auto',
     closeOnOutsideClick: true,
     closeOnEsc: true
+  },
+  imageUpload: {
+    id: 'image-upload-modal',
+    title: '이미지 업로드',
+    className: 'image-upload-modal',
+    contentClassName: 'image-upload-content',
+    maxWidth: '600px',
+    maxHeight: '90vh',
+    width: '90vw',
+    height: 'auto',
+    closeOnOutsideClick: true,
+    closeOnEsc: true
   }
 }; 

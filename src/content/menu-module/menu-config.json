@@ -25,6 +25,12 @@
         "title": "아이템 도감"
       },
       {
+        "id": "board",
+        "icon": "📋",
+        "text": "게시판",
+        "title": "게시판 메뉴"
+      },
+      {
         "id": "settings",
         "icon": "⚙️",
         "text": "설정",
@@ -122,7 +128,20 @@
         ]
       }
     },
-            "settings": {
+    "board": {
+      "subMenu": {
+        "title": "게시판",
+        "items": [
+          {
+            "id": "imageUpload",
+            "icon": "📤",
+            "text": "이미지 업로드",
+            "title": "이미지 업로드"
+          }
+        ]
+      }
+    },
+    "settings": {
           "subMenu": {
             "title": "설정",
             "items": [

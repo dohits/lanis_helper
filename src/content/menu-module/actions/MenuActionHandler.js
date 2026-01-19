@@ -20,7 +20,8 @@ class MenuActionHandler {
       programInfo: menuManager.programInfoModal,
       abilityInfo: menuManager.abilityInfoModal,
       enchantInfo: menuManager.enchantInfoModal,
-      guildWarInfo: menuManager.guildWarInfoModal
+      guildWarInfo: menuManager.guildWarInfoModal,
+      imageUpload: menuManager.imageUploadModal
     };
     this.expectedValueModal = menuManager.expectedValueModal;
     this.specCalculatorModal = menuManager.specCalculatorModal;
@@ -79,6 +80,9 @@ class MenuActionHandler {
         break;
       case 'guildWarInfo':
         this.modals.guildWarInfo.open();
+        break;
+      case 'imageUpload':
+        this.modals.imageUpload.open();
         break;
       default:
         // 알 수 없는 서브메뉴 아이템

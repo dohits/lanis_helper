@@ -105,6 +105,8 @@ class MenuUIManager {
       await this.actionHandler.updateSettingsAndRender(subMenu);
     } else if (item.id === 'guild') {
       await this.renderers.sub.createGuildSubMenu(subMenu);
+    } else if (item.id === 'board') {
+      await this.renderers.sub.createBoardSubMenu(subMenu);
     }
     
     // 서브메뉴 버튼에 이벤트 리스너 추가
@@ -294,6 +296,14 @@ class MenuUIManager {
     const guildItem = menuConfig.mainMenu.guild.subMenu.items.find(item => item.id === itemId);
     if (guildItem) {
       this.actionHandler.executeSubMenuItemAction(guildItem, button);
+      this.closeAllSubMenus();
+      return;
+    }
+    
+    // 게시판 메뉴 아이템 찾기
+    const boardItem = menuConfig.mainMenu.board.subMenu.items.find(item => item.id === itemId);
+    if (boardItem) {
+      this.actionHandler.executeSubMenuItemAction(boardItem, button);
       this.closeAllSubMenus();
       return;
     }

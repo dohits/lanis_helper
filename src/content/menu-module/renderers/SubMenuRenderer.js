@@ -112,6 +112,10 @@ class SubMenuRenderer {
     await this.renderSubMenu(container, 'guild');
   }
 
+  async createBoardSubMenu(container) {
+    await this.renderSubMenu(container, 'board');
+  }
+
   updateToggleButton(button, item) {
     const settingValue = this.settings[item.id];
     if (item.id === 'useComfortPack') {

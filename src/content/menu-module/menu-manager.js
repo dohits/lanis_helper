@@ -13,6 +13,7 @@ import ProgramInfoModal from './modal/settings/program-info-modal.js';
 import AbilityInfoModal from './modal/settings/ability-info-modal.js';
 import EnchantInfoModal from './modal/settings/enchant-info-modal.js';
 import { GuildWarInfoModal } from './modal/guild/guild-war-info-modal.js';
+import ImageUploadModal from './modal/board/image-upload-modal.js';
 import MainMenuRenderer from './renderers/MainMenuRenderer.js';
 import SubMenuRenderer from './renderers/SubMenuRenderer.js';
 import MenuStateManager from './state/MenuStateManager.js';
@@ -37,6 +38,7 @@ class MenuManager {
     this.abilityInfoModal = new AbilityInfoModal();
     this.enchantInfoModal = new EnchantInfoModal();
     this.guildWarInfoModal = new GuildWarInfoModal();
+    this.imageUploadModal = new ImageUploadModal();
     this.mainMenuRenderer = new MainMenuRenderer();
     this.subMenuRenderer = new SubMenuRenderer();
     this.eventHandler = new MenuEventHandler(this);
