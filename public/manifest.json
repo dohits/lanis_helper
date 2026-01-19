@@ -9,16 +9,13 @@
   ],
   "host_permissions": [
     "https://lanis.me/*",
-    "https://laniswiki.lovestoblog.com/*",
     "https://docs.google.com/*",
     "https://image.my/*"
   ],
   "content_scripts": [
     {
       "matches": [
-        "https://lanis.me/*",
-        "https://laniswiki.lovestoblog.com/*",
-        "https://laniswiki.lovestoblog.com/api.php*"
+        "https://lanis.me/*"
       ],
       "js": [
         "content.js"
@@ -34,8 +31,7 @@
         "styles.css"
       ],
       "matches": [
-        "https://lanis.me/*",
-        "https://laniswiki.lovestoblog.com/*"
+        "https://lanis.me/*"
       ]
     }
   ],
