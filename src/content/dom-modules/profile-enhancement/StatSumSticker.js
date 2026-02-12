@@ -101,8 +101,19 @@ class StatSumSticker {
         // "기본 스탯" 제목이 있는 섹션 찾기
         const titleElement = targetSection.querySelector('h6.MuiTypography-root');
         if (titleElement && titleElement.textContent.includes('기본 스탯')) {
-          // 스탯 요소들 찾기
-          const statElements = targetSection.querySelectorAll('p.MuiTypography-root.MuiTypography-body1');
+          // 기본 스탯 섹션 내의 Grid 컨테이너 찾기 (더 정확한 범위 지정)
+          const gridContainer = targetSection.querySelector('.MuiGrid-root.MuiGrid-container');
+          if (!gridContainer) {
+            return; // Grid 컨테이너가 없으면 건너뛰기
+          }
+          
+          // 스탯 요소들 찾기 (변경된 DOM 구조 지원: div.MuiBox-root 또는 p.MuiTypography-root)
+          // Grid 컨테이너 내에서만 찾아서 정확도 향상
+          const statElements = gridContainer.querySelectorAll(
+            'div.MuiBox-root.css-1rmhebz, ' +
+            'div.MuiBox-root.css-6tgdh8, ' +
+            'p.MuiTypography-root.MuiTypography-body1'
+          );
           
           statElements.forEach(statElement => {
             const statText = statElement.textContent.trim();

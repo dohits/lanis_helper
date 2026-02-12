@@ -392,31 +392,45 @@ class ImageUploadModal extends BaseModal {
           let width = img.width;
           let height = img.height;
           
-          // 가로가 320px보다 크면 리사이즈
-          if (img.width > maxWidth) {
-            const ratio = maxWidth / img.width;
-            width = maxWidth;
-            height = Math.round(img.height * ratio);
+          // 원본이 320px 이하이고 리사이즈가 필요 없는 경우 원본 반환
+          if (img.width <= maxWidth) {
+            resolve(file);
+            return;
           }
+          
+          // 가로가 320px보다 크면 리사이즈
+          const ratio = maxWidth / img.width;
+          width = maxWidth;
+          height = Math.round(img.height * ratio);
 
           // Canvas로 리사이즈
           const canvas = document.createElement('canvas');
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d');
+          
+          // 고품질 이미지 스무딩 설정
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          
           ctx.drawImage(img, 0, 0, width, height);
 
-          // Blob으로 변환
+          // 원본 파일 타입 확인
+          const originalType = file.type || 'image/jpeg';
+          const isPng = originalType === 'image/png';
+          
+          // Blob으로 변환 (원본 형식 유지)
           canvas.toBlob((blob) => {
             if (blob) {
-              // 원본 파일명 유지
-              const fileName = file.name.replace(/\.[^/.]+$/, '') + '.jpg';
-              const resizedFile = new File([blob], fileName, { type: 'image/jpeg' });
+              // 원본 파일 확장자 유지
+              const fileExtension = isPng ? '.png' : '.jpg';
+              const fileName = file.name.replace(/\.[^/.]+$/, '') + fileExtension;
+              const resizedFile = new File([blob], fileName, { type: originalType });
               resolve(resizedFile);
             } else {
               reject(new Error('이미지 리사이즈 실패'));
             }
-          }, 'image/jpeg', 0.9);
+          }, originalType, isPng ? undefined : 0.98); // PNG는 무손실, JPEG는 98% 품질
         };
         img.onerror = () => reject(new Error('이미지 로드 실패'));
         img.src = e.target.result;

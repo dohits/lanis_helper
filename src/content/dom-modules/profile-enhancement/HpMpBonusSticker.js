@@ -35,14 +35,9 @@ class HpMpBonusSticker {
             return; // 이미 스티커가 있으면 건너뛰기
           }
           
+          // 일반 프로필 보기와 자신 프로필 보기 모두 지원
           // 자신 프로필인지 확인 (골드, 은행, 숙련도 등이 있는지 확인)
-          const hasOwnProfile = section.textContent.includes('골드:') || 
-                                section.textContent.includes('은행:') || 
-                                section.textContent.includes('숙련도:');
-          
-          if (!hasOwnProfile) {
-            return; // 일반 프로필이면 스티커 추가하지 않음
-          }
+          // 일반 프로필 보기에서도 스티커를 표시하므로 이 체크는 제거
           
           // HP/MP 보너스 계산
           const hpMpBonus = this.calculateHpMpBonus(section);
