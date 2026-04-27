@@ -246,21 +246,7 @@ class FinalTagAdder {
     }
     
     tagRow.appendChild(tagSpan);
-    
-    // popover 내부 wrapper로 감싸기 (스카우터 적용 후에만 생성)
-    // wrapper가 이미 있으면 사용하고, 없으면 생성 (스카우터 적용 후 구조)
-    let wrapper = container.querySelector('.item-stats-wrapper');
-    if (!wrapper) {
-      // 스카우터 적용 후 구조: wrapper 생성
-      wrapper = document.createElement('div');
-      wrapper.className = 'item-stats-wrapper';
-      // 기존 컨텐츠를 wrapper로 이동
-      while (container.firstChild) {
-        wrapper.appendChild(container.firstChild);
-      }
-      container.appendChild(wrapper);
-    }
-    
+
     // 아이템 감정 정보 추가 후 팝오버 위치 재조정
     const popover = container.closest('.MuiPopover-root');
     if (popover) {

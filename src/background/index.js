@@ -30,13 +30,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     handleGetRecommenders(message, sendResponse);
     return true; // 비동기 응답을 위해 true 반환
   }
-  
-  // 이미지 업로드 처리
-  if (message.type === 'UPLOAD_IMAGE') {
-    handleImageUpload(message, sendResponse);
-    return true; // 비동기 응답을 위해 true 반환
-  }
-  
+
   // 기본 응답
   sendResponse({ success: false, error: '지원하지 않는 메시지 타입입니다.' });
   return false;
@@ -202,56 +196,3 @@ async function handleGetRecommenders(message, sendResponse) {
   }
 }
 
-// 이미지 업로드 처리
-async function handleImageUpload(message, sendResponse) {
-  try {
-    const { fileData } = message;
-    
-    // ArrayBuffer를 Blob으로 변환
-    const blob = new Blob([new Uint8Array(fileData.data)], { type: fileData.type });
-    const file = new File([blob], fileData.name, { type: fileData.type });
-    
-    // FormData 생성
-    const formData = new FormData();
-    formData.append('image', file);
-    
-    // API 호출 (background script는 CORS 제한 없음)
-    const response = await fetch('https://image.my/api/upload.php', {
-      method: 'POST',
-      headers: {
-        'X-API-SOURCE': 'lanis_helper'
-      },
-      body: formData
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-    }
-
-    const result = await response.json();
-    
-    console.log('IMAGE.MY API 응답:', result);
-    
-    if (result.success && result.data) {
-      sendResponse({
-        success: true,
-        data: result.data
-      });
-    } else {
-      // 에러 응답 처리
-      const errorMessage = result.error?.message || result.error || '업로드 실패';
-      console.error('IMAGE.MY API 에러:', errorMessage, result);
-      sendResponse({
-        success: false,
-        error: errorMessage
-      });
-    }
-    
-  } catch (error) {
-    sendResponse({ 
-      success: false, 
-      error: `이미지 업로드 실패: ${error.message}` 
-    });
-  }
-} 

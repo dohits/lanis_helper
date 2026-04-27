@@ -1,6 +1,6 @@
 {
   "name": "lanis_helper",
-  "version": "1.8.10",
+  "version": "1.8.11",
   "type": "module",
   "description": "> **본 확장 프로그램은 라니스 공식이 아닌 유저 비공식 확장입니다.**",
   "main": "background.js",
