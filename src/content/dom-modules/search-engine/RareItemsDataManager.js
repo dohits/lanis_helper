@@ -16,23 +16,39 @@ class RareItemsDataManager {
     return itemData || [];
   }
 
+  // 현재 확장 프로그램 버전 (manifest 기준)
+  getCurrentVersion() {
+    try {
+      return chrome.runtime.getManifest().version;
+    } catch (error) {
+      return null;
+    }
+  }
+
   // item-data.json에서 데이터 로드
   async loadRareItemsData() {
     try {
-      // 먼저 Chrome 스토리지에서 확인 (캐시된 데이터가 있으면 사용)
-      return new Promise(async (resolve) => {
-        chrome.storage.local.get(['rareItems', 'lastDataUpdate'], async (result) => {
-          if (result.rareItems && result.rareItems.length > 0) {
-            // 캐시된 데이터가 있으면 사용
+      const currentVersion = this.getCurrentVersion();
+      // 먼저 Chrome 스토리지에서 확인 (버전이 일치하는 캐시가 있으면 사용)
+      return new Promise((resolve) => {
+        chrome.storage.local.get(['rareItems', 'dataVersion'], (result) => {
+          // 캐시가 있고, 저장된 버전이 현재 버전과 같을 때만 캐시 사용
+          const cacheValid = result.rareItems
+            && result.rareItems.length > 0
+            && result.dataVersion === currentVersion;
+
+          if (cacheValid) {
+            // 캐시된 데이터가 최신 버전이면 사용
             this.rareItemsData = result.rareItems;
           } else {
-            // 캐시가 없으면 item-data.json에서 직접 로드
+            // 캐시가 없거나 버전이 바뀌었으면 item-data.json에서 재로드 (배포 시 즉시 반영)
             const loadedItemData = this.getItemDataFromFile();
             this.rareItemsData = loadedItemData || [];
-            
-            // Chrome 스토리지에 저장 (다음 로드 시 빠른 접근을 위해)
+
+            // 최신 데이터와 버전을 함께 저장 (다음 로드 시 빠른 접근을 위해)
             chrome.storage.local.set({
               rareItems: this.rareItemsData,
+              dataVersion: currentVersion,
               lastDataUpdate: Date.now()
             });
           }
@@ -63,9 +79,10 @@ class RareItemsDataManager {
       const items = this.getItemDataFromFile();
       
       if (items.length > 0) {
-        // Chrome 스토리지에 저장 (수집 시간 포함)
+        // Chrome 스토리지에 저장 (수집 시간 및 버전 포함)
         const saveData = {
           rareItems: items,
+          dataVersion: this.getCurrentVersion(),
           lastCrawlTime: now,
           lastDataUpdate: now,
           crawlCount: (existingData.crawlCount || 0) + 1

@@ -4779,5 +4779,3978 @@
     "attributes": [
       "빛"
     ]
+  },
+  {
+    "name": "객성",
+    "type": "무기",
+    "power_min": 283,
+    "power_max": 473,
+    "weight_min": 64,
+    "weight_max": 104,
+    "weapon_type": "창",
+    "abilities": [
+      "최후의 저항: HP가 0 이하로 떨어지는 공격을 받을 때, 1회에 한해 HP를 1로 유지한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "갤럭시아",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 444,
+    "weight_min": 62,
+    "weight_max": 100,
+    "weapon_type": "도끼",
+    "abilities": [
+      "저온: 빙결 상태의 상대에게 데미지가 20% 증가한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "거성의 검",
+    "type": "무기",
+    "power_min": 265,
+    "power_max": 458,
+    "weight_min": 58,
+    "weight_max": 94,
+    "weapon_type": "검",
+    "abilities": [
+      "마력 전환: 매 턴마다 MP를 최대치의 3% 추가 소모하여 데미지를 12% 증가시킨다. MP가 부족하면 발동하지 않는다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "게일 보우",
+    "type": "무기",
+    "power_min": 239,
+    "power_max": 401,
+    "weight_min": 25,
+    "weight_max": 46,
+    "weapon_type": "활",
+    "abilities": [
+      "선견지명: 상대가 스킬을 발동했을 때 해당 공격의 데미지를 15% 감소시킨다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "광인의 단도",
+    "type": "무기",
+    "power_min": 261,
+    "power_max": 444,
+    "weight_min": 31,
+    "weight_max": 52,
+    "weapon_type": "나이프",
+    "abilities": [
+      "잔류 에너지: 스킬 발동 후 다음 기본 공격의 데미지가 20% 증가한다. (1회 소모)"
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "그림자의 암인",
+    "type": "무기",
+    "power_min": 260,
+    "power_max": 445,
+    "weight_min": 34,
+    "weight_max": 56,
+    "weapon_type": "나이프",
+    "abilities": [
+      "약육강식: 자신의 기본 공격력이 상대보다 높을 때 데미지가 10% 증가한다. 낮을 때는 5% 감소한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "극광의 완드",
+    "type": "무기",
+    "power_min": 284,
+    "power_max": 487,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "과부하: 스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "글래셔 너클",
+    "type": "무기",
+    "power_min": 244,
+    "power_max": 415,
+    "weight_min": 26,
+    "weight_max": 46,
+    "weapon_type": "너클",
+    "abilities": [
+      "보복: 상태이상에 걸릴 때마다 3턴간 공격력이 6% 증가한다. (최대 3중첩, 18%)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "나락의 암극",
+    "type": "무기",
+    "power_min": 293,
+    "power_max": 491,
+    "weight_min": 63,
+    "weight_max": 102,
+    "weapon_type": "창",
+    "abilities": [
+      "연속 타격: 매 기본 공격마다 10% 확률로 동일한 공격을 한 번 더 수행한다. (스킬 발동 시에는 발동하지 않음)"
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "네크로스",
+    "type": "무기",
+    "power_min": 254,
+    "power_max": 434,
+    "weight_min": 34,
+    "weight_max": 58,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "흡수 갑옷: 받는 데미지의 5%를 MP로 전환하여 회복한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "노바 피스트",
+    "type": "무기",
+    "power_min": 249,
+    "power_max": 424,
+    "weight_min": 28,
+    "weight_max": 50,
+    "weapon_type": "너클",
+    "abilities": [
+      "기세: 연속으로 공격을 맞출 때마다 데미지가 3%씩 증가한다. (최대 5중첩, 15%. 회피/블록 당하면 초기화)"
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "뇌룡의 전극",
+    "type": "무기",
+    "power_min": 283,
+    "power_max": 473,
+    "weight_min": 63,
+    "weight_max": 102,
+    "weapon_type": "창",
+    "abilities": [
+      "철혈: 한 번의 공격으로 최대 HP의 10% 이상 데미지를 받으면, 초과분의 50%를 감소시킨다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "뇌명의 번개장",
+    "type": "무기",
+    "power_min": 285,
+    "power_max": 489,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "영혼 공명: 스킬 발동 시 12% 확률로 MP 소모 없이 발동한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "뇌섬의 극검",
+    "type": "무기",
+    "power_min": 259,
+    "power_max": 444,
+    "weight_min": 55,
+    "weight_max": 90,
+    "weapon_type": "검",
+    "abilities": [
+      "정적: 자신에게 상태이상이 걸려있지 않을 때 데미지가 10% 증가한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "뇌섬의 인도",
+    "type": "무기",
+    "power_min": 265,
+    "power_max": 454,
+    "weight_min": 34,
+    "weight_max": 56,
+    "weapon_type": "나이프",
+    "abilities": [
+      "쇠약: 매 공격마다 12% 확률로 3턴간 상대의 공격 속도를 30 감소시킨다. (중첩 가능)"
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "뇌신의 천둥극",
+    "type": "무기",
+    "power_min": 293,
+    "power_max": 493,
+    "weight_min": 60,
+    "weight_max": 98,
+    "weapon_type": "창",
+    "abilities": [
+      "전환: 물리 데미지의 25%를 추가로 마법 데미지로 전환하여 적중시킨다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "뇌왕의 천둥부",
+    "type": "무기",
+    "power_min": 281,
+    "power_max": 481,
+    "weight_min": 64,
+    "weight_max": 104,
+    "weapon_type": "도끼",
+    "abilities": [
+      "피의 맹약: 전투 시작 시 최대 HP의 20%를 소모하고, 전투 동안 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "뇌우의 섬궁",
+    "type": "무기",
+    "power_min": 273,
+    "power_max": 458,
+    "weight_min": 41,
+    "weight_max": 66,
+    "weapon_type": "활",
+    "abilities": [
+      "생명력 착취: 상대에게 상태이상이 걸려있을 때 매 공격마다 20% 확률로 데미지의 50%만큼 HP를 회복한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "뇌전의 격권",
+    "type": "무기",
+    "power_min": 276,
+    "power_max": 470,
+    "weight_min": 39,
+    "weight_max": 64,
+    "weapon_type": "너클",
+    "abilities": [
+      "폭주: 자신의 HP가 50% 이하일 때 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "뇌제의 번개검",
+    "type": "무기",
+    "power_min": 262,
+    "power_max": 453,
+    "weight_min": 54,
+    "weight_max": 88,
+    "weapon_type": "검",
+    "abilities": [
+      "연속 타격: 매 기본 공격마다 10% 확률로 동일한 공격을 한 번 더 수행한다. (스킬 발동 시에는 발동하지 않음)"
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "대기의 풍장",
+    "type": "무기",
+    "power_min": 277,
+    "power_max": 476,
+    "weight_min": 42,
+    "weight_max": 68,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "도박사의 주사위: 매 공격마다 데미지가 -30%~+50% 사이에서 랜덤으로 변동한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "데스 아처",
+    "type": "무기",
+    "power_min": 246,
+    "power_max": 414,
+    "weight_min": 30,
+    "weight_max": 54,
+    "weapon_type": "활",
+    "abilities": [
+      "정신 오염: 상대의 스킬 발동 확률을 30% 감소시킨다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "데스 엣지",
+    "type": "무기",
+    "power_min": 228,
+    "power_max": 391,
+    "weight_min": 23,
+    "weight_max": 42,
+    "weapon_type": "나이프",
+    "abilities": [
+      "잔류 에너지: 스킬 발동 후 다음 기본 공격의 데미지가 20% 증가한다. (1회 소모)"
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "동해의 빙권",
+    "type": "무기",
+    "power_min": 274,
+    "power_max": 467,
+    "weight_min": 37,
+    "weight_max": 60,
+    "weapon_type": "너클",
+    "abilities": [
+      "쇠약: 매 공격마다 12% 확률로 3턴간 상대의 공격 속도를 30 감소시킨다. (중첩 가능)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "듀라한",
+    "type": "무기",
+    "power_min": 261,
+    "power_max": 442,
+    "weight_min": 60,
+    "weight_max": 98,
+    "weapon_type": "도끼",
+    "abilities": [
+      "전투 적응: 매 4턴마다 받는 데미지가 3%씩 감소한다. (최대 15%, 20턴)"
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "라바 슈터",
+    "type": "무기",
+    "power_min": 243,
+    "power_max": 409,
+    "weight_min": 28,
+    "weight_max": 50,
+    "weapon_type": "활",
+    "abilities": [
+      "연속 타격: 매 기본 공격마다 10% 확률로 동일한 공격을 한 번 더 수행한다. (스킬 발동 시에는 발동하지 않음)"
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "라이즈",
+    "type": "무기",
+    "power_min": 243,
+    "power_max": 414,
+    "weight_min": 48,
+    "weight_max": 78,
+    "weapon_type": "검",
+    "abilities": [
+      "급조 보호막: 첫 턴에 받는 데미지를 25% 경감한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "라이트닝",
+    "type": "무기",
+    "power_min": 261,
+    "power_max": 431,
+    "weight_min": 51,
+    "weight_max": 84,
+    "weapon_type": "창",
+    "abilities": [
+      "마력 전환: 매 턴마다 MP를 최대치의 3% 추가 소모하여 데미지를 12% 증가시킨다. MP가 부족하면 발동하지 않는다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "레디언트",
+    "type": "무기",
+    "power_min": 245,
+    "power_max": 417,
+    "weight_min": 45,
+    "weight_max": 74,
+    "weapon_type": "검",
+    "abilities": [
+      "연속 타격: 매 기본 공격마다 10% 확률로 동일한 공격을 한 번 더 수행한다. (스킬 발동 시에는 발동하지 않음)"
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "레비아탄",
+    "type": "무기",
+    "power_min": 238,
+    "power_max": 403,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "검",
+    "abilities": [
+      "저온: 빙결 상태의 상대에게 데미지가 20% 증가한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "레퀴엠",
+    "type": "무기",
+    "power_min": 261,
+    "power_max": 441,
+    "weight_min": 60,
+    "weight_max": 98,
+    "weapon_type": "도끼",
+    "abilities": [
+      "폭주: 자신의 HP가 50% 이하일 때 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "루미나스",
+    "type": "무기",
+    "power_min": 227,
+    "power_max": 387,
+    "weight_min": 20,
+    "weight_max": 38,
+    "weapon_type": "나이프",
+    "abilities": [
+      "최후의 저항: HP가 0 이하로 떨어지는 공격을 받을 때, 1회에 한해 HP를 1로 유지한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "마그마 보우",
+    "type": "무기",
+    "power_min": 242,
+    "power_max": 407,
+    "weight_min": 30,
+    "weight_max": 54,
+    "weapon_type": "활",
+    "abilities": [
+      "상태이상 공명: 상대에게 상태이상이 2개 이상 걸려있을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "매그너스",
+    "type": "무기",
+    "power_min": 257,
+    "power_max": 434,
+    "weight_min": 60,
+    "weight_max": 98,
+    "weapon_type": "도끼",
+    "abilities": [
+      "최후의 저항: HP가 0 이하로 떨어지는 공격을 받을 때, 1회에 한해 HP를 1로 유지한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "매그넷 액스",
+    "type": "무기",
+    "power_min": 255,
+    "power_max": 432,
+    "weight_min": 60,
+    "weight_max": 98,
+    "weapon_type": "도끼",
+    "abilities": [
+      "전투 적응: 매 4턴마다 받는 데미지가 3%씩 감소한다. (최대 15%, 20턴)"
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "메테오 아처",
+    "type": "무기",
+    "power_min": 248,
+    "power_max": 417,
+    "weight_min": 31,
+    "weight_max": 56,
+    "weapon_type": "활",
+    "abilities": [
+      "과부하: 스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "명계의 암장",
+    "type": "무기",
+    "power_min": 276,
+    "power_max": 474,
+    "weight_min": 47,
+    "weight_max": 76,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "급조 보호막: 첫 턴에 받는 데미지를 25% 경감한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "명암의 암궁",
+    "type": "무기",
+    "power_min": 279,
+    "power_max": 471,
+    "weight_min": 42,
+    "weight_max": 68,
+    "weapon_type": "활",
+    "abilities": [
+      "도박사의 주사위: 매 공격마다 데미지가 -30%~+50% 사이에서 랜덤으로 변동한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "물결의 심해극",
+    "type": "무기",
+    "power_min": 288,
+    "power_max": 482,
+    "weight_min": 62,
+    "weight_max": 100,
+    "weapon_type": "창",
+    "abilities": [
+      "영혼 공명: 스킬 발동 시 12% 확률로 MP 소모 없이 발동한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "바람타는 권갑",
+    "type": "무기",
+    "power_min": 274,
+    "power_max": 467,
+    "weight_min": 34,
+    "weight_max": 56,
+    "weapon_type": "너클",
+    "abilities": [
+      "도박사의 룰렛: 매 턴 시작 시 10% 확률로 상대에게 랜덤 상태이상 1개를 부여한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "반짝거리는 완드",
+    "type": "무기",
+    "power_min": 278,
+    "power_max": 477,
+    "weight_min": 46,
+    "weight_max": 76,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "거울상: 전투 시작 시 상대의 아이템 어빌리티 중 하나를 복사하여 자신에게 적용한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "발키리의 철창",
+    "type": "무기",
+    "power_min": 259,
+    "power_max": 427,
+    "weight_min": 49,
+    "weight_max": 80,
+    "weapon_type": "창",
+    "abilities": [
+      "전환: 물리 데미지의 25%를 추가로 마법 데미지로 전환하여 적중시킨다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "버닝 너클",
+    "type": "무기",
+    "power_min": 245,
+    "power_max": 416,
+    "weight_min": 25,
+    "weight_max": 45,
+    "weapon_type": "너클",
+    "abilities": [
+      "약육강식: 자신의 기본 공격력이 상대보다 높을 때 데미지가 10% 증가한다. 낮을 때는 5% 감소한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "번개치는 권갑",
+    "type": "무기",
+    "power_min": 280,
+    "power_max": 477,
+    "weight_min": 38,
+    "weight_max": 62,
+    "weapon_type": "너클",
+    "abilities": [
+      "상태이상 공명: 상대에게 상태이상이 2개 이상 걸려있을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "벨리알",
+    "type": "무기",
+    "power_min": 241,
+    "power_max": 412,
+    "weight_min": 46,
+    "weight_max": 76,
+    "weapon_type": "검",
+    "abilities": [
+      "피의 맹약: 전투 시작 시 최대 HP의 20%를 소모하고, 전투 동안 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "별빛의 유성도",
+    "type": "무기",
+    "power_min": 260,
+    "power_max": 445,
+    "weight_min": 36,
+    "weight_max": 60,
+    "weapon_type": "나이프",
+    "abilities": [
+      "쇠약: 매 공격마다 12% 확률로 3턴간 상대의 공격 속도를 30 감소시킨다. (중첩 가능)"
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "볼텍스 랜스",
+    "type": "무기",
+    "power_min": 264,
+    "power_max": 438,
+    "weight_min": 54,
+    "weight_max": 88,
+    "weapon_type": "창",
+    "abilities": [
+      "약육강식: 자신의 기본 공격력이 상대보다 높을 때 데미지가 10% 증가한다. 낮을 때는 5% 감소한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "볼트 아처",
+    "type": "무기",
+    "power_min": 244,
+    "power_max": 411,
+    "weight_min": 29,
+    "weight_max": 52,
+    "weapon_type": "활",
+    "abilities": [
+      "도박사의 룰렛: 매 턴 시작 시 10% 확률로 상대에게 랜덤 상태이상 1개를 부여한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "브리즈 너클",
+    "type": "무기",
+    "power_min": 247,
+    "power_max": 408,
+    "weight_min": 22,
+    "weight_max": 40,
+    "weapon_type": "너클",
+    "abilities": [
+      "생명력 착취: 상대에게 상태이상이 걸려있을 때 매 공격마다 20% 확률로 데미지의 50%만큼 HP를 회복한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "브리즈 로드",
+    "type": "무기",
+    "power_min": 251,
+    "power_max": 429,
+    "weight_min": 30,
+    "weight_max": 52,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "마력 전환: 매 턴마다 MP를 최대치의 3% 추가 소모하여 데미지를 12% 증가시킨다. MP가 부족하면 발동하지 않는다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "블레이즈 대거",
+    "type": "무기",
+    "power_min": 228,
+    "power_max": 391,
+    "weight_min": 23,
+    "weight_max": 42,
+    "weapon_type": "나이프",
+    "abilities": [
+      "역천: 상대보다 HP 비율이 20% 이상 낮을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "비연의 풍도",
+    "type": "무기",
+    "power_min": 261,
+    "power_max": 444,
+    "weight_min": 30,
+    "weight_max": 50,
+    "weapon_type": "나이프",
+    "abilities": [
+      "거울상: 전투 시작 시 상대의 아이템 어빌리티 중 하나를 복사하여 자신에게 적용한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "빙벽의 쇄빙부",
+    "type": "무기",
+    "power_min": 276,
+    "power_max": 470,
+    "weight_min": 64,
+    "weight_max": 104,
+    "weapon_type": "도끼",
+    "abilities": [
+      "속성 증폭: 속성 상성 유리 시 추가 데미지가 25% 증가한다. 불리 시 받는 추가 데미지도 10% 증가한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "빙제의 한검",
+    "type": "무기",
+    "power_min": 253,
+    "power_max": 432,
+    "weight_min": 55,
+    "weight_max": 90,
+    "weapon_type": "검",
+    "abilities": [
+      "최후의 저항: HP가 0 이하로 떨어지는 공격을 받을 때, 1회에 한해 HP를 1로 유지한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "빙하 쇄도",
+    "type": "무기",
+    "power_min": 276,
+    "power_max": 473,
+    "weight_min": 63,
+    "weight_max": 102,
+    "weapon_type": "도끼",
+    "abilities": [
+      "최후의 저항: HP가 0 이하로 떨어지는 공격을 받을 때, 1회에 한해 HP를 1로 유지한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "빙하의 수장",
+    "type": "무기",
+    "power_min": 274,
+    "power_max": 472,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "급조 보호막: 첫 턴에 받는 데미지를 25% 경감한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "빙화의 한궁",
+    "type": "무기",
+    "power_min": 275,
+    "power_max": 461,
+    "weight_min": 38,
+    "weight_max": 62,
+    "weapon_type": "활",
+    "abilities": [
+      "선견지명: 상대가 스킬을 발동했을 때 해당 공격의 데미지를 15% 감소시킨다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "빛결의 성도",
+    "type": "무기",
+    "power_min": 258,
+    "power_max": 442,
+    "weight_min": 33,
+    "weight_max": 54,
+    "weapon_type": "나이프",
+    "abilities": [
+      "도박사의 룰렛: 매 턴 시작 시 10% 확률로 상대에게 랜덤 상태이상 1개를 부여한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "빛나는 성무갑",
+    "type": "무기",
+    "power_min": 278,
+    "power_max": 473,
+    "weight_min": 37,
+    "weight_max": 60,
+    "weapon_type": "너클",
+    "abilities": [
+      "거울상: 전투 시작 시 상대의 아이템 어빌리티 중 하나를 복사하여 자신에게 적용한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "빛의 파편",
+    "type": "무기",
+    "power_min": 276,
+    "power_max": 470,
+    "weight_min": 64,
+    "weight_max": 104,
+    "weapon_type": "도끼",
+    "abilities": [
+      "생명력 착취: 상대에게 상태이상이 걸려있을 때 매 공격마다 20% 확률로 데미지의 50%만큼 HP를 회복한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "사이클론",
+    "type": "무기",
+    "power_min": 253,
+    "power_max": 430,
+    "weight_min": 55,
+    "weight_max": 90,
+    "weapon_type": "도끼",
+    "abilities": [
+      "보복: 상태이상에 걸릴 때마다 3턴간 공격력이 6% 증가한다. (최대 3중첩, 18%)"
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "살라만더",
+    "type": "무기",
+    "power_min": 250,
+    "power_max": 429,
+    "weight_min": 32,
+    "weight_max": 55,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "영혼 공명: 스킬 발동 시 12% 확률로 MP 소모 없이 발동한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "서지 보우",
+    "type": "무기",
+    "power_min": 244,
+    "power_max": 411,
+    "weight_min": 30,
+    "weight_max": 54,
+    "weapon_type": "활",
+    "abilities": [
+      "역천: 상대보다 HP 비율이 20% 이상 낮을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "선 크래셔",
+    "type": "무기",
+    "power_min": 259,
+    "power_max": 438,
+    "weight_min": 58,
+    "weight_max": 96,
+    "weapon_type": "도끼",
+    "abilities": [
+      "폭주: 자신의 HP가 50% 이하일 때 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "선풍의 돌극",
+    "type": "무기",
+    "power_min": 287,
+    "power_max": 483,
+    "weight_min": 56,
+    "weight_max": 92,
+    "weapon_type": "창",
+    "abilities": [
+      "급조 보호막: 첫 턴에 받는 데미지를 25% 경감한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "선풍의 풍도",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 451,
+    "weight_min": 31,
+    "weight_max": 52,
+    "weapon_type": "나이프",
+    "abilities": [
+      "과부하: 스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "성검의 빛날검",
+    "type": "무기",
+    "power_min": 258,
+    "power_max": 441,
+    "weight_min": 54,
+    "weight_max": 88,
+    "weapon_type": "검",
+    "abilities": [
+      "속성 증폭: 속성 상성 유리 시 추가 데미지가 25% 증가한다. 불리 시 받는 추가 데미지도 10% 증가한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성광의 심판검",
+    "type": "무기",
+    "power_min": 260,
+    "power_max": 449,
+    "weight_min": 53,
+    "weight_max": 86,
+    "weapon_type": "검",
+    "abilities": [
+      "철혈: 한 번의 공격으로 최대 HP의 10% 이상 데미지를 받으면, 초과분의 50%를 감소시킨다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성광의 천극",
+    "type": "무기",
+    "power_min": 292,
+    "power_max": 487,
+    "weight_min": 60,
+    "weight_max": 98,
+    "weapon_type": "창",
+    "abilities": [
+      "피의 맹약: 전투 시작 시 최대 HP의 20%를 소모하고, 전투 동안 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성령의 신장",
+    "type": "무기",
+    "power_min": 283,
+    "power_max": 486,
+    "weight_min": 43,
+    "weight_max": 70,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "영혼 공명: 스킬 발동 시 12% 확률로 MP 소모 없이 발동한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성무의 광권",
+    "type": "무기",
+    "power_min": 274,
+    "power_max": 467,
+    "weight_min": 38,
+    "weight_max": 62,
+    "weapon_type": "너클",
+    "abilities": [
+      "역천: 상대보다 HP 비율이 20% 이상 낮을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성무의 별권",
+    "type": "무기",
+    "power_min": 276,
+    "power_max": 470,
+    "weight_min": 42,
+    "weight_max": 68,
+    "weapon_type": "너클",
+    "abilities": [
+      "약육강식: 자신의 기본 공격력이 상대보다 높을 때 데미지가 10% 증가한다. 낮을 때는 5% 감소한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "성스러운 석궁",
+    "type": "무기",
+    "power_min": 242,
+    "power_max": 407,
+    "weight_min": 29,
+    "weight_max": 52,
+    "weapon_type": "활",
+    "abilities": [
+      "기세: 연속으로 공격을 맞출 때마다 데미지가 3%씩 증가한다. (최대 5중첩, 15%. 회피/블록 당하면 초기화)"
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성운의 멸성검",
+    "type": "무기",
+    "power_min": 255,
+    "power_max": 438,
+    "weight_min": 59,
+    "weight_max": 96,
+    "weapon_type": "검",
+    "abilities": [
+      "급조 보호막: 첫 턴에 받는 데미지를 25% 경감한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "성재의 심판부",
+    "type": "무기",
+    "power_min": 277,
+    "power_max": 475,
+    "weight_min": 63,
+    "weight_max": 102,
+    "weapon_type": "도끼",
+    "abilities": [
+      "전투 적응: 매 4턴마다 받는 데미지가 3%씩 감소한다. (최대 15%, 20턴)"
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성좌의 별장",
+    "type": "무기",
+    "power_min": 289,
+    "power_max": 495,
+    "weight_min": 47,
+    "weight_max": 76,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "잔류 에너지: 스킬 발동 후 다음 기본 공격의 데미지가 20% 증가한다. (1회 소모)"
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "성좌의 은하장",
+    "type": "무기",
+    "power_min": 278,
+    "power_max": 477,
+    "weight_min": 48,
+    "weight_max": 78,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "거울상: 전투 시작 시 상대의 아이템 어빌리티 중 하나를 복사하여 자신에게 적용한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "성흔의 유성도",
+    "type": "무기",
+    "power_min": 265,
+    "power_max": 454,
+    "weight_min": 35,
+    "weight_max": 58,
+    "weapon_type": "나이프",
+    "abilities": [
+      "도박사의 주사위: 매 공격마다 데미지가 -30%~+50% 사이에서 랜덤으로 변동한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "세라프 너클",
+    "type": "무기",
+    "power_min": 245,
+    "power_max": 414,
+    "weight_min": 24,
+    "weight_max": 44,
+    "weapon_type": "너클",
+    "abilities": [
+      "급조 보호막: 첫 턴에 받는 데미지를 25% 경감한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "세인트 로드",
+    "type": "무기",
+    "power_min": 245,
+    "power_max": 418,
+    "weight_min": 32,
+    "weight_max": 56,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "선견지명: 상대가 스킬을 발동했을 때 해당 공격의 데미지를 15% 감소시킨다"
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "셀레스티얼",
+    "type": "무기",
+    "power_min": 264,
+    "power_max": 438,
+    "weight_min": 55,
+    "weight_max": 90,
+    "weapon_type": "창",
+    "abilities": [
+      "약육강식: 자신의 기본 공격력이 상대보다 높을 때 데미지가 10% 증가한다. 낮을 때는 5% 감소한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "소울 리퍼",
+    "type": "무기",
+    "power_min": 231,
+    "power_max": 392,
+    "weight_min": 22,
+    "weight_max": 40,
+    "weapon_type": "나이프",
+    "abilities": [
+      "생명력 착취: 상대에게 상태이상이 걸려있을 때 매 공격마다 20% 확률로 데미지의 50%만큼 HP를 회복한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "솔바람의 풍권",
+    "type": "무기",
+    "power_min": 269,
+    "power_max": 457,
+    "weight_min": 36,
+    "weight_max": 58,
+    "weapon_type": "너클",
+    "abilities": [
+      "철혈: 한 번의 공격으로 최대 HP의 10% 이상 데미지를 받으면, 초과분의 50%를 감소시킨다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "수면의 잔파도",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 451,
+    "weight_min": 32,
+    "weight_max": 54,
+    "weapon_type": "나이프",
+    "abilities": [
+      "연속 타격: 매 기본 공격마다 10% 확률로 동일한 공격을 한 번 더 수행한다. (스킬 발동 시에는 발동하지 않음)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "쉐도우 크로",
+    "type": "무기",
+    "power_min": 248,
+    "power_max": 423,
+    "weight_min": 27,
+    "weight_max": 48,
+    "weapon_type": "너클",
+    "abilities": [
+      "마력 전환: 매 턴마다 MP를 최대치의 3% 추가 소모하여 데미지를 12% 증가시킨다. MP가 부족하면 발동하지 않는다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "스카이피어서",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 438,
+    "weight_min": 50,
+    "weight_max": 82,
+    "weapon_type": "창",
+    "abilities": [
+      "마력 전환: 매 턴마다 MP를 최대치의 3% 추가 소모하여 데미지를 12% 증가시킨다. MP가 부족하면 발동하지 않는다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "스타 블레이드",
+    "type": "무기",
+    "power_min": 230,
+    "power_max": 393,
+    "weight_min": 24,
+    "weight_max": 44,
+    "weapon_type": "나이프",
+    "abilities": [
+      "역천: 상대보다 HP 비율이 20% 이상 낮을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "스타더스트",
+    "type": "무기",
+    "power_min": 246,
+    "power_max": 414,
+    "weight_min": 32,
+    "weight_max": 58,
+    "weapon_type": "활",
+    "abilities": [
+      "상태이상 공명: 상대에게 상태이상이 2개 이상 걸려있을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "스텔라 랜스",
+    "type": "무기",
+    "power_min": 265,
+    "power_max": 437,
+    "weight_min": 54,
+    "weight_max": 88,
+    "weapon_type": "창",
+    "abilities": [
+      "적응형 갑옷: 매 턴마다 상대의 물리/마법 관통 효과가 20%씩 감소한다. (곱연산)"
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "스텔라 소드",
+    "type": "무기",
+    "power_min": 248,
+    "power_max": 423,
+    "weight_min": 49,
+    "weight_max": 80,
+    "weapon_type": "검",
+    "abilities": [
+      "연속 타격: 매 기본 공격마다 10% 확률로 동일한 공격을 한 번 더 수행한다. (스킬 발동 시에는 발동하지 않음)"
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "스파크 피스트",
+    "type": "무기",
+    "power_min": 247,
+    "power_max": 418,
+    "weight_min": 26,
+    "weight_max": 46,
+    "weapon_type": "너클",
+    "abilities": [
+      "보복: 상태이상에 걸릴 때마다 3턴간 공격력이 6% 증가한다. (최대 3중첩, 18%)"
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "신광의 빛극",
+    "type": "무기",
+    "power_min": 289,
+    "power_max": 487,
+    "weight_min": 58,
+    "weight_max": 96,
+    "weapon_type": "창",
+    "abilities": [
+      "기세: 연속으로 공격을 맞출 때마다 데미지가 3%씩 증가한다. (최대 5중첩, 15%. 회피/블록 당하면 초기화)"
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "신궁의 성궁",
+    "type": "무기",
+    "power_min": 275,
+    "power_max": 460,
+    "weight_min": 40,
+    "weight_max": 66,
+    "weapon_type": "활",
+    "abilities": [
+      "마력 전환: 매 턴마다 MP를 최대치의 3% 추가 소모하여 데미지를 12% 증가시킨다. MP가 부족하면 발동하지 않는다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "실피드",
+    "type": "무기",
+    "power_min": 236,
+    "power_max": 401,
+    "weight_min": 42,
+    "weight_max": 68,
+    "weapon_type": "검",
+    "abilities": [
+      "연속 타격: 매 기본 공격마다 10% 확률로 동일한 공격을 한 번 더 수행한다. (스킬 발동 시에는 발동하지 않음)"
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "심연의 파멸부",
+    "type": "무기",
+    "power_min": 278,
+    "power_max": 472,
+    "weight_min": 65,
+    "weight_max": 106,
+    "weapon_type": "도끼",
+    "abilities": [
+      "속성 증폭: 속성 상성 유리 시 추가 데미지가 25% 증가한다. 불리 시 받는 추가 데미지도 10% 증가한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "심연의 흑극",
+    "type": "무기",
+    "power_min": 293,
+    "power_max": 495,
+    "weight_min": 62,
+    "weight_max": 100,
+    "weapon_type": "창",
+    "abilities": [
+      "상태이상 공명: 상대에게 상태이상이 2개 이상 걸려있을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "심해의 마장",
+    "type": "무기",
+    "power_min": 281,
+    "power_max": 483,
+    "weight_min": 41,
+    "weight_max": 68,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "거울상: 전투 시작 시 상대의 아이템 어빌리티 중 하나를 복사하여 자신에게 적용한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "쌍룡의 해극",
+    "type": "무기",
+    "power_min": 291,
+    "power_max": 490,
+    "weight_min": 60,
+    "weight_max": 98,
+    "weapon_type": "창",
+    "abilities": [
+      "적응형 갑옷: 매 턴마다 상대의 물리/마법 관통 효과가 20%씩 감소한다. (곱연산)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "쓰나미 엣지",
+    "type": "무기",
+    "power_min": 255,
+    "power_max": 432,
+    "weight_min": 56,
+    "weight_max": 92,
+    "weapon_type": "도끼",
+    "abilities": [
+      "약육강식: 자신의 기본 공격력이 상대보다 높을 때 데미지가 10% 증가한다. 낮을 때는 5% 감소한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "아발란체",
+    "type": "무기",
+    "power_min": 259,
+    "power_max": 438,
+    "weight_min": 58,
+    "weight_max": 94,
+    "weapon_type": "도끼",
+    "abilities": [
+      "폭주: 자신의 HP가 50% 이하일 때 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "아비돈",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 434,
+    "weight_min": 53,
+    "weight_max": 86,
+    "weapon_type": "창",
+    "abilities": [
+      "쇠약: 매 공격마다 12% 확률로 3턴간 상대의 공격 속도를 30 감소시킨다. (중첩 가능)"
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "아스트랄",
+    "type": "무기",
+    "power_min": 232,
+    "power_max": 394,
+    "weight_min": 23,
+    "weight_max": 42,
+    "weapon_type": "나이프",
+    "abilities": [
+      "선견지명: 상대가 스킬을 발동했을 때 해당 공격의 데미지를 15% 감소시킨다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "아스트럴 너클",
+    "type": "무기",
+    "power_min": 245,
+    "power_max": 418,
+    "weight_min": 29,
+    "weight_max": 52,
+    "weapon_type": "너클",
+    "abilities": [
+      "전환: 물리 데미지의 25%를 추가로 마법 데미지로 전환하여 적중시킨다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "아스트레아",
+    "type": "무기",
+    "power_min": 250,
+    "power_max": 427,
+    "weight_min": 31,
+    "weight_max": 54,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "공명기: 같은 속성의 방어구와 무기를 장착하고 있을 때 데미지가 8% 증가한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "아이스 셰이드",
+    "type": "무기",
+    "power_min": 229,
+    "power_max": 389,
+    "weight_min": 20,
+    "weight_max": 38,
+    "weapon_type": "나이프",
+    "abilities": [
+      "정신 오염: 상대의 스킬 발동 확률을 30% 감소시킨다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "아이스 팽",
+    "type": "무기",
+    "power_min": 226,
+    "power_max": 388,
+    "weight_min": 22,
+    "weight_max": 40,
+    "weapon_type": "나이프",
+    "abilities": [
+      "도박사의 주사위: 매 공격마다 데미지가 -30%~+50% 사이에서 랜덤으로 변동한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "아이스크라운",
+    "type": "무기",
+    "power_min": 248,
+    "power_max": 424,
+    "weight_min": 31,
+    "weight_max": 54,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "정적: 자신에게 상태이상이 걸려있지 않을 때 데미지가 10% 증가한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "아쿠아리우스",
+    "type": "무기",
+    "power_min": 241,
+    "power_max": 414,
+    "weight_min": 46,
+    "weight_max": 76,
+    "weapon_type": "검",
+    "abilities": [
+      "전환: 물리 데미지의 25%를 추가로 마법 데미지로 전환하여 적중시킨다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "악룡의 정수",
+    "type": "무기",
+    "power_min": 287,
+    "power_max": 492,
+    "weight_min": 45,
+    "weight_max": 74,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "과부하: 스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "암야의 흑권",
+    "type": "무기",
+    "power_min": 274,
+    "power_max": 467,
+    "weight_min": 39,
+    "weight_max": 64,
+    "weapon_type": "너클",
+    "abilities": [
+      "기세: 연속으로 공격을 맞출 때마다 데미지가 3%씩 증가한다. (최대 5중첩, 15%. 회피/블록 당하면 초기화)"
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "암흑의 나락검",
+    "type": "무기",
+    "power_min": 264,
+    "power_max": 455,
+    "weight_min": 56,
+    "weight_max": 92,
+    "weapon_type": "검",
+    "abilities": [
+      "약육강식: 자신의 기본 공격력이 상대보다 높을 때 데미지가 10% 증가한다. 낮을 때는 5% 감소한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "암흑의 파멸검",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 450,
+    "weight_min": 56,
+    "weight_max": 92,
+    "weapon_type": "검",
+    "abilities": [
+      "연속 타격: 매 기본 공격마다 10% 확률로 동일한 공격을 한 번 더 수행한다. (스킬 발동 시에는 발동하지 않음)"
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "애쉬 블레이드",
+    "type": "무기",
+    "power_min": 232,
+    "power_max": 394,
+    "weight_min": 22,
+    "weight_max": 40,
+    "weapon_type": "나이프",
+    "abilities": [
+      "쇠약: 매 공격마다 12% 확률로 3턴간 상대의 공격 속도를 30 감소시킨다. (중첩 가능)"
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "야경의 흑궁",
+    "type": "무기",
+    "power_min": 273,
+    "power_max": 458,
+    "weight_min": 42,
+    "weight_max": 68,
+    "weapon_type": "활",
+    "abilities": [
+      "속성 증폭: 속성 상성 유리 시 추가 데미지가 25% 증가한다. 불리 시 받는 추가 데미지도 10% 증가한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "야차의 저주도",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 450,
+    "weight_min": 32,
+    "weight_max": 54,
+    "weapon_type": "나이프",
+    "abilities": [
+      "도박사의 룰렛: 매 턴 시작 시 10% 확률로 상대에게 랜덤 상태이상 1개를 부여한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "어둠삼킨 권갑",
+    "type": "무기",
+    "power_min": 282,
+    "power_max": 480,
+    "weight_min": 39,
+    "weight_max": 64,
+    "weapon_type": "너클",
+    "abilities": [
+      "폭주: 자신의 HP가 50% 이하일 때 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "얼어붙은 권갑",
+    "type": "무기",
+    "power_min": 276,
+    "power_max": 470,
+    "weight_min": 35,
+    "weight_max": 58,
+    "weapon_type": "너클",
+    "abilities": [
+      "전투 적응: 매 4턴마다 받는 데미지가 3%씩 감소한다. (최대 15%, 20턴)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "에레버스",
+    "type": "무기",
+    "power_min": 255,
+    "power_max": 435,
+    "weight_min": 35,
+    "weight_max": 60,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "마력 전환: 매 턴마다 MP를 최대치의 3% 추가 소모하여 데미지를 12% 증가시킨다. MP가 부족하면 발동하지 않는다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "에어로 랜스",
+    "type": "무기",
+    "power_min": 255,
+    "power_max": 422,
+    "weight_min": 48,
+    "weight_max": 78,
+    "weapon_type": "창",
+    "abilities": [
+      "전투 적응: 매 4턴마다 받는 데미지가 3%씩 감소한다. (최대 15%, 20턴)"
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "에어리얼",
+    "type": "무기",
+    "power_min": 246,
+    "power_max": 421,
+    "weight_min": 28,
+    "weight_max": 50,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "잔류 에너지: 스킬 발동 후 다음 기본 공격의 데미지가 20% 증가한다. (1회 소모)"
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "에어스트라이크",
+    "type": "무기",
+    "power_min": 243,
+    "power_max": 409,
+    "weight_min": 26,
+    "weight_max": 48,
+    "weapon_type": "활",
+    "abilities": [
+      "과부하: 스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "에어커터",
+    "type": "무기",
+    "power_min": 226,
+    "power_max": 388,
+    "weight_min": 20,
+    "weight_max": 38,
+    "weapon_type": "나이프",
+    "abilities": [
+      "상태이상 공명: 상대에게 상태이상이 2개 이상 걸려있을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "에테르의 공명",
+    "type": "무기",
+    "power_min": 256,
+    "power_max": 437,
+    "weight_min": 35,
+    "weight_max": 60,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "공명기: 같은 속성의 방어구와 무기를 장착하고 있을 때 데미지가 8% 증가한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "엑스칼리온",
+    "type": "무기",
+    "power_min": 240,
+    "power_max": 406,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "검",
+    "abilities": [
+      "정적: 자신에게 상태이상이 걸려있지 않을 때 데미지가 10% 증가한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "역천의 장궁",
+    "type": "무기",
+    "power_min": 244,
+    "power_max": 411,
+    "weight_min": 31,
+    "weight_max": 56,
+    "weapon_type": "활",
+    "abilities": [
+      "역천: 상대보다 HP 비율이 20% 이상 낮을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "역풍",
+    "type": "무기",
+    "power_min": 227,
+    "power_max": 385,
+    "weight_min": 18,
+    "weight_max": 36,
+    "weapon_type": "나이프",
+    "abilities": [
+      "역천: 상대보다 HP 비율이 20% 이상 낮을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "열화의 화도",
+    "type": "무기",
+    "power_min": 255,
+    "power_max": 436,
+    "weight_min": 34,
+    "weight_max": 56,
+    "weapon_type": "나이프",
+    "abilities": [
+      "선견지명: 상대가 스킬을 발동했을 때 해당 공격의 데미지를 15% 감소시킨다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "염마의 화염부",
+    "type": "무기",
+    "power_min": 279,
+    "power_max": 478,
+    "weight_min": 65,
+    "weight_max": 105,
+    "weapon_type": "도끼",
+    "abilities": [
+      "과부하: 스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "오로라 로드",
+    "type": "무기",
+    "power_min": 254,
+    "power_max": 433,
+    "weight_min": 36,
+    "weight_max": 62,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "속성 증폭: 속성 상성 유리 시 추가 데미지가 25% 증가한다. 불리 시 받는 추가 데미지도 10% 증가한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "용암의 파쇄부",
+    "type": "무기",
+    "power_min": 278,
+    "power_max": 474,
+    "weight_min": 65,
+    "weight_max": 106,
+    "weapon_type": "도끼",
+    "abilities": [
+      "속성 증폭: 속성 상성 유리 시 추가 데미지가 25% 증가한다. 불리 시 받는 추가 데미지도 10% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "운디네",
+    "type": "무기",
+    "power_min": 248,
+    "power_max": 424,
+    "weight_min": 30,
+    "weight_max": 52,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "흡수 갑옷: 받는 데미지의 5%를 MP로 전환하여 회복한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "윈드 러쉬",
+    "type": "무기",
+    "power_min": 242,
+    "power_max": 412,
+    "weight_min": 23,
+    "weight_max": 42,
+    "weapon_type": "너클",
+    "abilities": [
+      "기세: 연속으로 공격을 맞출 때마다 데미지가 3%씩 증가한다. (최대 5중첩, 15%. 회피/블록 당하면 초기화)"
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "유성의 망치",
+    "type": "무기",
+    "power_min": 272,
+    "power_max": 462,
+    "weight_min": 65,
+    "weight_max": 106,
+    "weapon_type": "도끼",
+    "abilities": [
+      "전투 적응: 매 4턴마다 받는 데미지가 3%씩 감소한다. (최대 15%, 20턴)"
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "유성의 별궁",
+    "type": "무기",
+    "power_min": 281,
+    "power_max": 474,
+    "weight_min": 43,
+    "weight_max": 70,
+    "weapon_type": "활",
+    "abilities": [
+      "정적: 자신에게 상태이상이 걸려있지 않을 때 데미지가 10% 증가한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "이그나이터",
+    "type": "무기",
+    "power_min": 253,
+    "power_max": 432,
+    "weight_min": 33,
+    "weight_max": 56,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "마력 전환: 매 턴마다 MP를 최대치의 3% 추가 소모하여 데미지를 12% 증가시킨다. MP가 부족하면 발동하지 않는다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "이그니스",
+    "type": "무기",
+    "power_min": 244,
+    "power_max": 415,
+    "weight_min": 27,
+    "weight_max": 48,
+    "weapon_type": "너클",
+    "abilities": [
+      "상태이상 공명: 상대에게 상태이상이 2개 이상 걸려있을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "이프리트",
+    "type": "무기",
+    "power_min": 260,
+    "power_max": 429,
+    "weight_min": 52,
+    "weight_max": 85,
+    "weapon_type": "창",
+    "abilities": [
+      "기세: 연속으로 공격을 맞출 때마다 데미지가 3%씩 증가한다. (최대 5중첩, 15%. 회피/블록 당하면 초기화)"
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "인드라",
+    "type": "무기",
+    "power_min": 241,
+    "power_max": 409,
+    "weight_min": 45,
+    "weight_max": 74,
+    "weapon_type": "검",
+    "abilities": [
+      "속성 증폭: 속성 상성 유리 시 추가 데미지가 25% 증가한다. 불리 시 받는 추가 데미지도 10% 증가한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "인페르노",
+    "type": "무기",
+    "power_min": 237,
+    "power_max": 406,
+    "weight_min": 49,
+    "weight_max": 80,
+    "weapon_type": "검",
+    "abilities": [
+      "전투 적응: 매 4턴마다 받는 데미지가 3%씩 감소한다. (최대 15%, 20턴)"
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "일렉 대거",
+    "type": "무기",
+    "power_min": 230,
+    "power_max": 393,
+    "weight_min": 24,
+    "weight_max": 44,
+    "weapon_type": "나이프",
+    "abilities": [
+      "약육강식: 자신의 기본 공격력이 상대보다 높을 때 데미지가 10% 증가한다. 낮을 때는 5% 감소한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "일렉트라",
+    "type": "무기",
+    "power_min": 252,
+    "power_max": 431,
+    "weight_min": 33,
+    "weight_max": 56,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "과부하: 스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "재가 된 권갑",
+    "type": "무기",
+    "power_min": 279,
+    "power_max": 475,
+    "weight_min": 37,
+    "weight_max": 60,
+    "weapon_type": "너클",
+    "abilities": [
+      "보복: 상태이상에 걸릴 때마다 3턴간 공격력이 6% 증가한다. (최대 3중첩, 18%)"
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "저지먼트",
+    "type": "무기",
+    "power_min": 257,
+    "power_max": 435,
+    "weight_min": 57,
+    "weight_max": 94,
+    "weapon_type": "도끼",
+    "abilities": [
+      "약육강식: 자신의 기본 공격력이 상대보다 높을 때 데미지가 10% 증가한다. 낮을 때는 5% 감소한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "저항의 바람",
+    "type": "무기",
+    "power_min": 268,
+    "power_max": 457,
+    "weight_min": 63,
+    "weight_max": 102,
+    "weapon_type": "도끼",
+    "abilities": [
+      "최후의 저항: HP가 0 이하로 떨어지는 공격을 받을 때, 1회에 한해 HP를 1로 유지한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "적마의 비도",
+    "type": "무기",
+    "power_min": 265,
+    "power_max": 452,
+    "weight_min": 33,
+    "weight_max": 55,
+    "weapon_type": "나이프",
+    "abilities": [
+      "정신 오염: 상대의 스킬 발동 확률을 30% 감소시킨다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "적염제의 마검",
+    "type": "무기",
+    "power_min": 261,
+    "power_max": 451,
+    "weight_min": 55,
+    "weight_max": 90,
+    "weapon_type": "검",
+    "abilities": [
+      "피의 맹약: 전투 시작 시 최대 HP의 20%를 소모하고, 전투 동안 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "적화의 맹검",
+    "type": "무기",
+    "power_min": 258,
+    "power_max": 441,
+    "weight_min": 56,
+    "weight_max": 92,
+    "weapon_type": "검",
+    "abilities": [
+      "저온: 빙결 상태의 상대에게 데미지가 20% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "전광의 뇌궁",
+    "type": "무기",
+    "power_min": 279,
+    "power_max": 468,
+    "weight_min": 39,
+    "weight_max": 64,
+    "weapon_type": "활",
+    "abilities": [
+      "잔류 에너지: 스킬 발동 후 다음 기본 공격의 데미지가 20% 증가한다. (1회 소모)"
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "전류의 뇌인",
+    "type": "무기",
+    "power_min": 255,
+    "power_max": 436,
+    "weight_min": 34,
+    "weight_max": 56,
+    "weapon_type": "나이프",
+    "abilities": [
+      "선견지명: 상대가 스킬을 발동했을 때 해당 공격의 데미지를 15% 감소시킨다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "젤파이어",
+    "type": "무기",
+    "power_min": 241,
+    "power_max": 412,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "검",
+    "abilities": [
+      "폭주: 자신의 HP가 50% 이하일 때 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "진화하는 용창",
+    "type": "무기",
+    "power_min": 293,
+    "power_max": 495,
+    "weight_min": 62,
+    "weight_max": 100,
+    "weapon_type": "창",
+    "abilities": [
+      "전환: 물리 데미지의 25%를 추가로 마법 데미지로 전환하여 적중시킨다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "질풍의 열궁",
+    "type": "무기",
+    "power_min": 267,
+    "power_max": 449,
+    "weight_min": 38,
+    "weight_max": 62,
+    "weapon_type": "활",
+    "abilities": [
+      "기세: 연속으로 공격을 맞출 때마다 데미지가 3%씩 증가한다. (최대 5중첩, 15%. 회피/블록 당하면 초기화)"
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "질풍의 풍궁",
+    "type": "무기",
+    "power_min": 273,
+    "power_max": 459,
+    "weight_min": 36,
+    "weight_max": 60,
+    "weapon_type": "활",
+    "abilities": [
+      "속성 증폭: 속성 상성 유리 시 추가 데미지가 25% 증가한다. 불리 시 받는 추가 데미지도 10% 증가한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "천궁",
+    "type": "무기",
+    "power_min": 277,
+    "power_max": 464,
+    "weight_min": 39,
+    "weight_max": 64,
+    "weapon_type": "활",
+    "abilities": [
+      "급조 보호막: 첫 턴에 받는 데미지를 25% 경감한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "천궁의 은혜",
+    "type": "무기",
+    "power_min": 275,
+    "power_max": 460,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "활",
+    "abilities": [
+      "생명력 착취: 상대에게 상태이상이 걸려있을 때 매 공격마다 20% 확률로 데미지의 50%만큼 HP를 회복한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "천둥의 파뢰부",
+    "type": "무기",
+    "power_min": 272,
+    "power_max": 462,
+    "weight_min": 65,
+    "weight_max": 106,
+    "weapon_type": "도끼",
+    "abilities": [
+      "최후의 저항: HP가 0 이하로 떨어지는 공격을 받을 때, 1회에 한해 HP를 1로 유지한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "천문의 성부",
+    "type": "무기",
+    "power_min": 281,
+    "power_max": 483,
+    "weight_min": 65,
+    "weight_max": 105,
+    "weapon_type": "도끼",
+    "abilities": [
+      "급조 보호막: 첫 턴에 받는 데미지를 25% 경감한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "천추의 성운극",
+    "type": "무기",
+    "power_min": 293,
+    "power_max": 495,
+    "weight_min": 63,
+    "weight_max": 102,
+    "weapon_type": "창",
+    "abilities": [
+      "폭주: 자신의 HP가 50% 이하일 때 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "카구츠치",
+    "type": "무기",
+    "power_min": 240,
+    "power_max": 407,
+    "weight_min": 46,
+    "weight_max": 75,
+    "weapon_type": "검",
+    "abilities": [
+      "폭주: 자신의 HP가 50% 이하일 때 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "카오스 블레이드",
+    "type": "무기",
+    "power_min": 241,
+    "power_max": 412,
+    "weight_min": 48,
+    "weight_max": 78,
+    "weapon_type": "검",
+    "abilities": [
+      "거울상: 전투 시작 시 상대의 아이템 어빌리티 중 하나를 복사하여 자신에게 적용한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "코스모스",
+    "type": "무기",
+    "power_min": 243,
+    "power_max": 414,
+    "weight_min": 48,
+    "weight_max": 78,
+    "weapon_type": "검",
+    "abilities": [
+      "속성 증폭: 속성 상성 유리 시 추가 데미지가 25% 증가한다. 불리 시 받는 추가 데미지도 10% 증가한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "크레바스",
+    "type": "무기",
+    "power_min": 284,
+    "power_max": 483,
+    "weight_min": 41,
+    "weight_max": 66,
+    "weapon_type": "너클",
+    "abilities": [
+      "저온: 빙결 상태의 상대에게 데미지가 20% 증가한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "타이달 보우",
+    "type": "무기",
+    "power_min": 240,
+    "power_max": 404,
+    "weight_min": 26,
+    "weight_max": 48,
+    "weapon_type": "활",
+    "abilities": [
+      "상태이상 공명: 상대에게 상태이상이 2개 이상 걸려있을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "테슬라",
+    "type": "무기",
+    "power_min": 245,
+    "power_max": 418,
+    "weight_min": 34,
+    "weight_max": 58,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "선견지명: 상대가 스킬을 발동했을 때 해당 공격의 데미지를 15% 감소시킨다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "토르 해머",
+    "type": "무기",
+    "power_min": 259,
+    "power_max": 439,
+    "weight_min": 59,
+    "weight_max": 96,
+    "weapon_type": "도끼",
+    "abilities": [
+      "역천: 상대보다 HP 비율이 20% 이상 낮을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "파멸의 흑부",
+    "type": "무기",
+    "power_min": 281,
+    "power_max": 483,
+    "weight_min": 65,
+    "weight_max": 105,
+    "weapon_type": "도끼",
+    "abilities": [
+      "철혈: 한 번의 공격으로 최대 HP의 10% 이상 데미지를 받으면, 초과분의 50%를 감소시킨다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "팬텀 피스트",
+    "type": "무기",
+    "power_min": 247,
+    "power_max": 421,
+    "weight_min": 27,
+    "weight_max": 48,
+    "weapon_type": "너클",
+    "abilities": [
+      "최후의 저항: HP가 0 이하로 떨어지는 공격을 받을 때, 1회에 한해 HP를 1로 유지한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "펄스 나이프",
+    "type": "무기",
+    "power_min": 233,
+    "power_max": 396,
+    "weight_min": 23,
+    "weight_max": 42,
+    "weapon_type": "나이프",
+    "abilities": [
+      "정적: 자신에게 상태이상이 걸려있지 않을 때 데미지가 10% 증가한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "포세이돈",
+    "type": "무기",
+    "power_min": 257,
+    "power_max": 425,
+    "weight_min": 50,
+    "weight_max": 82,
+    "weapon_type": "창",
+    "abilities": [
+      "폭주: 자신의 HP가 50% 이하일 때 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "폭풍의 선부",
+    "type": "무기",
+    "power_min": 275,
+    "power_max": 472,
+    "weight_min": 62,
+    "weight_max": 100,
+    "weapon_type": "도끼",
+    "abilities": [
+      "적응형 갑옷: 매 턴마다 상대의 물리/마법 관통 효과가 20%씩 감소한다. (곱연산)"
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "폭풍의 질풍극",
+    "type": "무기",
+    "power_min": 292,
+    "power_max": 487,
+    "weight_min": 59,
+    "weight_max": 96,
+    "weapon_type": "창",
+    "abilities": [
+      "피의 맹약: 전투 시작 시 최대 HP의 20%를 소모하고, 전투 동안 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "풍검의 선풍인",
+    "type": "무기",
+    "power_min": 256,
+    "power_max": 440,
+    "weight_min": 52,
+    "weight_max": 84,
+    "weapon_type": "검",
+    "abilities": [
+      "약육강식: 자신의 기본 공격력이 상대보다 높을 때 데미지가 10% 증가한다. 낮을 때는 5% 감소한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "풍령의 풍장",
+    "type": "무기",
+    "power_min": 281,
+    "power_max": 480,
+    "weight_min": 40,
+    "weight_max": 66,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "흡수 갑옷: 받는 데미지의 5%를 MP로 전환하여 회복한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "풍신의 바람검",
+    "type": "무기",
+    "power_min": 257,
+    "power_max": 444,
+    "weight_min": 50,
+    "weight_max": 82,
+    "weapon_type": "검",
+    "abilities": [
+      "도박사의 주사위: 매 공격마다 데미지가 -30%~+50% 사이에서 랜덤으로 변동한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "프라즈마 너클",
+    "type": "무기",
+    "power_min": 245,
+    "power_max": 418,
+    "weight_min": 27,
+    "weight_max": 48,
+    "weapon_type": "너클",
+    "abilities": [
+      "전환: 물리 데미지의 25%를 추가로 마법 데미지로 전환하여 적중시킨다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "프로스트",
+    "type": "무기",
+    "power_min": 243,
+    "power_max": 411,
+    "weight_min": 24,
+    "weight_max": 42,
+    "weapon_type": "너클",
+    "abilities": [
+      "마력 전환: 매 턴마다 MP를 최대치의 3% 추가 소모하여 데미지를 12% 증가시킨다. MP가 부족하면 발동하지 않는다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "프로즌 아처",
+    "type": "무기",
+    "power_min": 242,
+    "power_max": 407,
+    "weight_min": 28,
+    "weight_max": 50,
+    "weapon_type": "활",
+    "abilities": [
+      "역천: 상대보다 HP 비율이 20% 이상 낮을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "프리즘 엣지",
+    "type": "무기",
+    "power_min": 226,
+    "power_max": 388,
+    "weight_min": 22,
+    "weight_max": 40,
+    "weapon_type": "나이프",
+    "abilities": [
+      "정신 오염: 상대의 스킬 발동 확률을 30% 감소시킨다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "플레어 로드",
+    "type": "무기",
+    "power_min": 284,
+    "power_max": 487,
+    "weight_min": 43,
+    "weight_max": 70,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "공명기: 같은 속성의 방어구와 무기를 장착하고 있을 때 데미지가 8% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "피닉스 랜스",
+    "type": "무기",
+    "power_min": 262,
+    "power_max": 434,
+    "weight_min": 54,
+    "weight_max": 88,
+    "weapon_type": "창",
+    "abilities": [
+      "역천: 상대보다 HP 비율이 20% 이상 낮을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "핏빛 왜성",
+    "type": "무기",
+    "power_min": 267,
+    "power_max": 452,
+    "weight_min": 62,
+    "weight_max": 100,
+    "weapon_type": "도끼",
+    "abilities": [
+      "피의 맹약: 전투 시작 시 최대 HP의 20%를 소모하고, 전투 동안 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "하이페리온",
+    "type": "무기",
+    "power_min": 262,
+    "power_max": 434,
+    "weight_min": 51,
+    "weight_max": 84,
+    "weapon_type": "창",
+    "abilities": [
+      "약육강식: 자신의 기본 공격력이 상대보다 높을 때 데미지가 10% 증가한다. 낮을 때는 5% 감소한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "한류의 빙인검",
+    "type": "무기",
+    "power_min": 263,
+    "power_max": 447,
+    "weight_min": 31,
+    "weight_max": 52,
+    "weapon_type": "나이프",
+    "abilities": [
+      "생명력 착취: 상대에게 상태이상이 걸려있을 때 매 공격마다 20% 확률로 데미지의 50%만큼 HP를 회복한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "한파의 빙궁",
+    "type": "무기",
+    "power_min": 273,
+    "power_max": 458,
+    "weight_min": 39,
+    "weight_max": 64,
+    "weapon_type": "활",
+    "abilities": [
+      "연속 타격: 매 기본 공격마다 10% 확률로 동일한 공격을 한 번 더 수행한다. (스킬 발동 시에는 발동하지 않음)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "해왕의 파도검",
+    "type": "무기",
+    "power_min": 258,
+    "power_max": 446,
+    "weight_min": 54,
+    "weight_max": 88,
+    "weapon_type": "검",
+    "abilities": [
+      "기세: 연속으로 공격을 맞출 때마다 데미지가 3%씩 증가한다. (최대 5중첩, 15%. 회피/블록 당하면 초기화)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "허리케인",
+    "type": "무기",
+    "power_min": 253,
+    "power_max": 429,
+    "weight_min": 56,
+    "weight_max": 92,
+    "weapon_type": "도끼",
+    "abilities": [
+      "전투 적응: 매 4턴마다 받는 데미지가 3%씩 감소한다. (최대 15%, 20턴)"
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "헬바인",
+    "type": "무기",
+    "power_min": 258,
+    "power_max": 428,
+    "weight_min": 54,
+    "weight_max": 88,
+    "weapon_type": "창",
+    "abilities": [
+      "거울상: 전투 시작 시 상대의 아이템 어빌리티 중 하나를 복사하여 자신에게 적용한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "헬파이어",
+    "type": "무기",
+    "power_min": 258,
+    "power_max": 437,
+    "weight_min": 58,
+    "weight_max": 95,
+    "weapon_type": "도끼",
+    "abilities": [
+      "철혈: 한 번의 공격으로 최대 HP의 10% 이상 데미지를 받으면, 초과분의 50%를 감소시킨다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "홀리 아처",
+    "type": "무기",
+    "power_min": 242,
+    "power_max": 407,
+    "weight_min": 27,
+    "weight_max": 50,
+    "weapon_type": "활",
+    "abilities": [
+      "역천: 상대보다 HP 비율이 20% 이상 낮을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "홀리 피스트",
+    "type": "무기",
+    "power_min": 246,
+    "power_max": 420,
+    "weight_min": 25,
+    "weight_max": 46,
+    "weapon_type": "너클",
+    "abilities": [
+      "과부하: 스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "화련의 쌍갑",
+    "type": "무기",
+    "power_min": 276,
+    "power_max": 470,
+    "weight_min": 38,
+    "weight_max": 62,
+    "weapon_type": "너클",
+    "abilities": [
+      "정적: 자신에게 상태이상이 걸려있지 않을 때 데미지가 10% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "화룡의 열극",
+    "type": "무기",
+    "power_min": 283,
+    "power_max": 473,
+    "weight_min": 63,
+    "weight_max": 102,
+    "weapon_type": "창",
+    "abilities": [
+      "급조 보호막: 첫 턴에 받는 데미지를 25% 경감한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "화린의 염궁",
+    "type": "무기",
+    "power_min": 277,
+    "power_max": 466,
+    "weight_min": 40,
+    "weight_max": 65,
+    "weapon_type": "활",
+    "abilities": [
+      "도박사의 주사위: 매 공격마다 데미지가 -30%~+50% 사이에서 랜덤으로 변동한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "화염매의 사궁",
+    "type": "무기",
+    "power_min": 272,
+    "power_max": 458,
+    "weight_min": 40,
+    "weight_max": 66,
+    "weapon_type": "활",
+    "abilities": [
+      "생명력 착취: 상대에게 상태이상이 걸려있을 때 매 공격마다 20% 확률로 데미지의 50%만큼 HP를 회복한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "화정의 불장",
+    "type": "무기",
+    "power_min": 281,
+    "power_max": 481,
+    "weight_min": 44,
+    "weight_max": 72,
+    "weapon_type": "지팡이",
+    "abilities": [
+      "속성 증폭: 속성 상성 유리 시 추가 데미지가 25% 증가한다. 불리 시 받는 추가 데미지도 10% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "깊은 물결",
+    "type": "방어구",
+    "power_min": 259,
+    "power_max": 444,
+    "weight_min": 43,
+    "weight_max": 70,
+    "weapon_type": "방어구",
+    "abilities": [
+      "마력 전환: 매 턴마다 MP를 최대치의 3% 추가 소모하여 데미지를 12% 증가시킨다. MP가 부족하면 발동하지 않는다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "뇌광의 전갑",
+    "type": "방어구",
+    "power_min": 282,
+    "power_max": 481,
+    "weight_min": 53,
+    "weight_max": 85,
+    "weapon_type": "방어구",
+    "abilities": [
+      "정신 오염: 상대의 스킬 발동 확률을 30% 감소시킨다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "뇌전의 석갑",
+    "type": "방어구",
+    "power_min": 243,
+    "power_max": 416,
+    "weight_min": 40,
+    "weight_max": 65,
+    "weapon_type": "방어구",
+    "abilities": [
+      "연속 타격: 매 기본 공격마다 10% 확률로 동일한 공격을 한 번 더 수행한다. (스킬 발동 시에는 발동하지 않음)"
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "눈부신 새벽빛",
+    "type": "방어구",
+    "power_min": 287,
+    "power_max": 456,
+    "weight_min": 44,
+    "weight_max": 65,
+    "weapon_type": "방어구",
+    "abilities": [
+      "급조 보호막: 첫 턴에 받는 데미지를 25% 경감한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "망자의 노래",
+    "type": "방어구",
+    "power_min": 243,
+    "power_max": 416,
+    "weight_min": 31,
+    "weight_max": 50,
+    "weapon_type": "방어구",
+    "abilities": [
+      "도박사의 주사위: 매 공격마다 데미지가 -30%~+50% 사이에서 랜덤으로 변동한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "먹구름",
+    "type": "방어구",
+    "power_min": 265,
+    "power_max": 453,
+    "weight_min": 31,
+    "weight_max": 46,
+    "weapon_type": "방어구",
+    "abilities": [
+      "최후의 저항: HP가 0 이하로 떨어지는 공격을 받을 때, 1회에 한해 HP를 1로 유지한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "바람꽃",
+    "type": "방어구",
+    "power_min": 270,
+    "power_max": 463,
+    "weight_min": 50,
+    "weight_max": 80,
+    "weapon_type": "방어구",
+    "abilities": [
+      "긴급 회피: HP가 30% 이하일 때 회피율이 15% 증가한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "밤의 장막",
+    "type": "방어구",
+    "power_min": 254,
+    "power_max": 435,
+    "weight_min": 37,
+    "weight_max": 60,
+    "weapon_type": "방어구",
+    "abilities": [
+      "생명력 착취: 상대에게 상태이상이 걸려있을 때 매 공격마다 20% 확률로 데미지의 50%만큼 HP를 회복한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "별빛의 노래",
+    "type": "방어구",
+    "power_min": 276,
+    "power_max": 472,
+    "weight_min": 50,
+    "weight_max": 85,
+    "weapon_type": "방어구",
+    "abilities": [
+      "급조 보호막: 첫 턴에 받는 데미지를 25% 경감한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "불사조의 깃",
+    "type": "방어구",
+    "power_min": 282,
+    "power_max": 481,
+    "weight_min": 56,
+    "weight_max": 90,
+    "weapon_type": "방어구",
+    "abilities": [
+      "속성 증폭: 속성 상성 유리 시 추가 데미지가 25% 증가한다. 불리 시 받는 추가 데미지도 10% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "붉은 노을",
+    "type": "방어구",
+    "power_min": 264,
+    "power_max": 453,
+    "weight_min": 46,
+    "weight_max": 67,
+    "weapon_type": "방어구",
+    "abilities": [
+      "역경: HP가 50% 이하일 때 받는 데미지가 12% 감소한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "빙하의 눈물",
+    "type": "방어구",
+    "power_min": 236,
+    "power_max": 407,
+    "weight_min": 34,
+    "weight_max": 55,
+    "weapon_type": "방어구",
+    "abilities": [
+      "저온: 빙결 상태의 상대에게 데미지가 20% 증가한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "서리꽃",
+    "type": "방어구",
+    "power_min": 227,
+    "power_max": 389,
+    "weight_min": 28,
+    "weight_max": 45,
+    "weapon_type": "방어구",
+    "abilities": [
+      "흡수 갑옷: 받는 데미지의 5%를 MP로 전환하여 회복한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "성광의 빛린갑",
+    "type": "방어구",
+    "power_min": 270,
+    "power_max": 463,
+    "weight_min": 50,
+    "weight_max": 80,
+    "weapon_type": "방어구",
+    "abilities": [
+      "공명기: 같은 속성의 방어구와 무기를 장착하고 있을 때 데미지가 8% 증가한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성진의 별갑주",
+    "type": "방어구",
+    "power_min": 243,
+    "power_max": 416,
+    "weight_min": 40,
+    "weight_max": 65,
+    "weapon_type": "방어구",
+    "abilities": [
+      "연속 타격: 매 기본 공격마다 10% 확률로 동일한 공격을 한 번 더 수행한다. (스킬 발동 시에는 발동하지 않음)"
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "솔바람의 풍결",
+    "type": "방어구",
+    "power_min": 248,
+    "power_max": 426,
+    "weight_min": 34,
+    "weight_max": 55,
+    "weapon_type": "방어구",
+    "abilities": [
+      "도박사의 룰렛: 매 턴 시작 시 10% 확률로 상대에게 랜덤 상태이상 1개를 부여한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "시간의 모래",
+    "type": "방어구",
+    "power_min": 245,
+    "power_max": 425,
+    "weight_min": 28,
+    "weight_max": 45,
+    "weapon_type": "방어구",
+    "abilities": [
+      "영혼 공명: 스킬 발동 시 12% 확률로 MP 소모 없이 발동한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "신성한 빛",
+    "type": "방어구",
+    "power_min": 268,
+    "power_max": 407,
+    "weight_min": 40,
+    "weight_max": 65,
+    "weapon_type": "방어구",
+    "abilities": [
+      "역천: 상대보다 HP 비율이 20% 이상 낮을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "심해의 파수꾼",
+    "type": "방어구",
+    "power_min": 339,
+    "power_max": 536,
+    "weight_min": 50,
+    "weight_max": 80,
+    "weapon_type": "방어구",
+    "abilities": [],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "암군의 그림자",
+    "type": "방어구",
+    "power_min": 238,
+    "power_max": 407,
+    "weight_min": 47,
+    "weight_max": 75,
+    "weapon_type": "방어구",
+    "abilities": [
+      "정적: 자신에게 상태이상이 걸려있지 않을 때 데미지가 10% 증가한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "염화의 맹세",
+    "type": "방어구",
+    "power_min": 231,
+    "power_max": 398,
+    "weight_min": 37,
+    "weight_max": 60,
+    "weapon_type": "방어구",
+    "abilities": [
+      "보복: 상태이상에 걸릴 때마다 3턴간 공격력이 6% 증가한다. (최대 3중첩, 18%)"
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "은하수",
+    "type": "방어구",
+    "power_min": 269,
+    "power_max": 477,
+    "weight_min": 51,
+    "weight_max": 72,
+    "weapon_type": "방어구",
+    "abilities": [
+      "역경: HP가 50% 이하일 때 받는 데미지가 12% 감소한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "잊혀진 암흑",
+    "type": "방어구",
+    "power_min": 295,
+    "power_max": 492,
+    "weight_min": 53,
+    "weight_max": 85,
+    "weapon_type": "방어구",
+    "abilities": [
+      "거울상: 전투 시작 시 상대의 아이템 어빌리티 중 하나를 복사하여 자신에게 적용한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "잠든 바다",
+    "type": "방어구",
+    "power_min": 254,
+    "power_max": 435,
+    "weight_min": 18,
+    "weight_max": 28,
+    "weapon_type": "방어구",
+    "abilities": [
+      "적응형 갑옷: 매 턴마다 상대의 물리/마법 관통 효과가 20%씩 감소한다. (곱연산)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "전광의 섬갑",
+    "type": "방어구",
+    "power_min": 261,
+    "power_max": 459,
+    "weight_min": 31,
+    "weight_max": 50,
+    "weapon_type": "방어구",
+    "abilities": [
+      "긴급 회피: HP가 30% 이하일 때 회피율이 15% 증가한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "질풍",
+    "type": "방어구",
+    "power_min": 231,
+    "power_max": 398,
+    "weight_min": 25,
+    "weight_max": 40,
+    "weapon_type": "방어구",
+    "abilities": [
+      "쇠약: 매 공격마다 12% 확률로 3턴간 상대의 공격 속도를 30 감소시킨다. (중첩 가능)"
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "천둥소리",
+    "type": "방어구",
+    "power_min": 264,
+    "power_max": 433,
+    "weight_min": 29,
+    "weight_max": 43,
+    "weapon_type": "방어구",
+    "abilities": [
+      "과부하: 스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "천사 날개",
+    "type": "방어구",
+    "power_min": 259,
+    "power_max": 444,
+    "weight_min": 56,
+    "weight_max": 90,
+    "weapon_type": "방어구",
+    "abilities": [
+      "전환: 물리 데미지의 25%를 추가로 마법 데미지로 전환하여 적중시킨다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "축복의 빛",
+    "type": "방어구",
+    "power_min": 227,
+    "power_max": 389,
+    "weight_min": 11,
+    "weight_max": 17,
+    "weapon_type": "방어구",
+    "abilities": [
+      "영혼 공명: 스킬 발동 시 12% 확률로 MP 소모 없이 발동한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "폭풍전야",
+    "type": "방어구",
+    "power_min": 254,
+    "power_max": 435,
+    "weight_min": 47,
+    "weight_max": 75,
+    "weapon_type": "방어구",
+    "abilities": [
+      "잔류 에너지: 스킬 발동 후 다음 기본 공격의 데미지가 20% 증가한다. (1회 소모)"
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "푸른 산들",
+    "type": "방어구",
+    "power_min": 216,
+    "power_max": 370,
+    "weight_min": 6,
+    "weight_max": 10,
+    "weapon_type": "방어구",
+    "abilities": [
+      "선견지명: 상대가 스킬을 발동했을 때 해당 공격의 데미지를 15% 감소시킨다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "하늘빛 바람",
+    "type": "방어구",
+    "power_min": 259,
+    "power_max": 444,
+    "weight_min": 43,
+    "weight_max": 70,
+    "weapon_type": "방어구",
+    "abilities": [
+      "상태이상 공명: 상대에게 상태이상이 2개 이상 걸려있을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "화산의 숨결",
+    "type": "방어구",
+    "power_min": 278,
+    "power_max": 472,
+    "weight_min": 53,
+    "weight_max": 85,
+    "weapon_type": "방어구",
+    "abilities": [
+      "철혈: 한 번의 공격으로 최대 HP의 10% 이상 데미지를 받으면, 초과분의 50%를 감소시킨다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "화염의 적린갑",
+    "type": "방어구",
+    "power_min": 250,
+    "power_max": 426,
+    "weight_min": 47,
+    "weight_max": 75,
+    "weapon_type": "방어구",
+    "abilities": [
+      "폭주: 자신의 HP가 50% 이하일 때 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "흘러간 별빛",
+    "type": "방어구",
+    "power_min": 222,
+    "power_max": 379,
+    "weight_min": 0,
+    "weight_max": 5,
+    "weapon_type": "방어구",
+    "abilities": [
+      "도박사의 주사위: 매 공격마다 데미지가 -30%~+50% 사이에서 랜덤으로 변동한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "감전패",
+    "type": "장신구",
+    "power_min": 69,
+    "power_max": 119,
+    "weight_min": 18,
+    "weight_max": 28,
+    "weapon_type": "장신구",
+    "abilities": [
+      "마력 전환: 매 턴마다 MP를 최대치의 3% 추가 소모하여 데미지를 12% 증가시킨다. MP가 부족하면 발동하지 않는다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "겨울 파도",
+    "type": "장신구",
+    "power_min": 60,
+    "power_max": 102,
+    "weight_min": 14,
+    "weight_max": 22,
+    "weapon_type": "장신구",
+    "abilities": [
+      "저온: 빙결 상태의 상대에게 데미지가 20% 증가한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "고요한 호수",
+    "type": "장신구",
+    "power_min": 48,
+    "power_max": 82,
+    "weight_min": 3,
+    "weight_max": 8,
+    "weapon_type": "장신구",
+    "abilities": [
+      "흡수 갑옷: 받는 데미지의 5%를 MP로 전환하여 회복한다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "공명의 빛",
+    "type": "장신구",
+    "power_min": 70,
+    "power_max": 121,
+    "weight_min": 18,
+    "weight_max": 29,
+    "weapon_type": "장신구",
+    "abilities": [
+      "공명기: 같은 속성의 방어구와 무기를 장착하고 있을 때 데미지가 8% 증가한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "과전류",
+    "type": "장신구",
+    "power_min": 39,
+    "power_max": 67,
+    "weight_min": 7,
+    "weight_max": 14,
+    "weapon_type": "장신구",
+    "abilities": [
+      "과부하: 스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "광휘",
+    "type": "장신구",
+    "power_min": 38,
+    "power_max": 65,
+    "weight_min": -6,
+    "weight_max": -1,
+    "weapon_type": "장신구",
+    "abilities": [
+      "속성 증폭: 속성 상성 유리 시 추가 데미지가 25% 증가한다. 불리 시 받는 추가 데미지도 10% 증가한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "극야",
+    "type": "장신구",
+    "power_min": 73,
+    "power_max": 125,
+    "weight_min": 21,
+    "weight_max": 33,
+    "weapon_type": "장신구",
+    "abilities": [
+      "과부하: 스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "나래",
+    "type": "장신구",
+    "power_min": 58,
+    "power_max": 100,
+    "weight_min": 13,
+    "weight_max": 20,
+    "weapon_type": "장신구",
+    "abilities": [
+      "쇠약: 매 공격마다 12% 확률로 3턴간 상대의 공격 속도를 30 감소시킨다. (중첩 가능)"
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "내면의 불꽃",
+    "type": "장신구",
+    "power_min": 66,
+    "power_max": 111,
+    "weight_min": 16,
+    "weight_max": 25,
+    "weapon_type": "장신구",
+    "abilities": [
+      "폭주: 자신의 HP가 50% 이하일 때 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "만월패",
+    "type": "장신구",
+    "power_min": 44,
+    "power_max": 76,
+    "weight_min": 4,
+    "weight_max": 9,
+    "weapon_type": "장신구",
+    "abilities": [
+      "정신 오염: 상대의 스킬 발동 확률을 30% 감소시킨다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "망각의 거울",
+    "type": "장신구",
+    "power_min": 71,
+    "power_max": 122,
+    "weight_min": 22,
+    "weight_max": 35,
+    "weapon_type": "장신구",
+    "abilities": [
+      "거울상: 전투 시작 시 상대의 아이템 어빌리티 중 하나를 복사하여 자신에게 적용한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "물안개",
+    "type": "장신구",
+    "power_min": 70,
+    "power_max": 121,
+    "weight_min": 19,
+    "weight_max": 30,
+    "weapon_type": "장신구",
+    "abilities": [
+      "전투 적응: 매 4턴마다 받는 데미지가 3%씩 감소한다. (최대 15%, 20턴)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "바람의 여정",
+    "type": "장신구",
+    "power_min": 46,
+    "power_max": 79,
+    "weight_min": 2,
+    "weight_max": 7,
+    "weapon_type": "장신구",
+    "abilities": [
+      "상태이상 공명: 상대에게 상태이상이 2개 이상 걸려있을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "밤그늘",
+    "type": "장신구",
+    "power_min": 63,
+    "power_max": 109,
+    "weight_min": 15,
+    "weight_max": 24,
+    "weapon_type": "장신구",
+    "abilities": [
+      "생명력 착취: 상대에게 상태이상이 걸려있을 때 매 공격마다 20% 확률로 데미지의 50%만큼 HP를 회복한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "봉황의 깃털",
+    "type": "장신구",
+    "power_min": 50,
+    "power_max": 88,
+    "weight_min": 6,
+    "weight_max": 12,
+    "weapon_type": "장신구",
+    "abilities": [
+      "잔류 에너지: 스킬 발동 후 다음 기본 공격의 데미지가 20% 증가한다. (1회 소모)"
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "산들 바람",
+    "type": "장신구",
+    "power_min": 38,
+    "power_max": 65,
+    "weight_min": 0,
+    "weight_max": 5,
+    "weapon_type": "장신구",
+    "abilities": [
+      "영혼 공명: 스킬 발동 시 12% 확률로 MP 소모 없이 발동한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "새벽빛",
+    "type": "장신구",
+    "power_min": 52,
+    "power_max": 91,
+    "weight_min": 10,
+    "weight_max": 16,
+    "weapon_type": "장신구",
+    "abilities": [
+      "최후의 저항: HP가 0 이하로 떨어지는 공격을 받을 때, 1회에 한해 HP를 1로 유지한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성스러운 날개",
+    "type": "장신구",
+    "power_min": 31,
+    "power_max": 54,
+    "weight_min": -3,
+    "weight_max": 2,
+    "weapon_type": "장신구",
+    "abilities": [
+      "보복: 상태이상에 걸릴 때마다 3턴간 공격력이 6% 증가한다. (최대 3중첩, 18%)"
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "성운",
+    "type": "장신구",
+    "power_min": 35,
+    "power_max": 60,
+    "weight_min": -11,
+    "weight_max": -6,
+    "weapon_type": "장신구",
+    "abilities": [
+      "도박사의 주사위: 매 공격마다 데미지가 -30%~+50% 사이에서 랜덤으로 변동한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "심해의 석판",
+    "type": "장신구",
+    "power_min": 40,
+    "power_max": 70,
+    "weight_min": 9,
+    "weight_max": 15,
+    "weapon_type": "장신구",
+    "abilities": [
+      "적응형 갑옷: 매 턴마다 상대의 물리/마법 관통 효과가 20%씩 감소한다. (곱연산)"
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "암철편",
+    "type": "장신구",
+    "power_min": 35,
+    "power_max": 60,
+    "weight_min": -2,
+    "weight_max": 3,
+    "weapon_type": "장신구",
+    "abilities": [
+      "철혈: 한 번의 공격으로 최대 HP의 10% 이상 데미지를 받으면, 초과분의 50%를 감소시킨다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "야풍",
+    "type": "장신구",
+    "power_min": 67,
+    "power_max": 116,
+    "weight_min": 17,
+    "weight_max": 27,
+    "weapon_type": "장신구",
+    "abilities": [
+      "약육강식: 자신의 기본 공격력이 상대보다 높을 때 데미지가 10% 증가한다. 낮을 때는 5% 감소한다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "어스름의 잔달",
+    "type": "장신구",
+    "power_min": 49,
+    "power_max": 84,
+    "weight_min": 5,
+    "weight_max": 11,
+    "weapon_type": "장신구",
+    "abilities": [
+      "정적: 자신에게 상태이상이 걸려있지 않을 때 데미지가 10% 증가한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
+  },
+  {
+    "name": "얼어붙은 달빛",
+    "type": "장신구",
+    "power_min": 57,
+    "power_max": 88,
+    "weight_min": -8,
+    "weight_max": -3,
+    "weapon_type": "장신구",
+    "abilities": [
+      "선견지명: 상대가 스킬을 발동했을 때 해당 공격의 데미지를 15% 감소시킨다."
+    ],
+    "attributes": [
+      "물"
+    ]
+  },
+  {
+    "name": "염화",
+    "type": "장신구",
+    "power_min": 32,
+    "power_max": 56,
+    "weight_min": -10,
+    "weight_max": -5,
+    "weapon_type": "장신구",
+    "abilities": [
+      "전환: 물리 데미지의 25%를 추가로 마법 데미지로 전환하여 적중시킨다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "용의 화염구슬",
+    "type": "장신구",
+    "power_min": 44,
+    "power_max": 74,
+    "weight_min": 10,
+    "weight_max": 18,
+    "weapon_type": "장신구",
+    "abilities": [
+      "보복: 상태이상에 걸릴 때마다 3턴간 공격력이 6% 증가한다. (최대 3중첩, 18%)"
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "운명의 실",
+    "type": "장신구",
+    "power_min": 67,
+    "power_max": 116,
+    "weight_min": 16,
+    "weight_max": 25,
+    "weapon_type": "장신구",
+    "abilities": [
+      "역천: 상대보다 HP 비율이 20% 이상 낮을 때 데미지가 12% 증가한다."
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "유성의 목걸이",
+    "type": "장신구",
+    "power_min": 53,
+    "power_max": 93,
+    "weight_min": 11,
+    "weight_max": 17,
+    "weapon_type": "장신구",
+    "abilities": [
+      "연속 타격: 매 기본 공격마다 10% 확률로 동일한 공격을 한 번 더 수행한다. (스킬 발동 시에는 발동하지 않음)"
+    ],
+    "attributes": [
+      "별"
+    ]
+  },
+  {
+    "name": "잔광",
+    "type": "장신구",
+    "power_min": 62,
+    "power_max": 107,
+    "weight_min": 15,
+    "weight_max": 23,
+    "weapon_type": "장신구",
+    "abilities": [
+      "연속 타격: 매 기본 공격마다 10% 확률로 동일한 공격을 한 번 더 수행한다. (스킬 발동 시에는 발동하지 않음)"
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "잿빛 하늘",
+    "type": "장신구",
+    "power_min": 37,
+    "power_max": 63,
+    "weight_min": -7,
+    "weight_max": -2,
+    "weapon_type": "장신구",
+    "abilities": [
+      "정신 오염: 상대의 스킬 발동 확률을 30% 감소시킨다."
+    ],
+    "attributes": [
+      "바람"
+    ]
+  },
+  {
+    "name": "축뢰",
+    "type": "장신구",
+    "power_min": 50,
+    "power_max": 85,
+    "weight_min": 5,
+    "weight_max": 10,
+    "weapon_type": "장신구",
+    "abilities": [
+      "기세: 연속으로 공격을 맞출 때마다 데미지가 3%씩 증가한다. (최대 5중첩, 15%. 회피/블록 당하면 초기화)"
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "타오르는 맹세",
+    "type": "장신구",
+    "power_min": 73,
+    "power_max": 125,
+    "weight_min": 20,
+    "weight_max": 32,
+    "weapon_type": "장신구",
+    "abilities": [
+      "피의 맹약: 전투 시작 시 최대 HP의 20%를 소모하고, 전투 동안 공격력과 마법 공격력이 20% 증가한다."
+    ],
+    "attributes": [
+      "불"
+    ]
+  },
+  {
+    "name": "태양의 축복",
+    "type": "장신구",
+    "power_min": 65,
+    "power_max": 113,
+    "weight_min": 17,
+    "weight_max": 26,
+    "weapon_type": "장신구",
+    "abilities": [
+      "급조 보호막: 첫 턴에 받는 데미지를 25% 경감한다."
+    ],
+    "attributes": [
+      "빛"
+    ]
+  },
+  {
+    "name": "폭풍우의 전조",
+    "type": "장신구",
+    "power_min": 28,
+    "power_max": 46,
+    "weight_min": -12,
+    "weight_max": -8,
+    "weapon_type": "장신구",
+    "abilities": [
+      "도박사의 룰렛: 매 턴 시작 시 10% 확률로 상대에게 랜덤 상태이상 1개를 부여한다."
+    ],
+    "attributes": [
+      "번개"
+    ]
+  },
+  {
+    "name": "혼백경",
+    "type": "장신구",
+    "power_min": 42,
+    "power_max": 72,
+    "weight_min": -9,
+    "weight_max": -4,
+    "weapon_type": "장신구",
+    "abilities": [
+      "도박사의 주사위: 매 공격마다 데미지가 -30%~+50% 사이에서 랜덤으로 변동한다."
+    ],
+    "attributes": [
+      "어둠"
+    ]
   }
 ]
