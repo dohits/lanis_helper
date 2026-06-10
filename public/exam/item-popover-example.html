@@ -143,8 +143,9 @@
 - 타입: "제작"
 - 본문: "'<어빌명>' 어빌리티가 부여된 장비를 제작할 때 사용합니다."
 - ScrollAbilityAdder가 이름에 '스크롤'+콜론이 있으면 어빌명을 추출하여
-  ability-data.json에서 효과를 찾아 본문 하단에 .scroll-ability-info 행으로 추가하고
-  팝오버 paper에 scroll-ability-processed 클래스를 부여한다(중복 처리 방지).
+  ability-data.json에서 효과를 찾아 본문 하단에 .scroll-ability-info 행으로 추가한다.
+  재처리 방지는 마커 클래스가 아니라 .scroll-ability-info 콘텐츠 존재 여부로 판정한다
+  (MUI가 팝오버를 재사용하며 내부를 다시 렌더해 행이 지워지면 재오픈 시 다시 추가).
 -->
 
 <!-- 스크롤 팝오버 원본 (스카우터 적용 전) -->
@@ -166,8 +167,8 @@
   </div>
 </div>
 
-<!-- 스크롤 팝오버 처리 후 (ScrollAbilityAdder 적용: scroll-ability-info 행 추가, scroll-ability-processed 마킹) -->
-<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper css-szzq31 scroll-ability-processed" tabindex="-1" style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); opacity: 1; transform: none; top: 829px; left: 26px; transform-origin: 2.8px 0px;">
+<!-- 스크롤 팝오버 처리 후 (ScrollAbilityAdder 적용: scroll-ability-info 행 추가) -->
+<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper css-szzq31" tabindex="-1" style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); opacity: 1; transform: none; top: 829px; left: 26px; transform-origin: 2.8px 0px;">
   <div class="MuiBox-root css-18csvm3">
     <div class="MuiBox-root css-1g9e0mr">
       <div class="MuiBox-root css-0">
