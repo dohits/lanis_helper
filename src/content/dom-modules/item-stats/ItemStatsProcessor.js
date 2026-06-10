@@ -3,21 +3,28 @@ import ITEM_COLORS from '../../../styles/item-colors.js';
 import GradeCalculator from './GradeCalculator.js';
 import RangeInfoAdder from './RangeInfoAdder.js';
 import FinalTagAdder from './FinalTagAdder.js';
+import ScrollAbilityAdder from './ScrollAbilityAdder.js';
 
 class ItemStatsProcessor {
   constructor() {
     this.gradeCalculator = new GradeCalculator();
     this.rangeInfoAdder = new RangeInfoAdder();
     this.finalTagAdder = new FinalTagAdder();
+    this.scrollAbilityAdder = new ScrollAbilityAdder();
   }
 
   async init() {
-    // DOM 기반 계산이므로 별도 데이터 로드 불필요
+    // 위력/무게는 DOM 기반 계산이라 데이터 로드 불필요.
+    // 스크롤 어빌 효과 표시를 위해 어빌 데이터만 로드한다.
+    await this.scrollAbilityAdder.init();
   }
 
   // 아이템 스탯 처리 메인 로직 (DOM 기반 계산)
   processItemStats() {
     try {
+      // 스크롤 팝오버 전용 패스 (위력/무게가 없는 별도 구조)
+      this.scrollAbilityAdder.processScrollPopovers();
+
       // 새로운 UI 구조에 맞는 선택자 사용
       const itemContainers = document.querySelectorAll('.MuiBox-root.css-38zrbw, .MuiBox-root[class*="css-"], .MuiPopover-root .MuiBox-root');
       let foundContainers = 0;
@@ -149,6 +156,9 @@ class ItemStatsProcessor {
     processedElements.forEach(element => {
       element.classList.remove('item-stats-processed', 'power-range-processed', 'weight-range-processed');
     });
+
+    // 스크롤 어빌 효과 요소 정리
+    this.scrollAbilityAdder.cleanup();
   }
 
   // DOM 기반 계산이므로 희귀 아이템 데이터 불필요
