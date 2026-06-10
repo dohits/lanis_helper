@@ -5,6 +5,7 @@ class AbilityPopoverView {
   constructor() {
     this.el = null;      // 현재 팝오버 엘리먼트
     this.anchor = null;  // 팝오버를 띄운 기준 요소
+    this.priceEl = null; // 가격 섹션 엘리먼트
   }
 
   // anchor에 대해 이미 열려 있는가 (토글 판정용)
@@ -28,6 +29,7 @@ class AbilityPopoverView {
     document.body.appendChild(card);
     this.el = card;
     this.anchor = anchor;
+    this.priceEl = card.querySelector('.lh-ability-price');
     this.position(card, anchor);
   }
 
@@ -37,6 +39,7 @@ class AbilityPopoverView {
     }
     this.el = null;
     this.anchor = null;
+    this.priceEl = null;
   }
 
   // 다크 카드 DOM 생성 (textContent만 사용 — XSS 안전)
@@ -87,10 +90,29 @@ class AbilityPopoverView {
     body.style.cssText = 'margin: 0; color: #ddd;';
     body.textContent = effect;
 
+    // 가격 섹션(placeholder) — 매니저가 비동기로 채운다
+    const price = document.createElement('div');
+    price.className = 'lh-ability-price';
+    price.style.cssText = 'margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.12); color: #bbb; font-size: 0.8rem; line-height: 1.4;';
+    price.textContent = '거래가 불러오는 중…';
+
     card.appendChild(header);
     card.appendChild(divider);
     card.appendChild(body);
+    card.appendChild(price);
     return card;
+  }
+
+  // 가격 섹션 갱신 (현재 카드가 열려 있고 섹션이 연결돼 있을 때만)
+  setPriceLines(lines) {
+    if (!this.priceEl || !this.priceEl.isConnected) return;
+    this.priceEl.textContent = '';
+    lines.forEach((line) => {
+      const p = document.createElement('p');
+      p.style.cssText = 'margin: 0;';
+      p.textContent = line;
+      this.priceEl.appendChild(p);
+    });
   }
 
   // 기준 요소 아래에 앵커하고 뷰포트 경계를 보정 (position: fixed — 뷰포트 좌표)
