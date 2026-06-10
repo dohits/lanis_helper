@@ -1,6 +1,6 @@
 import BaseModal from '../base/base-modal.js';
 import { MODAL_CONFIGS } from '../shared/modal-constants.js';
-import { API_ENDPOINTS, LANIS_ME_PATHS, LANIS_ME_PAGE_IDS, SHEET_IDS, ENCHANT_GID_MAP } from '../../../../shared/constants.js';
+import { API_ENDPOINTS, LANIS_ME_PATHS, LANIS_ME_PAGE_IDS } from '../../../../shared/constants.js';
 
 // 프로그램 정보 모달
 class ProgramInfoModal extends BaseModal {
@@ -80,8 +80,7 @@ class ProgramInfoModal extends BaseModal {
     // 본문
     const tbody = document.createElement('tbody');
     const contributors = [
-      { role: '장비해방', nick: '수고하세요', url: `https://docs.google.com/spreadsheets/d/${SHEET_IDS.ENCHANT_INFO}/edit?gid=${ENCHANT_GID_MAP.armor}#gid=${ENCHANT_GID_MAP.armor}`, urlinfo: '해방정보 시트' },
-              { role: '어빌리티', nick: '먹물', url: `${API_ENDPOINTS.LANIS_ME}${LANIS_ME_PATHS.BOARD_VIEW}/${LANIS_ME_PAGE_IDS.ABILITY_GUIDE}`, urlinfo: '어빌리티 게시글' },
+      { role: '어빌리티', nick: '먹물', url: `${API_ENDPOINTS.LANIS_ME}${LANIS_ME_PATHS.BOARD_VIEW}/${LANIS_ME_PAGE_IDS.ABILITY_GUIDE}`, urlinfo: '어빌리티 게시글' },
       { role: '위키운영', nick: '크루즈', url: `${API_ENDPOINTS.LANIS_WIKI.replace('/api.php', '/')}`, urlinfo: '위키 바로가기' }
     ];
 

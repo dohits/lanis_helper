@@ -20,16 +20,6 @@ export const MODAL_CONFIGS = {
     width: '90vw',
     height: 'auto'
   },
-  enchantInfo: {
-    id: 'enchantInfoModal',
-    title: '장비 해방 정보',
-    className: 'enchant-info-modal',
-    contentClassName: 'enchant-info-content',
-    maxWidth: '800px',
-    maxHeight: '90vh',
-    width: '90vw',
-    height: 'auto'
-  },
   abilityInfo: {
     id: 'abilityInfoModal',
     title: '어빌리티 정보',

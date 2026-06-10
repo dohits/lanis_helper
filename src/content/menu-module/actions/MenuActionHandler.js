@@ -19,7 +19,6 @@ class MenuActionHandler {
       userSearch: menuManager.userSearchModal,
       programInfo: menuManager.programInfoModal,
       abilityInfo: menuManager.abilityInfoModal,
-      enchantInfo: menuManager.enchantInfoModal,
       guildWarInfo: menuManager.guildWarInfoModal
     };
     this.expectedValueModal = menuManager.expectedValueModal;
@@ -56,9 +55,6 @@ class MenuActionHandler {
         break;
       case 'userSearch':
         this.modals.userSearch.open();
-        break;
-      case 'enchantInfo':
-        this.modals.enchantInfo.open();
         break;
       case 'programInfo':
         this.modals.programInfo.open();

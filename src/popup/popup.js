@@ -13,14 +13,6 @@ const LANIS_ME_PAGE_IDS = {
   ABILITY_GUIDE: '6841a029abffb8c821c43e85'
 };
 
-const SHEET_IDS = {
-  ENCHANT_INFO: '15E8F_qSxKPMqsL_ulfwm739PTjBLO64qN8jWuDZe7ng'
-};
-
-const ENCHANT_GID_MAP = {
-  'armor': '468768394'
-};
-
 // 버전 정보 표시 및 URL 동적 생성
 document.addEventListener('DOMContentLoaded', function() {
   // manifest에서 버전 동적 추출
@@ -55,11 +47,5 @@ function updateUrls() {
   const abilityLink = document.querySelector('a[href*="lanis.me/board/view/6841a029abffb8c821c43e85"]');
   if (abilityLink) {
     abilityLink.href = `${API_ENDPOINTS.LANIS_ME}${LANIS_ME_PATHS.BOARD_VIEW}/${LANIS_ME_PAGE_IDS.ABILITY_GUIDE}`;
-  }
-
-  // 해방정보 시트 링크 업데이트
-  const sheetLink = document.querySelector('a[href*="docs.google.com/spreadsheets/d/15E8F_qSxKPMqsL_ulfwm739PTjBLO64qN8jWuDZe7ng"]');
-  if (sheetLink) {
-    sheetLink.href = `https://docs.google.com/spreadsheets/d/${SHEET_IDS.ENCHANT_INFO}/edit?gid=${ENCHANT_GID_MAP.armor}#gid=${ENCHANT_GID_MAP.armor}`;
   }
 } 
