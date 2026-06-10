@@ -33,6 +33,22 @@ class OfficialPriceFetcher {
 
 
   /**
+   * 거래 내역(최근 거래 리스트) 가져오기
+   * @param {string} itemName - 아이템명 (예: '제작 스크롤:방한')
+   * @param {number} limit - 페이지당 건수
+   * @returns {Promise<Array>} transactions 배열 (실패 시 빈 배열)
+   */
+  async getPriceHistory(itemName, limit = 20) {
+    try {
+      const data = await this.api.fetchPriceHistory(itemName, limit);
+      return Array.isArray(data && data.transactions) ? data.transactions : [];
+    } catch (error) {
+      console.error(`${itemName} 거래 내역 가져오기 실패:`, error);
+      return [];
+    }
+  }
+
+  /**
    * 현재 시세 가져오기 (기존 API와 호환)
    * @param {string} itemName - 아이템명
    * @returns {Promise<Object>} 현재 시세 정보

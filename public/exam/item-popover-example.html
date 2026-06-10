@@ -143,8 +143,9 @@
 - 타입: "제작"
 - 본문: "'<어빌명>' 어빌리티가 부여된 장비를 제작할 때 사용합니다."
 - ScrollAbilityAdder가 이름에 '스크롤'+콜론이 있으면 어빌명을 추출하여
-  ability-data.json에서 효과를 찾아 본문 하단에 .scroll-ability-info 행으로 추가하고
-  팝오버 paper에 scroll-ability-processed 클래스를 부여한다(중복 처리 방지).
+  ability-data.json에서 효과를 찾아 본문 하단에 .scroll-ability-info 행으로 추가한다.
+  재처리 방지는 마커 클래스가 아니라 .scroll-ability-info 콘텐츠 존재 여부로 판정한다
+  (MUI가 팝오버를 재사용하며 내부를 다시 렌더해 행이 지워지면 재오픈 시 다시 추가).
 -->
 
 <!-- 스크롤 팝오버 원본 (스카우터 적용 전) -->
@@ -166,8 +167,8 @@
   </div>
 </div>
 
-<!-- 스크롤 팝오버 처리 후 (ScrollAbilityAdder 적용: scroll-ability-info 행 추가, scroll-ability-processed 마킹) -->
-<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper css-szzq31 scroll-ability-processed" tabindex="-1" style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); opacity: 1; transform: none; top: 829px; left: 26px; transform-origin: 2.8px 0px;">
+<!-- 스크롤 팝오버 처리 후 (ScrollAbilityAdder 적용: scroll-ability-info 행 추가) -->
+<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper css-szzq31" tabindex="-1" style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); opacity: 1; transform: none; top: 829px; left: 26px; transform-origin: 2.8px 0px;">
   <div class="MuiBox-root css-18csvm3">
     <div class="MuiBox-root css-1g9e0mr">
       <div class="MuiBox-root css-0">
@@ -185,8 +186,10 @@
         <p class="MuiTypography-root MuiTypography-body2" style="color: #66d9ef; font-size: 0.85rem; line-height: 1.4;">과부하: 스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다.</p>
       </div>
       <div class="scroll-price-info" style="margin-top: 4px;">
-        <p class="MuiTypography-root MuiTypography-body2" style="color: #c0c0c0; font-size: 0.8rem; line-height: 1.4; margin: 0;">최근 거래가: 12,000,000 Gold</p>
-        <p class="MuiTypography-root MuiTypography-body2" style="color: #c0c0c0; font-size: 0.8rem; line-height: 1.4; margin: 0;">30일 평균: 10,500,000 Gold</p>
+        <p class="MuiTypography-root MuiTypography-body2" style="color: #c0c0c0; font-size: 0.8rem; line-height: 1.4; margin: 0;">최근 거래 내역</p>
+        <p class="MuiTypography-root MuiTypography-body2" style="color: #c0c0c0; font-size: 0.8rem; line-height: 1.4; margin: 0;">- 2,000,001골드 / 2026. 6. 10. 오후 3:13:29</p>
+        <p class="MuiTypography-root MuiTypography-body2" style="color: #c0c0c0; font-size: 0.8rem; line-height: 1.4; margin: 0;">- 2,000,001골드 / 2026. 6. 10. 오전 9:21:28</p>
+        <p class="MuiTypography-root MuiTypography-body2" style="color: #c0c0c0; font-size: 0.8rem; line-height: 1.4; margin: 0;">- 2,000,001골드 / 2026. 6. 9. 오후 9:12:28</p>
       </div>
     </div>
   </div>

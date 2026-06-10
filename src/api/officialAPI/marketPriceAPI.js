@@ -195,6 +195,54 @@ class MarketPriceAPI {
   }
 
   /**
+   * 거래 내역(price-history) 가져오기 (24h 캐시 + 중복요청 제거, history_ 키 사용)
+   * @param {string} itemName - 아이템명 (예: '제작 스크롤:방한')
+   * @param {number} limit - 페이지당 건수
+   * @returns {Promise<Object>} { success, transactions, pagination }
+   */
+  async fetchPriceHistory(itemName, limit = 20) {
+    const cacheKey = `history_${itemName}_${limit}`;
+
+    const cached = this.getFromCache(cacheKey);
+    if (cached) return cached;
+
+    // 중복 요청 방지 (market-price와 키 네임스페이스 분리)
+    if (this.pendingRequests.has(cacheKey)) {
+      return await this.pendingRequests.get(cacheKey);
+    }
+
+    const requestPromise = this.makePriceHistoryRequest(itemName, limit, cacheKey);
+    this.pendingRequests.set(cacheKey, requestPromise);
+    try {
+      return await requestPromise;
+    } finally {
+      this.pendingRequests.delete(cacheKey);
+    }
+  }
+
+  async makePriceHistoryRequest(itemName, limit, cacheKey) {
+    const url = `https://lanis.me/api/exchange/price-history?itemName=${encodeURIComponent(itemName)}&page=1&limit=${limit}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      mode: 'cors',
+      credentials: 'omit'
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    if (!data.success) {
+      throw new Error('API 응답이 실패했습니다.');
+    }
+
+    this.setCache(cacheKey, data);
+    return data;
+  }
+
+  /**
    * 기존 API와 호환되는 가격 데이터 가져오기
    * @param {string} itemName - 아이템명
    * @param {string} priceType - 가격 타입 ('recent' 또는 'average')
