@@ -3,7 +3,7 @@ export const EXTENSION_VERSION = '1.7.3';
 
 // 구글 시트 ID들
 export const SHEET_IDS = {
-  PRICE_DATA: '1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo',    // 시세 데이터 시트 (어빌리티와 동일)
+  PRICE_DATA: '1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo',    // 시세 데이터 시트
   EQUIPMENT_DRAW: '1JdoCZQviWFNJKrSyn-ZUiy6d-rf4bt6ah5CAX15sOeU'  // 장비 뽑기 시트
 };
 
