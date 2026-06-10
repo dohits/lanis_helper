@@ -29,7 +29,7 @@ check('extract no colon -> null', extractScrollAbilityName('고통의 나이프'
 // 매칭: 전체 어빌(장비/직업) 대상, 공백 정규화
 check('equip ability (과부하)', findAbilityEffect(data, '과부하'), '스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다.');
 check('spacing normalize (냉기 돌풍 -> 냉기돌풍)', findAbilityEffect(data, '냉기 돌풍'), '매 공격마다 10% 확률로 상대방을 빙결 상태로 만든다.');
-check('job ability (블록)', findAbilityEffect(data, '블록'), '적의 공격을 3.5% 확률로 무효화');
+check('job ability (블록)', findAbilityEffect(data, '블록'), '적의 공격을 3.5% 확률로 무효화한다.');
 check('not found -> null', findAbilityEffect(data, '존재하지않는어빌'), null);
 
 if (failed) {
