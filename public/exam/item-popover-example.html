@@ -134,4 +134,56 @@
       </div>
     </div>
   </div>
-</div> 
+</div>
+
+<!--
+=== 스크롤 팝오버 구조 (신규 카테고리) ===
+- 위력/무게가 없는 별도 구조 (css-18csvm3 래퍼)
+- 아이템명: "제작 스크롤:<어빌명>" + 색상/등급 span (예: (금))
+- 타입: "제작"
+- 본문: "'<어빌명>' 어빌리티가 부여된 장비를 제작할 때 사용합니다."
+- ScrollAbilityAdder가 이름에 '스크롤'+콜론이 있으면 어빌명을 추출하여
+  ability-data.json에서 효과를 찾아 본문 하단에 .scroll-ability-info 행으로 추가하고
+  팝오버 paper에 scroll-ability-processed 클래스를 부여한다(중복 처리 방지).
+-->
+
+<!-- 스크롤 팝오버 원본 (스카우터 적용 전) -->
+<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper css-szzq31" tabindex="-1" style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); opacity: 1; transform: none; top: 829px; left: 26px; transform-origin: 2.8px 0px;">
+  <div class="MuiBox-root css-18csvm3">
+    <div class="MuiBox-root css-1g9e0mr">
+      <div class="MuiBox-root css-0">
+        <p class="MuiTypography-root MuiTypography-body2 css-rgjqpd">제작 스크롤:과부하<span class="MuiTypography-root MuiTypography-body1 css-1003q18">(금)</span></p>
+      </div>
+      <div class="MuiBox-root css-171onha">
+        <p class="MuiTypography-root MuiTypography-body2 css-nhjr0n">제작</p>
+      </div>
+    </div>
+    <div class="MuiBox-root css-1821gv5">
+      <div class="MuiBox-root css-0">
+        <p class="MuiTypography-root MuiTypography-body2 css-nhjr0n">'과부하' 어빌리티가 부여된 장비를 제작할 때 사용합니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 스크롤 팝오버 처리 후 (ScrollAbilityAdder 적용: scroll-ability-info 행 추가, scroll-ability-processed 마킹) -->
+<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper css-szzq31 scroll-ability-processed" tabindex="-1" style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); opacity: 1; transform: none; top: 829px; left: 26px; transform-origin: 2.8px 0px;">
+  <div class="MuiBox-root css-18csvm3">
+    <div class="MuiBox-root css-1g9e0mr">
+      <div class="MuiBox-root css-0">
+        <p class="MuiTypography-root MuiTypography-body2 css-rgjqpd">제작 스크롤:과부하<span class="MuiTypography-root MuiTypography-body1 css-1003q18">(금)</span></p>
+      </div>
+      <div class="MuiBox-root css-171onha">
+        <p class="MuiTypography-root MuiTypography-body2 css-nhjr0n">제작</p>
+      </div>
+    </div>
+    <div class="MuiBox-root css-1821gv5">
+      <div class="MuiBox-root css-0">
+        <p class="MuiTypography-root MuiTypography-body2 css-nhjr0n">'과부하' 어빌리티가 부여된 장비를 제작할 때 사용합니다.</p>
+      </div>
+      <div class="scroll-ability-info" style="margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.12);">
+        <p class="MuiTypography-root MuiTypography-body2" style="color: #66d9ef; font-size: 0.85rem; line-height: 1.4;">과부하: 스킬 데미지가 25% 증가하지만, MP 소비가 30% 증가한다.</p>
+      </div>
+    </div>
+  </div>
+</div>
