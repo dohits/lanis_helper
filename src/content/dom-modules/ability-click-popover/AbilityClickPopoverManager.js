@@ -2,6 +2,8 @@
 import AbilityInfoDataManager from '../ability-info/AbilityInfoDataManager.js';
 import { findAbilityEffect } from '../item-stats/scroll-ability-utils.js';
 import AbilityPopoverView from './AbilityPopoverView.js';
+import { fetchScrollPrice } from '../scroll-price/ScrollPriceService.js';
+import { priceLines } from '../scroll-price/scroll-price-utils.js';
 
 const CLICKABLE_CLASS = 'lh-ability-clickable';
 
@@ -161,6 +163,18 @@ class AbilityClickPopoverManager {
     const gradeEl = anchor.previousElementSibling;
     const grade = gradeEl ? gradeEl.textContent.trim() : '';
     this.view.open(anchor, { abilityName, grade, effect });
+    this.loadPrice(anchor, abilityName);
+  }
+
+  // 비동기 시세 로드 후 가격 섹션 갱신 (같은 앵커 팝오버가 열려 있을 때만)
+  async loadPrice(anchor, abilityName) {
+    try {
+      const result = await fetchScrollPrice(abilityName);
+      if (!this.view.isOpenFor(anchor)) return;
+      this.view.setPriceLines(priceLines(result));
+    } catch (error) {
+      console.warn('[AbilityClickPopover] 시세 표시 오류:', error);
+    }
   }
 
   destroy() {
