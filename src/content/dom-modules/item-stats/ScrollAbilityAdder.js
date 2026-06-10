@@ -3,6 +3,7 @@ import AbilityInfoDataManager from '../ability-info/AbilityInfoDataManager.js';
 import { extractScrollAbilityName, findAbilityEffect } from './scroll-ability-utils.js';
 import { fetchScrollPrice } from '../scroll-price/ScrollPriceService.js';
 import { priceLines } from '../scroll-price/scroll-price-utils.js';
+import { adjustPaperPosition } from './popover-position.js';
 
 // 가격 라인 <p> 공통 스타일 (placeholder와 최종 렌더가 항상 동일하도록)
 const PRICE_LINE_STYLE = 'color: #c0c0c0; font-size: 0.8rem; line-height: 1.4; margin: 0;';
@@ -72,7 +73,10 @@ class ScrollAbilityAdder {
     // 가격 행(placeholder) 추가 후 비동기 채움
     const priceRow = this.buildPriceRow();
     targetBox.appendChild(priceRow);
-    this.loadPrice(priceRow, abilityName);
+    this.loadPrice(priceRow, abilityName, paper);
+
+    // 행 추가로 팝오버가 커졌으니 위치 보정 (장비 스카우터와 동일 동작)
+    adjustPaperPosition(paper);
   }
 
   // 효과 표시 행 생성
@@ -107,11 +111,13 @@ class ScrollAbilityAdder {
   }
 
   // 비동기 시세 로드 후 행 갱신 (팝오버가 닫혔으면 무시)
-  async loadPrice(row, abilityName) {
+  async loadPrice(row, abilityName, paper) {
     try {
       const result = await fetchScrollPrice(abilityName);
       if (!row.isConnected) return;
       this.renderPriceLines(row, priceLines(result));
+      // 비동기 시세로 높이가 바뀌었으니 위치 재보정
+      adjustPaperPosition(paper);
     } catch (error) {
       console.warn('[ScrollAbilityAdder] 시세 표시 오류:', error);
     }
