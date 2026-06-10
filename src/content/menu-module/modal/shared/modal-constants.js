@@ -62,18 +62,6 @@ export const MODAL_CONFIGS = {
     closeOnOutsideClick: true,
     closeOnEsc: true
   },
-  equipmentSettingSim: {
-    id: 'equipment-setting-sim-modal',
-    title: '⚔️ 장비 셋팅 시뮬레이션',
-    className: 'equipment-setting-sim-modal',
-    contentClassName: 'equipment-setting-sim-content',
-    maxWidth: '800px',
-    maxHeight: '90vh',
-    width: '90%',
-    height: 'auto',
-    closeOnOutsideClick: true,
-    closeOnEsc: true
-  },
   equipmentEnchantSim: {
     id: 'equipment-enchant-sim-modal',
     title: '🔮 장비 감정 시뮬레이션',
