@@ -43,8 +43,9 @@
 - **googleSheetLoad/**: 구글 시트 데이터 로딩
   - **index.js**: 공통 API 모듈
   - **priceDataAPI.js**: 가격 데이터 API
-  - **abilityInfoAPI.js**: 능력치 정보 API
   - **enchantInfoAPI.js**: 인챈트 정보 API
+
+> 어빌리티 정보는 구글 시트 실시간 호출에서 번들 로컬 JSON(`src/shared/ability-data.json`)으로 전환됨. `src/content/dom-modules/ability-info/AbilityInfoDataManager.js` 참고.
 
 ### 계산기 모듈 (src/content/calculator/)
 기대값 계산기 및 관련 기능
