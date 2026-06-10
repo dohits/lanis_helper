@@ -6,7 +6,6 @@
 
 - [설치 및 설정](#설치-및-설정)
 - [기본 API 사용법](#기본-api-사용법)
-- [장비 셋팅 전용 API](#장비-셋팅-전용-api)
 - [에러 처리](#에러-처리)
 - [예시 코드](#예시-코드)
 
@@ -30,10 +29,9 @@
 ### 2. API 설정
 
 ```javascript
-import { EquipmentSettingAPI } from './src/api/googleSheetWrite/equipmentSettingAPI.js';
+import GoogleSheetWriteAPI from './src/api/googleSheetWrite/index.js';
 
-const api = new EquipmentSettingAPI();
-api.setSheetId('YOUR_SHEET_ID_HERE');
+const api = new GoogleSheetWriteAPI();
 ```
 
 ## 📚 기본 API 사용법
@@ -86,88 +84,6 @@ const result = await api.findAndUpdate(
 );
 ```
 
-## 🎮 장비 셋팅 전용 API
-
-### EquipmentSettingAPI 클래스
-
-장비 셋팅 시뮬레이션에 특화된 API입니다.
-
-```javascript
-import { EquipmentSettingAPI } from './src/api/googleSheetWrite/equipmentSettingAPI.js';
-
-const equipmentAPI = new EquipmentSettingAPI();
-equipmentAPI.setSheetId('YOUR_SHEET_ID_HERE');
-```
-
-#### 주요 메서드
-
-##### `initializeSheet(options)`
-시트를 초기화하고 헤더를 생성합니다.
-
-```javascript
-const result = await equipmentAPI.initializeSheet();
-if (result.success) {
-  console.log('시트 초기화 완료');
-}
-```
-
-##### `saveEquipmentSetting(settingData, options)`
-장비 셋팅을 저장합니다.
-
-```javascript
-const settingData = {
-  userId: 'user123',
-  userName: '테스트유저',
-  job: { name: '전사', icon: '⚔️' },
-  element: { name: '화염', icon: '🔥' },
-  mainAbility: [{ '어빌리티명': '강화된 힘', '직업': '전사' }],
-  jobAbility: [{ '어빌리티명': '전사의 의지', '직업': '전사' }],
-  weapon: [{ name: '강화된 검', type: '무기/검' }],
-  armor: [{ name: '강화된 갑옷', type: '방어구/갑옷' }],
-  accessory: [{ name: '힘의 반지', type: '장신구/반지' }],
-  notes: '테스트용 셋팅'
-};
-
-const result = await equipmentAPI.saveEquipmentSetting(settingData);
-if (result.success) {
-  console.log('셋팅 저장 완료, ID:', result.data.settingId);
-}
-```
-
-##### `getUserSettings(userId, options)`
-사용자의 셋팅 목록을 조회합니다.
-
-```javascript
-const result = await equipmentAPI.getUserSettings('user123');
-if (result.success) {
-  console.log('조회된 셋팅 수:', result.data.settings.length);
-  result.data.settings.forEach(setting => {
-    console.log('셋팅 ID:', setting.id);
-    console.log('직업:', setting.job);
-    console.log('저장 시간:', setting.timestamp);
-  });
-}
-```
-
-##### `updateSetting(settingId, settingData, options)`
-특정 셋팅을 업데이트합니다.
-
-```javascript
-const updateData = {
-  ...originalSettingData,
-  notes: '업데이트된 메모'
-};
-
-const result = await equipmentAPI.updateSetting(1, updateData);
-```
-
-##### `deleteSetting(settingId, options)`
-특정 셋팅을 삭제합니다.
-
-```javascript
-const result = await equipmentAPI.deleteSetting(1);
-```
-
 ## ⚠️ 에러 처리
 
 모든 API 메서드는 일관된 응답 형식을 반환합니다:
@@ -195,57 +111,49 @@ const result = await equipmentAPI.deleteSetting(1);
 ```
 
 ### 자동 재시도
-- 네트워크 오류 시 자동으로 3회 재시도
-- 재시도 간격은 점진적으로 증가 (1초 → 2초 → 3초)
-- 타임아웃은 15초로 설정
+- 네트워크 오류 시 자동으로 재시도
+- 재시도 간격은 점진적으로 증가
+- 타임아웃 설정 지원
 
 ## 💡 예시 코드
 
-### 완전한 예시
+### 기본 예시
 
 ```javascript
-import { EquipmentSettingAPI } from './src/api/googleSheetWrite/equipmentSettingAPI.js';
+import GoogleSheetWriteAPI from './src/api/googleSheetWrite/index.js';
 
-async function completeExample() {
-  const api = new EquipmentSettingAPI();
-  api.setSheetId('YOUR_SHEET_ID_HERE');
-  
+async function basicExample() {
+  const api = new GoogleSheetWriteAPI();
+  const sheetId = 'YOUR_SHEET_ID_HERE';
+  const sheetName = 'TestSheet';
+
   try {
-    // 1. 시트 초기화
-    const initResult = await api.initializeSheet();
-    if (!initResult.success) {
-      console.error('시트 초기화 실패:', initResult.error);
-      return;
-    }
-    
-    // 2. 셋팅 저장
-    const settingData = {
-      userId: 'user123',
-      userName: '테스트유저',
-      job: { name: '전사' },
-      element: { name: '화염' },
-      mainAbility: [{ '어빌리티명': '강화된 힘' }],
-      weapon: [{ name: '강화된 검' }],
-      notes: '테스트 셋팅'
-    };
-    
-    const saveResult = await api.saveEquipmentSetting(settingData);
-    if (saveResult.success) {
-      console.log('저장 완료, ID:', saveResult.data.settingId);
-      
-      // 3. 저장된 셋팅 조회
-      const loadResult = await api.getUserSettings('user123');
-      if (loadResult.success) {
-        console.log('조회된 셋팅:', loadResult.data.settings);
-      }
-    }
-    
+    // 1. 데이터 추가
+    const dataToAdd = [
+      ['2024-01-01', 'User1', 'Test Data 1'],
+      ['2024-01-02', 'User2', 'Test Data 2']
+    ];
+    const appendResult = await api.appendData(sheetId, sheetName, dataToAdd);
+    console.log(appendResult.success ? '추가 성공' : appendResult.error);
+
+    // 2. 특정 행 업데이트
+    const updateData = ['2024-01-01', 'User1', 'Updated Test Data 1'];
+    await api.updateRow(sheetId, sheetName, 2, updateData);
+
+    // 3. 조건부 검색 및 업데이트
+    await api.findAndUpdate(
+      sheetId,
+      sheetName,
+      1,
+      'User2',
+      ['2024-01-02', 'User2', 'Found and Updated Data']
+    );
   } catch (error) {
     console.error('오류 발생:', error);
   }
 }
 
-completeExample();
+basicExample();
 ```
 
 ## 🔒 보안 고려사항
@@ -259,17 +167,11 @@ completeExample();
 
 ### 일반적인 문제들
 
-1. **"시트 ID가 설정되지 않았습니다"**
-   - `setSheetId()` 메서드로 시트 ID를 설정했는지 확인
-
-2. **"HTTP error! status: 403"**
+1. **"HTTP error! status: 403"**
    - 시트의 공개 설정과 권한을 확인
    - 익명 쓰기 권한이 부여되었는지 확인
 
-3. **"시트가 이미 초기화되어 있습니다"**
-   - 정상적인 응답입니다. 기존 헤더가 있다는 의미
-
-4. **네트워크 타임아웃**
+2. **네트워크 타임아웃**
    - 자동 재시도가 실행됩니다
    - 인터넷 연결 상태를 확인
 
@@ -277,7 +179,7 @@ completeExample();
 
 ```javascript
 // 상세한 로그 확인
-const result = await api.saveEquipmentSetting(data);
+const result = await api.appendData(sheetId, sheetName, data);
 console.log('전체 응답:', JSON.stringify(result, null, 2));
 
 // 네트워크 요청 확인 (브라우저 개발자 도구)

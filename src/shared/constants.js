@@ -5,15 +5,11 @@ export const EXTENSION_VERSION = '1.7.3';
 export const SHEET_IDS = {
   ABILITY_INFO: '1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo',  // 어빌리티 정보 시트
   PRICE_DATA: '1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo',    // 시세 데이터 시트 (어빌리티와 동일)
-  EQUIPMENT_SETTING: '1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo',  // 장비 셋팅 시트
   EQUIPMENT_DRAW: '1JdoCZQviWFNJKrSyn-ZUiy6d-rf4bt6ah5CAX15sOeU'  // 장비 뽑기 시트
 };
 
 // 시세 데이터 시트 GID
 export const PRICE_DATA_GID = '1489625214';  // 시세 시트 GID
-
-// 장비 셋팅 시트 GID
-export const EQUIPMENT_SETTING_GID = '1210758692';  // 장비 셋팅 시트 GID
 
 // 장비 뽑기 시트 GID
 export const EQUIPMENT_DRAW_GID = '1202665113';  // 장비 뽑기 시트 GID

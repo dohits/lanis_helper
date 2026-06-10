@@ -1,7 +1,6 @@
 import { ExpectedValueModal } from '../modal/calculator/expected-value-modal.js';
 import { SpecCalculatorModal } from '../modal/calculator/spec-calculator-modal.js';
 import { FishingCalculatorModal } from '../modal/calculator/fishing-calculator-modal.js';
-import { EquipmentSettingSimModal } from '../modal/calculator/equipment-setting-sim-modal.js';
 import { EquipmentEnchantSimModal } from '../modal/calculator/equipment-enchant-sim-modal.js';
 import { ArtifactEnchantSimModal } from '../modal/calculator/artifact-enchant-sim-modal.js';
 
@@ -23,7 +22,6 @@ class MenuActionHandler {
     this.expectedValueModal = menuManager.expectedValueModal;
     this.specCalculatorModal = menuManager.specCalculatorModal;
     this.fishingCalculatorModal = menuManager.fishingCalculatorModal;
-    this.equipmentSettingSimModal = menuManager.equipmentSettingSimModal;
     this.equipmentEnchantSimModal = menuManager.equipmentEnchantSimModal;
     this.artifactEnchantSimModal = menuManager.artifactEnchantSimModal;
   }
@@ -39,9 +37,6 @@ class MenuActionHandler {
         break;
       case 'fishingCalculator':
         this.openFishingCalculatorModal();
-        break;
-      case 'equipmentSettingSim':
-        this.openEquipmentSettingSimModal();
         break;
       case 'equipmentEnchantSim':
         this.openEquipmentEnchantSimModal();
@@ -147,12 +142,6 @@ class MenuActionHandler {
   openFishingCalculatorModal() {
     // 직접 FishingCalculatorModal 사용
     this.fishingCalculatorModal.open();
-  }
-
-  // 장비 셋팅 시뮬 모달 열기
-  openEquipmentSettingSimModal() {
-    // 직접 EquipmentSettingSimModal 사용
-    this.equipmentSettingSimModal.open();
   }
 
   // 장비 감정 시뮬 모달 열기
