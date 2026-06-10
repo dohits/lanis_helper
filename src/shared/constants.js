@@ -3,18 +3,10 @@ export const EXTENSION_VERSION = '1.7.3';
 
 // 구글 시트 ID들
 export const SHEET_IDS = {
-  ENCHANT_INFO: '15E8F_qSxKPMqsL_ulfwm739PTjBLO64qN8jWuDZe7ng',  // 해방 정보 시트
   ABILITY_INFO: '1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo',  // 어빌리티 정보 시트
   PRICE_DATA: '1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo',    // 시세 데이터 시트 (어빌리티와 동일)
   EQUIPMENT_SETTING: '1R27XF4SHjvYeXVkk0wD_3XsAxo9DDF7Mp0dr3ljmXFo',  // 장비 셋팅 시트
   EQUIPMENT_DRAW: '1JdoCZQviWFNJKrSyn-ZUiy6d-rf4bt6ah5CAX15sOeU'  // 장비 뽑기 시트
-};
-
-// 해방 정보 시트 GID 매핑
-export const ENCHANT_GID_MAP = {
-  'armor': '468768394',     // 장비해방(방어구) 시트 GID
-  'weapon': '337738977',    // 장비해방(무기) 시트 GID
-  'accessory': '567672096'  // 장비해방(장신구) 시트 GID
 };
 
 // 시세 데이터 시트 GID

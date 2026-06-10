@@ -11,7 +11,6 @@ import ItemGuideModal from './modal/item-guide/item-guide-modal.js';
 import UserSearchModal from './modal/item-guide/user-search-modal.js';
 import ProgramInfoModal from './modal/settings/program-info-modal.js';
 import AbilityInfoModal from './modal/settings/ability-info-modal.js';
-import EnchantInfoModal from './modal/settings/enchant-info-modal.js';
 import MainMenuRenderer from './renderers/MainMenuRenderer.js';
 import SubMenuRenderer from './renderers/SubMenuRenderer.js';
 import MenuStateManager from './state/MenuStateManager.js';
@@ -34,7 +33,6 @@ class MenuManager {
     this.userSearchModal = new UserSearchModal();
     this.programInfoModal = new ProgramInfoModal();
     this.abilityInfoModal = new AbilityInfoModal();
-    this.enchantInfoModal = new EnchantInfoModal();
     this.mainMenuRenderer = new MainMenuRenderer();
     this.subMenuRenderer = new SubMenuRenderer();
     this.eventHandler = new MenuEventHandler(this);
