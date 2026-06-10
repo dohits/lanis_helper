@@ -1,6 +1,6 @@
 import BaseModal from '../base/base-modal.js';
 import { MODAL_CONFIGS } from '../shared/modal-constants.js';
-import AbilityInfoAPI from '../../../../api/googleSheetLoad/abilityInfoAPI.js';
+import AbilityInfoDataManager from '../../../dom-modules/ability-info/AbilityInfoDataManager.js';
 
 // 어빌리티 정보 모달
 class AbilityInfoModal extends BaseModal {
@@ -109,12 +109,12 @@ class AbilityInfoModal extends BaseModal {
   // 데이터 로드
   async loadData(tableContainer, jobToggleSection) {
     try {
-      // 직접 API 호출
-      const abilityAPI = new AbilityInfoAPI();
-      const result = await abilityAPI.fetchAbilityInfo();
-      
-      if (result && result.success && result.data) {
-        this.data = result.data;
+      // 로컬 JSON 기반 데이터 매니저 사용
+      const manager = new AbilityInfoDataManager();
+      const data = await manager.load();
+
+      if (Array.isArray(data) && data.length > 0) {
+        this.data = data;
         this.createJobToggles(jobToggleSection);
         this.renderTable();
         this.bindSearchEvent();
