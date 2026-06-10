@@ -115,6 +115,13 @@ class AbilityPopoverView {
     });
   }
 
+  // 콘텐츠 변경 등으로 카드 크기가 바뀐 뒤 위치 재계산 (열려 있을 때만)
+  reposition() {
+    if (this.el && this.anchor) {
+      this.position(this.el, this.anchor);
+    }
+  }
+
   // 기준 요소 아래에 앵커하고 뷰포트 경계를 보정 (position: fixed — 뷰포트 좌표)
   position(card, anchor) {
     const rect = anchor.getBoundingClientRect();

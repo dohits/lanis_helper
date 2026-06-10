@@ -172,6 +172,8 @@ class AbilityClickPopoverManager {
       const result = await fetchScrollPrice(abilityName);
       if (!this.view.isOpenFor(anchor)) return;
       this.view.setPriceLines(priceLines(result));
+      // 시세 3줄이 채워져 카드가 커졌으니 위치 재계산
+      this.view.reposition();
     } catch (error) {
       console.warn('[AbilityClickPopover] 시세 표시 오류:', error);
     }
