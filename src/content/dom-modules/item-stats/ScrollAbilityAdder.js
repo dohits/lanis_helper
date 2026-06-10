@@ -4,6 +4,9 @@ import { extractScrollAbilityName, findAbilityEffect } from './scroll-ability-ut
 import { fetchScrollPrice } from '../scroll-price/ScrollPriceService.js';
 import { priceLines } from '../scroll-price/scroll-price-utils.js';
 
+// 가격 라인 <p> 공통 스타일 (placeholder와 최종 렌더가 항상 동일하도록)
+const PRICE_LINE_STYLE = 'color: #c0c0c0; font-size: 0.8rem; line-height: 1.4; margin: 0;';
+
 class ScrollAbilityAdder {
   constructor() {
     this.dataManager = new AbilityInfoDataManager();
@@ -94,7 +97,7 @@ class ScrollAbilityAdder {
 
     const p = document.createElement('p');
     p.className = 'MuiTypography-root MuiTypography-body2';
-    p.style.cssText = 'color: #c0c0c0; font-size: 0.8rem; line-height: 1.4; margin: 0;';
+    p.style.cssText = PRICE_LINE_STYLE;
     p.textContent = '거래가 불러오는 중…';
 
     row.appendChild(p);
@@ -118,7 +121,7 @@ class ScrollAbilityAdder {
     lines.forEach((line) => {
       const p = document.createElement('p');
       p.className = 'MuiTypography-root MuiTypography-body2';
-      p.style.cssText = 'color: #c0c0c0; font-size: 0.8rem; line-height: 1.4; margin: 0;';
+      p.style.cssText = PRICE_LINE_STYLE;
       p.textContent = line;
       row.appendChild(p);
     });
