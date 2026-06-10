@@ -1,0 +1,45 @@
+<!--
+어빌리티 이름 클릭 → 효과 팝오버 예시 (참조 문서)
+
+대상 페이지: https://lanis.me/refinery?section=craft&tab=scroll-exchange
+
+감지 규칙(AbilityClickPopoverManager):
+- 후보: 앞에 등급 <span> 형제를 가진 p.MuiTypography-body2
+- ability-data.json에 정규화 매칭되는 이름만 .lh-ability-clickable 로 마킹
+  (커서 포인터 + 점선 밑줄). data-lh-ability 속성에 어빌명 저장.
+- 클릭 시 AbilityPopoverView가 #lh-ability-popover 다크 카드를 요소 아래에 생성(position: fixed).
+- 바깥 클릭 / 같은 이름 재클릭 / Esc 로 닫힘. 한 번에 하나만.
+-->
+
+<!-- 스크롤 교환 행 (원본) -->
+<div class="MuiBox-root css-1gvspc2">
+  <div class="MuiBox-root css-1fjtzvx">
+    <div class="MuiBox-root css-2hjtak">
+      <span class="MuiBox-root css-1rvpxpb">은</span>
+      <p class="MuiTypography-root MuiTypography-body2 css-15p2vbb">마나 비전</p>
+    </div>
+    <span class="MuiTypography-root MuiTypography-caption css-6275ju">보유 2</span>
+  </div>
+</div>
+
+<!-- 마킹 후 (클릭 가능 표시: 커서/점선 밑줄 + data 속성) -->
+<div class="MuiBox-root css-1gvspc2">
+  <div class="MuiBox-root css-1fjtzvx">
+    <div class="MuiBox-root css-2hjtak">
+      <span class="MuiBox-root css-1rvpxpb">은</span>
+      <p class="MuiTypography-root MuiTypography-body2 css-15p2vbb lh-ability-clickable" data-lh-ability="마나 비전" style="cursor: pointer; text-decoration: underline dotted; text-underline-offset: 2px;">마나 비전</p>
+    </div>
+    <span class="MuiTypography-root MuiTypography-caption css-6275ju">보유 2</span>
+  </div>
+</div>
+
+<!-- 클릭 시 생성되는 팝오버 카드 (AbilityPopoverView 출력 예시, position: fixed) -->
+<div id="lh-ability-popover" style="position: fixed; z-index: 99999; max-width: 280px; background: #2b2b2b; color: #eee; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); padding: 10px 12px; font-size: 0.85rem; line-height: 1.45;">
+  <div style="display: flex; align-items: baseline; gap: 6px; margin-bottom: 6px;">
+    <span style="font-weight: bold; color: #fff;">마나 비전</span>
+    <span style="color: #aaa; font-size: 0.8rem;">(은)</span>
+    <span style="margin-left: auto; color: #888; font-size: 0.75rem;">어빌리티</span>
+  </div>
+  <div style="border-top: 1px solid rgba(255,255,255,0.12); margin: 0 0 6px 0;"></div>
+  <p style="margin: 0; color: #ddd;">MP 소비가 30% 증가하지만, 적중이 6% 증가하고 마법 방어력을 48만큼 관통한다.</p>
+</div>
