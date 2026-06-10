@@ -3,6 +3,7 @@ import ProfileEnhancementManager from './profile-enhancement/ProfileEnhancementM
 import SearchEngineManager from './search-engine/SearchEngineManager.js';
 import ItemStatsManager from './item-stats/ItemStatsManager.js';
 import { NicknameChecker } from './nickname-checker/NicknameChecker.js';
+import AbilityClickPopoverManager from './ability-click-popover/AbilityClickPopoverManager.js';
 
 class DOMModulesManager {
   constructor() {
@@ -10,7 +11,8 @@ class DOMModulesManager {
       profileEnhancement: new ProfileEnhancementManager(),
       searchEngine: new SearchEngineManager(),
       itemStats: new ItemStatsManager(),
-      nicknameChecker: new NicknameChecker()
+      nicknameChecker: new NicknameChecker(),
+      abilityClickPopover: new AbilityClickPopoverManager()
     };
   }
 
@@ -21,6 +23,7 @@ class DOMModulesManager {
       await this.modules.searchEngine.init();
       await this.modules.itemStats.init();
       this.modules.nicknameChecker.init();
+      await this.modules.abilityClickPopover.init();
 
     } catch (error) {
       console.error('DOMModulesManager 초기화 중 오류:', error);
@@ -61,10 +64,14 @@ class DOMModulesManager {
   // 아이템 스탯 관련 메서드들
   async processItemStats() {
     await this.modules.itemStats.processItemStats();
+    // 어빌 클릭 팝오버도 showItemStats 연동 (켜짐)
+    this.modules.abilityClickPopover.setEnabled(true);
   }
 
   removeItemStats() {
     this.modules.itemStats.removeItemStats();
+    // 어빌 클릭 팝오버도 showItemStats 연동 (꺼짐: 마킹 제거 + 팝오버 닫기)
+    this.modules.abilityClickPopover.setEnabled(false);
   }
 
   isProcessingStats() {
@@ -86,6 +93,7 @@ class DOMModulesManager {
       this.modules.profileEnhancement.destroy();
       this.modules.itemStats.removeItemStats();
       this.modules.nicknameChecker.destroy();
+      this.modules.abilityClickPopover.destroy();
 
     } catch (error) {
       console.error('DOMModulesManager 정리 중 오류:', error);
