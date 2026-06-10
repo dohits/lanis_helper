@@ -44,7 +44,7 @@ class AbilityPopoverView {
     const card = document.createElement('div');
     card.id = POPOVER_ID;
     card.style.cssText = [
-      'position: absolute',
+      'position: fixed',
       'z-index: 99999',
       'max-width: 280px',
       'background: #2b2b2b',
@@ -93,14 +93,12 @@ class AbilityPopoverView {
     return card;
   }
 
-  // 기준 요소 아래에 앵커하고 뷰포트 경계를 보정
+  // 기준 요소 아래에 앵커하고 뷰포트 경계를 보정 (position: fixed — 뷰포트 좌표)
   position(card, anchor) {
     const rect = anchor.getBoundingClientRect();
-    const scrollX = window.scrollX || window.pageXOffset || 0;
-    const scrollY = window.scrollY || window.pageYOffset || 0;
 
-    let left = rect.left + scrollX;
-    let top = rect.bottom + scrollY + 6;
+    let left = rect.left;
+    let top = rect.bottom + 6;
     card.style.left = `${left}px`;
     card.style.top = `${top}px`;
 
@@ -110,13 +108,13 @@ class AbilityPopoverView {
     const vh = window.innerHeight;
 
     if (popRect.right > vw - 8) {
-      left = Math.max(8 + scrollX, vw - popRect.width - 8 + scrollX);
+      left = Math.max(8, vw - popRect.width - 8);
       card.style.left = `${left}px`;
     }
     if (popRect.bottom > vh - 8) {
       // 아래 공간 부족 → 기준 요소 위로
-      top = rect.top + scrollY - popRect.height - 6;
-      card.style.top = `${Math.max(8 + scrollY, top)}px`;
+      top = rect.top - popRect.height - 6;
+      card.style.top = `${Math.max(8, top)}px`;
     }
   }
 }
