@@ -98,7 +98,8 @@ class AbilityClickPopoverManager {
     }
   }
 
-  // 등급 span 형제를 가진 어빌명 p 구조인지 (해시 비의존 판정)
+  // 등급 span 형제를 가진 어빌명 p '구조'인지만 판정 (해시 비의존).
+  // 실제 어빌리티 식별(데이터 매칭) 게이트는 scan()의 findAbilityEffect가 담당한다.
   isAbilityNameElement(p) {
     const prev = p.previousElementSibling;
     if (!prev || prev.tagName !== 'SPAN') return false;
@@ -150,7 +151,7 @@ class AbilityClickPopoverManager {
   }
 
   onKeyDown(event) {
-    if (event.key === 'Escape') this.view.close();
+    if (event.key === 'Escape' && this.view.isOpen()) this.view.close();
   }
 
   openFor(anchor) {
