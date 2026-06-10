@@ -1,6 +1,8 @@
 // 스크롤 팝오버에 어빌리티 효과를 표시하는 모듈
 import AbilityInfoDataManager from '../ability-info/AbilityInfoDataManager.js';
 import { extractScrollAbilityName, findAbilityEffect } from './scroll-ability-utils.js';
+import { fetchScrollPrice } from '../scroll-price/ScrollPriceService.js';
+import { priceLines } from '../scroll-price/scroll-price-utils.js';
 
 class ScrollAbilityAdder {
   constructor() {
@@ -61,6 +63,11 @@ class ScrollAbilityAdder {
     if (!targetBox) return;
 
     targetBox.appendChild(this.buildAbilityRow(abilityName, effect));
+
+    // 가격 행(placeholder) 추가 후 비동기 채움
+    const priceRow = this.buildPriceRow();
+    targetBox.appendChild(priceRow);
+    this.loadPrice(priceRow, abilityName);
   }
 
   // 효과 표시 행 생성
@@ -79,9 +86,47 @@ class ScrollAbilityAdder {
     return row;
   }
 
+  // 가격 행(placeholder) 생성
+  buildPriceRow() {
+    const row = document.createElement('div');
+    row.className = 'scroll-price-info';
+    row.style.cssText = 'margin-top: 4px;';
+
+    const p = document.createElement('p');
+    p.className = 'MuiTypography-root MuiTypography-body2';
+    p.style.cssText = 'color: #c0c0c0; font-size: 0.8rem; line-height: 1.4; margin: 0;';
+    p.textContent = '거래가 불러오는 중…';
+
+    row.appendChild(p);
+    return row;
+  }
+
+  // 비동기 시세 로드 후 행 갱신 (팝오버가 닫혔으면 무시)
+  async loadPrice(row, abilityName) {
+    try {
+      const result = await fetchScrollPrice(abilityName);
+      if (!row.isConnected) return;
+      this.renderPriceLines(row, priceLines(result));
+    } catch (error) {
+      console.warn('[ScrollAbilityAdder] 시세 표시 오류:', error);
+    }
+  }
+
+  // 가격 라인들을 행에 렌더 (기존 내용 교체)
+  renderPriceLines(row, lines) {
+    row.textContent = '';
+    lines.forEach((line) => {
+      const p = document.createElement('p');
+      p.className = 'MuiTypography-root MuiTypography-body2';
+      p.style.cssText = 'color: #c0c0c0; font-size: 0.8rem; line-height: 1.4; margin: 0;';
+      p.textContent = line;
+      row.appendChild(p);
+    });
+  }
+
   // 추가 요소 정리 (스카우터 OFF/해제 시)
   cleanup(root = document) {
-    root.querySelectorAll('.scroll-ability-info').forEach((el) => el.remove());
+    root.querySelectorAll('.scroll-ability-info, .scroll-price-info').forEach((el) => el.remove());
     root
       .querySelectorAll('.scroll-ability-processed')
       .forEach((el) => el.classList.remove('scroll-ability-processed'));
